@@ -4159,18 +4159,12 @@ template <int NV>
 using split22_t = container::split<parameter::empty, 
                                    wrap::fix<1, math::add<NV>>>;
 
-using ahdsr3_multimod = parameter::list<parameter::empty, parameter::empty>;
-
-template <int NV>
-using ahdsr3_t = wrap::no_data<envelope::ahdsr<NV, ahdsr3_multimod>>;
-
 template <int NV>
 using chain3_t = container::chain<parameter::empty, 
                                   wrap::fix<1, math::clear<NV>>, 
                                   cable_table1_t<NV>, 
                                   math::clear<NV>, 
-                                  split22_t<NV>, 
-                                  ahdsr3_t<NV>>;
+                                  split22_t<NV>>;
 template <int NV>
 using branch14_t = container::branch<parameter::empty, 
                                      wrap::fix<1, chain91_t<NV>>, 
@@ -4256,18 +4250,12 @@ using chain164_t = container::chain<parameter::empty,
 
 template <int NV> using split25_t = split22_t<NV>;
 
-using ahdsr7_multimod = ahdsr3_multimod;
-
-template <int NV>
-using ahdsr7_t = wrap::no_data<envelope::ahdsr<NV, ahdsr7_multimod>>;
-
 template <int NV>
 using chain165_t = container::chain<parameter::empty, 
                                     wrap::fix<1, math::clear<NV>>, 
                                     cable_table8_t<NV>, 
                                     math::clear<NV>, 
-                                    split25_t<NV>, 
-                                    ahdsr7_t<NV>>;
+                                    split25_t<NV>>;
 template <int NV>
 using branch18_t = container::branch<parameter::empty, 
                                      wrap::fix<1, chain164_t<NV>>, 
@@ -5524,6 +5512,7 @@ using chain15_t = container::chain<parameter::empty,
 template <int NV>
 using chain57_t = container::chain<parameter::empty, 
                                    wrap::fix<2, chain15_t<NV>>, 
+                                   routing::send<stereo_cable>, 
                                    core::gain<NV>>;
 
 template <int NV>
@@ -5543,7 +5532,6 @@ using chain58_t = container::chain<parameter::empty,
                                    split31_t<NV>, 
                                    xfader_t<NV>, 
                                    split12_t<NV>, 
-                                   routing::send<stereo_cable>, 
                                    peak33_t<NV>>;
 
 template <int NV>
@@ -5967,16 +5955,6 @@ using q2 = parameter::chain<ranges::Identity,
                             q2_4<NV>, 
                             q2_5<NV>, 
                             q2_6<NV>>;
-
-template <int NV>
-using r1 = parameter::chain<ranges::Identity, 
-                            parameter::plain<osc1_impl::ahdsr_t<NV>, 5>, 
-                            parameter::plain<osc1_impl::ahdsr3_t<NV>, 5>>;
-
-template <int NV>
-using r2 = parameter::chain<ranges::Identity, 
-                            parameter::plain<osc1_impl::ahdsr6_t<NV>, 5>, 
-                            parameter::plain<osc1_impl::ahdsr7_t<NV>, 5>>;
 
 template <int NV>
 using EnvTempo1 = parameter::chain<ranges::Identity, 
@@ -6523,6 +6501,8 @@ using d1 = parameter::plain<osc1_impl::ahdsr_t<NV>, 3>;
 template <int NV>
 using s1 = parameter::plain<osc1_impl::ahdsr_t<NV>, 4>;
 template <int NV>
+using r1 = parameter::plain<osc1_impl::ahdsr_t<NV>, 5>;
+template <int NV>
 using a2 = parameter::plain<osc1_impl::ahdsr6_t<NV>, 
                             0>;
 template <int NV>
@@ -6534,6 +6514,9 @@ using d2 = parameter::plain<osc1_impl::ahdsr6_t<NV>,
 template <int NV>
 using s2 = parameter::plain<osc1_impl::ahdsr6_t<NV>, 
                             4>;
+template <int NV>
+using r2 = parameter::plain<osc1_impl::ahdsr6_t<NV>, 
+                            5>;
 template <int NV>
 using EnvClock1 = parameter::plain<osc1_impl::branch13_t<NV>, 
                                    0>;
@@ -8435,9 +8418,6 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
                         getT(3);
 		auto& add22 = this->getT(1).getT(0).getT(0).getT(2).getT(2).getT(0).                 // math::add<NV>
                       getT(0).getT(0).getT(3).getT(1).getT(3).getT(0);
-		auto& ahdsr3 = this->getT(1).getT(0).getT(0).getT(2).getT(2).                        // osc1_impl::ahdsr3_t<NV>
-                       getT(0).getT(0).getT(0).getT(3).getT(1).
-                       getT(4);
 		auto& peak7 = this->getT(1).getT(0).getT(0).getT(2).                                 // osc1_impl::peak7_t<NV>
                       getT(2).getT(0).getT(0).getT(0).
                       getT(4);
@@ -8498,9 +8478,6 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
                         getT(3);
 		auto& add102 = this->getT(1).getT(0).getT(0).getT(2).getT(2).getT(0).                // math::add<NV>
                        getT(0).getT(1).getT(3).getT(1).getT(3).getT(0);
-		auto& ahdsr7 = this->getT(1).getT(0).getT(0).getT(2).getT(2).                        // osc1_impl::ahdsr7_t<NV>
-                       getT(0).getT(0).getT(1).getT(3).getT(1).
-                       getT(4);
 		auto& peak16 = this->getT(1).getT(0).getT(0).getT(2).                                // osc1_impl::peak16_t<NV>
                        getT(2).getT(0).getT(0).getT(1).
                        getT(4);
@@ -9384,9 +9361,9 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		auto& jpanner7 = this->getT(1).getT(0).getT(0).getT(3).getT(3).              // jdsp::jpanner<NV>
                          getT(1).getT(0).getT(0).getT(6).getT(1).
                          getT(2);
-		auto& gain2 = this->getT(1).getT(0).getT(0).getT(3).getT(3).getT(1).getT(1); // core::gain<NV>
-		auto& send7 = this->getT(1).getT(0).getT(0).getT(3).getT(4);                 // routing::send<stereo_cable>
-		auto& peak33 = this->getT(1).getT(0).getT(0).getT(3).getT(5);                // osc1_impl::peak33_t<NV>
+		auto& send7 = this->getT(1).getT(0).getT(0).getT(3).getT(3).getT(1).getT(1); // routing::send<stereo_cable>
+		auto& gain2 = this->getT(1).getT(0).getT(0).getT(3).getT(3).getT(1).getT(2); // core::gain<NV>
+		auto& peak33 = this->getT(1).getT(0).getT(0).getT(3).getT(4);                // osc1_impl::peak33_t<NV>
 		auto& gain77 = this->getT(2);                                                // core::gain<NV>
 		auto& oscilloscope = this->getT(3);                                          // osc1_impl::oscilloscope_t
 		auto& jpanner3 = this->getT(4);                                              // jdsp::jpanner<NV>
@@ -9541,9 +9518,7 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		
 		this->getParameterT(58).connectT(0, ahdsr); // s1 -> ahdsr::Sustain
 		
-		auto& r1_p = this->getParameterT(59);
-		r1_p.connectT(0, ahdsr);  // r1 -> ahdsr::Release
-		r1_p.connectT(1, ahdsr3); // r1 -> ahdsr3::Release
+		this->getParameterT(59).connectT(0, ahdsr); // r1 -> ahdsr::Release
 		
 		this->getParameterT(60).connectT(0, ahdsr6); // a2 -> ahdsr6::Attack
 		
@@ -9553,9 +9528,7 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		
 		this->getParameterT(63).connectT(0, ahdsr6); // s2 -> ahdsr6::Sustain
 		
-		auto& r2_p = this->getParameterT(64);
-		r2_p.connectT(0, ahdsr6); // r2 -> ahdsr6::Release
-		r2_p.connectT(1, ahdsr7); // r2 -> ahdsr7::Release
+		this->getParameterT(64).connectT(0, ahdsr6); // r2 -> ahdsr6::Release
 		
 		this->getParameterT(65).connectT(0, branch13); // EnvClock1 -> branch13::Index
 		
@@ -10217,123 +10190,121 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		cable_table1.getWrappedObject().getParameter().connectT(0, add22); // cable_table1 -> add22::Value
 		peak2.getParameter().connectT(0, input_toggle);                    // peak2 -> input_toggle::Value2
 		peak2.getParameter().connectT(1, cable_table1);                    // peak2 -> cable_table1::Value
-		auto& ahdsr3_p = ahdsr3.getWrappedObject().getParameter();
-		peak7.getParameter().connectT(0, add29);       // peak7 -> add29::Value
-		peak7.getParameter().connectT(1, add64);       // peak7 -> add64::Value
-		peak7.getParameter().connectT(2, add34);       // peak7 -> add34::Value
-		peak7.getParameter().connectT(3, add46);       // peak7 -> add46::Value
-		peak7.getParameter().connectT(4, add115);      // peak7 -> add115::Value
-		peak7.getParameter().connectT(5, add165);      // peak7 -> add165::Value
-		peak7.getParameter().connectT(6, add247);      // peak7 -> add247::Value
-		peak7.getParameter().connectT(7, add229);      // peak7 -> add229::Value
-		peak7.getParameter().connectT(8, add258);      // peak7 -> add258::Value
-		peak7.getParameter().connectT(9, add201);      // peak7 -> add201::Value
-		peak7.getParameter().connectT(10, add183);     // peak7 -> add183::Value
-		peak7.getParameter().connectT(11, add147);     // peak7 -> add147::Value
-		peak7.getParameter().connectT(12, add280);     // peak7 -> add280::Value
-		peak7.getParameter().connectT(13, add291);     // peak7 -> add291::Value
-		peak7.getParameter().connectT(14, add302);     // peak7 -> add302::Value
-		peak7.getParameter().connectT(15, add269);     // peak7 -> add269::Value
-		tempo_sync5.getParameter().connectT(0, ramp4); // tempo_sync5 -> ramp4::PeriodTime
+		peak7.getParameter().connectT(0, add29);                           // peak7 -> add29::Value
+		peak7.getParameter().connectT(1, add64);                           // peak7 -> add64::Value
+		peak7.getParameter().connectT(2, add34);                           // peak7 -> add34::Value
+		peak7.getParameter().connectT(3, add46);                           // peak7 -> add46::Value
+		peak7.getParameter().connectT(4, add115);                          // peak7 -> add115::Value
+		peak7.getParameter().connectT(5, add165);                          // peak7 -> add165::Value
+		peak7.getParameter().connectT(6, add247);                          // peak7 -> add247::Value
+		peak7.getParameter().connectT(7, add229);                          // peak7 -> add229::Value
+		peak7.getParameter().connectT(8, add258);                          // peak7 -> add258::Value
+		peak7.getParameter().connectT(9, add201);                          // peak7 -> add201::Value
+		peak7.getParameter().connectT(10, add183);                         // peak7 -> add183::Value
+		peak7.getParameter().connectT(11, add147);                         // peak7 -> add147::Value
+		peak7.getParameter().connectT(12, add280);                         // peak7 -> add280::Value
+		peak7.getParameter().connectT(13, add291);                         // peak7 -> add291::Value
+		peak7.getParameter().connectT(14, add302);                         // peak7 -> add302::Value
+		peak7.getParameter().connectT(15, add269);                         // peak7 -> add269::Value
+		tempo_sync5.getParameter().connectT(0, ramp4);                     // tempo_sync5 -> ramp4::PeriodTime
 		auto& ahdsr6_p = ahdsr6.getWrappedObject().getParameter();
 		ahdsr6_p.getParameterT(0).connectT(0, add100);                       // ahdsr6 -> add100::Value
 		input_toggle2.getWrappedObject().getParameter().connectT(0, ahdsr6); // input_toggle2 -> ahdsr6::Gate
 		cable_table8.getWrappedObject().getParameter().connectT(0, add102);  // cable_table8 -> add102::Value
 		peak14.getParameter().connectT(0, input_toggle2);                    // peak14 -> input_toggle2::Value2
 		peak14.getParameter().connectT(1, cable_table8);                     // peak14 -> cable_table8::Value
-		auto& ahdsr7_p = ahdsr7.getWrappedObject().getParameter();
-		peak16.getParameter().connectT(0, add28);                       // peak16 -> add28::Value
-		peak16.getParameter().connectT(1, add65);                       // peak16 -> add65::Value
-		peak16.getParameter().connectT(2, add35);                       // peak16 -> add35::Value
-		peak16.getParameter().connectT(3, add47);                       // peak16 -> add47::Value
-		peak16.getParameter().connectT(4, add116);                      // peak16 -> add116::Value
-		peak16.getParameter().connectT(5, add166);                      // peak16 -> add166::Value
-		peak16.getParameter().connectT(6, add248);                      // peak16 -> add248::Value
-		peak16.getParameter().connectT(7, add230);                      // peak16 -> add230::Value
-		peak16.getParameter().connectT(8, add259);                      // peak16 -> add259::Value
-		peak16.getParameter().connectT(9, add202);                      // peak16 -> add202::Value
-		peak16.getParameter().connectT(10, add184);                     // peak16 -> add184::Value
-		peak16.getParameter().connectT(11, add148);                     // peak16 -> add148::Value
-		peak16.getParameter().connectT(12, add281);                     // peak16 -> add281::Value
-		peak16.getParameter().connectT(13, add292);                     // peak16 -> add292::Value
-		peak16.getParameter().connectT(14, add303);                     // peak16 -> add303::Value
-		peak16.getParameter().connectT(15, add270);                     // peak16 -> add270::Value
-		tempo_sync6.getParameter().connectT(0, ramp5);                  // tempo_sync6 -> ramp5::PeriodTime
-		minmax30.getWrappedObject().getParameter().connectT(0, add552); // minmax30 -> add552::Value
-		minmax31.getWrappedObject().getParameter().connectT(0, add553); // minmax31 -> add553::Value
-		minmax32.getWrappedObject().getParameter().connectT(0, add554); // minmax32 -> add554::Value
-		minmax33.getWrappedObject().getParameter().connectT(0, add555); // minmax33 -> add555::Value
-		minmax34.getWrappedObject().getParameter().connectT(0, add556); // minmax34 -> add556::Value
-		minmax35.getWrappedObject().getParameter().connectT(0, add557); // minmax35 -> add557::Value
-		minmax36.getWrappedObject().getParameter().connectT(0, add558); // minmax36 -> add558::Value
-		minmax37.getWrappedObject().getParameter().connectT(0, add559); // minmax37 -> add559::Value
-		pma33.getWrappedObject().getParameter().connectT(0, minmax30);  // pma33 -> minmax30::Value
-		pma33.getWrappedObject().getParameter().connectT(1, minmax31);  // pma33 -> minmax31::Value
-		pma33.getWrappedObject().getParameter().connectT(2, minmax32);  // pma33 -> minmax32::Value
-		pma33.getWrappedObject().getParameter().connectT(3, minmax33);  // pma33 -> minmax33::Value
-		pma33.getWrappedObject().getParameter().connectT(4, minmax34);  // pma33 -> minmax34::Value
-		pma33.getWrappedObject().getParameter().connectT(5, minmax35);  // pma33 -> minmax35::Value
-		pma33.getWrappedObject().getParameter().connectT(6, minmax36);  // pma33 -> minmax36::Value
-		pma33.getWrappedObject().getParameter().connectT(7, add551);    // pma33 -> add551::Value
-		pma33.getWrappedObject().getParameter().connectT(8, minmax37);  // pma33 -> minmax37::Value
-		peak15.getParameter().connectT(0, pma33);                       // peak15 -> pma33::Value
-		tempo_sync9.getParameter().connectT(0, ramp8);                  // tempo_sync9 -> ramp8::PeriodTime
-		minmax10.getWrappedObject().getParameter().connectT(0, add525); // minmax10 -> add525::Value
-		minmax13.getWrappedObject().getParameter().connectT(0, add526); // minmax13 -> add526::Value
-		minmax24.getWrappedObject().getParameter().connectT(0, add527); // minmax24 -> add527::Value
-		minmax25.getWrappedObject().getParameter().connectT(0, add528); // minmax25 -> add528::Value
-		minmax26.getWrappedObject().getParameter().connectT(0, add529); // minmax26 -> add529::Value
-		minmax27.getWrappedObject().getParameter().connectT(0, add530); // minmax27 -> add530::Value
-		minmax28.getWrappedObject().getParameter().connectT(0, add531); // minmax28 -> add531::Value
-		minmax29.getWrappedObject().getParameter().connectT(0, add532); // minmax29 -> add532::Value
-		pma32.getWrappedObject().getParameter().connectT(0, minmax10);  // pma32 -> minmax10::Value
-		pma32.getWrappedObject().getParameter().connectT(1, minmax13);  // pma32 -> minmax13::Value
-		pma32.getWrappedObject().getParameter().connectT(2, minmax24);  // pma32 -> minmax24::Value
-		pma32.getWrappedObject().getParameter().connectT(3, minmax25);  // pma32 -> minmax25::Value
-		pma32.getWrappedObject().getParameter().connectT(4, minmax26);  // pma32 -> minmax26::Value
-		pma32.getWrappedObject().getParameter().connectT(5, minmax27);  // pma32 -> minmax27::Value
-		pma32.getWrappedObject().getParameter().connectT(6, minmax28);  // pma32 -> minmax28::Value
-		pma32.getWrappedObject().getParameter().connectT(7, add524);    // pma32 -> add524::Value
-		pma32.getWrappedObject().getParameter().connectT(8, minmax29);  // pma32 -> minmax29::Value
-		peak49.getParameter().connectT(0, pma32);                       // peak49 -> pma32::Value
-		tempo_sync8.getParameter().connectT(0, ramp7);                  // tempo_sync8 -> ramp7::PeriodTime
-		minmax8.getWrappedObject().getParameter().connectT(0, add498);  // minmax8 -> add498::Value
-		minmax9.getWrappedObject().getParameter().connectT(0, add499);  // minmax9 -> add499::Value
-		minmax19.getWrappedObject().getParameter().connectT(0, add500); // minmax19 -> add500::Value
-		minmax12.getWrappedObject().getParameter().connectT(0, add501); // minmax12 -> add501::Value
-		minmax20.getWrappedObject().getParameter().connectT(0, add502); // minmax20 -> add502::Value
-		minmax21.getWrappedObject().getParameter().connectT(0, add503); // minmax21 -> add503::Value
-		minmax22.getWrappedObject().getParameter().connectT(0, add504); // minmax22 -> add504::Value
-		minmax23.getWrappedObject().getParameter().connectT(0, add505); // minmax23 -> add505::Value
-		pma31.getWrappedObject().getParameter().connectT(0, minmax8);   // pma31 -> minmax8::Value
-		pma31.getWrappedObject().getParameter().connectT(1, minmax9);   // pma31 -> minmax9::Value
-		pma31.getWrappedObject().getParameter().connectT(2, minmax19);  // pma31 -> minmax19::Value
-		pma31.getWrappedObject().getParameter().connectT(3, minmax12);  // pma31 -> minmax12::Value
-		pma31.getWrappedObject().getParameter().connectT(4, minmax20);  // pma31 -> minmax20::Value
-		pma31.getWrappedObject().getParameter().connectT(5, minmax21);  // pma31 -> minmax21::Value
-		pma31.getWrappedObject().getParameter().connectT(6, minmax22);  // pma31 -> minmax22::Value
-		pma31.getWrappedObject().getParameter().connectT(7, minmax23);  // pma31 -> minmax23::Minimum
-		pma31.getWrappedObject().getParameter().connectT(8, add497);    // pma31 -> add497::Value
-		peak48.getParameter().connectT(0, pma31);                       // peak48 -> pma31::Value
-		tempo_sync7.getParameter().connectT(0, ramp6);                  // tempo_sync7 -> ramp6::PeriodTime
-		minmax38.getWrappedObject().getParameter().connectT(0, add579); // minmax38 -> add579::Value
-		minmax39.getWrappedObject().getParameter().connectT(0, add580); // minmax39 -> add580::Value
-		minmax40.getWrappedObject().getParameter().connectT(0, add581); // minmax40 -> add581::Value
-		minmax41.getWrappedObject().getParameter().connectT(0, add582); // minmax41 -> add582::Value
-		minmax42.getWrappedObject().getParameter().connectT(0, add583); // minmax42 -> add583::Value
-		minmax43.getWrappedObject().getParameter().connectT(0, add584); // minmax43 -> add584::Value
-		minmax44.getWrappedObject().getParameter().connectT(0, add585); // minmax44 -> add585::Value
-		minmax45.getWrappedObject().getParameter().connectT(0, add586); // minmax45 -> add586::Value
-		pma34.getWrappedObject().getParameter().connectT(0, minmax38);  // pma34 -> minmax38::Value
-		pma34.getWrappedObject().getParameter().connectT(1, minmax39);  // pma34 -> minmax39::Value
-		pma34.getWrappedObject().getParameter().connectT(2, minmax40);  // pma34 -> minmax40::Value
-		pma34.getWrappedObject().getParameter().connectT(3, minmax41);  // pma34 -> minmax41::Value
-		pma34.getWrappedObject().getParameter().connectT(4, minmax42);  // pma34 -> minmax42::Value
-		pma34.getWrappedObject().getParameter().connectT(5, minmax43);  // pma34 -> minmax43::Value
-		pma34.getWrappedObject().getParameter().connectT(6, minmax44);  // pma34 -> minmax44::Value
-		pma34.getWrappedObject().getParameter().connectT(7, minmax45);  // pma34 -> minmax45::Minimum
-		pma34.getWrappedObject().getParameter().connectT(8, add578);    // pma34 -> add578::Value
-		peak47.getParameter().connectT(0, pma34);                       // peak47 -> pma34::Value
+		peak16.getParameter().connectT(0, add28);                            // peak16 -> add28::Value
+		peak16.getParameter().connectT(1, add65);                            // peak16 -> add65::Value
+		peak16.getParameter().connectT(2, add35);                            // peak16 -> add35::Value
+		peak16.getParameter().connectT(3, add47);                            // peak16 -> add47::Value
+		peak16.getParameter().connectT(4, add116);                           // peak16 -> add116::Value
+		peak16.getParameter().connectT(5, add166);                           // peak16 -> add166::Value
+		peak16.getParameter().connectT(6, add248);                           // peak16 -> add248::Value
+		peak16.getParameter().connectT(7, add230);                           // peak16 -> add230::Value
+		peak16.getParameter().connectT(8, add259);                           // peak16 -> add259::Value
+		peak16.getParameter().connectT(9, add202);                           // peak16 -> add202::Value
+		peak16.getParameter().connectT(10, add184);                          // peak16 -> add184::Value
+		peak16.getParameter().connectT(11, add148);                          // peak16 -> add148::Value
+		peak16.getParameter().connectT(12, add281);                          // peak16 -> add281::Value
+		peak16.getParameter().connectT(13, add292);                          // peak16 -> add292::Value
+		peak16.getParameter().connectT(14, add303);                          // peak16 -> add303::Value
+		peak16.getParameter().connectT(15, add270);                          // peak16 -> add270::Value
+		tempo_sync6.getParameter().connectT(0, ramp5);                       // tempo_sync6 -> ramp5::PeriodTime
+		minmax30.getWrappedObject().getParameter().connectT(0, add552);      // minmax30 -> add552::Value
+		minmax31.getWrappedObject().getParameter().connectT(0, add553);      // minmax31 -> add553::Value
+		minmax32.getWrappedObject().getParameter().connectT(0, add554);      // minmax32 -> add554::Value
+		minmax33.getWrappedObject().getParameter().connectT(0, add555);      // minmax33 -> add555::Value
+		minmax34.getWrappedObject().getParameter().connectT(0, add556);      // minmax34 -> add556::Value
+		minmax35.getWrappedObject().getParameter().connectT(0, add557);      // minmax35 -> add557::Value
+		minmax36.getWrappedObject().getParameter().connectT(0, add558);      // minmax36 -> add558::Value
+		minmax37.getWrappedObject().getParameter().connectT(0, add559);      // minmax37 -> add559::Value
+		pma33.getWrappedObject().getParameter().connectT(0, minmax30);       // pma33 -> minmax30::Value
+		pma33.getWrappedObject().getParameter().connectT(1, minmax31);       // pma33 -> minmax31::Value
+		pma33.getWrappedObject().getParameter().connectT(2, minmax32);       // pma33 -> minmax32::Value
+		pma33.getWrappedObject().getParameter().connectT(3, minmax33);       // pma33 -> minmax33::Value
+		pma33.getWrappedObject().getParameter().connectT(4, minmax34);       // pma33 -> minmax34::Value
+		pma33.getWrappedObject().getParameter().connectT(5, minmax35);       // pma33 -> minmax35::Value
+		pma33.getWrappedObject().getParameter().connectT(6, minmax36);       // pma33 -> minmax36::Value
+		pma33.getWrappedObject().getParameter().connectT(7, add551);         // pma33 -> add551::Value
+		pma33.getWrappedObject().getParameter().connectT(8, minmax37);       // pma33 -> minmax37::Value
+		peak15.getParameter().connectT(0, pma33);                            // peak15 -> pma33::Value
+		tempo_sync9.getParameter().connectT(0, ramp8);                       // tempo_sync9 -> ramp8::PeriodTime
+		minmax10.getWrappedObject().getParameter().connectT(0, add525);      // minmax10 -> add525::Value
+		minmax13.getWrappedObject().getParameter().connectT(0, add526);      // minmax13 -> add526::Value
+		minmax24.getWrappedObject().getParameter().connectT(0, add527);      // minmax24 -> add527::Value
+		minmax25.getWrappedObject().getParameter().connectT(0, add528);      // minmax25 -> add528::Value
+		minmax26.getWrappedObject().getParameter().connectT(0, add529);      // minmax26 -> add529::Value
+		minmax27.getWrappedObject().getParameter().connectT(0, add530);      // minmax27 -> add530::Value
+		minmax28.getWrappedObject().getParameter().connectT(0, add531);      // minmax28 -> add531::Value
+		minmax29.getWrappedObject().getParameter().connectT(0, add532);      // minmax29 -> add532::Value
+		pma32.getWrappedObject().getParameter().connectT(0, minmax10);       // pma32 -> minmax10::Value
+		pma32.getWrappedObject().getParameter().connectT(1, minmax13);       // pma32 -> minmax13::Value
+		pma32.getWrappedObject().getParameter().connectT(2, minmax24);       // pma32 -> minmax24::Value
+		pma32.getWrappedObject().getParameter().connectT(3, minmax25);       // pma32 -> minmax25::Value
+		pma32.getWrappedObject().getParameter().connectT(4, minmax26);       // pma32 -> minmax26::Value
+		pma32.getWrappedObject().getParameter().connectT(5, minmax27);       // pma32 -> minmax27::Value
+		pma32.getWrappedObject().getParameter().connectT(6, minmax28);       // pma32 -> minmax28::Value
+		pma32.getWrappedObject().getParameter().connectT(7, add524);         // pma32 -> add524::Value
+		pma32.getWrappedObject().getParameter().connectT(8, minmax29);       // pma32 -> minmax29::Value
+		peak49.getParameter().connectT(0, pma32);                            // peak49 -> pma32::Value
+		tempo_sync8.getParameter().connectT(0, ramp7);                       // tempo_sync8 -> ramp7::PeriodTime
+		minmax8.getWrappedObject().getParameter().connectT(0, add498);       // minmax8 -> add498::Value
+		minmax9.getWrappedObject().getParameter().connectT(0, add499);       // minmax9 -> add499::Value
+		minmax19.getWrappedObject().getParameter().connectT(0, add500);      // minmax19 -> add500::Value
+		minmax12.getWrappedObject().getParameter().connectT(0, add501);      // minmax12 -> add501::Value
+		minmax20.getWrappedObject().getParameter().connectT(0, add502);      // minmax20 -> add502::Value
+		minmax21.getWrappedObject().getParameter().connectT(0, add503);      // minmax21 -> add503::Value
+		minmax22.getWrappedObject().getParameter().connectT(0, add504);      // minmax22 -> add504::Value
+		minmax23.getWrappedObject().getParameter().connectT(0, add505);      // minmax23 -> add505::Value
+		pma31.getWrappedObject().getParameter().connectT(0, minmax8);        // pma31 -> minmax8::Value
+		pma31.getWrappedObject().getParameter().connectT(1, minmax9);        // pma31 -> minmax9::Value
+		pma31.getWrappedObject().getParameter().connectT(2, minmax19);       // pma31 -> minmax19::Value
+		pma31.getWrappedObject().getParameter().connectT(3, minmax12);       // pma31 -> minmax12::Value
+		pma31.getWrappedObject().getParameter().connectT(4, minmax20);       // pma31 -> minmax20::Value
+		pma31.getWrappedObject().getParameter().connectT(5, minmax21);       // pma31 -> minmax21::Value
+		pma31.getWrappedObject().getParameter().connectT(6, minmax22);       // pma31 -> minmax22::Value
+		pma31.getWrappedObject().getParameter().connectT(7, minmax23);       // pma31 -> minmax23::Minimum
+		pma31.getWrappedObject().getParameter().connectT(8, add497);         // pma31 -> add497::Value
+		peak48.getParameter().connectT(0, pma31);                            // peak48 -> pma31::Value
+		tempo_sync7.getParameter().connectT(0, ramp6);                       // tempo_sync7 -> ramp6::PeriodTime
+		minmax38.getWrappedObject().getParameter().connectT(0, add579);      // minmax38 -> add579::Value
+		minmax39.getWrappedObject().getParameter().connectT(0, add580);      // minmax39 -> add580::Value
+		minmax40.getWrappedObject().getParameter().connectT(0, add581);      // minmax40 -> add581::Value
+		minmax41.getWrappedObject().getParameter().connectT(0, add582);      // minmax41 -> add582::Value
+		minmax42.getWrappedObject().getParameter().connectT(0, add583);      // minmax42 -> add583::Value
+		minmax43.getWrappedObject().getParameter().connectT(0, add584);      // minmax43 -> add584::Value
+		minmax44.getWrappedObject().getParameter().connectT(0, add585);      // minmax44 -> add585::Value
+		minmax45.getWrappedObject().getParameter().connectT(0, add586);      // minmax45 -> add586::Value
+		pma34.getWrappedObject().getParameter().connectT(0, minmax38);       // pma34 -> minmax38::Value
+		pma34.getWrappedObject().getParameter().connectT(1, minmax39);       // pma34 -> minmax39::Value
+		pma34.getWrappedObject().getParameter().connectT(2, minmax40);       // pma34 -> minmax40::Value
+		pma34.getWrappedObject().getParameter().connectT(3, minmax41);       // pma34 -> minmax41::Value
+		pma34.getWrappedObject().getParameter().connectT(4, minmax42);       // pma34 -> minmax42::Value
+		pma34.getWrappedObject().getParameter().connectT(5, minmax43);       // pma34 -> minmax43::Value
+		pma34.getWrappedObject().getParameter().connectT(6, minmax44);       // pma34 -> minmax44::Value
+		pma34.getWrappedObject().getParameter().connectT(7, minmax45);       // pma34 -> minmax45::Minimum
+		pma34.getWrappedObject().getParameter().connectT(8, add578);         // pma34 -> add578::Value
+		peak47.getParameter().connectT(0, pma34);                            // peak47 -> pma34::Value
 		auto& sliderbank_p = sliderbank.getWrappedObject().getParameter();
 		sliderbank_p.getParameterT(0).connectT(0, gain7);  // sliderbank -> gain7::Gain
 		sliderbank_p.getParameterT(1).connectT(0, gain91); // sliderbank -> gain91::Gain
@@ -12459,16 +12430,6 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		
 		; // add22::Value is automated
 		
-		ahdsr3.setParameterT(0, 0.);  // envelope::ahdsr::Attack
-		ahdsr3.setParameterT(1, 0.);  // envelope::ahdsr::AttackLevel
-		ahdsr3.setParameterT(2, 20.); // envelope::ahdsr::Hold
-		ahdsr3.setParameterT(3, 0.);  // envelope::ahdsr::Decay
-		ahdsr3.setParameterT(4, 1.);  // envelope::ahdsr::Sustain
-		;                             // ahdsr3::Release is automated
-		ahdsr3.setParameterT(6, 0.5); // envelope::ahdsr::AttackCurve
-		ahdsr3.setParameterT(7, 0.);  // envelope::ahdsr::Retrigger
-		ahdsr3.setParameterT(8, 0.);  // envelope::ahdsr::Gate
-		
 		; // branch17::Index is automated
 		
 		;                                   // tempo_sync5::Tempo is automated
@@ -12515,16 +12476,6 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		clear18.setParameterT(0, 0.); // math::clear::Value
 		
 		; // add102::Value is automated
-		
-		ahdsr7.setParameterT(0, 0.);  // envelope::ahdsr::Attack
-		ahdsr7.setParameterT(1, 0.);  // envelope::ahdsr::AttackLevel
-		ahdsr7.setParameterT(2, 20.); // envelope::ahdsr::Hold
-		ahdsr7.setParameterT(3, 0.);  // envelope::ahdsr::Decay
-		ahdsr7.setParameterT(4, 1.);  // envelope::ahdsr::Sustain
-		;                             // ahdsr7::Release is automated
-		ahdsr7.setParameterT(6, 0.5); // envelope::ahdsr::AttackCurve
-		ahdsr7.setParameterT(7, 0.);  // envelope::ahdsr::Retrigger
-		ahdsr7.setParameterT(8, 0.);  // envelope::ahdsr::Gate
 		
 		;                                   // tempo_sync6::Tempo is automated
 		;                                   // tempo_sync6::Multiplier is automated
@@ -13697,9 +13648,6 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		this->getT(1).getT(0).getT(0).getT(2).getT(2).                                           // osc1_impl::cable_table1_t<NV>
         getT(0).getT(0).getT(0).getT(3).getT(1).
         getT(1).setExternalData(b, index);
-		this->getT(1).getT(0).getT(0).getT(2).getT(2).                                           // osc1_impl::ahdsr3_t<NV>
-        getT(0).getT(0).getT(0).getT(3).getT(1).
-        getT(4).setExternalData(b, index);
 		this->getT(1).getT(0).getT(0).getT(2).                                                   // osc1_impl::peak7_t<NV>
         getT(2).getT(0).getT(0).getT(0).
         getT(4).setExternalData(b, index);
@@ -13718,9 +13666,6 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		this->getT(1).getT(0).getT(0).getT(2).getT(2).                                           // osc1_impl::cable_table8_t<NV>
         getT(0).getT(0).getT(1).getT(3).getT(1).
         getT(1).setExternalData(b, index);
-		this->getT(1).getT(0).getT(0).getT(2).getT(2).                                           // osc1_impl::ahdsr7_t<NV>
-        getT(0).getT(0).getT(1).getT(3).getT(1).
-        getT(4).setExternalData(b, index);
 		this->getT(1).getT(0).getT(0).getT(2).                                                   // osc1_impl::peak16_t<NV>
         getT(2).getT(0).getT(0).getT(1).
         getT(4).setExternalData(b, index);
@@ -13800,7 +13745,7 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		this->getT(1).getT(0).getT(0).getT(3).getT(3).                           // osc1_impl::cable_table4_t<NV>
         getT(1).getT(0).getT(0).getT(6).getT(1).
         getT(0).setExternalData(b, index);
-		this->getT(1).getT(0).getT(0).getT(3).getT(5).setExternalData(b, index); // osc1_impl::peak33_t<NV>
+		this->getT(1).getT(0).getT(0).getT(3).getT(4).setExternalData(b, index); // osc1_impl::peak33_t<NV>
 		this->getT(3).setExternalData(b, index);                                 // osc1_impl::oscilloscope_t
 	}
 };
