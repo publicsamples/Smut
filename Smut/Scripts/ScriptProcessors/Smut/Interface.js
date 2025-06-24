@@ -12,29 +12,39 @@ include("KnobLAF3.js");
 include("KnobLAF4.js");
 include("Rect.js");
 
-//include("Scopes.js");
+include("Scopes.js");
 include("Loading.js");
 
 include("V1.js");
 
 
-inline function onScriptButton1Control(component, value)
-{
-	if (value == 0){
 
-	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 8);
-//	Engine.setMaximumBlockSize(256);
-	}
-	
+
+inline function onHiQControl(component, value)
+{
+
 	if (value == 1){
 		
-	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 1);
-///	Engine.setMaximumBlockSize(16);
+	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 8);
+	Engine.setMaximumBlockSize(256);
 	}
+	
+	if (value == 2){
+			
+	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 8);
+	Engine.setMaximumBlockSize(64);
+		}
+	
+	if (value == 3){
+			
+	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 8);
+	Engine.setMaximumBlockSize(16);
+		}
+	
 	
 };
 
-Content.getComponent("ScriptButton1").setControlCallback(onScriptButton1Control);
+Content.getComponent("HiQ").setControlCallback(onHiQControl);
 
 
 
@@ -81,9 +91,6 @@ ModPages[1] = Content.getComponent("lfo2");
 ModPages[2] = Content.getComponent("lfo3");
 ModPages[3] = Content.getComponent("lfo4");
 ModPages[4] = Content.getComponent("Env1");
-ModPages[5] = Content.getComponent("Env2");
-ModPages[6] = Content.getComponent("Xfade");
-ModPages[7] = Content.getComponent("SEQ");
 
 
 inline function onModSelectControl(component, value)
@@ -98,13 +105,11 @@ Content.getComponent("ModSelect").setControlCallback(onModSelectControl);
 
 //LFO1
 
-const var LFO1 = Synth.getModulator("LFO1");
+const var LFO1 = Synth.getEffect("LFO1");
 
 const var LfoShpPanel1 = Content.getComponent("LfoShapeVis1");
 const var LfoTable1 = Content.getComponent("LfoTable1");
 const var LfoSliderPack1 = Content.getComponent("LfoSliderPack1");
-const var MiniVis1 = Content.getComponent("MiniVis1");
-
 
 inline function onLfoShape1Control(component, value)
 {
@@ -116,7 +121,7 @@ inline function onLfoShape1Control(component, value)
 		LfoShpPanel1.showControl(1);
 		LfoTable1.showControl(0);
 		LfoSliderPack1.showControl(0);
-		MiniVis1.showControl(0);
+
 
 	}
 	if (value == 2){
@@ -124,7 +129,7 @@ inline function onLfoShape1Control(component, value)
 		LfoShpPanel1.showControl(1);
 		LfoTable1.showControl(0);
 		LfoSliderPack1.showControl(0);
-		MiniVis1.showControl(0);
+
         }
         
       if (value == 3){
@@ -132,7 +137,7 @@ inline function onLfoShape1Control(component, value)
       	LfoShpPanel1.showControl(1);
       	LfoTable1.showControl(0);
       	LfoSliderPack1.showControl(0);
-      	MiniVis1.showControl(0);
+
               }
     
     if (value == 4){
@@ -140,7 +145,7 @@ inline function onLfoShape1Control(component, value)
     	LfoShpPanel1.showControl(1);
     	LfoTable1.showControl(0);
     	LfoSliderPack1.showControl(0);
-    	MiniVis1.showControl(0);
+
             }          
  
 		if (value == 5){
@@ -149,7 +154,7 @@ inline function onLfoShape1Control(component, value)
 			LfoShpPanel1.showControl(1);
 			LfoTable1.showControl(0);
 			LfoSliderPack1.showControl(0);
-			MiniVis1.showControl(0);
+
 		        }
 		        
 	if (value == 6){
@@ -158,7 +163,7 @@ inline function onLfoShape1Control(component, value)
 		LfoShpPanel1.showControl(0);
 		LfoTable1.showControl(1);
 		LfoSliderPack1.showControl(0);
-		MiniVis1.showControl(1);
+	
 	        }	        
 	 
 	 	if (value == 7){
@@ -166,7 +171,7 @@ inline function onLfoShape1Control(component, value)
 	 		LfoShpPanel1.showControl(0);
 	 		LfoTable1.showControl(0);
 	 		LfoSliderPack1.showControl(1);
-	 		MiniVis1.showControl(1);
+
 	 	        }	        
 	 	     
      
@@ -176,13 +181,11 @@ Content.getComponent("LfoShape1").setControlCallback(onLfoShape1Control);
 
 //LFO2
 
-const var LFO2 = Synth.getModulator("LFO2");
+const var LFO2 = Synth.getEffect("LFO2");
 
 const var LfoShpPanel2 = Content.getComponent("LfoShapeVis2");
 const var LfoTable2 = Content.getComponent("LfoTable2");
 const var LfoSliderPack2 = Content.getComponent("LfoSliderPack2");
-const var MiniVis2 = Content.getComponent("MiniVis2");
-
 
 inline function onLfoShape2Control(component, value)
 {
@@ -194,7 +197,7 @@ inline function onLfoShape2Control(component, value)
 		LfoShpPanel2.showControl(1);
 		LfoTable2.showControl(0);
 		LfoSliderPack2.showControl(0);
-		MiniVis2.showControl(0);
+	
 
 	}
 	if (value == 2){
@@ -202,7 +205,7 @@ inline function onLfoShape2Control(component, value)
 		LfoShpPanel2.showControl(1);
 		LfoTable2.showControl(0);
 		LfoSliderPack2.showControl(0);
-		MiniVis2.showControl(0);
+
         }
         
       if (value == 3){
@@ -210,7 +213,7 @@ inline function onLfoShape2Control(component, value)
       	LfoShpPanel2.showControl(1);
       	LfoTable2.showControl(0);
       	LfoSliderPack2.showControl(0);
-      	MiniVis2.showControl(0);
+
               }
     
     if (value == 4){
@@ -218,7 +221,7 @@ inline function onLfoShape2Control(component, value)
     	LfoShpPanel2.showControl(1);
     	LfoTable2.showControl(0);
     	LfoSliderPack2.showControl(0);
-    	MiniVis2.showControl(0);
+    
             }          
  
 		if (value == 5){
@@ -227,7 +230,7 @@ inline function onLfoShape2Control(component, value)
 			LfoShpPanel2.showControl(1);
 			LfoTable2.showControl(0);
 			LfoSliderPack2.showControl(0);
-			MiniVis2.showControl(0);
+	
 		        }
 		        
 	if (value == 6){
@@ -236,7 +239,7 @@ inline function onLfoShape2Control(component, value)
 		LfoShpPanel2.showControl(0);
 		LfoTable2.showControl(1);
 		LfoSliderPack2.showControl(0);
-		MiniVis2.showControl(1);
+	
 	        }	        
 	 
 	 	if (value == 7){
@@ -244,7 +247,7 @@ inline function onLfoShape2Control(component, value)
 	 		LfoShpPanel2.showControl(0);
 	 		LfoTable2.showControl(0);
 	 		LfoSliderPack2.showControl(1);
-	 		MiniVis2.showControl(1);
+
 	 	        }	        
 	 	     
      
@@ -254,7 +257,7 @@ Content.getComponent("LfoShape2").setControlCallback(onLfoShape2Control);
 
 //LFO3
 
-const var LFO3 = Synth.getModulator("LFO3");
+const var LFO3 = Synth.getEffect("LFO3");
 
 const var LfoShpPanel3 = Content.getComponent("LfoShapeVis3");
 const var LfoTable3 = Content.getComponent("LfoTable3");
@@ -272,7 +275,7 @@ inline function onLfoShape3Control(component, value)
 		LfoShpPanel3.showControl(1);
 		LfoTable3.showControl(0);
 		LfoSliderPack3.showControl(0);
-		MiniVis3.showControl(0);
+
 
 	}
 	if (value == 2){
@@ -280,7 +283,7 @@ inline function onLfoShape3Control(component, value)
 		LfoShpPanel3.showControl(1);
 		LfoTable3.showControl(0);
 		LfoSliderPack3.showControl(0);
-		MiniVis3.showControl(0);
+
         }
         
       if (value == 3){
@@ -288,7 +291,7 @@ inline function onLfoShape3Control(component, value)
       	LfoShpPanel3.showControl(1);
       	LfoTable3.showControl(0);
       	LfoSliderPack3.showControl(0);
-      	MiniVis3.showControl(0);
+      
               }
     
     if (value == 4){
@@ -296,7 +299,7 @@ inline function onLfoShape3Control(component, value)
     	LfoShpPanel3.showControl(1);
     	LfoTable3.showControl(0);
     	LfoSliderPack3.showControl(0);
-    	MiniVis3.showControl(0);
+    
             }          
  
 		if (value == 5){
@@ -305,7 +308,7 @@ inline function onLfoShape3Control(component, value)
 			LfoShpPanel3.showControl(1);
 			LfoTable3.showControl(0);
 			LfoSliderPack3.showControl(0);
-			MiniVis3.showControl(0);
+
 		        }
 		        
 	if (value == 6){
@@ -314,7 +317,7 @@ inline function onLfoShape3Control(component, value)
 		LfoShpPanel3.showControl(0);
 		LfoTable3.showControl(1);
 		LfoSliderPack3.showControl(0);
-		MiniVis3.showControl(1);
+
 	        }	        
 	 
 	 	if (value == 7){
@@ -322,7 +325,7 @@ inline function onLfoShape3Control(component, value)
 	 		LfoShpPanel3.showControl(0);
 	 		LfoTable3.showControl(0);
 	 		LfoSliderPack3.showControl(1);
-	 		MiniVis3.showControl(1);
+
 	 	        }	        
 	 	     
      
@@ -330,7 +333,83 @@ inline function onLfoShape3Control(component, value)
 
 Content.getComponent("LfoShape3").setControlCallback(onLfoShape3Control);
 
-//LFO4
+//LFO6
+
+const var LFO4 = Synth.getEffect("LFO4");
+
+const var LfoShpPanel4 = Content.getComponent("LfoShapeVis4");
+const var LfoTable4 = Content.getComponent("LfoTable4");
+const var LfoSliderPack4 = Content.getComponent("LfoSliderPack4");
+
+
+
+inline function onLfoShape4Control(component, value)
+{
+	
+	LFO4.setAttribute(LFO4.Shape, value);
+
+	if (value == 1){
+	
+		LfoShpPanel4.showControl(1);
+		LfoTable4.showControl(0);
+		LfoSliderPack4.showControl(0);
+	
+
+	}
+	if (value == 2){
+
+		LfoShpPanel4.showControl(1);
+		LfoTable4.showControl(0);
+		LfoSliderPack4.showControl(0);
+	
+        }
+        
+      if (value == 3){
+      
+      	LfoShpPanel4.showControl(1);
+      	LfoTable4.showControl(0);
+      	LfoSliderPack4.showControl(0);
+     
+              }
+    
+    if (value == 4){
+
+    	LfoShpPanel4.showControl(1);
+    	LfoTable4.showControl(0);
+    	LfoSliderPack4.showControl(0);
+    
+            }          
+ 
+		if (value == 5){
+		
+
+			LfoShpPanel4.showControl(1);
+			LfoTable4.showControl(0);
+			LfoSliderPack4.showControl(0);
+		
+		        }
+		        
+	if (value == 6){
+	
+
+		LfoShpPanel4.showControl(0);
+		LfoTable4.showControl(1);
+		LfoSliderPack4.showControl(0);
+	
+	        }	        
+	 
+	 	if (value == 7){
+
+	 		LfoShpPanel4.showControl(0);
+	 		LfoTable4.showControl(0);
+	 		LfoSliderPack4.showControl(1);
+	 	
+	 	        }	        
+	 	     
+     
+};
+
+Content.getComponent("LfoShape4").setControlCallback(onLfoShape4Control);
 
 
 
@@ -349,9 +428,17 @@ LfoPanels4[4] = Content.getComponent("AdjVis4");
 const var PresetPanel = Content.getComponent("PresetPanel");
 
 
+inline function onClosePresetControl(component, value)
+{
+   PresetPanel.showControl(0);
+};
+
+Content.getComponent("ClosePreset").setControlCallback(onClosePresetControl);
+
+
 inline function onPresetsControl(component, value)
 {
-	PresetPanel.showControl(value-1);
+	PresetPanel.showControl(1);
 };
 
 Content.getComponent("Presets").setControlCallback(onPresetsControl);
@@ -413,7 +500,7 @@ const var XfCont = [Content.getComponent("Xfader"),
 
 inline function onFadeModeControl(component, value)
 {
-	Osc1.setAttribute(Osc1.Shape, value);
+	Osc1.setAttribute(Osc1.FileXrossFadeMode, value);
 	
 		if (value == 4){
 			
@@ -434,6 +521,26 @@ inline function onFadeModeControl(component, value)
 };
 
 Content.getComponent("FadeMode").setControlCallback(onFadeModeControl);
+
+const var EnvTable1 = Content.getComponent("EnvTable1");
+
+inline function onEnvMode1Control(component, value)
+{
+	Osc1.setAttribute(Osc1.EnvType1, value);
+	EnvTable1.showControl(value);
+};
+
+Content.getComponent("EnvMode1").setControlCallback(onEnvMode1Control);
+
+const var EnvTable2 = Content.getComponent("EnvTable2");
+
+inline function onEnvMode2Control(component, value)
+{
+	Osc1.setAttribute(Osc1.EnvType2, value);
+	EnvTable2.showControl(value);
+};
+
+Content.getComponent("EnvMode2").setControlCallback(onEnvMode2Control);
 
 
 

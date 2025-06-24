@@ -46,6 +46,7 @@ struct Factory: public scriptnode::dll::StaticLibraryHostFactory
 		registerDataNode<project::lfo3_networkdata>();
 		registerDataNode<project::lfo4_networkdata>();
 		registerDataNode<project::Lfos_networkdata>();
+		registerDataNode<project::ModConnect_networkdata>();
 		registerDataNode<project::SuperDetune_networkdata>();
 		registerDataNode<project::VcaAdsr_networkdata>();
 	}

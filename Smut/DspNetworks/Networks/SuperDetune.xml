@@ -12,6 +12,7 @@
         <ModulationTargets>
           <Connection NodeId="shfiter" ParameterId="shift (note)"/>
           <Connection NodeId="jpanner" ParameterId="Pan"/>
+          <Connection NodeId="phase_delay" ParameterId="Frequency"/>
         </ModulationTargets>
         <Parameters>
           <Parameter MinValue="1.0" MaxValue="16.0" StepSize="1.0" ID="NumClones"
@@ -39,6 +40,13 @@
                              Value="4780.0" DefaultValue="10.0"/>
                 </Parameters>
               </Node>
+              <Node ID="phase_delay" FactoryPath="fx.phase_delay" Bypassed="0" Name="phase_delay">
+                <Parameters>
+                  <Parameter MinValue="20.0" MaxValue="20000.0" StepSize="0.1000000014901161"
+                             SkewFactor="0.2299045622348785" ID="Frequency" DefaultValue="400.0"
+                             Automated="1"/>
+                </Parameters>
+              </Node>
               <Node ID="jpanner" FactoryPath="jdsp.jpanner" Bypassed="0" Name="jpanner">
                 <Parameters>
                   <Parameter MinValue="-1.0" MaxValue="1.0" ID="Pan" Automated="1"/>
@@ -62,23 +70,29 @@
           <Node ID="clone_child1" FactoryPath="container.chain" Bypassed="0"
                 Name="clone_child" NodeColour="4287927444">
             <Nodes>
-              <Node ID="shfiter22" FactoryPath="project.shfiter" Bypassed="0" Name="shfiter">
+              <Node ID="shfiter1" FactoryPath="project.shfiter" Bypassed="0" Name="shfiter">
                 <Parameters>
                   <Parameter MinValue="-1.0" MaxValue="1.0" StepSize="0.1000000014901161"
-                             ID="shift (note)" Value="0.0"/>
+                             ID="shift (note)"/>
                   <Parameter MinValue="50.0" MaxValue="10000.0" StepSize="1.0" ID="window (samples)"
                              Value="5894.0" DefaultValue="1000.0"/>
                   <Parameter MinValue="1.0" MaxValue="10000.0" StepSize="1.0" ID="xfade (samples)"
                              Value="4780.0" DefaultValue="10.0"/>
                 </Parameters>
               </Node>
-              <Node ID="jpanner15" FactoryPath="jdsp.jpanner" Bypassed="0" Name="jpanner">
+              <Node ID="phase_delay1" FactoryPath="fx.phase_delay" Bypassed="0" Name="phase_delay">
                 <Parameters>
-                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="Pan" Value="0.0"/>
+                  <Parameter MinValue="20.0" MaxValue="20000.0" StepSize="0.1000000014901161"
+                             SkewFactor="0.2299045622348785" ID="Frequency" Value="400.0"/>
+                </Parameters>
+              </Node>
+              <Node ID="jpanner1" FactoryPath="jdsp.jpanner" Bypassed="0" Name="jpanner">
+                <Parameters>
+                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="Pan"/>
                   <Parameter MinValue="0.0" MaxValue="6.0" StepSize="1.0" ID="Rule" Value="1.0"/>
                 </Parameters>
               </Node>
-              <Node ID="gain1" FactoryPath="core.gain" Bypassed="0" Name="gain">
+              <Node ID="gain8" FactoryPath="core.gain" Bypassed="0" Name="gain">
                 <Parameters>
                   <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
                              SkewFactor="5.422270774841309" ID="Gain" Value="-11.99999868869783"
@@ -95,23 +109,29 @@
           <Node ID="clone_child2" FactoryPath="container.chain" Bypassed="0"
                 Name="clone_child" NodeColour="4287927444">
             <Nodes>
-              <Node ID="shfiter23" FactoryPath="project.shfiter" Bypassed="0" Name="shfiter">
+              <Node ID="shfiter2" FactoryPath="project.shfiter" Bypassed="0" Name="shfiter">
                 <Parameters>
                   <Parameter MinValue="-1.0" MaxValue="1.0" StepSize="0.1000000014901161"
-                             ID="shift (note)" Value="0.0"/>
+                             ID="shift (note)"/>
                   <Parameter MinValue="50.0" MaxValue="10000.0" StepSize="1.0" ID="window (samples)"
                              Value="5894.0" DefaultValue="1000.0"/>
                   <Parameter MinValue="1.0" MaxValue="10000.0" StepSize="1.0" ID="xfade (samples)"
                              Value="4780.0" DefaultValue="10.0"/>
                 </Parameters>
               </Node>
-              <Node ID="jpanner16" FactoryPath="jdsp.jpanner" Bypassed="0" Name="jpanner">
+              <Node ID="phase_delay2" FactoryPath="fx.phase_delay" Bypassed="0" Name="phase_delay">
                 <Parameters>
-                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="Pan" Value="0.0"/>
+                  <Parameter MinValue="20.0" MaxValue="20000.0" StepSize="0.1000000014901161"
+                             SkewFactor="0.2299045622348785" ID="Frequency" Value="400.0"/>
+                </Parameters>
+              </Node>
+              <Node ID="jpanner2" FactoryPath="jdsp.jpanner" Bypassed="0" Name="jpanner">
+                <Parameters>
+                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="Pan"/>
                   <Parameter MinValue="0.0" MaxValue="6.0" StepSize="1.0" ID="Rule" Value="1.0"/>
                 </Parameters>
               </Node>
-              <Node ID="gain2" FactoryPath="core.gain" Bypassed="0" Name="gain">
+              <Node ID="gain9" FactoryPath="core.gain" Bypassed="0" Name="gain">
                 <Parameters>
                   <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
                              SkewFactor="5.422270774841309" ID="Gain" Value="-11.99999868869783"
@@ -128,23 +148,29 @@
           <Node ID="clone_child3" FactoryPath="container.chain" Bypassed="0"
                 Name="clone_child" NodeColour="4287927444">
             <Nodes>
-              <Node ID="shfiter24" FactoryPath="project.shfiter" Bypassed="0" Name="shfiter">
+              <Node ID="shfiter3" FactoryPath="project.shfiter" Bypassed="0" Name="shfiter">
                 <Parameters>
                   <Parameter MinValue="-1.0" MaxValue="1.0" StepSize="0.1000000014901161"
-                             ID="shift (note)" Value="0.0"/>
+                             ID="shift (note)"/>
                   <Parameter MinValue="50.0" MaxValue="10000.0" StepSize="1.0" ID="window (samples)"
                              Value="5894.0" DefaultValue="1000.0"/>
                   <Parameter MinValue="1.0" MaxValue="10000.0" StepSize="1.0" ID="xfade (samples)"
                              Value="4780.0" DefaultValue="10.0"/>
                 </Parameters>
               </Node>
-              <Node ID="jpanner17" FactoryPath="jdsp.jpanner" Bypassed="0" Name="jpanner">
+              <Node ID="phase_delay3" FactoryPath="fx.phase_delay" Bypassed="0" Name="phase_delay">
                 <Parameters>
-                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="Pan" Value="0.0"/>
+                  <Parameter MinValue="20.0" MaxValue="20000.0" StepSize="0.1000000014901161"
+                             SkewFactor="0.2299045622348785" ID="Frequency" Value="400.0"/>
+                </Parameters>
+              </Node>
+              <Node ID="jpanner3" FactoryPath="jdsp.jpanner" Bypassed="0" Name="jpanner">
+                <Parameters>
+                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="Pan"/>
                   <Parameter MinValue="0.0" MaxValue="6.0" StepSize="1.0" ID="Rule" Value="1.0"/>
                 </Parameters>
               </Node>
-              <Node ID="gain3" FactoryPath="core.gain" Bypassed="0" Name="gain">
+              <Node ID="gain10" FactoryPath="core.gain" Bypassed="0" Name="gain">
                 <Parameters>
                   <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
                              SkewFactor="5.422270774841309" ID="Gain" Value="-11.99999868869783"
@@ -161,23 +187,29 @@
           <Node ID="clone_child4" FactoryPath="container.chain" Bypassed="0"
                 Name="clone_child" NodeColour="4287927444">
             <Nodes>
-              <Node ID="shfiter25" FactoryPath="project.shfiter" Bypassed="0" Name="shfiter">
+              <Node ID="shfiter4" FactoryPath="project.shfiter" Bypassed="0" Name="shfiter">
                 <Parameters>
                   <Parameter MinValue="-1.0" MaxValue="1.0" StepSize="0.1000000014901161"
-                             ID="shift (note)" Value="0.0"/>
+                             ID="shift (note)"/>
                   <Parameter MinValue="50.0" MaxValue="10000.0" StepSize="1.0" ID="window (samples)"
                              Value="5894.0" DefaultValue="1000.0"/>
                   <Parameter MinValue="1.0" MaxValue="10000.0" StepSize="1.0" ID="xfade (samples)"
                              Value="4780.0" DefaultValue="10.0"/>
                 </Parameters>
               </Node>
-              <Node ID="jpanner18" FactoryPath="jdsp.jpanner" Bypassed="0" Name="jpanner">
+              <Node ID="phase_delay4" FactoryPath="fx.phase_delay" Bypassed="0" Name="phase_delay">
                 <Parameters>
-                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="Pan" Value="0.0"/>
+                  <Parameter MinValue="20.0" MaxValue="20000.0" StepSize="0.1000000014901161"
+                             SkewFactor="0.2299045622348785" ID="Frequency" Value="400.0"/>
+                </Parameters>
+              </Node>
+              <Node ID="jpanner4" FactoryPath="jdsp.jpanner" Bypassed="0" Name="jpanner">
+                <Parameters>
+                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="Pan"/>
                   <Parameter MinValue="0.0" MaxValue="6.0" StepSize="1.0" ID="Rule" Value="1.0"/>
                 </Parameters>
               </Node>
-              <Node ID="gain4" FactoryPath="core.gain" Bypassed="0" Name="gain">
+              <Node ID="gain11" FactoryPath="core.gain" Bypassed="0" Name="gain">
                 <Parameters>
                   <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
                              SkewFactor="5.422270774841309" ID="Gain" Value="-11.99999868869783"
@@ -194,23 +226,29 @@
           <Node ID="clone_child5" FactoryPath="container.chain" Bypassed="0"
                 Name="clone_child" NodeColour="4287927444">
             <Nodes>
-              <Node ID="shfiter26" FactoryPath="project.shfiter" Bypassed="0" Name="shfiter">
+              <Node ID="shfiter5" FactoryPath="project.shfiter" Bypassed="0" Name="shfiter">
                 <Parameters>
                   <Parameter MinValue="-1.0" MaxValue="1.0" StepSize="0.1000000014901161"
-                             ID="shift (note)" Value="0.0"/>
+                             ID="shift (note)"/>
                   <Parameter MinValue="50.0" MaxValue="10000.0" StepSize="1.0" ID="window (samples)"
                              Value="5894.0" DefaultValue="1000.0"/>
                   <Parameter MinValue="1.0" MaxValue="10000.0" StepSize="1.0" ID="xfade (samples)"
                              Value="4780.0" DefaultValue="10.0"/>
                 </Parameters>
               </Node>
-              <Node ID="jpanner19" FactoryPath="jdsp.jpanner" Bypassed="0" Name="jpanner">
+              <Node ID="phase_delay5" FactoryPath="fx.phase_delay" Bypassed="0" Name="phase_delay">
                 <Parameters>
-                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="Pan" Value="0.0"/>
+                  <Parameter MinValue="20.0" MaxValue="20000.0" StepSize="0.1000000014901161"
+                             SkewFactor="0.2299045622348785" ID="Frequency" Value="400.0"/>
+                </Parameters>
+              </Node>
+              <Node ID="jpanner5" FactoryPath="jdsp.jpanner" Bypassed="0" Name="jpanner">
+                <Parameters>
+                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="Pan"/>
                   <Parameter MinValue="0.0" MaxValue="6.0" StepSize="1.0" ID="Rule" Value="1.0"/>
                 </Parameters>
               </Node>
-              <Node ID="gain5" FactoryPath="core.gain" Bypassed="0" Name="gain">
+              <Node ID="gain12" FactoryPath="core.gain" Bypassed="0" Name="gain">
                 <Parameters>
                   <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
                              SkewFactor="5.422270774841309" ID="Gain" Value="-11.99999868869783"
@@ -227,23 +265,29 @@
           <Node ID="clone_child6" FactoryPath="container.chain" Bypassed="0"
                 Name="clone_child" NodeColour="4287927444">
             <Nodes>
-              <Node ID="shfiter27" FactoryPath="project.shfiter" Bypassed="0" Name="shfiter">
+              <Node ID="shfiter6" FactoryPath="project.shfiter" Bypassed="0" Name="shfiter">
                 <Parameters>
                   <Parameter MinValue="-1.0" MaxValue="1.0" StepSize="0.1000000014901161"
-                             ID="shift (note)" Value="0.0"/>
+                             ID="shift (note)"/>
                   <Parameter MinValue="50.0" MaxValue="10000.0" StepSize="1.0" ID="window (samples)"
                              Value="5894.0" DefaultValue="1000.0"/>
                   <Parameter MinValue="1.0" MaxValue="10000.0" StepSize="1.0" ID="xfade (samples)"
                              Value="4780.0" DefaultValue="10.0"/>
                 </Parameters>
               </Node>
-              <Node ID="jpanner20" FactoryPath="jdsp.jpanner" Bypassed="0" Name="jpanner">
+              <Node ID="phase_delay6" FactoryPath="fx.phase_delay" Bypassed="0" Name="phase_delay">
                 <Parameters>
-                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="Pan" Value="0.0"/>
+                  <Parameter MinValue="20.0" MaxValue="20000.0" StepSize="0.1000000014901161"
+                             SkewFactor="0.2299045622348785" ID="Frequency" Value="400.0"/>
+                </Parameters>
+              </Node>
+              <Node ID="jpanner6" FactoryPath="jdsp.jpanner" Bypassed="0" Name="jpanner">
+                <Parameters>
+                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="Pan"/>
                   <Parameter MinValue="0.0" MaxValue="6.0" StepSize="1.0" ID="Rule" Value="1.0"/>
                 </Parameters>
               </Node>
-              <Node ID="gain6" FactoryPath="core.gain" Bypassed="0" Name="gain">
+              <Node ID="gain13" FactoryPath="core.gain" Bypassed="0" Name="gain">
                 <Parameters>
                   <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
                              SkewFactor="5.422270774841309" ID="Gain" Value="-11.99999868869783"
@@ -260,23 +304,29 @@
           <Node ID="clone_child7" FactoryPath="container.chain" Bypassed="0"
                 Name="clone_child" NodeColour="4287927444">
             <Nodes>
-              <Node ID="shfiter28" FactoryPath="project.shfiter" Bypassed="0" Name="shfiter">
+              <Node ID="shfiter7" FactoryPath="project.shfiter" Bypassed="0" Name="shfiter">
                 <Parameters>
                   <Parameter MinValue="-1.0" MaxValue="1.0" StepSize="0.1000000014901161"
-                             ID="shift (note)" Value="0.0"/>
+                             ID="shift (note)"/>
                   <Parameter MinValue="50.0" MaxValue="10000.0" StepSize="1.0" ID="window (samples)"
                              Value="5894.0" DefaultValue="1000.0"/>
                   <Parameter MinValue="1.0" MaxValue="10000.0" StepSize="1.0" ID="xfade (samples)"
                              Value="4780.0" DefaultValue="10.0"/>
                 </Parameters>
               </Node>
-              <Node ID="jpanner21" FactoryPath="jdsp.jpanner" Bypassed="0" Name="jpanner">
+              <Node ID="phase_delay7" FactoryPath="fx.phase_delay" Bypassed="0" Name="phase_delay">
                 <Parameters>
-                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="Pan" Value="0.0"/>
+                  <Parameter MinValue="20.0" MaxValue="20000.0" StepSize="0.1000000014901161"
+                             SkewFactor="0.2299045622348785" ID="Frequency" Value="400.0"/>
+                </Parameters>
+              </Node>
+              <Node ID="jpanner7" FactoryPath="jdsp.jpanner" Bypassed="0" Name="jpanner">
+                <Parameters>
+                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="Pan"/>
                   <Parameter MinValue="0.0" MaxValue="6.0" StepSize="1.0" ID="Rule" Value="1.0"/>
                 </Parameters>
               </Node>
-              <Node ID="gain7" FactoryPath="core.gain" Bypassed="0" Name="gain">
+              <Node ID="gain14" FactoryPath="core.gain" Bypassed="0" Name="gain">
                 <Parameters>
                   <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
                              SkewFactor="5.422270774841309" ID="Gain" Value="-11.99999868869783"
@@ -300,8 +350,7 @@
       </Node>
     </Nodes>
     <Parameters>
-      <Parameter ID="DET" MinValue="-1.0" MaxValue="1.0" Value="0.119999997317791"
-                 DefaultValue="1.0">
+      <Parameter ID="DET" MinValue="-1.0" MaxValue="1.0" Value="0.0" DefaultValue="1.0">
         <Connections>
           <Connection NodeId="clone_cable" ParameterId="Value"/>
         </Connections>

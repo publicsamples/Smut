@@ -29,6 +29,7 @@
 #include "lfo3_networkdata.h"
 #include "lfo4_networkdata.h"
 #include "Lfos_networkdata.h"
+#include "ModConnect_networkdata.h"
 #include "osc1.h"
 #include "SuperDetune_networkdata.h"
 #include "VcaAdsr_networkdata.h"
