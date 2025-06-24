@@ -33,7 +33,7 @@ laf.registerFunction("drawPresetBrowserListItem", function(g, obj)
 {
     if(obj.selected)
     {
-        g.setColour(0x22FFFFFF);
+        g.setColour(0x6DD3ADAD);
         g.fillRoundedRectangle(obj.area, 5.0);
         
        g.setFont("Montserrat", 16.0);

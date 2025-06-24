@@ -103,7 +103,7 @@ for (file in AudioList) {
   
     }
 
-   FirstSp.set("items", foldersV1.join("\n"));
+
    FirstCB.set("items", foldersV1.join("\n"));
 }
 
@@ -111,8 +111,6 @@ for (file in AudioList) {
 
 // Run the sorting function
 sortAudioFilesListV1();
-
-// Callback for GenreV1 selection
 inline function onFirstCBControl(component, value) {
     if (value >= 0) {
         // Get the selected Genre
@@ -214,8 +212,6 @@ inline function onThirdCBControl(component, value)
 Content.getComponent("ThirdCB").setControlCallback(onThirdCBControl);
 
 
-
-
 inline function onFirstSpControl(component, value)
 {
 	FirstCB.setValue(value+1);
@@ -310,6 +306,7 @@ inline function onFirstCB1Control(component, value) {
         
      //   FirstCB1.setValue(value);
 		SecondCB1.setValue(value);
+		SecondCB1.changed();
          
     }
 }
@@ -338,6 +335,7 @@ inline function onSecondCB1Control(component, value) {
     }
     
     SecondCB1.setValue(value);
+    SecondCB1.changed();
 }
 
 Content.getComponent("SecondCB1").setControlCallback(onSecondCB1Control);
@@ -483,6 +481,7 @@ inline function onFirstCB2Control(component, value) {
         
      //   FirstCB2.setValue(value);
 		SecondCB2.setValue(value);
+		SecondCB2.changed();
          
     }
 }
@@ -511,6 +510,7 @@ inline function onSecondCB2Control(component, value) {
     }
     
     SecondCB2.setValue(value);
+    SecondCB2.changed();
 }
 
 Content.getComponent("SecondCB2").setControlCallback(onSecondCB2Control);
@@ -656,6 +656,7 @@ inline function onFirstCB3Control(component, value) {
         
      //   FirstCB3.setValue(value);
 		SecondCB3.setValue(value);
+		SecondCB3.changed();
          
     }
 }
@@ -684,6 +685,7 @@ inline function onSecondCB3Control(component, value) {
     }
     
     SecondCB3.setValue(value);
+    SecondCB3.changed();
 }
 
 Content.getComponent("SecondCB3").setControlCallback(onSecondCB3Control);

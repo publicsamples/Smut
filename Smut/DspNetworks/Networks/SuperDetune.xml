@@ -350,7 +350,8 @@
       </Node>
     </Nodes>
     <Parameters>
-      <Parameter ID="DET" MinValue="-1.0" MaxValue="1.0" Value="0.0" DefaultValue="1.0">
+      <Parameter ID="DET" MinValue="-1.0" MaxValue="1.0" Value="0.2899999916553497"
+                 DefaultValue="1.0">
         <Connections>
           <Connection NodeId="clone_cable" ParameterId="Value"/>
         </Connections>

@@ -24,7 +24,7 @@ const var File1Mods =[];
 
 for (i = 0; i < 7; i++)
 {
-    File1Mods[i] = Content.getComponent("flModRouteA"+(i+1));
+    File1Mods[i] = Content.getComponent("flModRouteA"+(i));
 
 } 
 
@@ -39,7 +39,7 @@ inline function onfileModRoutPage1Control(component, value)
    
   
    	  
-   	  if (value == 7){
+   	  if (value == 1){
    	     		 Ramps.showControl(1);
    	     		}
    	     	  else {
