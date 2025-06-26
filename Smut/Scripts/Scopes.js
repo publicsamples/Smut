@@ -1,6 +1,6 @@
 //osc1
 
-const var OsdDp1 = Synth.getDisplayBufferSource("Osc1");
+const var OsdDp1 = Synth.getDisplayBufferSource("Filter1");
 const var rb1 = OsdDp1.getDisplayBuffer(2);
 
 

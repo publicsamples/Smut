@@ -1,4 +1,4 @@
-Content.makeFrontInterface(900, 910);
+Content.makeFrontInterface(865, 920);
 
 Engine.loadFontAs("{PROJECT_FOLDER}Montserrat-Medium.ttf", "mon");
 
@@ -18,30 +18,34 @@ include("Loading.js");
 include("V1.js");
 
 
-
-
 inline function onHiQControl(component, value)
 {
 
 	if (value == 1){
 		
-	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 8);
-	Engine.setMaximumBlockSize(256);
+	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 16);
+
 	}
 	
 	if (value == 2){
 			
 	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 8);
-	Engine.setMaximumBlockSize(64);
+	
 		}
 	
 	if (value == 3){
 			
-	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 8);
-	Engine.setMaximumBlockSize(16);
+	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 4);
+
 		}
 	
-	
+	if (value == 4){
+			
+	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 1);
+
+		}	
+		
+
 };
 
 Content.getComponent("HiQ").setControlCallback(onHiQControl);
@@ -78,7 +82,7 @@ Synth.setUseUniformVoiceHandler("Smut", true);
 
 const var rm = Engine.getGlobalRoutingManager();
 
-const var Files = Content.getComponent("Files");
+
 
 
 
@@ -480,15 +484,6 @@ inline function populatePresetsMenu()
 }
 
 
-const var Verb = Content.getComponent("Verb");
-
-inline function onShowVerbControl(component, value)
-{
-	Verb.showControl(value);
-};
-
-Content.getComponent("ShowVerb").setControlCallback(onShowVerbControl);
-
 
 
 const var MixCont = [Content.getComponent("MixLabel"),
@@ -496,11 +491,12 @@ const var MixCont = [Content.getComponent("MixLabel"),
 
 const var XfCont = [Content.getComponent("Xfader"),
                     Content.getComponent("XfLabel")];
+const var File = Synth.getEffect("File");
                      
 
 inline function onFadeModeControl(component, value)
 {
-	Osc1.setAttribute(Osc1.FileXrossFadeMode, value);
+	File.setAttribute(File.FileXrossFadeMode, value);
 	
 		if (value == 4){
 			
@@ -523,10 +519,11 @@ inline function onFadeModeControl(component, value)
 Content.getComponent("FadeMode").setControlCallback(onFadeModeControl);
 
 const var EnvTable1 = Content.getComponent("EnvTable1");
+const var vv1 = Synth.getChildSynth("v1");
 
 inline function onEnvMode1Control(component, value)
 {
-	Osc1.setAttribute(Osc1.EnvType1, value);
+	vv1.setAttribute(vv1.Mode, value);
 	EnvTable1.showControl(value);
 };
 
@@ -536,7 +533,7 @@ const var EnvTable2 = Content.getComponent("EnvTable2");
 
 inline function onEnvMode2Control(component, value)
 {
-	Osc1.setAttribute(Osc1.EnvType2, value);
+	vv1.setAttribute(vv1.Mode2, value);
 	EnvTable2.showControl(value);
 };
 

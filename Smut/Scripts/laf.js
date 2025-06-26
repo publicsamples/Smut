@@ -136,8 +136,7 @@ const var EnvButtons = [Content.getComponent("EnvMode1"),
 for(s in EnvButtons)
       s.setLocalLookAndFeel(LAF_Button);  
       
-const var MiscButtons = [Content.getComponent("LpHpCt"),
-                         Content.getComponent("ScriptButton1")];
+const var MiscButtons = [Content.getComponent("LpHpCt")];
 
  
  for(s in MiscButtons)

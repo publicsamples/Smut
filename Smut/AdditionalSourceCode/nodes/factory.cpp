@@ -37,16 +37,24 @@ struct Factory: public scriptnode::dll::StaticLibraryHostFactory
 		registerPolyNode<project::hole<1>, scriptnode::wrap::illegal_poly<project::hole<1>>>();
 		registerPolyNode<project::gran<1>, scriptnode::wrap::illegal_poly<project::gran<1>>>();
 		registerPolyNode<project::Comb<1>, project::Comb<NUM_POLYPHONIC_VOICES>>();
+		registerPolyNode<project::Files<1>, project::Files<NUM_POLYPHONIC_VOICES>>();
+		registerPolyNode<project::Filter<1>, project::Filter<NUM_POLYPHONIC_VOICES>>();
 		registerPolyNode<project::lfo<1>, wrap::illegal_poly<project::lfo<1>>>();
 		registerPolyNode<project::osc1<1>, project::osc1<NUM_POLYPHONIC_VOICES>>();
 		registerPolyNode<project::verb<1>, wrap::illegal_poly<project::verb<1>>>();
 		registerDataNode<project::empty_networkdata>();
+		registerDataNode<project::FileIn_networkdata>();
+		registerDataNode<project::Filter2Out_networkdata>();
+		registerDataNode<project::FilterIn_networkdata>();
+		registerDataNode<project::FilterOut_networkdata>();
 		registerDataNode<project::GainMod_networkdata>();
 		registerDataNode<project::lfo2_networkdata>();
 		registerDataNode<project::lfo3_networkdata>();
 		registerDataNode<project::lfo4_networkdata>();
 		registerDataNode<project::Lfos_networkdata>();
 		registerDataNode<project::ModConnect_networkdata>();
+		registerDataNode<project::Osc1In_networkdata>();
+		registerDataNode<project::Osc2In_networkdata>();
 		registerDataNode<project::SuperDetune_networkdata>();
 		registerDataNode<project::VcaAdsr_networkdata>();
 	}

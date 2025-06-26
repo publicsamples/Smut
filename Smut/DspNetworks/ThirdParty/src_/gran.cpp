@@ -70,10 +70,10 @@ struct _gran final : public ::faust::dsp {
 	FAUSTFLOAT fHslider3;
 	int iRec4[2];
 	int iVec0[2];
+	int iRec3[2];
 	FAUSTFLOAT fHslider4;
+	float fRec6[2];
 	float fRec5[2];
-	float fRec3[2];
-	int iRec6[2];
 	float fConst4;
 	float fRec8[2];
 	float fRec7[2];
@@ -236,8 +236,8 @@ struct _gran final : public ::faust::dsp {
 	void instanceResetUserInterface() {
 		fHslider0 = FAUSTFLOAT(0.0f);
 		fHslider1 = FAUSTFLOAT(0.0f);
-		fHslider2 = FAUSTFLOAT(1.0f);
-		fHslider3 = FAUSTFLOAT(1e+01f);
+		fHslider2 = FAUSTFLOAT(1e+01f);
+		fHslider3 = FAUSTFLOAT(1.0f);
 		fHslider4 = FAUSTFLOAT(1e+01f);
 	}
 	
@@ -252,13 +252,13 @@ struct _gran final : public ::faust::dsp {
 			iVec0[l2] = 0;
 		}
 		for (int l3 = 0; l3 < 2; l3 = l3 + 1) {
-			fRec5[l3] = 0.0f;
+			iRec3[l3] = 0;
 		}
 		for (int l4 = 0; l4 < 2; l4 = l4 + 1) {
-			fRec3[l4] = 0.0f;
+			fRec6[l4] = 0.0f;
 		}
 		for (int l5 = 0; l5 < 2; l5 = l5 + 1) {
-			iRec6[l5] = 0;
+			fRec5[l5] = 0.0f;
 		}
 		for (int l6 = 0; l6 < 2; l6 = l6 + 1) {
 			fRec8[l6] = 0.0f;
@@ -365,12 +365,12 @@ struct _gran final : public ::faust::dsp {
 		ui_interface->addHorizontalSlider("decal", &fHslider1, FAUSTFLOAT(0.0f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.001f));
 		ui_interface->declare(&fHslider0, "BELA", "ANALOG_4");
 		ui_interface->addHorizontalSlider("feedback", &fHslider0, FAUSTFLOAT(0.0f), FAUSTFLOAT(0.0f), FAUSTFLOAT(2.0f), FAUSTFLOAT(0.001f));
-		ui_interface->declare(&fHslider2, "BELA", "ANALOG_0");
-		ui_interface->addHorizontalSlider("population", &fHslider2, FAUSTFLOAT(1.0f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.001f));
+		ui_interface->declare(&fHslider3, "BELA", "ANALOG_0");
+		ui_interface->addHorizontalSlider("population", &fHslider3, FAUSTFLOAT(1.0f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.001f));
 		ui_interface->declare(&fHslider4, "BELA", "ANALOG_3");
 		ui_interface->addHorizontalSlider("speed", &fHslider4, FAUSTFLOAT(1e+01f), FAUSTFLOAT(-24.0f), FAUSTFLOAT(24.0f), FAUSTFLOAT(0.1f));
-		ui_interface->declare(&fHslider3, "BELA", "ANALOG_1");
-		ui_interface->addHorizontalSlider("taille", &fHslider3, FAUSTFLOAT(1e+01f), FAUSTFLOAT(4.0f), FAUSTFLOAT(1.2e+04f), FAUSTFLOAT(0.001f));
+		ui_interface->declare(&fHslider2, "BELA", "ANALOG_1");
+		ui_interface->addHorizontalSlider("taille", &fHslider2, FAUSTFLOAT(1e+01f), FAUSTFLOAT(4.0f), FAUSTFLOAT(1.2e+04f), FAUSTFLOAT(0.001f));
 		ui_interface->closeBox();
 	}
 	
@@ -381,8 +381,8 @@ struct _gran final : public ::faust::dsp {
 		FAUSTFLOAT* output1 = outputs[1];
 		float fSlow0 = std::max<float>(0.0f, std::min<float>(2.0f, float(fHslider0)));
 		int iSlow1 = int(4.41e+04f * (1.0f - std::max<float>(0.0f, std::min<float>(1.0f, float(fHslider1)))));
-		float fSlow2 = std::max<float>(4.0f, std::min<float>(1.2e+04f, float(fHslider3)));
-		int iSlow3 = int(fConst0 * (0.01f * (1.0f - std::max<float>(0.0f, std::min<float>(1.0f, float(fHslider2)))) + 0.001f) * fSlow2);
+		float fSlow2 = std::max<float>(4.0f, std::min<float>(1.2e+04f, float(fHslider2)));
+		int iSlow3 = int(fConst0 * fSlow2 * (0.01f * (1.0f - std::max<float>(0.0f, std::min<float>(1.0f, float(fHslider3)))) + 0.001f));
 		float fSlow4 = std::max<float>(-24.0f, std::min<float>(24.0f, float(fHslider4)));
 		float fSlow5 = 1e+03f / fSlow2;
 		float fSlow6 = 0.33333334f * float(iSlow3);
@@ -392,15 +392,15 @@ struct _gran final : public ::faust::dsp {
 		int iSlow10 = iSlow3 + -10;
 		for (int i0 = 0; i0 < count; i0 = i0 + 1) {
 			iRec2[0] = (iRec2[1] + 1) % 44100;
-			ftbl0[iRec2[0]] = float(input0[i0]) + fSlow0 * fRec0[1];
+			ftbl0[iRec2[0]] = fSlow0 * fRec0[1] + float(input0[i0]);
 			iRec4[0] = (iRec4[1] + 1) % iSlow3;
 			int iTemp0 = ((iRec4[0] < 10) ? 1 : 0);
 			iVec0[0] = iTemp0;
 			int iTemp1 = iTemp0 > iVec0[1];
-			fRec5[0] = ((iTemp1) ? fSlow4 : fRec5[1]);
-			fRec3[0] = std::max<float>(0.0f, ((iTemp1) ? float(fRec5[0] < 0.0f) : fRec5[0] + fRec3[1]));
-			iRec6[0] = ((iTemp1) ? iRec2[0] : iRec6[1]);
-			int iTemp2 = (iSlow1 + int(fRec3[0]) + iRec6[0]) % 44100;
+			iRec3[0] = ((iTemp1) ? iRec2[0] : iRec3[1]);
+			fRec6[0] = ((iTemp1) ? fSlow4 : fRec6[1]);
+			fRec5[0] = std::max<float>(0.0f, ((iTemp1) ? float(fRec6[0] < 0.0f) : fRec5[1] + fRec6[0]));
+			int iTemp2 = (iSlow1 + iRec3[0] + int(fRec5[0])) % 44100;
 			fRec8[0] = ((iTemp1) ? fSlow5 : fRec8[1]);
 			float fTemp3 = fConst4 * fRec8[0];
 			fRec7[0] = std::max<float>(0.0f, ((iTemp1) ? float(fTemp3 < 0.0f) : fRec7[1] + fTemp3));
@@ -410,7 +410,7 @@ struct _gran final : public ::faust::dsp {
 			iVec1[0] = iTemp6;
 			int iTemp7 = iTemp6 > iVec1[1];
 			fRec10[0] = ((iTemp7) ? fSlow4 : fRec10[1]);
-			fRec9[0] = std::max<float>(0.0f, ((iTemp7) ? float(fRec10[0] < 0.0f) : fRec10[0] + fRec9[1]));
+			fRec9[0] = std::max<float>(0.0f, ((iTemp7) ? float(fRec10[0] < 0.0f) : fRec9[1] + fRec10[0]));
 			iRec11[0] = ((iTemp7) ? iRec2[0] : iRec11[1]);
 			int iTemp8 = (iSlow1 + int(fRec9[0]) + iRec11[0]) % 44100;
 			fRec13[0] = ((iTemp7) ? fSlow5 : fRec13[1]);
@@ -444,8 +444,8 @@ struct _gran final : public ::faust::dsp {
 			fRec1[0] = fConst2 * (fConst3 * fRec1[1] + 0.1f * (fTemp21 - fVec4[1]));
 			fRec0[0] = fRec1[0];
 			output0[i0] = FAUSTFLOAT(fRec0[0]);
-			ftbl1[iRec2[0]] = float(input1[i0]) + fSlow0 * fRec24[1];
-			float fTemp22 = fTemp4 * ftbl1[iTemp2] + fTemp10 * ftbl1[iTemp8] + fTemp15 * ftbl1[iTemp13] + fTemp20 * ftbl1[iTemp18];
+			ftbl1[iRec2[0]] = fSlow0 * fRec24[1] + float(input1[i0]);
+			float fTemp22 = fTemp4 * ftbl1[iTemp2] + fTemp10 * ftbl1[iTemp8] + fTemp15 * ftbl1[iTemp13] + ftbl1[iTemp18] * fTemp20;
 			fVec5[0] = fTemp22;
 			fRec25[0] = fConst2 * (fConst3 * fRec25[1] + 0.1f * (fTemp22 - fVec5[1]));
 			fRec24[0] = fRec25[0];
@@ -453,9 +453,9 @@ struct _gran final : public ::faust::dsp {
 			iRec2[1] = iRec2[0];
 			iRec4[1] = iRec4[0];
 			iVec0[1] = iVec0[0];
+			iRec3[1] = iRec3[0];
+			fRec6[1] = fRec6[0];
 			fRec5[1] = fRec5[0];
-			fRec3[1] = fRec3[0];
-			iRec6[1] = iRec6[0];
 			fRec8[1] = fRec8[0];
 			fRec7[1] = fRec7[0];
 			iVec1[1] = iVec1[0];
@@ -499,16 +499,16 @@ struct _gran final : public ::faust::dsp {
 
 	FAUST_ADDHORIZONTALSLIDER("decal", fHslider1, 0.0f, 0.0f, 1.0f, 0.001f);
 	FAUST_ADDHORIZONTALSLIDER("feedback", fHslider0, 0.0f, 0.0f, 2.0f, 0.001f);
-	FAUST_ADDHORIZONTALSLIDER("population", fHslider2, 1.0f, 0.0f, 1.0f, 0.001f);
+	FAUST_ADDHORIZONTALSLIDER("population", fHslider3, 1.0f, 0.0f, 1.0f, 0.001f);
 	FAUST_ADDHORIZONTALSLIDER("speed", fHslider4, 1e+01f, -24.0f, 24.0f, 0.1f);
-	FAUST_ADDHORIZONTALSLIDER("taille", fHslider3, 1e+01f, 4.0f, 1.2e+04f, 0.001f);
+	FAUST_ADDHORIZONTALSLIDER("taille", fHslider2, 1e+01f, 4.0f, 1.2e+04f, 0.001f);
 
 	#define FAUST_LIST_ACTIVES(p) \
 		p(HORIZONTALSLIDER, decal, "decal", fHslider1, 0.0f, 0.0f, 1.0f, 0.001f) \
 		p(HORIZONTALSLIDER, feedback, "feedback", fHslider0, 0.0f, 0.0f, 2.0f, 0.001f) \
-		p(HORIZONTALSLIDER, population, "population", fHslider2, 1.0f, 0.0f, 1.0f, 0.001f) \
+		p(HORIZONTALSLIDER, population, "population", fHslider3, 1.0f, 0.0f, 1.0f, 0.001f) \
 		p(HORIZONTALSLIDER, speed, "speed", fHslider4, 1e+01f, -24.0f, 24.0f, 0.1f) \
-		p(HORIZONTALSLIDER, taille, "taille", fHslider3, 1e+01f, 4.0f, 1.2e+04f, 0.001f) \
+		p(HORIZONTALSLIDER, taille, "taille", fHslider2, 1e+01f, 4.0f, 1.2e+04f, 0.001f) \
 
 	#define FAUST_LIST_PASSIVES(p) \
 

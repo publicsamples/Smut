@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Network ID="Filter2Out" AllowPolyphonic="1" Version="0.0.0">
+  <Node FactoryPath="container.chain" ID="Filter2Out" Bypassed="0" Name="Filter2Out"
+        ShowParameters="1">
+    <Nodes>
+      <Node ID="global_send" FactoryPath="routing.global_send" Bypassed="0"
+            Name="global_send" NodeColour="4288983624">
+        <Properties>
+          <Property ID="Connection" Value="f2out"/>
+        </Properties>
+        <Parameters>
+          <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.2408090820312499"
+                     DefaultValue="1.0"/>
+        </Parameters>
+      </Node>
+      <Node ID="chain196" FactoryPath="container.chain" Bypassed="0" Name="chain196">
+        <Nodes>
+          <Node ID="peak17" FactoryPath="core.peak" Bypassed="0" Name="peak17"
+                NodeColour="4288240050">
+            <ModulationTargets>
+              <Connection NodeId="event_data_writer" ParameterId="Value"/>
+            </ModulationTargets>
+            <ComplexData>
+              <DisplayBuffers>
+                <DisplayBuffer Index="-1"/>
+              </DisplayBuffers>
+            </ComplexData>
+            <Parameters/>
+          </Node>
+          <Node ID="event_data_writer" FactoryPath="routing.event_data_writer"
+                Bypassed="0" Name="event_data_writer">
+            <Parameters>
+              <Parameter MinValue="0.0" MaxValue="16.0" StepSize="1.0" ID="SlotIndex"
+                         Value="3.0" DefaultValue="0.0"/>
+              <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Automated="1"/>
+            </Parameters>
+          </Node>
+        </Nodes>
+        <Parameters/>
+      </Node>
+      <Node ID="clear" FactoryPath="math.clear" Bypassed="0" Name="clear">
+        <Parameters>
+          <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.0"/>
+        </Parameters>
+      </Node>
+      <Node ID="split" FactoryPath="container.split" Bypassed="0" Name="split">
+        <Nodes>
+          <Node ID="chain3" FactoryPath="container.chain" Bypassed="0" Name="chain">
+            <Nodes>
+              <Node ID="global_receive3" FactoryPath="routing.global_receive" Bypassed="0"
+                    Name="global_receive" NodeColour="4282954328">
+                <Properties>
+                  <Property ID="Connection" Value="FilerOut"/>
+                </Properties>
+                <Parameters>
+                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" DefaultValue="1.0" Automated="1"/>
+                </Parameters>
+              </Node>
+            </Nodes>
+            <Parameters/>
+          </Node>
+          <Node ID="chain4" FactoryPath="container.chain" Bypassed="0" Name="chain">
+            <Nodes>
+              <Node ID="global_receive4" FactoryPath="routing.global_receive" Bypassed="0"
+                    Name="global_receive" NodeColour="4288983624">
+                <Properties>
+                  <Property ID="Connection" Value="f2out"/>
+                </Properties>
+                <Parameters>
+                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" DefaultValue="1.0" Automated="1"/>
+                </Parameters>
+              </Node>
+            </Nodes>
+            <Parameters/>
+          </Node>
+        </Nodes>
+        <Parameters/>
+      </Node>
+      <Node ID="gain5" FactoryPath="core.gain" Bypassed="0" Name="gain5">
+        <Parameters>
+          <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
+                     SkewFactor="5.422270774841309" ID="Gain" DefaultValue="0.0" Automated="1"/>
+          <Parameter MinValue="0.0" MaxValue="1000.0" StepSize="0.1000000014901161"
+                     SkewFactor="0.3010300099849701" ID="Smoothing" Value="20.0"/>
+          <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
+                     SkewFactor="5.422270774841309" ID="ResetValue" Value="-100.0"
+                     DefaultValue="0.0"/>
+        </Parameters>
+      </Node>
+    </Nodes>
+    <Parameters>
+      <Parameter MinValue="-100.0" MaxValue="0.0" ID="Master" Value="-21.89999883621932"
+                 DefaultValue="0.0" StepSize="0.1000000014901161" SkewFactor="5.422270774841309">
+        <Connections>
+          <Connection NodeId="gain5" ParameterId="Gain"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="filter1" Value="0.0">
+        <Connections>
+          <Connection NodeId="global_receive3" ParameterId="Value"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="filter2" Value="0.9900000095367432"
+                 DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="global_receive4" ParameterId="Value"/>
+        </Connections>
+      </Parameter>
+    </Parameters>
+  </Node>
+</Network>

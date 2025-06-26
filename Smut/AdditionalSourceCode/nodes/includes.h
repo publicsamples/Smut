@@ -23,6 +23,12 @@
 // Include compiled network files ------------------
 
 #include "empty_networkdata.h"
+#include "FileIn_networkdata.h"
+#include "Files.h"
+#include "Filter.h"
+#include "Filter2Out_networkdata.h"
+#include "FilterIn_networkdata.h"
+#include "FilterOut_networkdata.h"
 #include "GainMod_networkdata.h"
 #include "lfo.h"
 #include "lfo2_networkdata.h"
@@ -31,6 +37,8 @@
 #include "Lfos_networkdata.h"
 #include "ModConnect_networkdata.h"
 #include "osc1.h"
+#include "Osc1In_networkdata.h"
+#include "Osc2In_networkdata.h"
 #include "SuperDetune_networkdata.h"
 #include "VcaAdsr_networkdata.h"
 #include "verb.h"

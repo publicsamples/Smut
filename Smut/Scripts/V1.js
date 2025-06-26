@@ -52,7 +52,7 @@ Content.getComponent("fileModRoutPage1").setControlCallback(onfileModRoutPage1Co
 
 const var Filter1Mods =[];
 
-for (i = 0; i < 5; i++)
+for (i = 0; i < 8; i++)
 {
     Filter1Mods[i] = Content.getComponent("fModRouteA"+(i+1));
 
@@ -81,21 +81,26 @@ const var ShapePanel1 = Content.getComponent("ShapePanel1");
  //Pitch Mode Menu
  
  const var Semitones1 = [Content.getComponent("Pitch1"),
- 						Content.getComponent("Pitch2"),
                          Content.getComponent("Step1")];
  
 const var Tempo1 = [Content.getComponent("Tempo1"),
-					Content.getComponent("Tempo2"),
                     Content.getComponent("Div1")];
 
+const var Semitones2 = [Content.getComponent("Pitch2"),
+                        Content.getComponent("Step2")];
+
+const var Tempo2 = [Content.getComponent("Tempo2"),
+                   Content.getComponent("Div2")];
+                   
+                   
 const var StepLabel = Content.getComponent("StepLabel");
+const var StepLabel1 = Content.getComponent("StepLabel1");
 const var PitchLabel1 = Content.getComponent("PitchLabel1");
 const var PitchLabel2 = Content.getComponent("PitchLabel2");
 
- inline function onPitchMode1Control(component, value)
+ inline function onPitchType1Control(component, value)
  {
-	
-Osc1.setAttribute(Osc1.pitchmode, value);           
+ 	Osc1.setAttribute(Osc1.pitchmode, value);           
 
  if (value == 1){
 	 
@@ -107,7 +112,7 @@ Osc1.setAttribute(Osc1.pitchmode, value);
        
    StepLabel.setValue("Step");
    PitchLabel1.setValue("Pitch");
-   PitchLabel2.setValue("Pitch");
+
         
        }
 
@@ -119,7 +124,7 @@ Osc1.setAttribute(Osc1.pitchmode, value);
          s.showControl(1); 
     StepLabel.setValue("Divide");  
     PitchLabel1.setValue("Tempo");
-    PitchLabel2.setValue("Tempo");             
+            
               
        }
    if (value == 3){
@@ -130,19 +135,63 @@ Osc1.setAttribute(Osc1.pitchmode, value);
          s.showControl(1);   
      StepLabel.setValue("Divide");     
      PitchLabel1.setValue("Tempo");
-         PitchLabel2.setValue("Tempo");    
+
              
-       }        
+       } 
  };
  
- Content.getComponent("PitchMode1").setControlCallback(onPitchMode1Control);
+ Content.getComponent("PitchType1").setControlCallback(onPitchType1Control);
+ 
+ const var Osc2 = Synth.getEffect("Osc2");
+ 
+ inline function onPitchType2Control(component, value)
+ {
+	Osc2.setAttribute(Osc2.pitchmode, value);           
+
+ if (value == 1){
+	 
+ for(s in Semitones2)
+       s.showControl(1);
+ 
+ for(s in Tempo2)
+       s.showControl(0);    
+       
+   StepLabel1.setValue("Step");
+   PitchLabel2.setValue("Pitch");
+
+        
+       }
+
+   if (value == 2){
+      	 
+  for(s in Semitones2)
+            s.showControl(0);  
+   for(s in Tempo2)
+         s.showControl(1); 
+    StepLabel1.setValue("Divide");  
+    PitchLabel2.setValue("Tempo");
+            
+              
+       }
+   if (value == 3){
+      	 
+     for(s in Semitones2)
+            s.showControl(0); 
+   for(s in Tempo2)
+         s.showControl(1);   
+     StepLabel1.setValue("Divide");     
+     PitchLabel2.setValue("Tempo");
+
+             
+       } 
+ };
+ 
+ Content.getComponent("PitchType2").setControlCallback(onPitchType2Control);
+ 
+ 
  
  const var FilePanel = Content.getComponent("Files");
  
- 
- 
- 
-
 const var WinUnsync1 = [Content.getComponent("FileWin1"),
                        Content.getComponent("FileXf1")];
 

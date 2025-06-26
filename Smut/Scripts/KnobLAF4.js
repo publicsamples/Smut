@@ -102,7 +102,7 @@ const var verbs = [Content.getComponent("ScriptSlider16"),
                    Content.getComponent("ScriptSlider19")];
 
 for(s in verbs)
-      s.setLocalLookAndFeel(KnobLaf); 
+      s.setLocalLookAndFeel(KnobLaf4); 
       
 const var PositionRamps = [Content.getComponent("PosDiv1"),
                            Content.getComponent("PosDiv2"),

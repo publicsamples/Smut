@@ -149,9 +149,10 @@ KnobLaf2b.registerFunction("drawRotarySlider", function(g, obj)
 
 
 const var BigKnbs = [Content.getComponent("FilePos1"),
-Content.getComponent("XfParamB2"),
 Content.getComponent("Xfader"),
-Content.getComponent("XfParamA2")];
+Content.getComponent("Cut1"),
+Content.getComponent("MasterGain"),
+Content.getComponent("Cut2")];
 
 
 for(s in BigKnbs)

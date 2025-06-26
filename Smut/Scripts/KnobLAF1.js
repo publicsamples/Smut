@@ -116,7 +116,9 @@ const var OscKnobs = [Content.getComponent("Bend1"),
                       Content.getComponent("Width2"),
                       Content.getComponent("FmIn2"),
                       Content.getComponent("Step1"),
+                      Content.getComponent("Step2"),
                       Content.getComponent("Div1"),
+                      Content.getComponent("Div2"),
                       Content.getComponent("Bend2")];
  
  for(s in OscKnobs)
@@ -145,23 +147,18 @@ const var LfoMods1 = [Content.getComponent("LfoGateMod1"),
 for(s in LfoMods1)
       s.setLocalLookAndFeel(KnobLaf);  
 
-
-const var masterSends = [Content.getComponent("ScriptSlider8"),
-                         Content.getComponent("ScriptSlider7"),
-                         Content.getComponent("ScriptSlider6"),
-                         Content.getComponent("ScriptSlider5")];
-
-for(s in masterSends)
-      s.setLocalLookAndFeel(KnobLaf);     
+ 
       
       
       const var FVCA = [Content.getComponent("FilterQ1"),
-                        Content.getComponent("Filter2Q1"),
-                        Content.getComponent("InGain5"),
-                        Content.getComponent("InGain1"),
-                        Content.getComponent("FilterMix1"),
-                        Content.getComponent("InGain6"),
+              			Content.getComponent("FilterQ2"),
+            			Content.getComponent("FilterMix1"),
+       					Content.getComponent("FilterMix2"),
                         Content.getComponent("VcaGain1"),
+                        Content.getComponent("VcaGain2"),
+                        Content.getComponent("VcaMaster1"),
+                        Content.getComponent("VcaMaster2"),
+                        Content.getComponent("VcaPan2"),
                         Content.getComponent("VcaPan1")];
 
 for(s in FVCA)
@@ -169,7 +166,7 @@ for(s in FVCA)
 
 const var FileKnbs = [Content.getComponent("Input Offset1"),
                       Content.getComponent("Input Offset"),
-                      Content.getComponent("FileIn1"),
+                      
                       Content.getComponent("FileIn2"),
                       Content.getComponent("Pos"),
                       Content.getComponent("FileWin1"),
@@ -181,15 +178,14 @@ for(s in FileKnbs)
                       
 const var ModKnobs = [Content.getComponent("MidiSelOsc1"),
                       Content.getComponent("InputMod1"),
-                      Content.getComponent("ShapeMod1"),
+                      Content.getComponent("InputMod2"),
                       Content.getComponent("WidthMod1"),
-                      Content.getComponent("OutMod1"),
-                      Content.getComponent("OutMod2"),
-                      Content.getComponent("FileTempoMod1"),
-                      Content.getComponent("FilePitchMod1"),
+                      Content.getComponent("WidthMod2"),
+         			Content.getComponent("FileTempoMod1"),
                       Content.getComponent("FileInMod1"),
                       Content.getComponent("WinMod1"),
                       Content.getComponent("PitchMod1"),
+                      Content.getComponent("PitchMod2"),
                       Content.getComponent("WinXfMod1"),
                       Content.getComponent("WinXfMod2"),
                       Content.getComponent("FilterMixMod1"),

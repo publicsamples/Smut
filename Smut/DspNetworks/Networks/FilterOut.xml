@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Network ID="FilterOut" AllowPolyphonic="1" Version="0.0.0">
+  <Node FactoryPath="container.chain" ID="FilterOut" Bypassed="0" Name="FilterOut">
+    <Nodes>
+      <Node ID="global_send" FactoryPath="routing.global_send" Bypassed="0"
+            Name="global_send" NodeColour="4282954328">
+        <Properties>
+          <Property ID="Connection" Value="FilerOut"/>
+        </Properties>
+        <Parameters>
+          <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.24959375" DefaultValue="1.0"/>
+        </Parameters>
+      </Node>
+      <Node ID="clear" FactoryPath="math.clear" Bypassed="0" Name="clear">
+        <Parameters>
+          <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.0"/>
+        </Parameters>
+      </Node>
+      <Node ID="sliderbank" FactoryPath="control.sliderbank" Bypassed="0"
+            Name="sliderbank">
+        <Properties>
+          <Property ID="NumParameters" Value="4"/>
+        </Properties>
+        <SwitchTargets>
+          <SwitchTarget>
+            <Connections>
+              <Connection NodeId="global_receive" ParameterId="Value"/>
+            </Connections>
+          </SwitchTarget>
+          <SwitchTarget>
+            <Connections>
+              <Connection NodeId="global_receive1" ParameterId="Value"/>
+            </Connections>
+          </SwitchTarget>
+          <SwitchTarget>
+            <Connections>
+              <Connection NodeId="global_receive2" ParameterId="Value"/>
+            </Connections>
+          </SwitchTarget>
+          <SwitchTarget>
+            <Connections>
+              <Connection NodeId="global_receive3" ParameterId="Value"/>
+            </Connections>
+          </SwitchTarget>
+        </SwitchTargets>
+        <ComplexData>
+          <SliderPacks>
+            <SliderPack Index="0" EmbeddedData="16....f+....9C...3O...f+."/>
+          </SliderPacks>
+        </ComplexData>
+        <Parameters>
+          <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="1.0" DefaultValue="0.0"/>
+        </Parameters>
+      </Node>
+      <Node ID="split1" FactoryPath="container.split" Bypassed="0" Name="split1">
+        <Nodes>
+          <Node ID="global_receive" FactoryPath="routing.global_receive" Bypassed="0"
+                Name="global_receive" NodeColour="4283582386">
+            <Properties>
+              <Property ID="Connection" Value="osc1Out"/>
+            </Properties>
+            <Parameters>
+              <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" DefaultValue="1.0" Automated="1"/>
+            </Parameters>
+          </Node>
+          <Node ID="global_receive1" FactoryPath="routing.global_receive" Bypassed="0"
+                Name="global_receive" NodeColour="4289889863">
+            <Properties>
+              <Property ID="Connection" Value="osc2out"/>
+            </Properties>
+            <Parameters>
+              <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" DefaultValue="1.0" Automated="1"/>
+            </Parameters>
+          </Node>
+          <Node ID="global_receive2" FactoryPath="routing.global_receive" Bypassed="0"
+                Name="global_receive" NodeColour="4289877062">
+            <Properties>
+              <Property ID="Connection" Value="FileOut"/>
+            </Properties>
+            <Parameters>
+              <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" DefaultValue="1.0" Automated="1"/>
+            </Parameters>
+          </Node>
+          <Node ID="global_receive3" FactoryPath="routing.global_receive" Bypassed="0"
+                Name="global_receive" NodeColour="4282954328">
+            <Properties>
+              <Property ID="Connection" Value="FilerOut"/>
+            </Properties>
+            <Parameters>
+              <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" DefaultValue="1.0" Automated="1"/>
+            </Parameters>
+          </Node>
+        </Nodes>
+        <Parameters/>
+      </Node>
+    </Nodes>
+    <Parameters/>
+  </Node>
+</Network>
