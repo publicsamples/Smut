@@ -9,16 +9,16 @@
         <Processor Type="ScriptProcessor" ID="Interface" Bypassed="0" NumSliderPacks="1">
           <ChildProcessors/>
           <Content>
-            <Control type="ScriptSlider" id="Width1" value="0.3100000023841858"/>
-            <Control type="ScriptComboBox" id="PitchType1" value="1.0"/>
-            <Control type="ScriptSlider" id="Pitch1" value="3.576278686523438e-7"/>
+            <Control type="ScriptSlider" id="Width1" value="0.3400000035762787"/>
+            <Control type="ScriptComboBox" id="PitchType1" value="2.0"/>
+            <Control type="ScriptSlider" id="Pitch1" value="0.1000003591179848"/>
             <Control type="ScriptSlider" id="Step1" value="0.0"/>
             <Control type="ScriptButton" id="ShowUserTable1" value="0.0"/>
-            <Control type="ScriptComboBox" id="OscModRoutPage1" value="4.0"/>
-            <Control type="ScriptSliderPack" id="PmSp1" value="6.0" data="32.35Qg9....7ydT3xOyLyL+LyLy7ydT3xOCWOJ+......"/>
+            <Control type="ScriptComboBox" id="OscModRoutPage1" value="1.0"/>
+            <Control type="ScriptSliderPack" id="PmSp1" value="7.0" data="32............................................"/>
             <Control type="ScriptSlider" id="PitchMod1" value="0.0"/>
             <Control type="ScriptComboBox" id="XfSelOsc1" value="1.0"/>
-            <Control type="ScriptComboBox" id="MidiSelOsc1" value="1.0"/>
+            <Control type="ScriptComboBox" id="MidiSelOsc1" value="3.0"/>
             <Control type="ScriptSliderPack" id="PmSp2" value="4.0" data="32............................................"/>
             <Control type="ScriptSlider" id="PitchMod2" value="-1.0"/>
             <Control type="ScriptComboBox" id="XfSelOsc2" value="2.0"/>
@@ -52,11 +52,11 @@
             <Control type="ScriptComboBox" id="PitchMode5" value="4.0"/>
             <Control type="ScriptSlider" id="FmIn2" value="0.1299999952316284"/>
             <Control type="ScriptButton" id="ShowUserTable2" value="0.0"/>
-            <Control type="ScriptSlider" id="Pitch2" value="-24.0"/>
+            <Control type="ScriptSlider" id="Pitch2" value="3.576278686523438e-7"/>
             <Control type="ScriptSlider" id="Width2" value="0.25"/>
             <Control type="ScriptSlider" id="Tempo2" value="0.0"/>
             <Control type="ScriptSlider" id="Step2" value="0.0"/>
-            <Control type="ScriptComboBox" id="PitchType2" value="2.0"/>
+            <Control type="ScriptComboBox" id="PitchType2" value="1.0"/>
             <Control type="ScriptSlider" id="Div2" value="32.0"/>
             <Control type="ScriptedViewport" id="FirstSp" value="3.0"/>
             <Control type="ScriptedViewport" id="SecondSp" value="3.0"/>
@@ -86,7 +86,7 @@
             <Control type="ScriptSliderPack" id="FxSp7" value="0.0" data="32............................................"/>
             <Control type="ScriptComboBox" id="XfSelOsc10" value="1.0"/>
             <Control type="ScriptComboBox" id="MidiSelOsc10" value="1.0"/>
-            <Control type="ScriptSliderPack" id="FxSp8" value="7.0" data="32............................................"/>
+            <Control type="ScriptSliderPack" id="FxSp8" value="7.0" data="32......................................ziBW4C"/>
             <Control type="ScriptSlider" id="FileInMod1" value="0.0"/>
             <Control type="ScriptComboBox" id="MidiSelOsc15" value="1.0"/>
             <Control type="ScriptComboBox" id="XfSelOsc15" value="1.0"/>
@@ -126,10 +126,10 @@
             <Control type="ScriptButton" id="UserMode" value="1.0"/>
             <Control type="ScriptSlider" id="FileIn2" value="0.4900000095367432"/>
             <Control type="ScriptSlider" id="Xfader" value="0.0"/>
-            <Control type="ScriptButton" id="file1" value="0"/>
-            <Control type="ScriptButton" id="file2" value="0"/>
-            <Control type="ScriptButton" id="file3" value="0"/>
-            <Control type="ScriptButton" id="file4" value="1.0"/>
+            <Control type="ScriptButton" id="file1" value="1.0"/>
+            <Control type="ScriptButton" id="file2" value="0.0"/>
+            <Control type="ScriptButton" id="file3" value="0.0"/>
+            <Control type="ScriptButton" id="file4" value="0.0"/>
             <Control type="ScriptComboBox" id="FadeMode" value="4.0"/>
             <Control type="ScriptSlider" id="Input Offset1" value="395.0"/>
             <Control type="ScriptButton" id="LpHpCt" value="0.0"/>
@@ -150,7 +150,7 @@
             <Control type="ScriptSlider" id="PostTempo4" value="0.0"/>
             <Control type="ScriptSlider" id="PosMod4" value="0.0"/>
             <Control type="ScriptSlider" id="Pos" value="0.0"/>
-            <Control type="ScriptSliderPack" id="ScriptSliderPack1" value="1.0" data="16.w0iR+................."/>
+            <Control type="ScriptSliderPack" id="ScriptSliderPack1" value="0.0" data="16.T35A+................."/>
             <Control type="ScriptComboBox" id="UsrCbVis1" value="1.0"/>
             <Control type="ScriptComboBox" id="UsrCbVis2" value="1.0"/>
             <Control type="ScriptComboBox" id="UsrCbVis3" value="1.0"/>
@@ -193,16 +193,16 @@
             <Control type="ScriptSlider" id="FilterPanMod4" value="0.0"/>
             <Control type="ScriptSlider" id="Cut1" value="7497.0"/>
             <Control type="ScriptComboBox" id="FilterType1" value="1.0"/>
-            <Control type="ScriptSlider" id="FilterQ1" value="0.7799999713897705"/>
+            <Control type="ScriptSlider" id="FilterQ1" value="0.0"/>
             <Control type="ScriptSlider" id="VcaGain1" value="1.0"/>
             <Control type="ScriptSlider" id="VcaPan1" value="0.0"/>
             <Control type="ScriptSlider" id="FilterMix1" value="1.0"/>
-            <Control type="ScriptSliderPack" id="ScriptSliderPack2" value="0.0" data="12...............3O"/>
+            <Control type="ScriptSliderPack" id="ScriptSliderPack2" value="0" data="12....f+..........."/>
             <Control type="ScriptSliderPack" id="ScriptSliderPack3" value="2.0" data="16......................."/>
             <Control type="ScriptSlider" id="FilterMix2" value="0.8100000023841858"/>
             <Control type="ScriptSlider" id="VcaPan2" value="0.0"/>
-            <Control type="ScriptSlider" id="VcaGain2" value="0.6399999856948853"/>
-            <Control type="ScriptSlider" id="FilterQ2" value="0.6899999976158142"/>
+            <Control type="ScriptSlider" id="VcaGain2" value="0.0"/>
+            <Control type="ScriptSlider" id="FilterQ2" value="0.0"/>
             <Control type="ScriptComboBox" id="FilterType2" value="3.0"/>
             <Control type="ScriptSlider" id="Cut2" value="3035.0"/>
             <Control type="ScriptSlider" id="LfoTempo1" value="0.0"/>
@@ -304,7 +304,7 @@
             <Control type="ScriptTable" id="ScriptTable2" value="0.0" data=""/>
             <Control type="ScriptSlider" id="LfoDiv6" value="17.0"/>
             <Control type="ScriptComboBox" id="ModSelect" value="1.0"/>
-            <Control type="ScriptButton" id="ScriptButton3" value="0.0"/>
+            <Control type="ScriptButton" id="ScriptButton3" value="1.0"/>
             <Control type="ScriptSlider" id="ScriptSlider9" value="0.3199999928474426"/>
             <Control type="ScriptSlider" id="ScriptSlider10" value="2.180000066757202"/>
             <Control type="ScriptSlider" id="ScriptSlider11" value="0.8500000238418579"/>
@@ -316,9 +316,9 @@
             <Control type="ScriptSlider" id="ScriptSlider17" value="4.380000114440918"/>
             <Control type="ScriptSlider" id="ScriptSlider18" value="1.0"/>
             <Control type="ScriptSlider" id="ScriptSlider19" value="0.0"/>
-            <Control type="ScriptSlider" id="SlotVol6" value="10000.0"/>
+            <Control type="ScriptSlider" id="SlotVol6" value="977.0"/>
             <Control type="ScriptSlider" id="SlotVol7" value="1.0"/>
-            <Control type="ScriptSlider" id="SlotVol8" value="20000.0"/>
+            <Control type="ScriptSlider" id="SlotVol8" value="40000.0"/>
             <Control type="ScriptSlider" id="SlotVol9" value="0.0"/>
             <Control type="ScriptSlider" id="SlotVol10" value="0.0"/>
             <Control type="ScriptSlider" id="MasterGain" value="-31.39999961853027"/>
@@ -356,7 +356,7 @@
           </ChildProcessors>
           <RoutingMatrix NumSourceChannels="2" Channel0="0" Send0="-1" Channel1="1" Send1="-1"/>
         </Processor>
-        <Processor Type="Hardcoded Master FX" ID="Verb" Bypassed="0" Network="verb"
+        <Processor Type="Hardcoded Master FX" ID="Verb" Bypassed="1" Network="verb"
                    mix="0.3199999928474426" size="2.180000066757202" diff="0.8500000238418579"
                    Damp="0.1000000014901161" Low="0.949999988079071" MidX="0.8399999737739563"
                    HighX="0.8999999761581421" LowBand="0.0" HighBand="0.0" Mod="1.0"
@@ -585,9 +585,9 @@
                   </UIData>
                 </Processor>
                 <Processor Type="HardcodedPolyphonicFX" ID="Osc1" Bypassed="0" Network="osc1"
-                           Pitch="3.576278686523438e-7" tempo="0.0" div="1.0" pitchmode="1.0"
-                           step="0.0" PitchMod="0.0" Input1="0.25" InMod1="0.0" MidiSlotPitch="1.0"
-                           Bend="20.0" Shape="3.0" WidhMod="1.0" Width="0.3100000023841858"
+                           Pitch="0.1000003591179848" tempo="0.0" div="1.0" pitchmode="2.0"
+                           step="0.0" PitchMod="0.0" Input1="0.25" InMod1="0.0" MidiSlotPitch="3.0"
+                           Bend="20.0" Shape="3.0" WidhMod="1.0" Width="0.3400000035762787"
                            MidiWidth="1.0" PitchPkModSrc1="1.0" InSrcOsc1="1.0" OscInPeak="1.0"
                            OscWidthPk="2.0" ModOutputDest="0.0">
                   <ChildProcessors/>
@@ -596,7 +596,7 @@
                     <Table EmbeddedData=""/>
                   </Tables>
                   <SliderPacks>
-                    <SliderPack EmbeddedData="32.35Qg9....7ydT3xOyLyL+LyLy7ydT3xOCWOJ+......"/>
+                    <SliderPack EmbeddedData="32............................................"/>
                     <SliderPack EmbeddedData="32...............3O..........................."/>
                     <SliderPack EmbeddedData="32....................................f+......"/>
                   </SliderPacks>
@@ -612,11 +612,11 @@
                   </UIData>
                 </Processor>
                 <Processor Type="HardcodedPolyphonicFX" ID="Osc2" Bypassed="0" Network="osc1"
-                           Pitch="-24.0" tempo="0.0" div="32.0" pitchmode="2.0" step="0.0"
-                           PitchMod="-1.0" Input1="0.1299999952316284" InMod1="0.0" MidiSlotPitch="1.0"
-                           Bend="20.0" Shape="4.0" WidhMod="-1.0" Width="0.25" MidiWidth="1.0"
-                           PitchPkModSrc1="2.0" InSrcOsc1="3.0" OscInPeak="1.0" OscWidthPk="1.0"
-                           ModOutputDest="1.0">
+                           Pitch="3.576278686523438e-7" tempo="0.0" div="32.0" pitchmode="1.0"
+                           step="0.0" PitchMod="-1.0" Input1="0.1299999952316284" InMod1="0.0"
+                           MidiSlotPitch="1.0" Bend="20.0" Shape="4.0" WidhMod="-1.0" Width="0.25"
+                           MidiWidth="1.0" PitchPkModSrc1="2.0" InSrcOsc1="3.0" OscInPeak="1.0"
+                           OscWidthPk="1.0" ModOutputDest="1.0">
                   <ChildProcessors/>
                   <RoutingMatrix NumSourceChannels="2" Channel0="0" Send0="-1" Channel1="1" Send1="-1"/>
                   <Tables>
@@ -672,7 +672,7 @@
                   </Tables>
                   <SliderPacks>
                     <SliderPack EmbeddedData="32............................................"/>
-                    <SliderPack EmbeddedData="32............................................"/>
+                    <SliderPack EmbeddedData="32......................................ziBW4C"/>
                     <SliderPack EmbeddedData="32............................................"/>
                     <SliderPack EmbeddedData="32.yLyL+......................................"/>
                     <SliderPack EmbeddedData="32............................................"/>
@@ -690,7 +690,7 @@
                     <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
                     <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
                     <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
-                    <SliderPack EmbeddedData="16.w0iR+................."/>
+                    <SliderPack EmbeddedData="16.T35A+................."/>
                   </SliderPacks>
                   <AudioFiles>
                     <AudioFile EmbeddedData="{PROJECT_FOLDER}Wavetables/512/BROKEN.WAV" MinValue="0"
@@ -718,11 +718,11 @@
                   </UIData>
                 </Processor>
                 <Processor Type="HardcodedPolyphonicFX" ID="Filter1" Bypassed="0" Network="Filter"
-                           Q="0.7799999713897705" FilterMix="1.0" FilterMod="0.0" Cut1="7497.0"
-                           Cut1Mod="0.0" FilterMidiMix="1.0" FilterMidiCut1="6.0" FilterMode="1.0"
-                           FilerInOsc1="0.0" FilterInOSc2="0.0" FilterInFile="1.0" Gain="1.0"
-                           GainMod="0.0" PAn="0.0" PanMod="0.0" CutPK="1.0" GainMidi="1.0"
-                           GainPk="1.0" PanMidi="0.0" PanPk="0.0" FilterMixPk="0.0">
+                           Q="0.0" FilterMix="1.0" FilterMod="0.0" Cut1="7497.0" Cut1Mod="0.0"
+                           FilterMidiMix="1.0" FilterMidiCut1="6.0" FilterMode="1.0" FilerInOsc1="0.0"
+                           FilterInOSc2="0.0" FilterInFile="1.0" Gain="1.0" GainMod="0.0"
+                           PAn="0.0" PanMod="0.0" CutPK="1.0" GainMidi="1.0" GainPk="1.0"
+                           PanMidi="0.0" PanPk="0.0" FilterMixPk="0.0">
                   <ChildProcessors/>
                   <RoutingMatrix NumSourceChannels="2" Channel0="0" Send0="-1" Channel1="1" Send1="-1"/>
                   <SliderPacks>
@@ -743,12 +743,11 @@
                   </UIData>
                 </Processor>
                 <Processor Type="HardcodedPolyphonicFX" ID="Filter2" Bypassed="0" Network="Filter"
-                           Q="0.6899999976158142" FilterMix="0.8100000023841858" FilterMod="0.0"
-                           Cut1="3035.0" Cut1Mod="0.0" FilterMidiMix="1.0" FilterMidiCut1="6.0"
-                           FilterMode="3.0" FilerInOsc1="0.0" FilterInOSc2="0.0" FilterInFile="1.0"
-                           Gain="0.6399999856948853" GainMod="0.0" PAn="0.0" PanMod="0.0"
-                           CutPK="2.0" GainMidi="1.0" GainPk="1.0" PanMidi="0.0" PanPk="0.0"
-                           FilterMixPk="1.0">
+                           Q="0.0" FilterMix="0.8100000023841858" FilterMod="0.0" Cut1="3035.0"
+                           Cut1Mod="0.0" FilterMidiMix="1.0" FilterMidiCut1="6.0" FilterMode="3.0"
+                           FilerInOsc1="0.0" FilterInOSc2="0.0" FilterInFile="1.0" Gain="0.0"
+                           GainMod="0.0" PAn="0.0" PanMod="0.0" CutPK="2.0" GainMidi="1.0"
+                           GainPk="1.0" PanMidi="0.0" PanPk="0.0" FilterMixPk="1.0">
                   <ChildProcessors/>
                   <RoutingMatrix NumSourceChannels="2" Channel0="0" Send0="-1" Channel1="1" Send1="-1"/>
                   <SliderPacks>

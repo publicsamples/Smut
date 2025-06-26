@@ -469,7 +469,7 @@
       </Node>
     </Nodes>
     <Parameters>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="Clock1" Value="0.001129638671875"
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="Clock1" Value="0.001129638636484742"
                  DefaultValue="0.0">
         <Connections>
           <Connection NodeId="branch13" ParameterId="Index"/>
@@ -541,7 +541,8 @@
         </Connections>
       </Parameter>
       <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
-                 SkewFactor="0.1976716816425323" ID="h1" Value="0.0">
+                 SkewFactor="0.1976716816425323" ID="h1" Value="1.000000014901161"
+                 DefaultValue="0.0">
         <Connections>
           <Connection NodeId="ahdsr" ParameterId="Hold"/>
         </Connections>
@@ -553,31 +554,32 @@
         </Connections>
       </Parameter>
       <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
-                 SkewFactor="0.1976716816425323" ID="d1" Value="351.9000052437186"
+                 SkewFactor="0.1976716816425323" ID="d1" Value="693.0000103265046"
                  DefaultValue="0.0">
         <Connections>
           <Connection NodeId="ahdsr" ParameterId="Decay"/>
         </Connections>
       </Parameter>
       <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
-                 SkewFactor="0.1976716816425323" ID="d2" Value="350.6000052243471"
-                 DefaultValue="0.0">
+                 SkewFactor="0.1976716816425323" ID="d2" Value="0.0">
         <Connections>
           <Connection NodeId="ahdsr6" ParameterId="Decay"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="s1" Value="1.0" DefaultValue="0.0">
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="s1" Value="0.8399999737739563"
+                 DefaultValue="0.0">
         <Connections>
           <Connection NodeId="ahdsr" ParameterId="Sustain"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="s2" Value="1.0" DefaultValue="0.0">
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="s2" Value="0.0">
         <Connections>
           <Connection NodeId="ahdsr6" ParameterId="Sustain"/>
         </Connections>
       </Parameter>
       <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
-                 SkewFactor="0.1976716816425323" ID="r1" Value="0.0">
+                 SkewFactor="0.1976716816425323" ID="r1" Value="10.00000014901161"
+                 DefaultValue="0.0">
         <Connections>
           <Connection NodeId="ahdsr" ParameterId="Release"/>
         </Connections>

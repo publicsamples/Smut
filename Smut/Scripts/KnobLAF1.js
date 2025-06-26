@@ -192,6 +192,8 @@ const var ModKnobs = [Content.getComponent("MidiSelOsc1"),
                       Content.getComponent("FilterCut1Mod1"),
                       Content.getComponent("FilterMixMod3"),
                       Content.getComponent("FilterVolMod1"),
+                      Content.getComponent("FilterPanMod4"),
+                      Content.getComponent("FilterPanMod3"),
                       Content.getComponent("FilterPanMod1")];
 for(s in ModKnobs)
       s.setLocalLookAndFeel(KnobLaf);  
