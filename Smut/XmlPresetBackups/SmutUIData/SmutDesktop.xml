@@ -1087,18 +1087,19 @@
     <Component type="ScriptPanel" id="Filter1" x="597.0" y="0.0" width="250.0"
                height="610.0" itemColour="4294307288" itemColour2="4294307288"
                textColour="4278190080" parentComponent="Voices">
-      <Component type="ScriptLabel" id="Shape39" x="95.0" y="366.0" parentComponent="Filter1"
-                 width="90.0" height="30.0" editable="0" text="SPREAD" fontName="mon"
-                 fontSize="16.0" bgColour="4283129195" alignment="right"/>
-      <Component type="ScriptButton" id="SpreadPower" x="98.0" y="371.0" width="20.0"
+      <Component type="ScriptLabel" id="Shape39" x="105.0" y="366.0" parentComponent="Filter1"
+                 width="130" height="30" editable="0" text="SPREAD" fontName="mon"
+                 fontSize="16.0" bgColour="4283129195">
+        <Component type="ScriptSlider" id="ScriptSlider1" x="96" y="0" width="30.0"
+                   height="30.0" parentComponent="Shape39" processorId="Detune"
+                   parameterId="DET" min="-1.0" middlePosition="0.0" bgColour="4291664281"
+                   isPluginParameter="1" pluginParameterName="Spread"/>
+      </Component>
+      <Component type="ScriptButton" id="SpreadPower" x="109.0" y="371.0" width="20.0"
                  height="20.0" parentComponent="Filter1" text="SREAD" processorId="Detune"
                  parameterId="Bypass" bgColour="4294901760" itemColour="4294901760"
                  itemColour2="4227792896" textColour="4294901760" filmstripImage="{PROJECT_FOLDER}power2.png"
                  scaleFactor="0.03999999910593033"/>
-      <Component type="ScriptSlider" id="ScriptSlider1" x="201.0" y="366.0" width="30.0"
-                 height="30.0" parentComponent="Filter1" processorId="Detune"
-                 parameterId="DET" min="-1.0" middlePosition="0.0" bgColour="1439537561"
-                 isPluginParameter="1" pluginParameterName="Spread"/>
       <Component type="ScriptComboBox" id="FlModRoutPage1" x="153.0" y="411.0"
                  width="80.0" height="20.0" max="8" items="Mix 1&#10;Mix 2&#10;Cutoff 1&#10;Cutoff 2&#10;Gain 1&#10;Gain 2&#10;Pan 1&#10;Pan 2&#10;&#10;"
                  parentComponent="Filter1" itemColour2="4211081216" itemColour="4278190080"
@@ -1422,10 +1423,10 @@
                  text="FILE" fontName="Montserrat" textColour="4281149480"/>
       <Component type="ScriptLabel" id="CutLabel26" x="15.0" y="339.0" width="40.0"
                  height="20.0" parentComponent="Filter1" editable="0" fontSize="14.0"
-                 text="Pan" fontName="Montserrat" textColour="4281149480"/>
+                 text="Type" fontName="Montserrat" textColour="4281149480"/>
       <Component type="ScriptLabel" id="CutLabel27" x="133.0" y="339.0" width="40.0"
                  height="20.0" parentComponent="Filter1" editable="0" fontSize="14.0"
-                 text="Pan" fontName="Montserrat" textColour="4281149480"/>
+                 text="Type" fontName="Montserrat" textColour="4281149480"/>
       <Component type="ScriptLabel" id="CutLabel28" x="208.0" y="100.0" width="30.0"
                  height="20.0" parentComponent="Filter1" editable="0" fontSize="14.0"
                  text="FL2" fontName="Montserrat" textColour="4281149480"/>

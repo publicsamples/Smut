@@ -150,14 +150,14 @@
             <Control type="ScriptSlider" id="PostTempo4" value="0.0"/>
             <Control type="ScriptSlider" id="PosMod4" value="0.0"/>
             <Control type="ScriptSlider" id="Pos" value="0.0"/>
-            <Control type="ScriptSliderPack" id="ScriptSliderPack1" value="1" data="16.w0iR+................."/>
+            <Control type="ScriptSliderPack" id="ScriptSliderPack1" value="1.0" data="16.w0iR+................."/>
             <Control type="ScriptComboBox" id="UsrCbVis1" value="1.0"/>
             <Control type="ScriptComboBox" id="UsrCbVis2" value="1.0"/>
             <Control type="ScriptComboBox" id="UsrCbVis3" value="1.0"/>
             <Control type="ScriptComboBox" id="UsrCbVis4" value="1.0"/>
             <Control type="ScriptComboBox" id="Quantise3" value="1.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider1" value="1.0"/>
             <Control type="ScriptButton" id="SpreadPower" value="1.0"/>
-            <Control type="ScriptSlider" id="ScriptSlider1" value="0.1700000017881393"/>
             <Control type="ScriptComboBox" id="FlModRoutPage1" value="3.0"/>
             <Control type="ScriptComboBox" id="XfSelOsc14" value="0.0"/>
             <Control type="ScriptComboBox" id="MidiSelOsc14" value="1.0"/>
@@ -173,7 +173,7 @@
             <Control type="ScriptSlider" id="FilterMixMod3" value="0.0"/>
             <Control type="ScriptComboBox" id="XfSelOsc65" value="2.0"/>
             <Control type="ScriptComboBox" id="MidiSelOsc65" value="6.0"/>
-            <Control type="ScriptSliderPack" id="FxSp51" value="3" data="32............................................"/>
+            <Control type="ScriptSliderPack" id="FxSp51" value="3.0" data="32............................................"/>
             <Control type="ScriptSlider" id="FilterVolMod1" value="0.0"/>
             <Control type="ScriptComboBox" id="XfSelOsc66" value="1.0"/>
             <Control type="ScriptComboBox" id="MidiSelOsc66" value="1.0"/>
@@ -197,8 +197,8 @@
             <Control type="ScriptSlider" id="VcaGain1" value="1.0"/>
             <Control type="ScriptSlider" id="VcaPan1" value="0.0"/>
             <Control type="ScriptSlider" id="FilterMix1" value="1.0"/>
-            <Control type="ScriptSliderPack" id="ScriptSliderPack2" value="0" data="12...............3O"/>
-            <Control type="ScriptSliderPack" id="ScriptSliderPack3" value="2" data="16......................."/>
+            <Control type="ScriptSliderPack" id="ScriptSliderPack2" value="0.0" data="12...............3O"/>
+            <Control type="ScriptSliderPack" id="ScriptSliderPack3" value="2.0" data="16......................."/>
             <Control type="ScriptSlider" id="FilterMix2" value="0.8100000023841858"/>
             <Control type="ScriptSlider" id="VcaPan2" value="0.0"/>
             <Control type="ScriptSlider" id="VcaGain2" value="0.6399999856948853"/>
