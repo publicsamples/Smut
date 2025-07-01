@@ -70,10 +70,10 @@ struct _gran final : public ::faust::dsp {
 	FAUSTFLOAT fHslider3;
 	int iRec4[2];
 	int iVec0[2];
-	int iRec3[2];
 	FAUSTFLOAT fHslider4;
-	float fRec6[2];
 	float fRec5[2];
+	float fRec3[2];
+	int iRec6[2];
 	float fConst4;
 	float fRec8[2];
 	float fRec7[2];
@@ -128,7 +128,7 @@ struct _gran final : public ::faust::dsp {
 		m->declare("envelopes.lib/license", "LGPL with exception");
 		m->declare("envelopes.lib/name", "Faust Envelope Library");
 		m->declare("envelopes.lib/version", "1.3.0");
-		m->declare("fds.lib/author", "Riccardo Russo");
+		m->declare("fds.lib/author", "Romain Michon");
 		m->declare("fds.lib/name", "Faust Finite Difference Schemes Library");
 		m->declare("fds.lib/version", "1.1.0");
 		m->declare("filename", "gran.dsp");
@@ -155,7 +155,7 @@ struct _gran final : public ::faust::dsp {
 		m->declare("maths.lib/license", "LGPL with exception");
 		m->declare("maths.lib/name", "Faust Math Library");
 		m->declare("maths.lib/version", "2.8.0");
-		m->declare("mi.lib/author", "James Leonard");
+		m->declare("mi.lib/author", "Romain Michon");
 		m->declare("mi.lib/copyright", "2018-2020 GRAME / GIPSA-Lab");
 		m->declare("mi.lib/name", "Faust mass-interaction physical modelling library");
 		m->declare("mi.lib/version", "1.1.0");
@@ -252,13 +252,13 @@ struct _gran final : public ::faust::dsp {
 			iVec0[l2] = 0;
 		}
 		for (int l3 = 0; l3 < 2; l3 = l3 + 1) {
-			iRec3[l3] = 0;
+			fRec5[l3] = 0.0f;
 		}
 		for (int l4 = 0; l4 < 2; l4 = l4 + 1) {
-			fRec6[l4] = 0.0f;
+			fRec3[l4] = 0.0f;
 		}
 		for (int l5 = 0; l5 < 2; l5 = l5 + 1) {
-			fRec5[l5] = 0.0f;
+			iRec6[l5] = 0;
 		}
 		for (int l6 = 0; l6 < 2; l6 = l6 + 1) {
 			fRec8[l6] = 0.0f;
@@ -397,10 +397,10 @@ struct _gran final : public ::faust::dsp {
 			int iTemp0 = ((iRec4[0] < 10) ? 1 : 0);
 			iVec0[0] = iTemp0;
 			int iTemp1 = iTemp0 > iVec0[1];
-			iRec3[0] = ((iTemp1) ? iRec2[0] : iRec3[1]);
-			fRec6[0] = ((iTemp1) ? fSlow4 : fRec6[1]);
-			fRec5[0] = std::max<float>(0.0f, ((iTemp1) ? float(fRec6[0] < 0.0f) : fRec5[1] + fRec6[0]));
-			int iTemp2 = (iSlow1 + iRec3[0] + int(fRec5[0])) % 44100;
+			fRec5[0] = ((iTemp1) ? fSlow4 : fRec5[1]);
+			fRec3[0] = std::max<float>(0.0f, ((iTemp1) ? float(fRec5[0] < 0.0f) : fRec5[0] + fRec3[1]));
+			iRec6[0] = ((iTemp1) ? iRec2[0] : iRec6[1]);
+			int iTemp2 = (iSlow1 + int(fRec3[0]) + iRec6[0]) % 44100;
 			fRec8[0] = ((iTemp1) ? fSlow5 : fRec8[1]);
 			float fTemp3 = fConst4 * fRec8[0];
 			fRec7[0] = std::max<float>(0.0f, ((iTemp1) ? float(fTemp3 < 0.0f) : fRec7[1] + fTemp3));
@@ -410,7 +410,7 @@ struct _gran final : public ::faust::dsp {
 			iVec1[0] = iTemp6;
 			int iTemp7 = iTemp6 > iVec1[1];
 			fRec10[0] = ((iTemp7) ? fSlow4 : fRec10[1]);
-			fRec9[0] = std::max<float>(0.0f, ((iTemp7) ? float(fRec10[0] < 0.0f) : fRec9[1] + fRec10[0]));
+			fRec9[0] = std::max<float>(0.0f, ((iTemp7) ? float(fRec10[0] < 0.0f) : fRec10[0] + fRec9[1]));
 			iRec11[0] = ((iTemp7) ? iRec2[0] : iRec11[1]);
 			int iTemp8 = (iSlow1 + int(fRec9[0]) + iRec11[0]) % 44100;
 			fRec13[0] = ((iTemp7) ? fSlow5 : fRec13[1]);
@@ -421,7 +421,7 @@ struct _gran final : public ::faust::dsp {
 			iVec2[0] = iTemp11;
 			int iTemp12 = iTemp11 > iVec2[1];
 			fRec15[0] = ((iTemp12) ? fSlow4 : fRec15[1]);
-			fRec14[0] = std::max<float>(0.0f, ((iTemp12) ? float(fRec15[0] < 0.0f) : fRec14[1] + fRec15[0]));
+			fRec14[0] = std::max<float>(0.0f, ((iTemp12) ? float(fRec15[0] < 0.0f) : fRec15[0] + fRec14[1]));
 			iRec16[0] = ((iTemp12) ? iRec2[0] : iRec16[1]);
 			int iTemp13 = (iSlow1 + int(fRec14[0]) + iRec16[0]) % 44100;
 			fRec18[0] = ((iTemp12) ? fSlow5 : fRec18[1]);
@@ -432,7 +432,7 @@ struct _gran final : public ::faust::dsp {
 			iVec3[0] = iTemp16;
 			int iTemp17 = iTemp16 > iVec3[1];
 			fRec20[0] = ((iTemp17) ? fSlow4 : fRec20[1]);
-			fRec19[0] = std::max<float>(0.0f, ((iTemp17) ? float(fRec20[0] < 0.0f) : fRec19[1] + fRec20[0]));
+			fRec19[0] = std::max<float>(0.0f, ((iTemp17) ? float(fRec20[0] < 0.0f) : fRec20[0] + fRec19[1]));
 			iRec21[0] = ((iTemp17) ? iRec2[0] : iRec21[1]);
 			int iTemp18 = (iSlow1 + int(fRec19[0]) + iRec21[0]) % 44100;
 			fRec23[0] = ((iTemp17) ? fSlow5 : fRec23[1]);
@@ -445,7 +445,7 @@ struct _gran final : public ::faust::dsp {
 			fRec0[0] = fRec1[0];
 			output0[i0] = FAUSTFLOAT(fRec0[0]);
 			ftbl1[iRec2[0]] = fSlow0 * fRec24[1] + float(input1[i0]);
-			float fTemp22 = fTemp4 * ftbl1[iTemp2] + fTemp10 * ftbl1[iTemp8] + fTemp15 * ftbl1[iTemp13] + ftbl1[iTemp18] * fTemp20;
+			float fTemp22 = fTemp4 * ftbl1[iTemp2] + fTemp10 * ftbl1[iTemp8] + fTemp15 * ftbl1[iTemp13] + fTemp20 * ftbl1[iTemp18];
 			fVec5[0] = fTemp22;
 			fRec25[0] = fConst2 * (fConst3 * fRec25[1] + 0.1f * (fTemp22 - fVec5[1]));
 			fRec24[0] = fRec25[0];
@@ -453,9 +453,9 @@ struct _gran final : public ::faust::dsp {
 			iRec2[1] = iRec2[0];
 			iRec4[1] = iRec4[0];
 			iVec0[1] = iVec0[0];
-			iRec3[1] = iRec3[0];
-			fRec6[1] = fRec6[0];
 			fRec5[1] = fRec5[0];
+			fRec3[1] = fRec3[0];
+			iRec6[1] = iRec6[0];
 			fRec8[1] = fRec8[0];
 			fRec7[1] = fRec7[0];
 			iVec1[1] = iVec1[0];
