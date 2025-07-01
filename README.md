@@ -35,11 +35,11 @@ Two sawtooth generators with waveshaping and fm controls.
 
  - Tri/Sin - crossfade between a triangle and sine. 
  - PWM - square with width control. 
-   Sync1 - "soft" sync effect . 
-   Sync2 - A dirtier sync effect
-   Fold1 - My "bad at maths" attempt at a wavefolder
-   Fold2 - Grottier version of above. Maybe sine squisher would be a better name. 
-   User  - "Draw" your own waveform
+ -  Sync1 - "soft" sync effect . 
+ -  Sync2 - A dirtier sync effect
+ -  Fold1 - My "bad at maths" attempt at a wavefolder
+ -  Fold2 - Grottier version of above. Maybe sine squisher would be a better name. 
+ -  User  - "Draw" your own waveform
    
 ## File
 
