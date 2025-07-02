@@ -4,15 +4,320 @@
   <Node FactoryPath="container.chain" ID="Filter2Out" Bypassed="0" Name="Filter2Out"
         ShowParameters="1">
     <Nodes>
-      <Node ID="global_send" FactoryPath="routing.global_send" Bypassed="0"
-            Name="global_send" NodeColour="4288983624">
-        <Properties>
-          <Property ID="Connection" Value="f2out"/>
-        </Properties>
+      <Node ID="gain" FactoryPath="core.gain" Bypassed="0" Name="gain">
         <Parameters>
-          <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.2408090820312499"
-                     DefaultValue="1.0"/>
+          <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
+                     SkewFactor="5.422270774841309" ID="Gain" Value="-11.99999868869781"
+                     DefaultValue="0.0"/>
+          <Parameter MinValue="0.0" MaxValue="1000.0" StepSize="0.1000000014901161"
+                     SkewFactor="0.3010300099849701" ID="Smoothing" Value="20.0"/>
+          <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
+                     SkewFactor="5.422270774841309" ID="ResetValue" Value="0.0"/>
         </Parameters>
+      </Node>
+      <Node ID="branch" FactoryPath="container.branch" Bypassed="0" Name="branch"
+            ShowParameters="1">
+        <Nodes>
+          <Node ID="split" FactoryPath="container.split" Bypassed="0" Name="split">
+            <Nodes>
+              <Node ID="chain1" FactoryPath="container.chain" Bypassed="0" Name="chain1">
+                <Nodes>
+                  <Node ID="Filter" FactoryPath="project.Filter" Bypassed="0" Name="Filter">
+                    <ComplexData>
+                      <SliderPacks>
+                        <SliderPack Index="0"/>
+                        <SliderPack Index="1"/>
+                        <SliderPack Index="2"/>
+                        <SliderPack Index="3" EmbeddedData="32....f+....9C...3O...f+....9C...3O...f+vdT31C"/>
+                        <SliderPack Index="-1"/>
+                        <SliderPack Index="-1"/>
+                        <SliderPack Index="-1"/>
+                      </SliderPacks>
+                      <DisplayBuffers>
+                        <DisplayBuffer Index="-1"/>
+                        <DisplayBuffer Index="-1"/>
+                        <DisplayBuffer Index="-1"/>
+                      </DisplayBuffers>
+                    </ComplexData>
+                    <Parameters>
+                      <Parameter MinValue="0.0" MaxValue="1.0" ID="Q" DefaultValue="0.9900000095367432"
+                                 Automated="1"/>
+                      <Parameter MinValue="0.0" MaxValue="1.0" ID="FilterMix" DefaultValue="0.2780230939388275"
+                                 Automated="1"/>
+                      <Parameter MinValue="-1.0" MaxValue="1.0" ID="FilterMod" Automated="1"/>
+                      <Parameter MinValue="20.0" MaxValue="20000.0" SkewFactor="0.2299045622348785"
+                                 ID="Cut1" DefaultValue="5746.0" Automated="1"/>
+                      <Parameter MinValue="-1.0" MaxValue="1.0" ID="Cut1Mod" DefaultValue="1.0"
+                                 Automated="1"/>
+                      <Parameter MinValue="1.0" MaxValue="7.0" ID="FilterMidiMix" DefaultValue="1.0"
+                                 Automated="1"/>
+                      <Parameter MinValue="1.0" MaxValue="7.0" ID="FilterMidiCut1" DefaultValue="6.0"
+                                 Automated="1"/>
+                      <Parameter MinValue="1.0" MaxValue="3.0" StepSize="1.0" ID="FilterMode"
+                                 DefaultValue="1.0" Automated="1"/>
+                      <Parameter MinValue="0.0" MaxValue="1.0" ID="FilerInOsc1" Value="0.0"/>
+                      <Parameter MinValue="0.0" MaxValue="1.0" ID="FilterInOSc2" Value="0.0"/>
+                      <Parameter MinValue="0.0" MaxValue="1.0" ID="FilterInFile" Value="0.0" DefaultValue="1.0"/>
+                      <Parameter MinValue="0.0" MaxValue="1.0" ID="Gain" DefaultValue="0.9100000262260437"
+                                 Automated="1"/>
+                      <Parameter MinValue="-1.0" MaxValue="1.0" ID="GainMod" DefaultValue="1.0"
+                                 Automated="1"/>
+                      <Parameter MinValue="-1.0" MaxValue="1.0" ID="PAn" Automated="1"/>
+                      <Parameter MinValue="-1.0" MaxValue="1.0" ID="PanMod" Automated="1"/>
+                      <Parameter MinValue="1.0" MaxValue="4.0" StepSize="1.0" ID="CutPK" DefaultValue="3.0"
+                                 Automated="1"/>
+                      <Parameter MinValue="1.0" MaxValue="7.0" StepSize="1.0" ID="GainMidi" DefaultValue="1.0"
+                                 Automated="1"/>
+                      <Parameter MinValue="1.0" MaxValue="4.0" StepSize="1.0" ID="GainPk" DefaultValue="1.0"
+                                 Automated="1"/>
+                      <Parameter MinValue="1.0" MaxValue="7.0" ID="PanMidi" DefaultValue="1.0"
+                                 Automated="1"/>
+                      <Parameter MinValue="1.0" MaxValue="4.0" ID="PanPk" DefaultValue="1.0" Automated="1"/>
+                      <Parameter MinValue="0.0" MaxValue="1.0" ID="FilterMixPk" DefaultValue="1.0"
+                                 Automated="1"/>
+                    </Parameters>
+                  </Node>
+                  <Node ID="global_send" FactoryPath="routing.global_send" Bypassed="0"
+                        Name="global_send" NodeColour="4283975602">
+                    <Properties>
+                      <Property ID="Connection" Value="Filter1"/>
+                    </Properties>
+                    <Parameters>
+                      <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="1.0"/>
+                    </Parameters>
+                  </Node>
+                </Nodes>
+                <Parameters/>
+              </Node>
+              <Node ID="chain2" FactoryPath="container.chain" Bypassed="0" Name="chain2">
+                <Nodes>
+                  <Node ID="Filter1" FactoryPath="project.Filter" Bypassed="0" Name="Filter">
+                    <ComplexData>
+                      <SliderPacks>
+                        <SliderPack Index="4"/>
+                        <SliderPack Index="5"/>
+                        <SliderPack Index="6"/>
+                        <SliderPack Index="7" EmbeddedData="32....f+....9C...3O...f+....9C...3O...f+vdT31C"/>
+                        <SliderPack Index="-1"/>
+                        <SliderPack Index="-1"/>
+                        <SliderPack Index="-1"/>
+                      </SliderPacks>
+                      <DisplayBuffers>
+                        <DisplayBuffer Index="-1"/>
+                        <DisplayBuffer Index="-1"/>
+                        <DisplayBuffer Index="-1"/>
+                      </DisplayBuffers>
+                    </ComplexData>
+                    <Parameters>
+                      <Parameter MinValue="0.0" MaxValue="1.0" ID="Q" DefaultValue="0.9900000095367432"
+                                 Automated="1"/>
+                      <Parameter MinValue="0.0" MaxValue="1.0" ID="FilterMix" DefaultValue="0.2780230939388275"
+                                 Automated="1"/>
+                      <Parameter MinValue="-1.0" MaxValue="1.0" ID="FilterMod" Automated="1"/>
+                      <Parameter MinValue="20.0" MaxValue="20000.0" SkewFactor="0.2299045622348785"
+                                 ID="Cut1" DefaultValue="5746.0" Automated="1"/>
+                      <Parameter MinValue="-1.0" MaxValue="1.0" ID="Cut1Mod" DefaultValue="1.0"
+                                 Automated="1"/>
+                      <Parameter MinValue="1.0" MaxValue="7.0" ID="FilterMidiMix" DefaultValue="1.0"
+                                 Automated="1"/>
+                      <Parameter MinValue="1.0" MaxValue="7.0" ID="FilterMidiCut1" DefaultValue="6.0"
+                                 Automated="1"/>
+                      <Parameter MinValue="1.0" MaxValue="3.0" StepSize="1.0" ID="FilterMode"
+                                 DefaultValue="1.0" Automated="1"/>
+                      <Parameter MinValue="0.0" MaxValue="1.0" ID="FilerInOsc1" Value="0.0"/>
+                      <Parameter MinValue="0.0" MaxValue="1.0" ID="FilterInOSc2" Value="1.0" DefaultValue="0.0"/>
+                      <Parameter MinValue="0.0" MaxValue="1.0" ID="FilterInFile" Value="1.0"/>
+                      <Parameter MinValue="0.0" MaxValue="1.0" ID="Gain" DefaultValue="0.9100000262260437"
+                                 Automated="1"/>
+                      <Parameter MinValue="-1.0" MaxValue="1.0" ID="GainMod" DefaultValue="1.0"
+                                 Automated="1"/>
+                      <Parameter MinValue="-1.0" MaxValue="1.0" ID="PAn" Automated="1"/>
+                      <Parameter MinValue="-1.0" MaxValue="1.0" ID="PanMod" Automated="1"/>
+                      <Parameter MinValue="1.0" MaxValue="4.0" StepSize="1.0" ID="CutPK" DefaultValue="3.0"
+                                 Automated="1"/>
+                      <Parameter MinValue="1.0" MaxValue="7.0" StepSize="1.0" ID="GainMidi" DefaultValue="1.0"
+                                 Automated="1"/>
+                      <Parameter MinValue="1.0" MaxValue="4.0" StepSize="1.0" ID="GainPk" DefaultValue="1.0"
+                                 Automated="1"/>
+                      <Parameter MinValue="1.0" MaxValue="7.0" ID="PanMidi" DefaultValue="1.0"
+                                 Automated="1"/>
+                      <Parameter MinValue="1.0" MaxValue="4.0" ID="PanPk" DefaultValue="1.0" Automated="1"/>
+                      <Parameter MinValue="0.0" MaxValue="1.0" ID="FilterMixPk" Value="1.0"/>
+                    </Parameters>
+                  </Node>
+                  <Node ID="global_send1" FactoryPath="routing.global_send" Bypassed="0"
+                        Name="global_send1" NodeColour="4283910322">
+                    <Properties>
+                      <Property ID="Connection" Value="Filter2"/>
+                    </Properties>
+                    <Parameters>
+                      <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="1.0"/>
+                    </Parameters>
+                  </Node>
+                </Nodes>
+                <Parameters/>
+              </Node>
+            </Nodes>
+            <Parameters/>
+          </Node>
+          <Node ID="chain" FactoryPath="container.chain" Bypassed="0" Name="chain">
+            <Nodes>
+              <Node ID="Filter4" FactoryPath="project.Filter" Bypassed="0" Name="Filter">
+                <ComplexData>
+                  <SliderPacks>
+                    <SliderPack Index="0"/>
+                    <SliderPack Index="1"/>
+                    <SliderPack Index="2"/>
+                    <SliderPack Index="3" EmbeddedData="32....f+....9C...3O...f+....9C...3O...f+vdT31C"/>
+                    <SliderPack Index="-1"/>
+                    <SliderPack Index="-1"/>
+                    <SliderPack Index="-1"/>
+                  </SliderPacks>
+                  <DisplayBuffers>
+                    <DisplayBuffer Index="-1"/>
+                    <DisplayBuffer Index="-1"/>
+                    <DisplayBuffer Index="-1"/>
+                  </DisplayBuffers>
+                </ComplexData>
+                <Parameters>
+                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Q" DefaultValue="0.9900000095367432"
+                             Automated="1"/>
+                  <Parameter MinValue="0.0" MaxValue="1.0" ID="FilterMix" DefaultValue="0.2780230939388275"
+                             Automated="1"/>
+                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="FilterMod" Automated="1"/>
+                  <Parameter MinValue="20.0" MaxValue="20000.0" SkewFactor="0.2299045622348785"
+                             ID="Cut1" DefaultValue="5746.0" Automated="1"/>
+                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="Cut1Mod" DefaultValue="1.0"
+                             Automated="1"/>
+                  <Parameter MinValue="1.0" MaxValue="7.0" ID="FilterMidiMix" DefaultValue="1.0"
+                             Automated="1"/>
+                  <Parameter MinValue="1.0" MaxValue="7.0" ID="FilterMidiCut1" DefaultValue="6.0"
+                             Automated="1"/>
+                  <Parameter MinValue="1.0" MaxValue="3.0" StepSize="1.0" ID="FilterMode"
+                             DefaultValue="1.0" Automated="1"/>
+                  <Parameter MinValue="0.0" MaxValue="1.0" ID="FilerInOsc1" Value="0.0"/>
+                  <Parameter MinValue="0.0" MaxValue="1.0" ID="FilterInOSc2" Value="0.0"/>
+                  <Parameter MinValue="0.0" MaxValue="1.0" ID="FilterInFile" Value="1.0"/>
+                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Gain" DefaultValue="0.9100000262260437"
+                             Automated="1"/>
+                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="GainMod" DefaultValue="1.0"
+                             Automated="1"/>
+                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="PAn" Automated="1"/>
+                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="PanMod" Automated="1"/>
+                  <Parameter MinValue="1.0" MaxValue="4.0" StepSize="1.0" ID="CutPK" DefaultValue="3.0"
+                             Automated="1"/>
+                  <Parameter MinValue="1.0" MaxValue="7.0" StepSize="1.0" ID="GainMidi" DefaultValue="1.0"
+                             Automated="1"/>
+                  <Parameter MinValue="1.0" MaxValue="4.0" StepSize="1.0" ID="GainPk" DefaultValue="1.0"
+                             Automated="1"/>
+                  <Parameter MinValue="1.0" MaxValue="7.0" ID="PanMidi" DefaultValue="1.0"
+                             Automated="1"/>
+                  <Parameter MinValue="1.0" MaxValue="4.0" ID="PanPk" DefaultValue="1.0" Automated="1"/>
+                  <Parameter MinValue="0.0" MaxValue="1.0" ID="FilterMixPk" DefaultValue="1.0"
+                             Automated="1"/>
+                </Parameters>
+              </Node>
+              <Node ID="global_send2" FactoryPath="routing.global_send" Bypassed="0"
+                    Name="global_send2" NodeColour="4282888877">
+                <Properties>
+                  <Property ID="Connection" Value="filter1b"/>
+                </Properties>
+                <Parameters>
+                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="1.0"/>
+                </Parameters>
+              </Node>
+              <Node ID="Filter2" FactoryPath="project.Filter" Bypassed="0" Name="Filter">
+                <ComplexData>
+                  <SliderPacks>
+                    <SliderPack Index="4"/>
+                    <SliderPack Index="5"/>
+                    <SliderPack Index="6"/>
+                    <SliderPack Index="7" EmbeddedData="32....f+....9C...3O...f+....9C...3O...f+vdT31C"/>
+                    <SliderPack Index="-1"/>
+                    <SliderPack Index="-1"/>
+                    <SliderPack Index="-1"/>
+                  </SliderPacks>
+                  <DisplayBuffers>
+                    <DisplayBuffer Index="-1"/>
+                    <DisplayBuffer Index="-1"/>
+                    <DisplayBuffer Index="-1"/>
+                  </DisplayBuffers>
+                </ComplexData>
+                <Parameters>
+                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Q" DefaultValue="0.9900000095367432"
+                             Automated="1"/>
+                  <Parameter MinValue="0.0" MaxValue="1.0" ID="FilterMix" DefaultValue="0.2780230939388275"
+                             Automated="1"/>
+                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="FilterMod" Automated="1"/>
+                  <Parameter MinValue="20.0" MaxValue="20000.0" SkewFactor="0.2299045622348785"
+                             ID="Cut1" DefaultValue="5746.0" Automated="1"/>
+                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="Cut1Mod" DefaultValue="1.0"
+                             Automated="1"/>
+                  <Parameter MinValue="1.0" MaxValue="7.0" ID="FilterMidiMix" DefaultValue="1.0"
+                             Automated="1"/>
+                  <Parameter MinValue="1.0" MaxValue="7.0" ID="FilterMidiCut1" DefaultValue="6.0"
+                             Automated="1"/>
+                  <Parameter MinValue="1.0" MaxValue="3.0" StepSize="1.0" ID="FilterMode"
+                             DefaultValue="1.0" Automated="1"/>
+                  <Parameter MinValue="0.0" MaxValue="1.0" ID="FilerInOsc1" Value="0.0"/>
+                  <Parameter MinValue="0.0" MaxValue="1.0" ID="FilterInOSc2" Value="0.0"/>
+                  <Parameter MinValue="0.0" MaxValue="1.0" ID="FilterInFile" Value="0.0" DefaultValue="1.0"/>
+                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Gain" DefaultValue="0.9100000262260437"
+                             Automated="1"/>
+                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="GainMod" DefaultValue="1.0"
+                             Automated="1"/>
+                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="PAn" Automated="1"/>
+                  <Parameter MinValue="-1.0" MaxValue="1.0" ID="PanMod" Automated="1"/>
+                  <Parameter MinValue="1.0" MaxValue="4.0" StepSize="1.0" ID="CutPK" DefaultValue="3.0"
+                             Automated="1"/>
+                  <Parameter MinValue="1.0" MaxValue="7.0" StepSize="1.0" ID="GainMidi" DefaultValue="1.0"
+                             Automated="1"/>
+                  <Parameter MinValue="1.0" MaxValue="4.0" StepSize="1.0" ID="GainPk" DefaultValue="1.0"
+                             Automated="1"/>
+                  <Parameter MinValue="1.0" MaxValue="7.0" ID="PanMidi" DefaultValue="1.0"
+                             Automated="1"/>
+                  <Parameter MinValue="1.0" MaxValue="4.0" ID="PanPk" DefaultValue="1.0" Automated="1"/>
+                  <Parameter MinValue="0.0" MaxValue="1.0" ID="FilterMixPk" DefaultValue="1.0"
+                             Automated="1"/>
+                </Parameters>
+              </Node>
+              <Node ID="gain1" FactoryPath="core.gain" Bypassed="0" Name="gain">
+                <Parameters>
+                  <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
+                             SkewFactor="5.422270774841309" ID="Gain" Value="-11.99999868869781"
+                             DefaultValue="0.0"/>
+                  <Parameter MinValue="0.0" MaxValue="1000.0" StepSize="0.1000000014901161"
+                             SkewFactor="0.3010300099849701" ID="Smoothing" Value="20.0"/>
+                  <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
+                             SkewFactor="5.422270774841309" ID="ResetValue" Value="0.0"/>
+                </Parameters>
+              </Node>
+              <Node ID="global_send3" FactoryPath="routing.global_send" Bypassed="0"
+                    Name="global_send2" NodeColour="4282951858">
+                <Properties>
+                  <Property ID="Connection" Value="filter2b"/>
+                </Properties>
+                <Parameters>
+                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="1.0"/>
+                </Parameters>
+              </Node>
+            </Nodes>
+            <Parameters/>
+          </Node>
+        </Nodes>
+        <Parameters>
+          <Parameter MinValue="0.0" MaxValue="1" StepSize="1.0" ID="Index" DefaultValue="0.0"
+                     Automated="1"/>
+        </Parameters>
+      </Node>
+      <Node ID="oscilloscope" FactoryPath="analyse.oscilloscope" Bypassed="0"
+            Name="oscilloscope">
+        <ComplexData>
+          <DisplayBuffers>
+            <DisplayBuffer Index="2" EmbeddedData=""/>
+          </DisplayBuffers>
+        </ComplexData>
+        <Parameters/>
       </Node>
       <Node ID="chain196" FactoryPath="container.chain" Bypassed="0" Name="chain196">
         <Nodes>
@@ -39,43 +344,45 @@
         </Nodes>
         <Parameters/>
       </Node>
-      <Node ID="clear" FactoryPath="math.clear" Bypassed="0" Name="clear">
+      <Node ID="ahdsr" FactoryPath="envelope.ahdsr" Bypassed="0" Name="ahdsr">
+        <Properties>
+          <Property ID="NumParameters" Value="2"/>
+        </Properties>
+        <SwitchTargets>
+          <SwitchTarget>
+            <Connections/>
+          </SwitchTarget>
+          <SwitchTarget>
+            <Connections>
+              <Connection NodeId="voice_manager" ParameterId="Kill Voice"/>
+            </Connections>
+          </SwitchTarget>
+        </SwitchTargets>
+        <ComplexData>
+          <DisplayBuffers>
+            <DisplayBuffer Index="-1" EmbeddedData=""/>
+          </DisplayBuffers>
+        </ComplexData>
         <Parameters>
-          <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.0"/>
+          <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
+                     SkewFactor="0.1976716816425323" ID="Attack" DefaultValue="10.0"
+                     Automated="1"/>
+          <Parameter MinValue="0.0" MaxValue="1.0" ID="AttackLevel" Value="1.0"/>
+          <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
+                     SkewFactor="0.1976716816425323" ID="Hold" DefaultValue="20.0"
+                     Automated="1"/>
+          <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
+                     SkewFactor="0.1976716816425323" ID="Decay" DefaultValue="300.0"
+                     Automated="1"/>
+          <Parameter MinValue="0.0" MaxValue="1.0" ID="Sustain" DefaultValue="0.5"
+                     Automated="1"/>
+          <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
+                     SkewFactor="0.1976716816425323" ID="Release" DefaultValue="20.0"
+                     Automated="1"/>
+          <Parameter MinValue="0.0" MaxValue="1.0" ID="AttackCurve" Value="0.5"/>
+          <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Retrigger" Value="0.0"/>
+          <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Gate" Value="0.0"/>
         </Parameters>
-      </Node>
-      <Node ID="split" FactoryPath="container.split" Bypassed="0" Name="split">
-        <Nodes>
-          <Node ID="chain3" FactoryPath="container.chain" Bypassed="0" Name="chain">
-            <Nodes>
-              <Node ID="global_receive3" FactoryPath="routing.global_receive" Bypassed="0"
-                    Name="global_receive" NodeColour="4282954328">
-                <Properties>
-                  <Property ID="Connection" Value="FilerOut"/>
-                </Properties>
-                <Parameters>
-                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" DefaultValue="1.0" Automated="1"/>
-                </Parameters>
-              </Node>
-            </Nodes>
-            <Parameters/>
-          </Node>
-          <Node ID="chain4" FactoryPath="container.chain" Bypassed="0" Name="chain">
-            <Nodes>
-              <Node ID="global_receive4" FactoryPath="routing.global_receive" Bypassed="0"
-                    Name="global_receive" NodeColour="4288983624">
-                <Properties>
-                  <Property ID="Connection" Value="f2out"/>
-                </Properties>
-                <Parameters>
-                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" DefaultValue="1.0" Automated="1"/>
-                </Parameters>
-              </Node>
-            </Nodes>
-            <Parameters/>
-          </Node>
-        </Nodes>
-        <Parameters/>
       </Node>
       <Node ID="gain5" FactoryPath="core.gain" Bypassed="0" Name="gain5">
         <Parameters>
@@ -88,23 +395,290 @@
                      DefaultValue="0.0"/>
         </Parameters>
       </Node>
+      <Node ID="voice_manager" FactoryPath="envelope.voice_manager" Bypassed="0"
+            Name="voice_manager">
+        <Parameters>
+          <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Kill Voice"
+                     DefaultValue="1.0" Automated="1"/>
+        </Parameters>
+      </Node>
     </Nodes>
     <Parameters>
-      <Parameter MinValue="-100.0" MaxValue="0.0" ID="Master" Value="-21.89999883621932"
+      <Parameter MinValue="-100.0" MaxValue="0.0" ID="Master" Value="-20.39999881386758"
                  DefaultValue="0.0" StepSize="0.1000000014901161" SkewFactor="5.422270774841309">
         <Connections>
           <Connection NodeId="gain5" ParameterId="Gain"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="filter1" Value="0.0">
-        <Connections>
-          <Connection NodeId="global_receive3" ParameterId="Value"/>
-        </Connections>
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="filter1" Value="1.0" DefaultValue="0.0">
+        <Connections/>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="filter2" Value="0.9900000095367432"
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="filter2" Value="0.0">
+        <Connections/>
+      </Parameter>
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="Q1" Value="0.9200000166893005"
                  DefaultValue="0.0">
         <Connections>
-          <Connection NodeId="global_receive4" ParameterId="Value"/>
+          <Connection NodeId="Filter" ParameterId="Q"/>
+          <Connection NodeId="Filter4" ParameterId="Q"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="Mix1" Value="0.0">
+        <Connections>
+          <Connection NodeId="Filter" ParameterId="FilterMix"/>
+          <Connection NodeId="Filter4" ParameterId="FilterMix"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="-1.0" MaxValue="1.0" ID="MixMod1" Value="0.0">
+        <Connections>
+          <Connection NodeId="Filter" ParameterId="FilterMod"/>
+          <Connection NodeId="Filter4" ParameterId="FilterMod"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="20.0" MaxValue="20000.0" ID="Cut1" Value="3116.0" DefaultValue="0.0"
+                 SkewFactor="0.2299045622348785">
+        <Connections>
+          <Connection NodeId="Filter" ParameterId="Cut1"/>
+          <Connection NodeId="Filter4" ParameterId="Cut1"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="-1.0" MaxValue="1.0" ID="CutMod1" Value="0.0">
+        <Connections>
+          <Connection NodeId="Filter" ParameterId="Cut1Mod"/>
+          <Connection NodeId="Filter4" ParameterId="Cut1Mod"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="1.0" MaxValue="7.0" ID="FilterMidMix1" Value="1.0"
+                 DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="Filter" ParameterId="FilterMidiMix"/>
+          <Connection NodeId="Filter4" ParameterId="FilterMidiMix"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="1.0" MaxValue="7.0" ID="FilterMidiCut1" Value="6.0"
+                 DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="Filter" ParameterId="FilterMidiCut1"/>
+          <Connection NodeId="Filter4" ParameterId="FilterMidiCut1"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="1.0" MaxValue="3.0" ID="FillterMode1" Value="1.0" DefaultValue="0.0"
+                 StepSize="1.0">
+        <Connections>
+          <Connection NodeId="Filter" ParameterId="FilterMode"/>
+          <Connection NodeId="Filter4" ParameterId="FilterMode"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="Gain" Value="0.5" DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="Filter" ParameterId="Gain"/>
+          <Connection NodeId="Filter4" ParameterId="Gain"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="-1.0" MaxValue="1.0" ID="GainMod1" Value="0.0">
+        <Connections>
+          <Connection NodeId="Filter" ParameterId="GainMod"/>
+          <Connection NodeId="Filter4" ParameterId="GainMod"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="-1.0" MaxValue="1.0" ID="Pan" Value="0.0">
+        <Connections>
+          <Connection NodeId="Filter4" ParameterId="PAn"/>
+          <Connection NodeId="Filter" ParameterId="PAn"/>
+          <Connection NodeId="Filter4" ParameterId="PanMod"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="-1.0" MaxValue="1.0" ID="PanMod" Value="0.0">
+        <Connections>
+          <Connection NodeId="Filter" ParameterId="PanMod"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="1.0" MaxValue="4.0" StepSize="1.0" ID="CutPK" Value="2.0"
+                 DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="Filter" ParameterId="CutPK"/>
+          <Connection NodeId="Filter4" ParameterId="CutPK"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="1.0" MaxValue="7.0" StepSize="1.0" ID="GainMidi" Value="1.0"
+                 DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="Filter" ParameterId="GainMidi"/>
+          <Connection NodeId="Filter4" ParameterId="GainMidi"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="1.0" MaxValue="4.0" StepSize="1.0" ID="GainPk" Value="1.0"
+                 DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="Filter" ParameterId="GainPk"/>
+          <Connection NodeId="Filter4" ParameterId="GainPk"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="PanMidi" Value="0.0">
+        <Connections>
+          <Connection NodeId="Filter" ParameterId="PanMidi"/>
+          <Connection NodeId="Filter4" ParameterId="PanMidi"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="1.0" MaxValue="4.0" ID="PanPk" Value="1.0" DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="Filter" ParameterId="PanPk"/>
+          <Connection NodeId="Filter4" ParameterId="PanPk"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="FilterMixPk" Value="0.0">
+        <Connections>
+          <Connection NodeId="Filter" ParameterId="FilterMixPk"/>
+          <Connection NodeId="Filter4" ParameterId="FilterMixPk"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="Q2" Value="0.8600000143051147"
+                 DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="Filter1" ParameterId="Q"/>
+          <Connection NodeId="Filter2" ParameterId="Q"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="Mix2" Value="0.0">
+        <Connections>
+          <Connection NodeId="Filter1" ParameterId="FilterMix"/>
+          <Connection NodeId="Filter2" ParameterId="FilterMix"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="-1.0" MaxValue="1.0" ID="MixMod2" Value="0.0">
+        <Connections>
+          <Connection NodeId="Filter1" ParameterId="FilterMod"/>
+          <Connection NodeId="Filter2" ParameterId="FilterMod"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="20.0" MaxValue="20000.0" SkewFactor="0.2299045622348785"
+                 ID="Cut2" Value="9115.0" DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="Filter1" ParameterId="Cut1"/>
+          <Connection NodeId="Filter2" ParameterId="Cut1"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="-1.0" MaxValue="1.0" ID="CutMod2" Value="1.0" DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="Filter1" ParameterId="Cut1Mod"/>
+          <Connection NodeId="Filter2" ParameterId="Cut1Mod"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="1.0" MaxValue="7.0" ID="MidiMix2" Value="1.0" DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="Filter2" ParameterId="FilterMidiMix"/>
+          <Connection NodeId="Filter1" ParameterId="FilterMidiMix"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="1.0" MaxValue="7.0" ID="MidCut2" Value="6.0" DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="Filter1" ParameterId="FilterMidiCut1"/>
+          <Connection NodeId="Filter2" ParameterId="FilterMidiCut1"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="1.0" MaxValue="3.0" StepSize="1.0" ID="Mode2" Value="1.0"
+                 DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="Filter1" ParameterId="FilterMode"/>
+          <Connection NodeId="Filter2" ParameterId="FilterMode"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="Gain2" Value="0.9300000071525574"
+                 DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="Filter1" ParameterId="Gain"/>
+          <Connection NodeId="Filter2" ParameterId="Gain"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="-1.0" MaxValue="1.0" ID="GainMod2" Value="0.0">
+        <Connections>
+          <Connection NodeId="Filter1" ParameterId="GainMod"/>
+          <Connection NodeId="Filter2" ParameterId="GainMod"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="-1.0" MaxValue="1.0" ID="Pan2" Value="0.05000000074505806"
+                 DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="Filter1" ParameterId="PAn"/>
+          <Connection NodeId="Filter2" ParameterId="PAn"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="-1.0" MaxValue="1.0" ID="PanMod2" Value="0.0">
+        <Connections>
+          <Connection NodeId="Filter1" ParameterId="PanMod"/>
+          <Connection NodeId="Filter2" ParameterId="PanMod"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="1.0" MaxValue="4.0" StepSize="1.0" ID="CutPk2" Value="1.0"
+                 DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="Filter1" ParameterId="CutPK"/>
+          <Connection NodeId="Filter2" ParameterId="CutPK"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="1.0" MaxValue="7.0" StepSize="1.0" ID="GainMidi2" Value="1.0"
+                 DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="Filter1" ParameterId="GainMidi"/>
+          <Connection NodeId="Filter2" ParameterId="GainMidi"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="1.0" MaxValue="4.0" StepSize="1.0" ID="GainPk2" Value="1.0"
+                 DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="Filter1" ParameterId="GainPk"/>
+          <Connection NodeId="Filter2" ParameterId="GainPk"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="1.0" MaxValue="7.0" ID="PanMidi1" Value="1.0" DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="Filter1" ParameterId="PanMidi"/>
+          <Connection NodeId="Filter2" ParameterId="PanMidi"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="1.0" MaxValue="4.0" ID="PanPk2" Value="1.0" DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="Filter1" ParameterId="PanPk"/>
+          <Connection NodeId="Filter2" ParameterId="PanPk"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="MixPk2" Value="1.0" DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="Filter2" ParameterId="FilterMixPk"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="ParaSer" Value="1.0" DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="branch" ParameterId="Index"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
+                 SkewFactor="0.1976716816425323" ID="a" Value="0.0">
+        <Connections>
+          <Connection NodeId="ahdsr" ParameterId="Attack"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
+                 SkewFactor="0.1976716816425323" ID="h" Value="0.0">
+        <Connections>
+          <Connection NodeId="ahdsr" ParameterId="Hold"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
+                 SkewFactor="0.1976716816425323" ID="d" Value="0.0">
+        <Connections>
+          <Connection NodeId="ahdsr" ParameterId="Decay"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="s" Value="0.0">
+        <Connections>
+          <Connection NodeId="ahdsr" ParameterId="Sustain"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
+                 SkewFactor="0.1976716816425323" ID="r" Value="0.0">
+        <Connections>
+          <Connection NodeId="ahdsr" ParameterId="Release"/>
         </Connections>
       </Parameter>
     </Parameters>

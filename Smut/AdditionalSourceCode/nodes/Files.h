@@ -15,21 +15,35 @@ namespace Files_impl
 {
 // ==============================| Node & Parameter type declarations |==============================
 
-DECLARE_PARAMETER_RANGE_SKEW(xfader1_c0Range, 
+DECLARE_PARAMETER_RANGE_SKEW(xfader_c0Range, 
                              -100., 
                              0., 
                              5.42227);
 
 template <int NV>
-using xfader1_c0 = parameter::from0To1<core::gain<NV>, 
-                                       0, 
-                                       xfader1_c0Range>;
+using xfader_c0 = parameter::from0To1<core::gain<NV>, 
+                                      0, 
+                                      xfader_c0Range>;
 
-template <int NV> using xfader1_c1 = xfader1_c0<NV>;
+template <int NV> using xfader_c1 = xfader_c0<NV>;
 
-template <int NV> using xfader1_c2 = xfader1_c0<NV>;
+template <int NV>
+using xfader_multimod = parameter::list<xfader_c0<NV>, xfader_c1<NV>>;
 
-template <int NV> using xfader1_c3 = xfader1_c0<NV>;
+template <int NV>
+using xfader_t = control::xfader<xfader_multimod<NV>, faders::overlap>;
+
+template <int NV>
+using chain_t = container::chain<parameter::empty, 
+                                 wrap::fix<2, core::gain<NV>>>;
+
+template <int NV> using xfader1_c0 = xfader_c0<NV>;
+
+template <int NV> using xfader1_c1 = xfader_c0<NV>;
+
+template <int NV> using xfader1_c2 = xfader_c0<NV>;
+
+template <int NV> using xfader1_c3 = xfader_c0<NV>;
 
 template <int NV>
 using xfader1_multimod = parameter::list<xfader1_c0<NV>, 
@@ -40,13 +54,13 @@ using xfader1_multimod = parameter::list<xfader1_c0<NV>,
 template <int NV>
 using xfader1_t = control::xfader<xfader1_multimod<NV>, faders::linear>;
 
-template <int NV> using xfader5_c0 = xfader1_c0<NV>;
+template <int NV> using xfader5_c0 = xfader_c0<NV>;
 
-template <int NV> using xfader5_c1 = xfader1_c0<NV>;
+template <int NV> using xfader5_c1 = xfader_c0<NV>;
 
-template <int NV> using xfader5_c2 = xfader1_c0<NV>;
+template <int NV> using xfader5_c2 = xfader_c0<NV>;
 
-template <int NV> using xfader5_c3 = xfader1_c0<NV>;
+template <int NV> using xfader5_c3 = xfader_c0<NV>;
 
 template <int NV>
 using xfader5_multimod = parameter::list<xfader5_c0<NV>, 
@@ -57,13 +71,13 @@ using xfader5_multimod = parameter::list<xfader5_c0<NV>,
 template <int NV>
 using xfader5_t = control::xfader<xfader5_multimod<NV>, faders::rms>;
 
-template <int NV> using xfader6_c0 = xfader1_c0<NV>;
+template <int NV> using xfader6_c0 = xfader_c0<NV>;
 
-template <int NV> using xfader6_c1 = xfader1_c0<NV>;
+template <int NV> using xfader6_c1 = xfader_c0<NV>;
 
-template <int NV> using xfader6_c2 = xfader1_c0<NV>;
+template <int NV> using xfader6_c2 = xfader_c0<NV>;
 
-template <int NV> using xfader6_c3 = xfader1_c0<NV>;
+template <int NV> using xfader6_c3 = xfader_c0<NV>;
 
 template <int NV>
 using xfader6_multimod = parameter::list<xfader6_c0<NV>, 
@@ -74,13 +88,13 @@ using xfader6_multimod = parameter::list<xfader6_c0<NV>,
 template <int NV>
 using xfader6_t = control::xfader<xfader6_multimod<NV>, faders::switcher>;
 
-template <int NV> using sliderbank_c0 = xfader1_c0<NV>;
+template <int NV> using sliderbank_c0 = xfader_c0<NV>;
 
-template <int NV> using sliderbank_c1 = xfader1_c0<NV>;
+template <int NV> using sliderbank_c1 = xfader_c0<NV>;
 
-template <int NV> using sliderbank_c2 = xfader1_c0<NV>;
+template <int NV> using sliderbank_c2 = xfader_c0<NV>;
 
-template <int NV> using sliderbank_c3 = xfader1_c0<NV>;
+template <int NV> using sliderbank_c3 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank_multimod = parameter::list<sliderbank_c0<NV>, 
@@ -124,7 +138,7 @@ using xfader71_multimod = parameter::list<parameter::empty, xfader71_c1<NV>>;
 
 template <int NV>
 using xfader71_t = control::xfader<xfader71_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank15_c0_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank15_c0_0 = xfader_c0<NV>;
 
 DECLARE_PARAMETER_RANGE_SKEW(sliderbank15_c0_1Range, 
                              0., 
@@ -167,7 +181,7 @@ using xfader79_multimod = parameter::list<parameter::empty, xfader79_c1<NV>>;
 
 template <int NV>
 using xfader79_t = control::xfader<xfader79_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank15_c1_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank15_c1_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank15_c1_1 = parameter::from0To1<xfader79_t<NV>, 
@@ -188,7 +202,7 @@ using xfader78_c1 = parameter::bypass<soft_bypass72_t>;
 using xfader78_multimod = parameter::list<parameter::empty, xfader78_c1>;
 
 using xfader78_t = control::xfader<xfader78_multimod, faders::switcher>;
-template <int NV> using sliderbank15_c2_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank15_c2_0 = xfader_c0<NV>;
 
 using sliderbank15_c2_1 = parameter::from0To1<xfader78_t, 
                                               0, 
@@ -225,7 +239,7 @@ using xfader77_multimod = parameter::list<parameter::empty, xfader77_c1<NV>>;
 
 template <int NV>
 using xfader77_t = control::xfader<xfader77_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank15_c3_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank15_c3_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank15_c3_1 = parameter::from0To1<xfader77_t<NV>, 
@@ -261,7 +275,7 @@ using xfader76_multimod = parameter::list<parameter::empty, xfader76_c1<NV>>;
 
 template <int NV>
 using xfader76_t = control::xfader<xfader76_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank15_c4_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank15_c4_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank15_c4_1 = parameter::from0To1<xfader76_t<NV>, 
@@ -295,7 +309,7 @@ using xfader75_multimod = parameter::list<parameter::empty, xfader75_c1<NV>>;
 
 template <int NV>
 using xfader75_t = control::xfader<xfader75_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank15_c5_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank15_c5_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank15_c5_1 = parameter::from0To1<xfader75_t<NV>, 
@@ -361,7 +375,7 @@ using xfader74_multimod = parameter::list<parameter::empty, xfader74_c1<NV>>;
 
 template <int NV>
 using xfader74_t = control::xfader<xfader74_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank15_c6_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank15_c6_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank15_c6_1 = parameter::from0To1<xfader74_t<NV>, 
@@ -457,7 +471,7 @@ using xfader73_multimod = parameter::list<parameter::empty, xfader73_c1<NV>>;
 
 template <int NV>
 using xfader73_t = control::xfader<xfader73_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank15_c7_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank15_c7_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank15_c7_1 = parameter::from0To1<xfader73_t<NV>, 
@@ -594,7 +608,7 @@ using xfader72_multimod = parameter::list<parameter::empty, xfader72_c1<NV>>;
 
 template <int NV>
 using xfader72_t = control::xfader<xfader72_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank16_c0_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank16_c0_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank16_c0_1 = parameter::from0To1<xfader72_t<NV>, 
@@ -632,7 +646,7 @@ using xfader86_multimod = parameter::list<parameter::empty, xfader86_c1<NV>>;
 
 template <int NV>
 using xfader86_t = control::xfader<xfader86_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank16_c1_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank16_c1_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank16_c1_1 = parameter::from0To1<xfader86_t<NV>, 
@@ -670,7 +684,7 @@ using xfader85_multimod = parameter::list<parameter::empty, xfader85_c1<NV>>;
 
 template <int NV>
 using xfader85_t = control::xfader<xfader85_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank16_c2_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank16_c2_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank16_c2_1 = parameter::from0To1<xfader85_t<NV>, 
@@ -690,7 +704,7 @@ using xfader84_c1 = parameter::bypass<soft_bypass78_t>;
 using xfader84_multimod = parameter::list<parameter::empty, xfader84_c1>;
 
 using xfader84_t = control::xfader<xfader84_multimod, faders::switcher>;
-template <int NV> using sliderbank16_c3_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank16_c3_0 = xfader_c0<NV>;
 
 using sliderbank16_c3_1 = parameter::from0To1<xfader84_t, 
                                               0, 
@@ -723,7 +737,7 @@ using xfader83_multimod = parameter::list<parameter::empty, xfader83_c1<NV>>;
 
 template <int NV>
 using xfader83_t = control::xfader<xfader83_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank16_c4_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank16_c4_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank16_c4_1 = parameter::from0To1<xfader83_t<NV>, 
@@ -757,7 +771,7 @@ using xfader82_multimod = parameter::list<parameter::empty, xfader82_c1<NV>>;
 
 template <int NV>
 using xfader82_t = control::xfader<xfader82_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank16_c5_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank16_c5_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank16_c5_1 = parameter::from0To1<xfader82_t<NV>, 
@@ -823,7 +837,7 @@ using xfader81_multimod = parameter::list<parameter::empty, xfader81_c1<NV>>;
 
 template <int NV>
 using xfader81_t = control::xfader<xfader81_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank16_c6_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank16_c6_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank16_c6_1 = parameter::from0To1<xfader81_t<NV>, 
@@ -912,7 +926,7 @@ using xfader80_multimod = parameter::list<parameter::empty, xfader80_c1<NV>>;
 
 template <int NV>
 using xfader80_t = control::xfader<xfader80_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank16_c7_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank16_c7_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank16_c7_1 = parameter::from0To1<xfader80_t<NV>, 
@@ -1060,7 +1074,7 @@ using xfader87_multimod = parameter::list<parameter::empty, xfader87_c1<NV>>;
 
 template <int NV>
 using xfader87_t = control::xfader<xfader87_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank17_c0_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank17_c0_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank17_c0_1 = parameter::from0To1<xfader87_t<NV>, 
@@ -1098,7 +1112,7 @@ using xfader95_multimod = parameter::list<parameter::empty, xfader95_c1<NV>>;
 
 template <int NV>
 using xfader95_t = control::xfader<xfader95_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank17_c1_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank17_c1_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank17_c1_1 = parameter::from0To1<xfader95_t<NV>, 
@@ -1136,7 +1150,7 @@ using xfader94_multimod = parameter::list<parameter::empty, xfader94_c1<NV>>;
 
 template <int NV>
 using xfader94_t = control::xfader<xfader94_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank17_c2_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank17_c2_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank17_c2_1 = parameter::from0To1<xfader94_t<NV>, 
@@ -1174,7 +1188,7 @@ using xfader93_multimod = parameter::list<parameter::empty, xfader93_c1<NV>>;
 
 template <int NV>
 using xfader93_t = control::xfader<xfader93_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank17_c3_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank17_c3_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank17_c3_1 = parameter::from0To1<xfader93_t<NV>, 
@@ -1208,7 +1222,7 @@ using xfader92_multimod = parameter::list<parameter::empty, xfader92_c1<NV>>;
 
 template <int NV>
 using xfader92_t = control::xfader<xfader92_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank17_c4_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank17_c4_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank17_c4_1 = parameter::from0To1<xfader92_t<NV>, 
@@ -1242,7 +1256,7 @@ using xfader91_multimod = parameter::list<parameter::empty, xfader91_c1<NV>>;
 
 template <int NV>
 using xfader91_t = control::xfader<xfader91_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank17_c5_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank17_c5_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank17_c5_1 = parameter::from0To1<xfader91_t<NV>, 
@@ -1308,7 +1322,7 @@ using xfader90_multimod = parameter::list<parameter::empty, xfader90_c1<NV>>;
 
 template <int NV>
 using xfader90_t = control::xfader<xfader90_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank17_c6_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank17_c6_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank17_c6_1 = parameter::from0To1<xfader90_t<NV>, 
@@ -1397,7 +1411,7 @@ using xfader89_multimod = parameter::list<parameter::empty, xfader89_c1<NV>>;
 
 template <int NV>
 using xfader89_t = control::xfader<xfader89_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank17_c7_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank17_c7_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank17_c7_1 = parameter::from0To1<xfader89_t<NV>, 
@@ -1527,7 +1541,7 @@ using xfader88_multimod = parameter::list<parameter::empty, xfader88_c1<NV>>;
 
 template <int NV>
 using xfader88_t = control::xfader<xfader88_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank18_c0_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank18_c0_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank18_c0_1 = parameter::from0To1<xfader88_t<NV>, 
@@ -1565,7 +1579,7 @@ using xfader96_multimod = parameter::list<parameter::empty, xfader96_c1<NV>>;
 
 template <int NV>
 using xfader96_t = control::xfader<xfader96_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank18_c1_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank18_c1_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank18_c1_1 = parameter::from0To1<xfader96_t<NV>, 
@@ -1603,7 +1617,7 @@ using xfader97_multimod = parameter::list<parameter::empty, xfader97_c1<NV>>;
 
 template <int NV>
 using xfader97_t = control::xfader<xfader97_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank18_c2_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank18_c2_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank18_c2_1 = parameter::from0To1<xfader97_t<NV>, 
@@ -1641,7 +1655,7 @@ using xfader98_multimod = parameter::list<parameter::empty, xfader98_c1<NV>>;
 
 template <int NV>
 using xfader98_t = control::xfader<xfader98_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank18_c3_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank18_c3_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank18_c3_1 = parameter::from0To1<xfader98_t<NV>, 
@@ -1675,7 +1689,7 @@ using xfader99_multimod = parameter::list<parameter::empty, xfader99_c1<NV>>;
 
 template <int NV>
 using xfader99_t = control::xfader<xfader99_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank18_c4_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank18_c4_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank18_c4_1 = parameter::from0To1<xfader99_t<NV>, 
@@ -1709,7 +1723,7 @@ using xfader100_multimod = parameter::list<parameter::empty, xfader100_c1<NV>>;
 
 template <int NV>
 using xfader100_t = control::xfader<xfader100_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank18_c5_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank18_c5_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank18_c5_1 = parameter::from0To1<xfader100_t<NV>, 
@@ -1775,7 +1789,7 @@ using xfader101_multimod = parameter::list<parameter::empty, xfader101_c1<NV>>;
 
 template <int NV>
 using xfader101_t = control::xfader<xfader101_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank18_c6_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank18_c6_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank18_c6_1 = parameter::from0To1<xfader101_t<NV>, 
@@ -1864,7 +1878,7 @@ using xfader102_multimod = parameter::list<parameter::empty, xfader102_c1<NV>>;
 
 template <int NV>
 using xfader102_t = control::xfader<xfader102_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank18_c7_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank18_c7_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank18_c7_1 = parameter::from0To1<xfader102_t<NV>, 
@@ -1980,16 +1994,25 @@ template <int NV>
 using tempo_sync6_t = wrap::mod<parameter::plain<ramp5_t<NV>, 0>, 
                                 control::tempo_sync<NV>>;
 
-template <int NV>
-using chain179_t = container::chain<parameter::empty, 
-                                    wrap::fix<1, tempo_sync6_t<NV>>, 
-                                    ramp5_t<NV>>;
-
 using chain102_t = soft_bypass72_t_;
 template <int NV>
 using branch36_t = container::branch<parameter::empty, 
                                      wrap::fix<1, chain102_t>, 
                                      math::mod_inv<NV>>;
+
+template <int NV>
+using chain179_t = container::chain<parameter::empty, 
+                                    wrap::fix<1, tempo_sync6_t<NV>>, 
+                                    ramp5_t<NV>, 
+                                    branch36_t<NV>>;
+
+template <int NV>
+using chain1_t = container::chain<parameter::empty, 
+                                  wrap::fix<1, core::phasor<NV>>>;
+template <int NV>
+using branch_t = container::branch<parameter::empty, 
+                                   wrap::fix<1, chain179_t<NV>>, 
+                                   chain1_t<NV>>;
 
 template <int NV>
 using minmax30_t = control::minmax<NV, 
@@ -2029,8 +2052,7 @@ using peak15_t = wrap::mod<parameter::plain<pma33_t<NV>, 0>,
 
 template <int NV>
 using chain178_t = container::chain<parameter::empty, 
-                                    wrap::fix<1, chain179_t<NV>>, 
-                                    branch36_t<NV>, 
+                                    wrap::fix<1, branch_t<NV>>, 
                                     peak15_t<NV>, 
                                     math::clear<NV>>;
 
@@ -2091,6 +2113,12 @@ using chain187_t = container::chain<parameter::empty,
                                     peak49_t<NV>, 
                                     math::clear<NV>>;
 
+template <int NV> using chain4_t = chain1_t<NV>;
+template <int NV>
+using branch1_t = container::branch<parameter::empty, 
+                                    wrap::fix<1, chain187_t<NV>>, 
+                                    chain4_t<NV>>;
+
 template <int NV> using ramp7_t = ramp5_t<NV>;
 template <int NV>
 using tempo_sync8_t = wrap::mod<parameter::plain<ramp7_t<NV>, 0>, 
@@ -2147,6 +2175,12 @@ using chain185_t = container::chain<parameter::empty,
                                     branch46_t<NV>, 
                                     peak48_t<NV>, 
                                     math::clear<NV>>;
+
+template <int NV> using chain3_t = chain1_t<NV>;
+template <int NV>
+using branch3_t = container::branch<parameter::empty, 
+                                    wrap::fix<1, chain185_t<NV>>, 
+                                    chain3_t<NV>>;
 
 template <int NV> using ramp6_t = ramp5_t<NV>;
 template <int NV>
@@ -2205,12 +2239,18 @@ using chain183_t = container::chain<parameter::empty,
                                     peak47_t<NV>, 
                                     math::clear<NV>>;
 
+template <int NV> using chain2_t = chain1_t<NV>;
+template <int NV>
+using branch2_t = container::branch<parameter::empty, 
+                                    wrap::fix<1, chain183_t<NV>>, 
+                                    chain2_t<NV>>;
+
 template <int NV>
 using split23_t = container::split<parameter::empty, 
                                    wrap::fix<1, chain178_t<NV>>, 
-                                   chain187_t<NV>, 
-                                   chain185_t<NV>, 
-                                   chain183_t<NV>>;
+                                   branch1_t<NV>, 
+                                   branch3_t<NV>, 
+                                   branch2_t<NV>>;
 
 template <int NV>
 using modchain8_t_ = container::chain<parameter::empty, 
@@ -2245,7 +2285,7 @@ using xfader135_multimod = parameter::list<parameter::empty, xfader135_c1<NV>>;
 
 template <int NV>
 using xfader135_t = control::xfader<xfader135_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank13_c0_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank13_c0_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank13_c0_1 = parameter::from0To1<xfader135_t<NV>, 
@@ -2283,7 +2323,7 @@ using xfader142_multimod = parameter::list<parameter::empty, xfader142_c1<NV>>;
 
 template <int NV>
 using xfader142_t = control::xfader<xfader142_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank13_c1_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank13_c1_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank13_c1_1 = parameter::from0To1<xfader142_t<NV>, 
@@ -2321,7 +2361,7 @@ using xfader141_multimod = parameter::list<parameter::empty, xfader141_c1<NV>>;
 
 template <int NV>
 using xfader141_t = control::xfader<xfader141_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank13_c2_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank13_c2_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank13_c2_1 = parameter::from0To1<xfader141_t<NV>, 
@@ -2359,7 +2399,7 @@ using xfader140_multimod = parameter::list<parameter::empty, xfader140_c1<NV>>;
 
 template <int NV>
 using xfader140_t = control::xfader<xfader140_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank13_c3_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank13_c3_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank13_c3_1 = parameter::from0To1<xfader140_t<NV>, 
@@ -2393,7 +2433,7 @@ using xfader139_multimod = parameter::list<parameter::empty, xfader139_c1<NV>>;
 
 template <int NV>
 using xfader139_t = control::xfader<xfader139_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank13_c4_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank13_c4_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank13_c4_1 = parameter::from0To1<xfader139_t<NV>, 
@@ -2427,7 +2467,7 @@ using xfader138_multimod = parameter::list<parameter::empty, xfader138_c1<NV>>;
 
 template <int NV>
 using xfader138_t = control::xfader<xfader138_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank13_c5_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank13_c5_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank13_c5_1 = parameter::from0To1<xfader138_t<NV>, 
@@ -2466,7 +2506,7 @@ using xfader137_multimod = parameter::list<parameter::empty, xfader137_c1<NV>>;
 
 template <int NV>
 using xfader137_t = control::xfader<xfader137_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank13_c6_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank13_c6_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank13_c6_1 = parameter::from0To1<xfader137_t<NV>, 
@@ -2555,7 +2595,7 @@ using xfader136_multimod = parameter::list<parameter::empty, xfader136_c1<NV>>;
 
 template <int NV>
 using xfader136_t = control::xfader<xfader136_multimod<NV>, faders::switcher>;
-template <int NV> using sliderbank13_c7_0 = xfader1_c0<NV>;
+template <int NV> using sliderbank13_c7_0 = xfader_c0<NV>;
 
 template <int NV>
 using sliderbank13_c7_1 = parameter::from0To1<xfader136_t<NV>, 
@@ -3331,15 +3371,18 @@ using chain73_t = container::chain<parameter::empty,
                                    wrap::fix<2, wrap::no_process<math::clear<NV>>>, 
                                    branch39_t<NV>, 
                                    fix8_block_t<NV>, 
-                                   branch23_t<NV>>;
+                                   branch23_t<NV>, 
+                                   core::gain<NV>>;
 
 template <int NV>
 using split20_t = container::split<parameter::empty, 
-                                   wrap::fix<2, chain73_t<NV>>>;
+                                   wrap::fix<2, chain_t<NV>>, 
+                                   chain73_t<NV>>;
 
 template <int NV>
 using xfade_2x_lin_t = container::chain<parameter::empty, 
-                                        wrap::fix<2, split20_t<NV>>>;
+                                        wrap::fix<2, xfader_t<NV>>, 
+                                        split20_t<NV>>;
 
 template <int NV>
 using peak_t = wrap::mod<parameter::plain<routing::event_data_writer<NV>, 1>, 
@@ -3759,6 +3802,21 @@ using Input = parameter::plain<Files_impl::pma_t<NV>, 2>;
 template <int NV>
 using InputMod = parameter::plain<Files_impl::pma_t<NV>, 1>;
 template <int NV>
+using Mix = parameter::plain<Files_impl::xfader_t<NV>, 
+                             0>;
+template <int NV>
+using Trk1 = parameter::plain<Files_impl::branch_t<NV>, 
+                              0>;
+template <int NV>
+using trk2 = parameter::plain<Files_impl::branch1_t<NV>, 
+                              0>;
+template <int NV>
+using trk3 = parameter::plain<Files_impl::branch3_t<NV>, 
+                              0>;
+template <int NV>
+using trk4 = parameter::plain<Files_impl::branch2_t<NV>, 
+                              0>;
+template <int NV>
 using Files_t_plist = parameter::list<PositionMod<NV>, 
                                       Position<NV>, 
                                       QuantisePositiion<NV>, 
@@ -3812,7 +3870,12 @@ using Files_t_plist = parameter::list<PositionMod<NV>,
                                       RampOS4<NV>, 
                                       InputMidi<NV>, 
                                       Input<NV>, 
-                                      InputMod<NV>>;
+                                      InputMod<NV>, 
+                                      Mix<NV>, 
+                                      Trk1<NV>, 
+                                      trk2<NV>, 
+                                      trk3<NV>, 
+                                      trk4<NV>>;
 }
 
 template <int NV>
@@ -3834,7 +3897,7 @@ template <int NV> struct instance: public Files_impl::Files_t_<NV>
 		
 		SNEX_METADATA_ID(Files);
 		SNEX_METADATA_NUM_CHANNELS(2);
-		SNEX_METADATA_ENCODED_PARAMETERS(944)
+		SNEX_METADATA_ENCODED_PARAMETERS(1018)
 		{
 			0x005B, 0x0000, 0x5000, 0x736F, 0x7469, 0x6F69, 0x4D6E, 0x646F, 
             0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 
@@ -3844,16 +3907,16 @@ template <int NV> struct instance: public Files_impl::Files_t_<NV>
             0x6974, 0x6573, 0x6F50, 0x6973, 0x6974, 0x6F69, 0x006E, 0x0000, 
             0x3F80, 0x0000, 0x4110, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
             0x3F80, 0x035B, 0x0000, 0x5000, 0x736F, 0x6D53, 0x6F6F, 0x6874, 
-            0x0000, 0xA000, 0x0041, 0x9C40, 0x0046, 0xA000, 0x1A41, 0x6B6C, 
+            0x0000, 0xA000, 0x0041, 0x9C40, 0x0046, 0x4790, 0x1A45, 0x6B6C, 
             0x003E, 0x0000, 0x5B00, 0x0004, 0x0000, 0x6946, 0x656C, 0x6950, 
-            0x6374, 0x0068, 0x0000, 0xC1C0, 0x0000, 0x41C0, 0x0000, 0x0000, 
+            0x6374, 0x0068, 0x0000, 0xC1C0, 0x0000, 0x41C0, 0x0000, 0xC1C0, 
             0x0000, 0x3F80, 0x0000, 0x0000, 0x055B, 0x0000, 0x5000, 0x6974, 
             0x6863, 0x6853, 0x6669, 0x4F74, 0x006E, 0x0000, 0x3F80, 0x0000, 
             0x4080, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x065B, 
             0x0000, 0x4600, 0x6C69, 0x5065, 0x7469, 0x6863, 0x6F4D, 0x0064, 
             0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 
             0x0000, 0x0000, 0x075B, 0x0000, 0x5000, 0x7469, 0x6863, 0x6957, 
-            0x006E, 0x0000, 0x4248, 0x4000, 0x461C, 0xA000, 0x45C5, 0x0000, 
+            0x006E, 0x0000, 0x4248, 0x4000, 0x461C, 0x147B, 0x42BA, 0x0000, 
             0x3F80, 0x0000, 0x0000, 0x085B, 0x0000, 0x5700, 0x6E69, 0x6F4D, 
             0x0064, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 
             0x3F80, 0x0000, 0x0000, 0x095B, 0x0000, 0x4600, 0x6C69, 0x5565, 
@@ -3869,14 +3932,14 @@ template <int NV> struct instance: public Files_impl::Files_t_<NV>
             0x4D65, 0x6469, 0x7769, 0x6E69, 0x6F64, 0x0077, 0x0000, 0x3F80, 
             0x0000, 0x40E0, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 
             0x0E5B, 0x0000, 0x4600, 0x6C69, 0x4D65, 0x6469, 0x6B50, 0x0000, 
-            0x8000, 0x003F, 0x8000, 0x0040, 0x8000, 0x0040, 0x8000, 0x003F, 
+            0x8000, 0x003F, 0x8000, 0x0040, 0x0000, 0x0040, 0x8000, 0x003F, 
             0x0000, 0x5B00, 0x000F, 0x0000, 0x6946, 0x656C, 0x6E49, 0x6B50, 
             0x0000, 0x8000, 0x003F, 0x8000, 0x0040, 0x8000, 0x003F, 0x8000, 
             0x003F, 0x0000, 0x5B00, 0x0010, 0x0000, 0x6946, 0x656C, 0x7258, 
             0x736F, 0x4673, 0x6461, 0x0065, 0x0000, 0x0000, 0x0000, 0x3F80, 
             0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x115B, 0x0000, 
             0x4600, 0x6C69, 0x5865, 0x6F72, 0x7373, 0x6146, 0x6564, 0x6F4D, 
-            0x0064, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 
+            0x0064, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
             0x3F80, 0x0000, 0x0000, 0x125B, 0x0000, 0x4600, 0x6C69, 0x5865, 
             0x6F72, 0x7373, 0x6146, 0x6564, 0x6B50, 0x0000, 0x8000, 0x003F, 
             0x8000, 0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5B00, 
@@ -3888,7 +3951,7 @@ template <int NV> struct instance: public Files_impl::Files_t_<NV>
             0x003F, 0x0000, 0x5B00, 0x0015, 0x0000, 0x6946, 0x656C, 0x6950, 
             0x6374, 0x5068, 0x006B, 0x0000, 0x3F80, 0x0000, 0x4080, 0x0000, 
             0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x165B, 0x0000, 0x6600, 
-            0x6565, 0x0064, 0x0000, 0x0000, 0x0000, 0x3F80, 0x47AE, 0x3EE1, 
+            0x6565, 0x0064, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 
             0x0000, 0x3F80, 0x0000, 0x0000, 0x175B, 0x0000, 0x5F00, 0x7031, 
             0x6F4D, 0x0064, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 
             0x0000, 0x3F80, 0x0000, 0x3F80, 0x185B, 0x0000, 0x4500, 0x766E, 
@@ -3896,32 +3959,32 @@ template <int NV> struct instance: public Files_impl::Files_t_<NV>
             0x0000, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0019, 0x0000, 0x6F50, 
             0x4173, 0x6F4D, 0x0064, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 
             0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x1A5B, 0x0000, 0x5000, 
-            0x736F, 0x0041, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x736F, 0x0041, 0x0000, 0x0000, 0x0000, 0x3F80, 0x28F6, 0x3EDC, 
             0x0000, 0x3F80, 0x0000, 0x0000, 0x1B5B, 0x0000, 0x5000, 0x736F, 
             0x0042, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 
             0x3F80, 0x0000, 0x0000, 0x1C5B, 0x0000, 0x5000, 0x736F, 0x6D42, 
-            0x646F, 0x0000, 0x8000, 0x00BF, 0x8000, 0x0A3F, 0x23D7, 0x003C, 
+            0x646F, 0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 
             0x8000, 0x003F, 0x0000, 0x5B00, 0x001D, 0x0000, 0x6F50, 0x4373, 
-            0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x003E, 0x8000, 
+            0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 
             0x003F, 0x0000, 0x5B00, 0x001E, 0x0000, 0x6F50, 0x4373, 0x6F4D, 
             0x0064, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 
             0x3F80, 0x0000, 0x0000, 0x1F5B, 0x0000, 0x5000, 0x736F, 0x0044, 
-            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3E80, 0x0000, 0x3F80, 
+            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 
             0x0000, 0x0000, 0x205B, 0x0000, 0x5000, 0x736F, 0x4D44, 0x646F, 
-            0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 
+            0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 
             0x003F, 0x0000, 0x5B00, 0x0021, 0x0000, 0x6E45, 0x4F76, 0x3153, 
             0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 
             0x003F, 0x0000, 0x5B00, 0x0022, 0x0000, 0x6E45, 0x4F76, 0x3253, 
             0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x7900, 0x003E, 0x8000, 
             0x003F, 0x0000, 0x5B00, 0x0023, 0x0000, 0x6152, 0x706D, 0x6554, 
-            0x706D, 0x316F, 0x0000, 0x0000, 0x0000, 0x9000, 0x0041, 0x0000, 
-            0x0000, 0x8000, 0x003F, 0x8000, 0x5B3F, 0x0024, 0x0000, 0x6152, 
+            0x706D, 0x316F, 0x0000, 0x0000, 0x0000, 0x9000, 0x0041, 0x8000, 
+            0x003F, 0x8000, 0x003F, 0x8000, 0x5B3F, 0x0024, 0x0000, 0x6152, 
             0x706D, 0x6554, 0x706D, 0x326F, 0x0000, 0x0000, 0x0000, 0x9000, 
-            0x0041, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x5B3F, 0x0025, 
+            0x0041, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5B3F, 0x0025, 
             0x0000, 0x6152, 0x706D, 0x6944, 0x3176, 0x0000, 0x8000, 0x003F, 
             0x0000, 0x0042, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5B3F, 
             0x0026, 0x0000, 0x6152, 0x706D, 0x6944, 0x3276, 0x0000, 0x8000, 
-            0x003F, 0x0000, 0x0042, 0x8000, 0x0040, 0x8000, 0x003F, 0x8000, 
+            0x003F, 0x0000, 0x0042, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 
             0x5B3F, 0x0027, 0x0000, 0x6152, 0x706D, 0x6E49, 0x3176, 0x0000, 
             0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 
             0x8000, 0x5B3F, 0x0028, 0x0000, 0x6152, 0x706D, 0x6E49, 0x3276, 
@@ -3932,9 +3995,9 @@ template <int NV> struct instance: public Files_impl::Files_t_<NV>
             0x5470, 0x6D65, 0x6F70, 0x0034, 0x0000, 0x0000, 0x0000, 0x4190, 
             0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x2B5B, 0x0000, 
             0x5200, 0x6D61, 0x4470, 0x7669, 0x0033, 0x0000, 0x3F80, 0x0000, 
-            0x4200, 0x0000, 0x4120, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x2C5B, 
+            0x4200, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x2C5B, 
             0x0000, 0x5200, 0x6D61, 0x4470, 0x7669, 0x0034, 0x0000, 0x3F80, 
-            0x0000, 0x4200, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x0000, 0x4200, 0x0000, 0x4200, 0x0000, 0x3F80, 0x0000, 0x3F80, 
             0x2D5B, 0x0000, 0x5200, 0x6D61, 0x4970, 0x766E, 0x0033, 0x0000, 
             0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
             0x3F80, 0x2E5B, 0x0000, 0x5200, 0x6D61, 0x4970, 0x766E, 0x0034, 
@@ -3950,10 +4013,20 @@ template <int NV> struct instance: public Files_impl::Files_t_<NV>
             0x0000, 0x3F80, 0x0000, 0x0000, 0x335B, 0x0000, 0x4900, 0x706E, 
             0x7475, 0x694D, 0x6964, 0x0000, 0x8000, 0x003F, 0xE000, 0x0040, 
             0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5B3F, 0x0034, 0x0000, 
-            0x6E49, 0x7570, 0x0074, 0x0000, 0x0000, 0x0000, 0x3F80, 0x69BD, 
-            0x3F34, 0x0000, 0x3F80, 0x0000, 0x0000, 0x355B, 0x0000, 0x4900, 
+            0x6E49, 0x7570, 0x0074, 0x0000, 0x0000, 0x0000, 0x3F80, 0x1EB8, 
+            0x3F45, 0x0000, 0x3F80, 0x0000, 0x0000, 0x355B, 0x0000, 0x4900, 
             0x706E, 0x7475, 0x6F4D, 0x0064, 0x0000, 0xBF80, 0x0000, 0x3F80, 
-            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x0000
+            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x365B, 0x0000, 
+            0x4D00, 0x7869, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 
+            0x003F, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0037, 0x0000, 0x7254, 
+            0x316B, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 
+            0x8000, 0x003F, 0x0000, 0x5B00, 0x0038, 0x0000, 0x7274, 0x326B, 
+            0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 
+            0x003F, 0x0000, 0x5B00, 0x0039, 0x0000, 0x7274, 0x336B, 0x0000, 
+            0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 
+            0x0000, 0x5B00, 0x003A, 0x0000, 0x7274, 0x346B, 0x0000, 0x0000, 
+            0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 
+            0x0000, 0x0000
 		};
 	};
 	
@@ -3963,1692 +4036,1729 @@ template <int NV> struct instance: public Files_impl::Files_t_<NV>
 		
 		auto& chain59 = this->getT(0);                                                              // Files_impl::chain59_t<NV>
 		auto& xfade_2x_lin = this->getT(0).getT(0);                                                 // Files_impl::xfade_2x_lin_t<NV>
-		auto& split20 = this->getT(0).getT(0).getT(0);                                              // Files_impl::split20_t<NV>
-		auto& chain73 = this->getT(0).getT(0).getT(0).getT(0);                                      // Files_impl::chain73_t<NV>
-		auto& clear25 = this->getT(0).getT(0).getT(0).getT(0).getT(0);                              // wrap::no_process<math::clear<NV>>
-		auto& branch39 = this->getT(0).getT(0).getT(0).getT(0).getT(1);                             // Files_impl::branch39_t<NV>
-		auto& xfader1 = this->getT(0).getT(0).getT(0).getT(0).getT(1).getT(0);                      // Files_impl::xfader1_t<NV>
-		auto& xfader5 = this->getT(0).getT(0).getT(0).getT(0).getT(1).getT(1);                      // Files_impl::xfader5_t<NV>
-		auto& xfader6 = this->getT(0).getT(0).getT(0).getT(0).getT(1).getT(2);                      // Files_impl::xfader6_t<NV>
-		auto& sliderbank = this->getT(0).getT(0).getT(0).getT(0).getT(1).getT(3);                   // Files_impl::sliderbank_t<NV>
-		auto& fix8_block = this->getT(0).getT(0).getT(0).getT(0).getT(2);                           // Files_impl::fix8_block_t<NV>
-		auto& split2 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0);                       // Files_impl::split2_t<NV>
-		auto& modchain15 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0);           // Files_impl::modchain15_t<NV>
-		auto& sliderbank15 = this->getT(0).getT(0).getT(0).getT(0).                                 // Files_impl::sliderbank15_t<NV>
+		auto& xfader = this->getT(0).getT(0).getT(0);                                               // Files_impl::xfader_t<NV>
+		auto& split20 = this->getT(0).getT(0).getT(1);                                              // Files_impl::split20_t<NV>
+		auto& chain = this->getT(0).getT(0).getT(1).getT(0);                                        // Files_impl::chain_t<NV>
+		auto& gain = this->getT(0).getT(0).getT(1).getT(0).getT(0);                                 // core::gain<NV>
+		auto& chain73 = this->getT(0).getT(0).getT(1).getT(1);                                      // Files_impl::chain73_t<NV>
+		auto& clear25 = this->getT(0).getT(0).getT(1).getT(1).getT(0);                              // wrap::no_process<math::clear<NV>>
+		auto& branch39 = this->getT(0).getT(0).getT(1).getT(1).getT(1);                             // Files_impl::branch39_t<NV>
+		auto& xfader1 = this->getT(0).getT(0).getT(1).getT(1).getT(1).getT(0);                      // Files_impl::xfader1_t<NV>
+		auto& xfader5 = this->getT(0).getT(0).getT(1).getT(1).getT(1).getT(1);                      // Files_impl::xfader5_t<NV>
+		auto& xfader6 = this->getT(0).getT(0).getT(1).getT(1).getT(1).getT(2);                      // Files_impl::xfader6_t<NV>
+		auto& sliderbank = this->getT(0).getT(0).getT(1).getT(1).getT(1).getT(3);                   // Files_impl::sliderbank_t<NV>
+		auto& fix8_block = this->getT(0).getT(0).getT(1).getT(1).getT(2);                           // Files_impl::fix8_block_t<NV>
+		auto& split2 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0);                       // Files_impl::split2_t<NV>
+		auto& modchain15 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0);           // Files_impl::modchain15_t<NV>
+		auto& sliderbank15 = this->getT(0).getT(0).getT(1).getT(1).                                 // Files_impl::sliderbank15_t<NV>
                              getT(2).getT(0).getT(0).getT(0);
-		auto& split29 = this->getT(0).getT(0).getT(0).getT(0).                                      // Files_impl::split29_t<NV>
+		auto& split29 = this->getT(0).getT(0).getT(1).getT(1).                                      // Files_impl::split29_t<NV>
                         getT(2).getT(0).getT(0).getT(1);
-		auto& chain392 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain392_t<NV>
+		auto& chain392 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain392_t<NV>
                          getT(2).getT(0).getT(0).getT(1).
                          getT(0);
-		auto& xfader71 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader71_t<NV>
+		auto& xfader71 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader71_t<NV>
                          getT(0).getT(0).getT(1).getT(0).getT(0);
-		auto& soft_bypass65 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass65_t<NV>
+		auto& soft_bypass65 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass65_t<NV>
                               getT(0).getT(0).getT(1).getT(0).getT(1);
-		auto& chain275 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain275_t<NV>
+		auto& chain275 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain275_t<NV>
                          getT(0).getT(0).getT(1).getT(0).getT(1).
                          getT(0);
-		auto& global_cable51 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).               // Files_impl::global_cable51_t<NV>
+		auto& global_cable51 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).               // Files_impl::global_cable51_t<NV>
                                getT(0).getT(1).getT(0).getT(1).getT(0).getT(0);
-		auto& add225 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add225 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(0).getT(1).getT(0).getT(1).getT(0).getT(1);
-		auto& gain140 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain140 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(0).getT(1).getT(0).getT(1).getT(0).getT(2);
-		auto& chain407 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain407_t<NV>
+		auto& chain407 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain407_t<NV>
                          getT(2).getT(0).getT(0).getT(1).
                          getT(1);
-		auto& xfader79 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader79_t<NV>
+		auto& xfader79 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader79_t<NV>
                          getT(0).getT(0).getT(1).getT(1).getT(0);
-		auto& soft_bypass73 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass73_t<NV>
+		auto& soft_bypass73 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass73_t<NV>
                               getT(0).getT(0).getT(1).getT(1).getT(1);
-		auto& chain276 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain276_t<NV>
+		auto& chain276 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain276_t<NV>
                          getT(0).getT(0).getT(1).getT(1).getT(1).
                          getT(0);
-		auto& global_cable52 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).               // Files_impl::global_cable52_t<NV>
+		auto& global_cable52 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).               // Files_impl::global_cable52_t<NV>
                                getT(0).getT(1).getT(1).getT(1).getT(0).getT(0);
-		auto& add226 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add226 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(0).getT(1).getT(1).getT(1).getT(0).getT(1);
-		auto& gain141 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain141 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(0).getT(1).getT(1).getT(1).getT(0).getT(2);
-		auto& chain406 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain406_t<NV>
+		auto& chain406 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain406_t<NV>
                          getT(2).getT(0).getT(0).getT(1).
                          getT(2);
-		auto& xfader78 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader78_t
+		auto& xfader78 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader78_t
                          getT(0).getT(0).getT(1).getT(2).getT(0);
-		auto& soft_bypass72 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass72_t
+		auto& soft_bypass72 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass72_t
                               getT(0).getT(0).getT(1).getT(2).getT(1);
-		auto& chain277 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain277_t<NV>
+		auto& chain277 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain277_t<NV>
                          getT(0).getT(0).getT(1).getT(2).getT(2);
-		auto& global_cable53 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                       // Files_impl::global_cable53_t<NV>
+		auto& global_cable53 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                       // Files_impl::global_cable53_t<NV>
                                getT(0).getT(0).getT(1).getT(2).getT(2).
                                getT(0);
-		auto& add227 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                               // math::add<NV>
+		auto& add227 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                               // math::add<NV>
                        getT(0).getT(0).getT(1).getT(2).getT(2).
                        getT(1);
-		auto& gain142 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                              // core::gain<NV>
+		auto& gain142 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                              // core::gain<NV>
                         getT(0).getT(0).getT(1).getT(2).getT(2).
                         getT(2);
-		auto& chain405 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain405_t<NV>
+		auto& chain405 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain405_t<NV>
                          getT(2).getT(0).getT(0).getT(1).
                          getT(3);
-		auto& xfader77 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader77_t<NV>
+		auto& xfader77 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader77_t<NV>
                          getT(0).getT(0).getT(1).getT(3).getT(0);
-		auto& soft_bypass71 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass71_t<NV>
+		auto& soft_bypass71 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass71_t<NV>
                               getT(0).getT(0).getT(1).getT(3).getT(1);
-		auto& chain278 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain278_t<NV>
+		auto& chain278 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain278_t<NV>
                          getT(0).getT(0).getT(1).getT(3).getT(1).
                          getT(0);
-		auto& global_cable54 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).               // Files_impl::global_cable54_t<NV>
+		auto& global_cable54 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).               // Files_impl::global_cable54_t<NV>
                                getT(0).getT(1).getT(3).getT(1).getT(0).getT(0);
-		auto& add228 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add228 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(0).getT(1).getT(3).getT(1).getT(0).getT(1);
-		auto& gain143 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain143 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(0).getT(1).getT(3).getT(1).getT(0).getT(2);
-		auto& chain404 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain404_t<NV>
+		auto& chain404 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain404_t<NV>
                          getT(2).getT(0).getT(0).getT(1).
                          getT(4);
-		auto& xfader76 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader76_t<NV>
+		auto& xfader76 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader76_t<NV>
                          getT(0).getT(0).getT(1).getT(4).getT(0);
-		auto& soft_bypass70 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass70_t<NV>
+		auto& soft_bypass70 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass70_t<NV>
                               getT(0).getT(0).getT(1).getT(4).getT(1);
-		auto& chain279 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain279_t<NV>
+		auto& chain279 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain279_t<NV>
                          getT(0).getT(0).getT(1).getT(4).getT(1).
                          getT(0);
-		auto& event_data_reader16 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).          // Files_impl::event_data_reader16_t<NV>
+		auto& event_data_reader16 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).          // Files_impl::event_data_reader16_t<NV>
                                     getT(0).getT(1).getT(4).getT(1).getT(0).getT(0);
-		auto& add229 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add229 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(0).getT(1).getT(4).getT(1).getT(0).getT(1);
-		auto& gain144 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain144 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(0).getT(1).getT(4).getT(1).getT(0).getT(2);
-		auto& chain403 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain403_t<NV>
+		auto& chain403 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain403_t<NV>
                          getT(2).getT(0).getT(0).getT(1).
                          getT(5);
-		auto& xfader75 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader75_t<NV>
+		auto& xfader75 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader75_t<NV>
                          getT(0).getT(0).getT(1).getT(5).getT(0);
-		auto& soft_bypass69 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass69_t<NV>
+		auto& soft_bypass69 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass69_t<NV>
                               getT(0).getT(0).getT(1).getT(5).getT(1);
-		auto& chain280 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain280_t<NV>
+		auto& chain280 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain280_t<NV>
                          getT(0).getT(0).getT(1).getT(5).getT(1).
                          getT(0);
-		auto& event_data_reader17 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).          // Files_impl::event_data_reader17_t<NV>
+		auto& event_data_reader17 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).          // Files_impl::event_data_reader17_t<NV>
                                     getT(0).getT(1).getT(5).getT(1).getT(0).getT(0);
-		auto& add230 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add230 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(0).getT(1).getT(5).getT(1).getT(0).getT(1);
-		auto& gain145 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain145 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(0).getT(1).getT(5).getT(1).getT(0).getT(2);
-		auto& chain402 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain402_t<NV>
+		auto& chain402 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain402_t<NV>
                          getT(2).getT(0).getT(0).getT(1).
                          getT(6);
-		auto& xfader74 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader74_t<NV>
+		auto& xfader74 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader74_t<NV>
                          getT(0).getT(0).getT(1).getT(6).getT(0);
-		auto& soft_bypass68 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass68_t<NV>
+		auto& soft_bypass68 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass68_t<NV>
                               getT(0).getT(0).getT(1).getT(6).getT(1);
-		auto& chain281 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain281_t<NV>
+		auto& chain281 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain281_t<NV>
                          getT(0).getT(0).getT(1).getT(6).getT(1).
                          getT(0);
-		auto& branch15 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::branch15_t<NV>
+		auto& branch15 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::branch15_t<NV>
                          getT(0).getT(1).getT(6).getT(1).getT(0).getT(0);
-		auto& chain384 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain384_t<NV>
+		auto& chain384 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain384_t<NV>
                          getT(0).getT(1).getT(6).getT(1).getT(0).getT(0).
                          getT(0);
-		auto& event_data_reader = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).    // Files_impl::event_data_reader_t<NV>
+		auto& event_data_reader = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).    // Files_impl::event_data_reader_t<NV>
                                   getT(1).getT(6).getT(1).getT(0).getT(0).getT(0).getT(0);
-		auto& add3 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).                 // math::add<NV>
+		auto& add3 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).                 // math::add<NV>
                      getT(1).getT(6).getT(1).getT(0).getT(0).getT(0).getT(1);
-		auto& chain395 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain395_t<NV>
+		auto& chain395 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain395_t<NV>
                          getT(0).getT(1).getT(6).getT(1).getT(0).getT(0).
                          getT(1);
-		auto& event_data_reader3 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).   // Files_impl::event_data_reader3_t<NV>
+		auto& event_data_reader3 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).   // Files_impl::event_data_reader3_t<NV>
                                    getT(1).getT(6).getT(1).getT(0).getT(0).getT(1).getT(0);
-		auto& add16 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).                // math::add<NV>
+		auto& add16 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).                // math::add<NV>
                       getT(1).getT(6).getT(1).getT(0).getT(0).getT(1).getT(1);
-		auto& chain394 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain394_t<NV>
+		auto& chain394 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain394_t<NV>
                          getT(0).getT(1).getT(6).getT(1).getT(0).getT(0).
                          getT(2);
-		auto& event_data_reader2 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).   // Files_impl::event_data_reader2_t<NV>
+		auto& event_data_reader2 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).   // Files_impl::event_data_reader2_t<NV>
                                    getT(1).getT(6).getT(1).getT(0).getT(0).getT(2).getT(0);
-		auto& add15 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).                // math::add<NV>
+		auto& add15 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).                // math::add<NV>
                       getT(1).getT(6).getT(1).getT(0).getT(0).getT(2).getT(1);
-		auto& chain393 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain393_t<NV>
+		auto& chain393 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain393_t<NV>
                          getT(0).getT(1).getT(6).getT(1).getT(0).getT(0).
                          getT(3);
-		auto& event_data_reader1 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).   // Files_impl::event_data_reader1_t<NV>
+		auto& event_data_reader1 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).   // Files_impl::event_data_reader1_t<NV>
                                    getT(1).getT(6).getT(1).getT(0).getT(0).getT(3).getT(0);
-		auto& add14 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).                // math::add<NV>
+		auto& add14 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).                // math::add<NV>
                       getT(1).getT(6).getT(1).getT(0).getT(0).getT(3).getT(1);
-		auto& add235 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add235 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(0).getT(1).getT(6).getT(1).getT(0).getT(1);
-		auto& gain146 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain146 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(0).getT(1).getT(6).getT(1).getT(0).getT(2);
-		auto& chain401 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain401_t<NV>
+		auto& chain401 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain401_t<NV>
                          getT(2).getT(0).getT(0).getT(1).
                          getT(7);
-		auto& xfader73 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader73_t<NV>
+		auto& xfader73 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader73_t<NV>
                          getT(0).getT(0).getT(1).getT(7).getT(0);
-		auto& soft_bypass67 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass67_t<NV>
+		auto& soft_bypass67 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass67_t<NV>
                               getT(0).getT(0).getT(1).getT(7).getT(1);
-		auto& chain282 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain282_t<NV>
+		auto& chain282 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain282_t<NV>
                          getT(0).getT(0).getT(1).getT(7).getT(1).
                          getT(0);
-		auto& branch56 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::branch56_t<NV>
+		auto& branch56 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::branch56_t<NV>
                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0);
-		auto& chain283 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain283_t<NV>
+		auto& chain283 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain283_t<NV>
                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(0);
-		auto& midi_cc51 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).            // Files_impl::midi_cc51_t<NV>
+		auto& midi_cc51 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).            // Files_impl::midi_cc51_t<NV>
                           getT(1).getT(7).getT(1).getT(0).getT(0).getT(0).getT(0);
-		auto& add236 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).               // math::add<NV>
+		auto& add236 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).               // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(0).getT(1);
-		auto& chain284 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain284_t<NV>
+		auto& chain284 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain284_t<NV>
                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(1);
-		auto& midi_cc52 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).            // Files_impl::midi_cc52_t<NV>
+		auto& midi_cc52 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).            // Files_impl::midi_cc52_t<NV>
                           getT(1).getT(7).getT(1).getT(0).getT(0).getT(1).getT(0);
-		auto& add237 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).               // math::add<NV>
+		auto& add237 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).               // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(1).getT(1);
-		auto& chain285 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain285_t<NV>
+		auto& chain285 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain285_t<NV>
                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(2);
-		auto& midi_cc53 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).            // Files_impl::midi_cc53_t<NV>
+		auto& midi_cc53 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).            // Files_impl::midi_cc53_t<NV>
                           getT(1).getT(7).getT(1).getT(0).getT(0).getT(2).getT(0);
-		auto& add238 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).               // math::add<NV>
+		auto& add238 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).               // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(2).getT(1);
-		auto& chain286 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain286_t<NV>
+		auto& chain286 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain286_t<NV>
                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(3);
-		auto& midi_cc54 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).            // Files_impl::midi_cc54_t<NV>
+		auto& midi_cc54 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).            // Files_impl::midi_cc54_t<NV>
                           getT(1).getT(7).getT(1).getT(0).getT(0).getT(3).getT(0);
-		auto& add239 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).               // math::add<NV>
+		auto& add239 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).               // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(3).getT(1);
-		auto& chain287 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain287_t<NV>
+		auto& chain287 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain287_t<NV>
                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(4);
-		auto& midi38 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).               // Files_impl::midi38_t<NV>
+		auto& midi38 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).               // Files_impl::midi38_t<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(4).getT(0);
-		auto& add240 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).               // math::add<NV>
+		auto& add240 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).               // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(4).getT(1);
-		auto& chain288 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain288_t<NV>
+		auto& chain288 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain288_t<NV>
                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(5);
-		auto& midi39 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).               // Files_impl::midi39_t<NV>
+		auto& midi39 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).               // Files_impl::midi39_t<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(5).getT(0);
-		auto& add241 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).               // math::add<NV>
+		auto& add241 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).               // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(5).getT(1);
-		auto& chain289 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain289_t<NV>
+		auto& chain289 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain289_t<NV>
                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(6);
-		auto& midi40 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).               // Files_impl::midi40_t<NV>
+		auto& midi40 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).               // Files_impl::midi40_t<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(6).getT(0);
-		auto& add242 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(0).               // math::add<NV>
+		auto& add242 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(0).               // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(6).getT(1);
-		auto& gain147 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain147 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(0).getT(1).getT(7).getT(1).getT(0).getT(1);
-		auto& peak35 = this->getT(0).getT(0).getT(0).getT(0).                                       // Files_impl::peak35_t<NV>
+		auto& peak35 = this->getT(0).getT(0).getT(1).getT(1).                                       // Files_impl::peak35_t<NV>
                        getT(2).getT(0).getT(0).getT(2);
-		auto& pma19 = this->getT(0).getT(0).getT(0).getT(0).                                        // Files_impl::pma19_t<NV>
+		auto& pma19 = this->getT(0).getT(0).getT(1).getT(1).                                        // Files_impl::pma19_t<NV>
                       getT(2).getT(0).getT(0).getT(3);
-		auto& modchain17 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1);           // Files_impl::modchain17_t<NV>
-		auto& sliderbank16 = this->getT(0).getT(0).getT(0).getT(0).                                 // Files_impl::sliderbank16_t<NV>
+		auto& modchain17 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1);           // Files_impl::modchain17_t<NV>
+		auto& sliderbank16 = this->getT(0).getT(0).getT(1).getT(1).                                 // Files_impl::sliderbank16_t<NV>
                              getT(2).getT(0).getT(1).getT(0);
-		auto& split33 = this->getT(0).getT(0).getT(0).getT(0).                                      // Files_impl::split33_t<NV>
+		auto& split33 = this->getT(0).getT(0).getT(1).getT(1).                                      // Files_impl::split33_t<NV>
                         getT(2).getT(0).getT(1).getT(1);
-		auto& chain400 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain400_t<NV>
+		auto& chain400 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain400_t<NV>
                          getT(2).getT(0).getT(1).getT(1).
                          getT(0);
-		auto& xfader72 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader72_t<NV>
+		auto& xfader72 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader72_t<NV>
                          getT(0).getT(1).getT(1).getT(0).getT(0);
-		auto& soft_bypass66 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass66_t<NV>
+		auto& soft_bypass66 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass66_t<NV>
                               getT(0).getT(1).getT(1).getT(0).getT(1);
-		auto& chain290 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain290_t<NV>
+		auto& chain290 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain290_t<NV>
                          getT(0).getT(1).getT(1).getT(0).getT(1).
                          getT(0);
-		auto& global_cable55 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).               // Files_impl::global_cable55_t<NV>
+		auto& global_cable55 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).               // Files_impl::global_cable55_t<NV>
                                getT(1).getT(1).getT(0).getT(1).getT(0).getT(0);
-		auto& add243 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add243 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(1).getT(1).getT(0).getT(1).getT(0).getT(1);
-		auto& gain228 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain228 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(1).getT(1).getT(0).getT(1).getT(0).getT(2);
-		auto& chain414 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain414_t<NV>
+		auto& chain414 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain414_t<NV>
                          getT(2).getT(0).getT(1).getT(1).
                          getT(1);
-		auto& xfader86 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader86_t<NV>
+		auto& xfader86 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader86_t<NV>
                          getT(0).getT(1).getT(1).getT(1).getT(0);
-		auto& soft_bypass80 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass80_t<NV>
+		auto& soft_bypass80 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass80_t<NV>
                               getT(0).getT(1).getT(1).getT(1).getT(1);
-		auto& chain291 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain291_t<NV>
+		auto& chain291 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain291_t<NV>
                          getT(0).getT(1).getT(1).getT(1).getT(1).
                          getT(0);
-		auto& global_cable56 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).               // Files_impl::global_cable56_t<NV>
+		auto& global_cable56 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).               // Files_impl::global_cable56_t<NV>
                                getT(1).getT(1).getT(1).getT(1).getT(0).getT(0);
-		auto& add244 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add244 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(1).getT(1).getT(1).getT(1).getT(0).getT(1);
-		auto& gain229 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain229 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(1).getT(1).getT(1).getT(1).getT(0).getT(2);
-		auto& chain413 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain413_t<NV>
+		auto& chain413 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain413_t<NV>
                          getT(2).getT(0).getT(1).getT(1).
                          getT(2);
-		auto& xfader85 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader85_t<NV>
+		auto& xfader85 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader85_t<NV>
                          getT(0).getT(1).getT(1).getT(2).getT(0);
-		auto& soft_bypass79 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass79_t<NV>
+		auto& soft_bypass79 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass79_t<NV>
                               getT(0).getT(1).getT(1).getT(2).getT(1);
-		auto& chain292 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain292_t<NV>
+		auto& chain292 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain292_t<NV>
                          getT(0).getT(1).getT(1).getT(2).getT(1).
                          getT(0);
-		auto& global_cable57 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).               // Files_impl::global_cable57_t<NV>
+		auto& global_cable57 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).               // Files_impl::global_cable57_t<NV>
                                getT(1).getT(1).getT(2).getT(1).getT(0).getT(0);
-		auto& add245 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add245 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(1).getT(1).getT(2).getT(1).getT(0).getT(1);
-		auto& gain230 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain230 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(1).getT(1).getT(2).getT(1).getT(0).getT(2);
-		auto& chain412 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain412_t<NV>
+		auto& chain412 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain412_t<NV>
                          getT(2).getT(0).getT(1).getT(1).
                          getT(3);
-		auto& xfader84 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader84_t
+		auto& xfader84 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader84_t
                          getT(0).getT(1).getT(1).getT(3).getT(0);
-		auto& soft_bypass78 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass78_t
+		auto& soft_bypass78 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass78_t
                               getT(0).getT(1).getT(1).getT(3).getT(1);
-		auto& chain293 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain293_t<NV>
+		auto& chain293 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain293_t<NV>
                          getT(0).getT(1).getT(1).getT(3).getT(2);
-		auto& global_cable58 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                       // Files_impl::global_cable58_t<NV>
+		auto& global_cable58 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                       // Files_impl::global_cable58_t<NV>
                                getT(0).getT(1).getT(1).getT(3).getT(2).
                                getT(0);
-		auto& add246 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                               // math::add<NV>
+		auto& add246 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                               // math::add<NV>
                        getT(0).getT(1).getT(1).getT(3).getT(2).
                        getT(1);
-		auto& gain231 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                              // core::gain<NV>
+		auto& gain231 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                              // core::gain<NV>
                         getT(0).getT(1).getT(1).getT(3).getT(2).
                         getT(2);
-		auto& chain411 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain411_t<NV>
+		auto& chain411 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain411_t<NV>
                          getT(2).getT(0).getT(1).getT(1).
                          getT(4);
-		auto& xfader83 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader83_t<NV>
+		auto& xfader83 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader83_t<NV>
                          getT(0).getT(1).getT(1).getT(4).getT(0);
-		auto& soft_bypass77 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass77_t<NV>
+		auto& soft_bypass77 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass77_t<NV>
                               getT(0).getT(1).getT(1).getT(4).getT(1);
-		auto& chain294 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain294_t<NV>
+		auto& chain294 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain294_t<NV>
                          getT(0).getT(1).getT(1).getT(4).getT(1).
                          getT(0);
-		auto& event_data_reader18 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).          // Files_impl::event_data_reader18_t<NV>
+		auto& event_data_reader18 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).          // Files_impl::event_data_reader18_t<NV>
                                     getT(1).getT(1).getT(4).getT(1).getT(0).getT(0);
-		auto& add247 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add247 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(1).getT(1).getT(4).getT(1).getT(0).getT(1);
-		auto& gain232 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain232 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(1).getT(1).getT(4).getT(1).getT(0).getT(2);
-		auto& chain410 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain410_t<NV>
+		auto& chain410 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain410_t<NV>
                          getT(2).getT(0).getT(1).getT(1).
                          getT(5);
-		auto& xfader82 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader82_t<NV>
+		auto& xfader82 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader82_t<NV>
                          getT(0).getT(1).getT(1).getT(5).getT(0);
-		auto& soft_bypass76 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass76_t<NV>
+		auto& soft_bypass76 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass76_t<NV>
                               getT(0).getT(1).getT(1).getT(5).getT(1);
-		auto& chain295 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain295_t<NV>
+		auto& chain295 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain295_t<NV>
                          getT(0).getT(1).getT(1).getT(5).getT(1).
                          getT(0);
-		auto& event_data_reader19 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).          // Files_impl::event_data_reader19_t<NV>
+		auto& event_data_reader19 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).          // Files_impl::event_data_reader19_t<NV>
                                     getT(1).getT(1).getT(5).getT(1).getT(0).getT(0);
-		auto& add248 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add248 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(1).getT(1).getT(5).getT(1).getT(0).getT(1);
-		auto& gain233 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain233 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(1).getT(1).getT(5).getT(1).getT(0).getT(2);
-		auto& chain409 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain409_t<NV>
+		auto& chain409 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain409_t<NV>
                          getT(2).getT(0).getT(1).getT(1).
                          getT(6);
-		auto& xfader81 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader81_t<NV>
+		auto& xfader81 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader81_t<NV>
                          getT(0).getT(1).getT(1).getT(6).getT(0);
-		auto& soft_bypass75 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass75_t<NV>
+		auto& soft_bypass75 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass75_t<NV>
                               getT(0).getT(1).getT(1).getT(6).getT(1);
-		auto& chain296 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain296_t<NV>
+		auto& chain296 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain296_t<NV>
                          getT(0).getT(1).getT(1).getT(6).getT(1).
                          getT(0);
-		auto& branch16 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::branch16_t<NV>
+		auto& branch16 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::branch16_t<NV>
                          getT(1).getT(1).getT(6).getT(1).getT(0).getT(0);
-		auto& chain385 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain385_t<NV>
+		auto& chain385 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain385_t<NV>
                          getT(1).getT(1).getT(6).getT(1).getT(0).getT(0).
                          getT(0);
-		auto& event_data_reader4 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).   // Files_impl::event_data_reader4_t<NV>
+		auto& event_data_reader4 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).   // Files_impl::event_data_reader4_t<NV>
                                    getT(1).getT(6).getT(1).getT(0).getT(0).getT(0).getT(0);
-		auto& add4 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).                 // math::add<NV>
+		auto& add4 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).                 // math::add<NV>
                      getT(1).getT(6).getT(1).getT(0).getT(0).getT(0).getT(1);
-		auto& chain396 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain396_t<NV>
+		auto& chain396 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain396_t<NV>
                          getT(1).getT(1).getT(6).getT(1).getT(0).getT(0).
                          getT(1);
-		auto& event_data_reader5 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).   // Files_impl::event_data_reader5_t<NV>
+		auto& event_data_reader5 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).   // Files_impl::event_data_reader5_t<NV>
                                    getT(1).getT(6).getT(1).getT(0).getT(0).getT(1).getT(0);
-		auto& add17 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).                // math::add<NV>
+		auto& add17 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).                // math::add<NV>
                       getT(1).getT(6).getT(1).getT(0).getT(0).getT(1).getT(1);
-		auto& chain397 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain397_t<NV>
+		auto& chain397 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain397_t<NV>
                          getT(1).getT(1).getT(6).getT(1).getT(0).getT(0).
                          getT(2);
-		auto& event_data_reader6 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).   // Files_impl::event_data_reader6_t<NV>
+		auto& event_data_reader6 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).   // Files_impl::event_data_reader6_t<NV>
                                    getT(1).getT(6).getT(1).getT(0).getT(0).getT(2).getT(0);
-		auto& add18 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).                // math::add<NV>
+		auto& add18 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).                // math::add<NV>
                       getT(1).getT(6).getT(1).getT(0).getT(0).getT(2).getT(1);
-		auto& chain398 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain398_t<NV>
+		auto& chain398 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain398_t<NV>
                          getT(1).getT(1).getT(6).getT(1).getT(0).getT(0).
                          getT(3);
-		auto& event_data_reader7 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).   // Files_impl::event_data_reader7_t<NV>
+		auto& event_data_reader7 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).   // Files_impl::event_data_reader7_t<NV>
                                    getT(1).getT(6).getT(1).getT(0).getT(0).getT(3).getT(0);
-		auto& add19 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).                // math::add<NV>
+		auto& add19 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).                // math::add<NV>
                       getT(1).getT(6).getT(1).getT(0).getT(0).getT(3).getT(1);
-		auto& add253 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add253 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(1).getT(1).getT(6).getT(1).getT(0).getT(1);
-		auto& gain234 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain234 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(1).getT(1).getT(6).getT(1).getT(0).getT(2);
-		auto& chain408 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain408_t<NV>
+		auto& chain408 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain408_t<NV>
                          getT(2).getT(0).getT(1).getT(1).
                          getT(7);
-		auto& xfader80 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader80_t<NV>
+		auto& xfader80 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader80_t<NV>
                          getT(0).getT(1).getT(1).getT(7).getT(0);
-		auto& soft_bypass74 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass74_t<NV>
+		auto& soft_bypass74 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass74_t<NV>
                               getT(0).getT(1).getT(1).getT(7).getT(1);
-		auto& chain297 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain297_t<NV>
+		auto& chain297 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain297_t<NV>
                          getT(0).getT(1).getT(1).getT(7).getT(1).
                          getT(0);
-		auto& branch58 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::branch58_t<NV>
+		auto& branch58 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::branch58_t<NV>
                          getT(1).getT(1).getT(7).getT(1).getT(0).getT(0);
-		auto& chain298 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain298_t<NV>
+		auto& chain298 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain298_t<NV>
                          getT(1).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(0);
-		auto& midi_cc55 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).            // Files_impl::midi_cc55_t<NV>
+		auto& midi_cc55 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).            // Files_impl::midi_cc55_t<NV>
                           getT(1).getT(7).getT(1).getT(0).getT(0).getT(0).getT(0);
-		auto& add394 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).               // math::add<NV>
+		auto& add394 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).               // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(0).getT(1);
-		auto& chain299 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain299_t<NV>
+		auto& chain299 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain299_t<NV>
                          getT(1).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(1);
-		auto& midi_cc56 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).            // Files_impl::midi_cc56_t<NV>
+		auto& midi_cc56 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).            // Files_impl::midi_cc56_t<NV>
                           getT(1).getT(7).getT(1).getT(0).getT(0).getT(1).getT(0);
-		auto& add395 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).               // math::add<NV>
+		auto& add395 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).               // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(1).getT(1);
-		auto& chain426 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain426_t<NV>
+		auto& chain426 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain426_t<NV>
                          getT(1).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(2);
-		auto& midi_cc57 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).            // Files_impl::midi_cc57_t<NV>
+		auto& midi_cc57 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).            // Files_impl::midi_cc57_t<NV>
                           getT(1).getT(7).getT(1).getT(0).getT(0).getT(2).getT(0);
-		auto& add396 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).               // math::add<NV>
+		auto& add396 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).               // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(2).getT(1);
-		auto& chain451 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain451_t<NV>
+		auto& chain451 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain451_t<NV>
                          getT(1).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(3);
-		auto& midi_cc58 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).            // Files_impl::midi_cc58_t<NV>
+		auto& midi_cc58 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).            // Files_impl::midi_cc58_t<NV>
                           getT(1).getT(7).getT(1).getT(0).getT(0).getT(3).getT(0);
-		auto& add397 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).               // math::add<NV>
+		auto& add397 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).               // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(3).getT(1);
-		auto& chain452 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain452_t<NV>
+		auto& chain452 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain452_t<NV>
                          getT(1).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(4);
-		auto& midi41 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).               // Files_impl::midi41_t<NV>
+		auto& midi41 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).               // Files_impl::midi41_t<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(4).getT(0);
-		auto& add398 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).               // math::add<NV>
+		auto& add398 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).               // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(4).getT(1);
-		auto& chain453 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain453_t<NV>
+		auto& chain453 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain453_t<NV>
                          getT(1).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(5);
-		auto& midi43 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).               // Files_impl::midi43_t<NV>
+		auto& midi43 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).               // Files_impl::midi43_t<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(5).getT(0);
-		auto& add399 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).               // math::add<NV>
+		auto& add399 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).               // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(5).getT(1);
-		auto& chain454 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain454_t<NV>
+		auto& chain454 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain454_t<NV>
                          getT(1).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(6);
-		auto& midi44 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).               // Files_impl::midi44_t<NV>
+		auto& midi44 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).               // Files_impl::midi44_t<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(6).getT(0);
-		auto& add400 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(1).               // math::add<NV>
+		auto& add400 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(1).               // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(6).getT(1);
-		auto& gain235 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain235 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(1).getT(1).getT(7).getT(1).getT(0).getT(1);
-		auto& peak36 = this->getT(0).getT(0).getT(0).getT(0).                                       // Files_impl::peak36_t<NV>
+		auto& peak36 = this->getT(0).getT(0).getT(1).getT(1).                                       // Files_impl::peak36_t<NV>
                        getT(2).getT(0).getT(1).getT(2);
-		auto& pma20 = this->getT(0).getT(0).getT(0).getT(0).                                        // Files_impl::pma20_t<NV>
+		auto& pma20 = this->getT(0).getT(0).getT(1).getT(1).                                        // Files_impl::pma20_t<NV>
                       getT(2).getT(0).getT(1).getT(3);
-		auto& modchain18 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2);           // Files_impl::modchain18_t<NV>
-		auto& sliderbank17 = this->getT(0).getT(0).getT(0).getT(0).                                 // Files_impl::sliderbank17_t<NV>
+		auto& modchain18 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2);           // Files_impl::modchain18_t<NV>
+		auto& sliderbank17 = this->getT(0).getT(0).getT(1).getT(1).                                 // Files_impl::sliderbank17_t<NV>
                              getT(2).getT(0).getT(2).getT(0);
-		auto& split34 = this->getT(0).getT(0).getT(0).getT(0).                                      // Files_impl::split34_t<NV>
+		auto& split34 = this->getT(0).getT(0).getT(1).getT(1).                                      // Files_impl::split34_t<NV>
                         getT(2).getT(0).getT(2).getT(1);
-		auto& chain415 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain415_t<NV>
+		auto& chain415 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain415_t<NV>
                          getT(2).getT(0).getT(2).getT(1).
                          getT(0);
-		auto& xfader87 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader87_t<NV>
+		auto& xfader87 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader87_t<NV>
                          getT(0).getT(2).getT(1).getT(0).getT(0);
-		auto& soft_bypass81 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass81_t<NV>
+		auto& soft_bypass81 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass81_t<NV>
                               getT(0).getT(2).getT(1).getT(0).getT(1);
-		auto& chain300 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain300_t<NV>
+		auto& chain300 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain300_t<NV>
                          getT(0).getT(2).getT(1).getT(0).getT(1).
                          getT(0);
-		auto& global_cable59 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).               // Files_impl::global_cable59_t<NV>
+		auto& global_cable59 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).               // Files_impl::global_cable59_t<NV>
                                getT(2).getT(1).getT(0).getT(1).getT(0).getT(0);
-		auto& add254 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add254 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(2).getT(1).getT(0).getT(1).getT(0).getT(1);
-		auto& gain236 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain236 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(2).getT(1).getT(0).getT(1).getT(0).getT(2);
-		auto& chain423 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain423_t<NV>
+		auto& chain423 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain423_t<NV>
                          getT(2).getT(0).getT(2).getT(1).
                          getT(1);
-		auto& xfader95 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader95_t<NV>
+		auto& xfader95 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader95_t<NV>
                          getT(0).getT(2).getT(1).getT(1).getT(0);
-		auto& soft_bypass89 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass89_t<NV>
+		auto& soft_bypass89 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass89_t<NV>
                               getT(0).getT(2).getT(1).getT(1).getT(1);
-		auto& chain301 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain301_t<NV>
+		auto& chain301 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain301_t<NV>
                          getT(0).getT(2).getT(1).getT(1).getT(1).
                          getT(0);
-		auto& global_cable60 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).               // Files_impl::global_cable60_t<NV>
+		auto& global_cable60 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).               // Files_impl::global_cable60_t<NV>
                                getT(2).getT(1).getT(1).getT(1).getT(0).getT(0);
-		auto& add255 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add255 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(2).getT(1).getT(1).getT(1).getT(0).getT(1);
-		auto& gain237 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain237 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(2).getT(1).getT(1).getT(1).getT(0).getT(2);
-		auto& chain422 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain422_t<NV>
+		auto& chain422 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain422_t<NV>
                          getT(2).getT(0).getT(2).getT(1).
                          getT(2);
-		auto& xfader94 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader94_t<NV>
+		auto& xfader94 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader94_t<NV>
                          getT(0).getT(2).getT(1).getT(2).getT(0);
-		auto& soft_bypass88 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass88_t<NV>
+		auto& soft_bypass88 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass88_t<NV>
                               getT(0).getT(2).getT(1).getT(2).getT(1);
-		auto& chain302 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain302_t<NV>
+		auto& chain302 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain302_t<NV>
                          getT(0).getT(2).getT(1).getT(2).getT(1).
                          getT(0);
-		auto& global_cable61 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).               // Files_impl::global_cable61_t<NV>
+		auto& global_cable61 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).               // Files_impl::global_cable61_t<NV>
                                getT(2).getT(1).getT(2).getT(1).getT(0).getT(0);
-		auto& add256 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add256 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(2).getT(1).getT(2).getT(1).getT(0).getT(1);
-		auto& gain238 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain238 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(2).getT(1).getT(2).getT(1).getT(0).getT(2);
-		auto& chain421 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain421_t<NV>
+		auto& chain421 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain421_t<NV>
                          getT(2).getT(0).getT(2).getT(1).
                          getT(3);
-		auto& xfader93 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader93_t<NV>
+		auto& xfader93 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader93_t<NV>
                          getT(0).getT(2).getT(1).getT(3).getT(0);
-		auto& soft_bypass87 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass87_t<NV>
+		auto& soft_bypass87 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass87_t<NV>
                               getT(0).getT(2).getT(1).getT(3).getT(1);
-		auto& chain303 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain303_t<NV>
+		auto& chain303 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain303_t<NV>
                          getT(0).getT(2).getT(1).getT(3).getT(1).
                          getT(0);
-		auto& global_cable62 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).               // Files_impl::global_cable62_t<NV>
+		auto& global_cable62 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).               // Files_impl::global_cable62_t<NV>
                                getT(2).getT(1).getT(3).getT(1).getT(0).getT(0);
-		auto& add257 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add257 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(2).getT(1).getT(3).getT(1).getT(0).getT(1);
-		auto& gain239 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain239 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(2).getT(1).getT(3).getT(1).getT(0).getT(2);
-		auto& chain420 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain420_t<NV>
+		auto& chain420 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain420_t<NV>
                          getT(2).getT(0).getT(2).getT(1).
                          getT(4);
-		auto& xfader92 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader92_t<NV>
+		auto& xfader92 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader92_t<NV>
                          getT(0).getT(2).getT(1).getT(4).getT(0);
-		auto& soft_bypass86 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass86_t<NV>
+		auto& soft_bypass86 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass86_t<NV>
                               getT(0).getT(2).getT(1).getT(4).getT(1);
-		auto& chain304 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain304_t<NV>
+		auto& chain304 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain304_t<NV>
                          getT(0).getT(2).getT(1).getT(4).getT(1).
                          getT(0);
-		auto& event_data_reader20 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).          // Files_impl::event_data_reader20_t<NV>
+		auto& event_data_reader20 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).          // Files_impl::event_data_reader20_t<NV>
                                     getT(2).getT(1).getT(4).getT(1).getT(0).getT(0);
-		auto& add258 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add258 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(2).getT(1).getT(4).getT(1).getT(0).getT(1);
-		auto& gain240 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain240 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(2).getT(1).getT(4).getT(1).getT(0).getT(2);
-		auto& chain419 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain419_t<NV>
+		auto& chain419 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain419_t<NV>
                          getT(2).getT(0).getT(2).getT(1).
                          getT(5);
-		auto& xfader91 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader91_t<NV>
+		auto& xfader91 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader91_t<NV>
                          getT(0).getT(2).getT(1).getT(5).getT(0);
-		auto& soft_bypass85 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass85_t<NV>
+		auto& soft_bypass85 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass85_t<NV>
                               getT(0).getT(2).getT(1).getT(5).getT(1);
-		auto& chain305 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain305_t<NV>
+		auto& chain305 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain305_t<NV>
                          getT(0).getT(2).getT(1).getT(5).getT(1).
                          getT(0);
-		auto& event_data_reader21 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).          // Files_impl::event_data_reader21_t<NV>
+		auto& event_data_reader21 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).          // Files_impl::event_data_reader21_t<NV>
                                     getT(2).getT(1).getT(5).getT(1).getT(0).getT(0);
-		auto& add259 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add259 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(2).getT(1).getT(5).getT(1).getT(0).getT(1);
-		auto& gain241 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain241 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(2).getT(1).getT(5).getT(1).getT(0).getT(2);
-		auto& chain418 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain418_t<NV>
+		auto& chain418 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain418_t<NV>
                          getT(2).getT(0).getT(2).getT(1).
                          getT(6);
-		auto& xfader90 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader90_t<NV>
+		auto& xfader90 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader90_t<NV>
                          getT(0).getT(2).getT(1).getT(6).getT(0);
-		auto& soft_bypass84 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass84_t<NV>
+		auto& soft_bypass84 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass84_t<NV>
                               getT(0).getT(2).getT(1).getT(6).getT(1);
-		auto& chain306 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain306_t<NV>
+		auto& chain306 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain306_t<NV>
                          getT(0).getT(2).getT(1).getT(6).getT(1).
                          getT(0);
-		auto& branch19 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::branch19_t<NV>
+		auto& branch19 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::branch19_t<NV>
                          getT(2).getT(1).getT(6).getT(1).getT(0).getT(0);
-		auto& chain386 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain386_t<NV>
+		auto& chain386 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain386_t<NV>
                          getT(2).getT(1).getT(6).getT(1).getT(0).getT(0).
                          getT(0);
-		auto& event_data_reader8 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).   // Files_impl::event_data_reader8_t<NV>
+		auto& event_data_reader8 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).   // Files_impl::event_data_reader8_t<NV>
                                    getT(1).getT(6).getT(1).getT(0).getT(0).getT(0).getT(0);
-		auto& add5 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).                 // math::add<NV>
+		auto& add5 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).                 // math::add<NV>
                      getT(1).getT(6).getT(1).getT(0).getT(0).getT(0).getT(1);
-		auto& chain399 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain399_t<NV>
+		auto& chain399 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain399_t<NV>
                          getT(2).getT(1).getT(6).getT(1).getT(0).getT(0).
                          getT(1);
-		auto& event_data_reader9 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).   // Files_impl::event_data_reader9_t<NV>
+		auto& event_data_reader9 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).   // Files_impl::event_data_reader9_t<NV>
                                    getT(1).getT(6).getT(1).getT(0).getT(0).getT(1).getT(0);
-		auto& add20 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).                // math::add<NV>
+		auto& add20 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).                // math::add<NV>
                       getT(1).getT(6).getT(1).getT(0).getT(0).getT(1).getT(1);
-		auto& chain416 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain416_t<NV>
+		auto& chain416 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain416_t<NV>
                          getT(2).getT(1).getT(6).getT(1).getT(0).getT(0).
                          getT(2);
-		auto& event_data_reader10 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).  // Files_impl::event_data_reader10_t<NV>
+		auto& event_data_reader10 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).  // Files_impl::event_data_reader10_t<NV>
                                     getT(1).getT(6).getT(1).getT(0).getT(0).getT(2).getT(0);
-		auto& add21 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).                // math::add<NV>
+		auto& add21 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).                // math::add<NV>
                       getT(1).getT(6).getT(1).getT(0).getT(0).getT(2).getT(1);
-		auto& chain424 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain424_t<NV>
+		auto& chain424 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain424_t<NV>
                          getT(2).getT(1).getT(6).getT(1).getT(0).getT(0).
                          getT(3);
-		auto& event_data_reader11 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).  // Files_impl::event_data_reader11_t<NV>
+		auto& event_data_reader11 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).  // Files_impl::event_data_reader11_t<NV>
                                     getT(1).getT(6).getT(1).getT(0).getT(0).getT(3).getT(0);
-		auto& add23 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).                // math::add<NV>
+		auto& add23 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).                // math::add<NV>
                       getT(1).getT(6).getT(1).getT(0).getT(0).getT(3).getT(1);
-		auto& add264 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add264 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(2).getT(1).getT(6).getT(1).getT(0).getT(1);
-		auto& gain242 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain242 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(2).getT(1).getT(6).getT(1).getT(0).getT(2);
-		auto& chain417 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain417_t<NV>
+		auto& chain417 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain417_t<NV>
                          getT(2).getT(0).getT(2).getT(1).
                          getT(7);
-		auto& xfader89 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader89_t<NV>
+		auto& xfader89 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader89_t<NV>
                          getT(0).getT(2).getT(1).getT(7).getT(0);
-		auto& soft_bypass83 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass83_t<NV>
+		auto& soft_bypass83 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass83_t<NV>
                               getT(0).getT(2).getT(1).getT(7).getT(1);
-		auto& chain307 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain307_t<NV>
+		auto& chain307 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain307_t<NV>
                          getT(0).getT(2).getT(1).getT(7).getT(1).
                          getT(0);
-		auto& branch60 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::branch60_t<NV>
+		auto& branch60 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::branch60_t<NV>
                          getT(2).getT(1).getT(7).getT(1).getT(0).getT(0);
-		auto& chain308 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain308_t<NV>
+		auto& chain308 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain308_t<NV>
                          getT(2).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(0);
-		auto& midi_cc59 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).            // Files_impl::midi_cc59_t<NV>
+		auto& midi_cc59 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).            // Files_impl::midi_cc59_t<NV>
                           getT(1).getT(7).getT(1).getT(0).getT(0).getT(0).getT(0);
-		auto& add401 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).               // math::add<NV>
+		auto& add401 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).               // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(0).getT(1);
-		auto& chain309 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain309_t<NV>
+		auto& chain309 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain309_t<NV>
                          getT(2).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(1);
-		auto& midi_cc60 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).            // Files_impl::midi_cc60_t<NV>
+		auto& midi_cc60 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).            // Files_impl::midi_cc60_t<NV>
                           getT(1).getT(7).getT(1).getT(0).getT(0).getT(1).getT(0);
-		auto& add402 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).               // math::add<NV>
+		auto& add402 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).               // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(1).getT(1);
-		auto& chain427 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain427_t<NV>
+		auto& chain427 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain427_t<NV>
                          getT(2).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(2);
-		auto& midi_cc61 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).            // Files_impl::midi_cc61_t<NV>
+		auto& midi_cc61 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).            // Files_impl::midi_cc61_t<NV>
                           getT(1).getT(7).getT(1).getT(0).getT(0).getT(2).getT(0);
-		auto& add403 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).               // math::add<NV>
+		auto& add403 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).               // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(2).getT(1);
-		auto& chain455 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain455_t<NV>
+		auto& chain455 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain455_t<NV>
                          getT(2).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(3);
-		auto& midi_cc62 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).            // Files_impl::midi_cc62_t<NV>
+		auto& midi_cc62 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).            // Files_impl::midi_cc62_t<NV>
                           getT(1).getT(7).getT(1).getT(0).getT(0).getT(3).getT(0);
-		auto& add404 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).               // math::add<NV>
+		auto& add404 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).               // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(3).getT(1);
-		auto& chain456 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain456_t<NV>
+		auto& chain456 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain456_t<NV>
                          getT(2).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(4);
-		auto& midi45 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).               // Files_impl::midi45_t<NV>
+		auto& midi45 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).               // Files_impl::midi45_t<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(4).getT(0);
-		auto& add405 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).               // math::add<NV>
+		auto& add405 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).               // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(4).getT(1);
-		auto& chain457 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain457_t<NV>
+		auto& chain457 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain457_t<NV>
                          getT(2).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(5);
-		auto& midi46 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).               // Files_impl::midi46_t<NV>
+		auto& midi46 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).               // Files_impl::midi46_t<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(5).getT(0);
-		auto& add406 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).               // math::add<NV>
+		auto& add406 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).               // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(5).getT(1);
-		auto& chain458 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain458_t<NV>
+		auto& chain458 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain458_t<NV>
                          getT(2).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(6);
-		auto& midi47 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).               // Files_impl::midi47_t<NV>
+		auto& midi47 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).               // Files_impl::midi47_t<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(6).getT(0);
-		auto& add407 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(2).               // math::add<NV>
+		auto& add407 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(2).               // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(6).getT(1);
-		auto& gain243 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain243 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(2).getT(1).getT(7).getT(1).getT(0).getT(1);
-		auto& peak_unscaled = this->getT(0).getT(0).getT(0).getT(0).                                // Files_impl::peak_unscaled_t<NV>
+		auto& peak_unscaled = this->getT(0).getT(0).getT(1).getT(1).                                // Files_impl::peak_unscaled_t<NV>
                               getT(2).getT(0).getT(2).getT(2);
-		auto& peak37 = this->getT(0).getT(0).getT(0).getT(0).                                       // Files_impl::peak37_t
+		auto& peak37 = this->getT(0).getT(0).getT(1).getT(1).                                       // Files_impl::peak37_t
                        getT(2).getT(0).getT(2).getT(3);
-		auto& pma_unscaled = this->getT(0).getT(0).getT(0).getT(0).                                 // Files_impl::pma_unscaled_t<NV>
+		auto& pma_unscaled = this->getT(0).getT(0).getT(1).getT(1).                                 // Files_impl::pma_unscaled_t<NV>
                              getT(2).getT(0).getT(2).getT(4);
-		auto& modchain19 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3);           // Files_impl::modchain19_t<NV>
-		auto& sliderbank18 = this->getT(0).getT(0).getT(0).getT(0).                                 // Files_impl::sliderbank18_t<NV>
+		auto& modchain19 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3);           // Files_impl::modchain19_t<NV>
+		auto& sliderbank18 = this->getT(0).getT(0).getT(1).getT(1).                                 // Files_impl::sliderbank18_t<NV>
                              getT(2).getT(0).getT(3).getT(0);
-		auto& split35 = this->getT(0).getT(0).getT(0).getT(0).                                      // Files_impl::split35_t<NV>
+		auto& split35 = this->getT(0).getT(0).getT(1).getT(1).                                      // Files_impl::split35_t<NV>
                         getT(2).getT(0).getT(3).getT(1);
-		auto& chain425 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain425_t<NV>
+		auto& chain425 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain425_t<NV>
                          getT(2).getT(0).getT(3).getT(1).
                          getT(0);
-		auto& xfader88 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader88_t<NV>
+		auto& xfader88 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader88_t<NV>
                          getT(0).getT(3).getT(1).getT(0).getT(0);
-		auto& soft_bypass82 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass82_t<NV>
+		auto& soft_bypass82 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass82_t<NV>
                               getT(0).getT(3).getT(1).getT(0).getT(1);
-		auto& chain310 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain310_t<NV>
+		auto& chain310 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain310_t<NV>
                          getT(0).getT(3).getT(1).getT(0).getT(1).
                          getT(0);
-		auto& global_cable63 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).               // Files_impl::global_cable63_t<NV>
+		auto& global_cable63 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).               // Files_impl::global_cable63_t<NV>
                                getT(3).getT(1).getT(0).getT(1).getT(0).getT(0);
-		auto& add265 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add265 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(3).getT(1).getT(0).getT(1).getT(0).getT(1);
-		auto& gain244 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain244 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(3).getT(1).getT(0).getT(1).getT(0).getT(2);
-		auto& chain428 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain428_t<NV>
+		auto& chain428 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain428_t<NV>
                          getT(2).getT(0).getT(3).getT(1).
                          getT(1);
-		auto& xfader96 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader96_t<NV>
+		auto& xfader96 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader96_t<NV>
                          getT(0).getT(3).getT(1).getT(1).getT(0);
-		auto& soft_bypass90 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass90_t<NV>
+		auto& soft_bypass90 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass90_t<NV>
                               getT(0).getT(3).getT(1).getT(1).getT(1);
-		auto& chain311 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain311_t<NV>
+		auto& chain311 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain311_t<NV>
                          getT(0).getT(3).getT(1).getT(1).getT(1).
                          getT(0);
-		auto& global_cable64 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).               // Files_impl::global_cable64_t<NV>
+		auto& global_cable64 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).               // Files_impl::global_cable64_t<NV>
                                getT(3).getT(1).getT(1).getT(1).getT(0).getT(0);
-		auto& add266 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add266 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(3).getT(1).getT(1).getT(1).getT(0).getT(1);
-		auto& gain245 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain245 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(3).getT(1).getT(1).getT(1).getT(0).getT(2);
-		auto& chain429 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain429_t<NV>
+		auto& chain429 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain429_t<NV>
                          getT(2).getT(0).getT(3).getT(1).
                          getT(2);
-		auto& xfader97 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader97_t<NV>
+		auto& xfader97 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader97_t<NV>
                          getT(0).getT(3).getT(1).getT(2).getT(0);
-		auto& soft_bypass91 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass91_t<NV>
+		auto& soft_bypass91 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass91_t<NV>
                               getT(0).getT(3).getT(1).getT(2).getT(1);
-		auto& chain312 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain312_t<NV>
+		auto& chain312 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain312_t<NV>
                          getT(0).getT(3).getT(1).getT(2).getT(1).
                          getT(0);
-		auto& global_cable65 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).               // Files_impl::global_cable65_t<NV>
+		auto& global_cable65 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).               // Files_impl::global_cable65_t<NV>
                                getT(3).getT(1).getT(2).getT(1).getT(0).getT(0);
-		auto& add267 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add267 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(3).getT(1).getT(2).getT(1).getT(0).getT(1);
-		auto& gain246 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain246 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(3).getT(1).getT(2).getT(1).getT(0).getT(2);
-		auto& chain430 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain430_t<NV>
+		auto& chain430 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain430_t<NV>
                          getT(2).getT(0).getT(3).getT(1).
                          getT(3);
-		auto& xfader98 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader98_t<NV>
+		auto& xfader98 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader98_t<NV>
                          getT(0).getT(3).getT(1).getT(3).getT(0);
-		auto& soft_bypass92 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass92_t<NV>
+		auto& soft_bypass92 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass92_t<NV>
                               getT(0).getT(3).getT(1).getT(3).getT(1);
-		auto& chain313 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain313_t<NV>
+		auto& chain313 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain313_t<NV>
                          getT(0).getT(3).getT(1).getT(3).getT(1).
                          getT(0);
-		auto& global_cable66 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).               // Files_impl::global_cable66_t<NV>
+		auto& global_cable66 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).               // Files_impl::global_cable66_t<NV>
                                getT(3).getT(1).getT(3).getT(1).getT(0).getT(0);
-		auto& add268 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add268 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(3).getT(1).getT(3).getT(1).getT(0).getT(1);
-		auto& gain247 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain247 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(3).getT(1).getT(3).getT(1).getT(0).getT(2);
-		auto& chain431 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain431_t<NV>
+		auto& chain431 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain431_t<NV>
                          getT(2).getT(0).getT(3).getT(1).
                          getT(4);
-		auto& xfader99 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::xfader99_t<NV>
+		auto& xfader99 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::xfader99_t<NV>
                          getT(0).getT(3).getT(1).getT(4).getT(0);
-		auto& soft_bypass93 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass93_t<NV>
+		auto& soft_bypass93 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass93_t<NV>
                               getT(0).getT(3).getT(1).getT(4).getT(1);
-		auto& chain314 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain314_t<NV>
+		auto& chain314 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain314_t<NV>
                          getT(0).getT(3).getT(1).getT(4).getT(1).
                          getT(0);
-		auto& event_data_reader22 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).          // Files_impl::event_data_reader22_t<NV>
+		auto& event_data_reader22 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).          // Files_impl::event_data_reader22_t<NV>
                                     getT(3).getT(1).getT(4).getT(1).getT(0).getT(0);
-		auto& add269 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add269 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(3).getT(1).getT(4).getT(1).getT(0).getT(1);
-		auto& gain248 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain248 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(3).getT(1).getT(4).getT(1).getT(0).getT(2);
-		auto& chain432 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain432_t<NV>
+		auto& chain432 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain432_t<NV>
                          getT(2).getT(0).getT(3).getT(1).
                          getT(5);
-		auto& xfader100 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                            // Files_impl::xfader100_t<NV>
+		auto& xfader100 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                            // Files_impl::xfader100_t<NV>
                           getT(0).getT(3).getT(1).getT(5).getT(0);
-		auto& soft_bypass94 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass94_t<NV>
+		auto& soft_bypass94 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass94_t<NV>
                               getT(0).getT(3).getT(1).getT(5).getT(1);
-		auto& chain315 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain315_t<NV>
+		auto& chain315 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain315_t<NV>
                          getT(0).getT(3).getT(1).getT(5).getT(1).
                          getT(0);
-		auto& event_data_reader23 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).          // Files_impl::event_data_reader23_t<NV>
+		auto& event_data_reader23 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).          // Files_impl::event_data_reader23_t<NV>
                                     getT(3).getT(1).getT(5).getT(1).getT(0).getT(0);
-		auto& add270 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                       // math::add<NV>
+		auto& add270 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                       // math::add<NV>
                        getT(3).getT(1).getT(5).getT(1).getT(0).getT(1);
-		auto& gain249 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                      // core::gain<NV>
+		auto& gain249 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                      // core::gain<NV>
                         getT(3).getT(1).getT(5).getT(1).getT(0).getT(2);
-		auto& chain433 = this->getT(0).getT(0).getT(0).getT(0).                                     // Files_impl::chain433_t<NV>
+		auto& chain433 = this->getT(0).getT(0).getT(1).getT(1).                                     // Files_impl::chain433_t<NV>
                          getT(2).getT(0).getT(3).getT(1).
                          getT(6);
-		auto& xfader101 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                            // Files_impl::xfader101_t<NV>
+		auto& xfader101 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                            // Files_impl::xfader101_t<NV>
                           getT(0).getT(3).getT(1).getT(6).getT(0);
-		auto& soft_bypass95 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::soft_bypass95_t<NV>
+		auto& soft_bypass95 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::soft_bypass95_t<NV>
                               getT(0).getT(3).getT(1).getT(6).getT(1);
-		auto& chain316 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                             // Files_impl::chain316_t<NV>
+		auto& chain316 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                             // Files_impl::chain316_t<NV>
                          getT(0).getT(3).getT(1).getT(6).getT(1).
                          getT(0);
-		auto& branch20 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::branch20_t<NV>
+		auto& branch20 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::branch20_t<NV>
                          getT(3).getT(1).getT(6).getT(1).getT(0).getT(0);
-		auto& chain387 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain387_t<NV>
+		auto& chain387 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain387_t<NV>
                          getT(3).getT(1).getT(6).getT(1).getT(0).getT(0).
                          getT(0);
-		auto& event_data_reader12 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).  // Files_impl::event_data_reader12_t<NV>
+		auto& event_data_reader12 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).  // Files_impl::event_data_reader12_t<NV>
                                     getT(1).getT(6).getT(1).getT(0).getT(0).getT(0).getT(0);
-		auto& add6 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).                 // math::add<NV>
+		auto& add6 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).                 // math::add<NV>
                      getT(1).getT(6).getT(1).getT(0).getT(0).getT(0).getT(1);
-		auto& chain434 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain434_t<NV>
+		auto& chain434 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain434_t<NV>
                          getT(3).getT(1).getT(6).getT(1).getT(0).getT(0).
                          getT(1);
-		auto& event_data_reader13 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).  // Files_impl::event_data_reader13_t<NV>
+		auto& event_data_reader13 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).  // Files_impl::event_data_reader13_t<NV>
                                     getT(1).getT(6).getT(1).getT(0).getT(0).getT(1).getT(0);
-		auto& add24 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).                // math::add<NV>
+		auto& add24 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).                // math::add<NV>
                       getT(1).getT(6).getT(1).getT(0).getT(0).getT(1).getT(1);
-		auto& chain435 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain435_t<NV>
+		auto& chain435 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain435_t<NV>
                          getT(3).getT(1).getT(6).getT(1).getT(0).getT(0).
                          getT(2);
-		auto& event_data_reader14 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).  // Files_impl::event_data_reader14_t<NV>
+		auto& event_data_reader14 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).  // Files_impl::event_data_reader14_t<NV>
                                     getT(1).getT(6).getT(1).getT(0).getT(0).getT(2).getT(0);
-		auto& add25 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).                // math::add<NV>
+		auto& add25 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).                // math::add<NV>
                       getT(1).getT(6).getT(1).getT(0).getT(0).getT(2).getT(1);
-		auto& chain436 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                     // Files_impl::chain436_t<NV>
+		auto& chain436 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                     // Files_impl::chain436_t<NV>
                          getT(3).getT(1).getT(6).getT(1).getT(0).getT(0).
                          getT(3);
-		auto& event_data_reader15 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).  // Files_impl::event_data_reader15_t<NV>
+		auto& event_data_reader15 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).  // Files_impl::event_data_reader15_t<NV>
                                     getT(1).getT(6).getT(1).getT(0).getT(0).getT(3).getT(0);
-		auto& add26 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).         // math::add<NV>
+		auto& add26 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).         // math::add<NV>
                       getT(1).getT(6).getT(1).getT(0).getT(0).getT(3).getT(1);
-		auto& add271 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).                // math::add<NV>
+		auto& add271 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).                // math::add<NV>
                        getT(3).getT(1).getT(6).getT(1).getT(0).getT(1);
-		auto& gain250 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).               // core::gain<NV>
+		auto& gain250 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).               // core::gain<NV>
                         getT(3).getT(1).getT(6).getT(1).getT(0).getT(2);
-		auto& chain437 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::chain437_t<NV>
+		auto& chain437 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::chain437_t<NV>
                          getT(2).getT(0).getT(3).getT(1).
                          getT(7);
-		auto& xfader102 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                     // Files_impl::xfader102_t<NV>
+		auto& xfader102 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                     // Files_impl::xfader102_t<NV>
                           getT(0).getT(3).getT(1).getT(7).getT(0);
-		auto& soft_bypass96 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                 // Files_impl::soft_bypass96_t<NV>
+		auto& soft_bypass96 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                 // Files_impl::soft_bypass96_t<NV>
                               getT(0).getT(3).getT(1).getT(7).getT(1);
-		auto& chain317 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain317_t<NV>
+		auto& chain317 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain317_t<NV>
                          getT(0).getT(3).getT(1).getT(7).getT(1).
                          getT(0);
-		auto& branch61 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).              // Files_impl::branch61_t<NV>
+		auto& branch61 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).              // Files_impl::branch61_t<NV>
                          getT(3).getT(1).getT(7).getT(1).getT(0).getT(0);
-		auto& chain318 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).              // Files_impl::chain318_t<NV>
+		auto& chain318 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).              // Files_impl::chain318_t<NV>
                          getT(3).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(0);
-		auto& midi_cc63 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).     // Files_impl::midi_cc63_t<NV>
+		auto& midi_cc63 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).     // Files_impl::midi_cc63_t<NV>
                           getT(1).getT(7).getT(1).getT(0).getT(0).getT(0).getT(0);
-		auto& add408 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).        // math::add<NV>
+		auto& add408 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).        // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(0).getT(1);
-		auto& chain319 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).              // Files_impl::chain319_t<NV>
+		auto& chain319 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).              // Files_impl::chain319_t<NV>
                          getT(3).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(1);
-		auto& midi_cc64 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).     // Files_impl::midi_cc64_t<NV>
+		auto& midi_cc64 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).     // Files_impl::midi_cc64_t<NV>
                           getT(1).getT(7).getT(1).getT(0).getT(0).getT(1).getT(0);
-		auto& add409 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).        // math::add<NV>
+		auto& add409 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).        // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(1).getT(1);
-		auto& chain438 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).              // Files_impl::chain438_t<NV>
+		auto& chain438 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).              // Files_impl::chain438_t<NV>
                          getT(3).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(2);
-		auto& midi_cc65 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).     // Files_impl::midi_cc65_t<NV>
+		auto& midi_cc65 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).     // Files_impl::midi_cc65_t<NV>
                           getT(1).getT(7).getT(1).getT(0).getT(0).getT(2).getT(0);
-		auto& add410 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).        // math::add<NV>
+		auto& add410 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).        // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(2).getT(1);
-		auto& chain459 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).              // Files_impl::chain459_t<NV>
+		auto& chain459 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).              // Files_impl::chain459_t<NV>
                          getT(3).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(3);
-		auto& midi_cc66 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).     // Files_impl::midi_cc66_t<NV>
+		auto& midi_cc66 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).     // Files_impl::midi_cc66_t<NV>
                           getT(1).getT(7).getT(1).getT(0).getT(0).getT(3).getT(0);
-		auto& add411 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).        // math::add<NV>
+		auto& add411 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).        // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(3).getT(1);
-		auto& chain460 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).              // Files_impl::chain460_t<NV>
+		auto& chain460 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).              // Files_impl::chain460_t<NV>
                          getT(3).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(4);
-		auto& midi48 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).        // Files_impl::midi48_t<NV>
+		auto& midi48 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).        // Files_impl::midi48_t<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(4).getT(0);
-		auto& add412 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).        // math::add<NV>
+		auto& add412 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).        // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(4).getT(1);
-		auto& chain461 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).              // Files_impl::chain461_t<NV>
+		auto& chain461 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).              // Files_impl::chain461_t<NV>
                          getT(3).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(5);
-		auto& midi49 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).        // Files_impl::midi49_t<NV>
+		auto& midi49 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).        // Files_impl::midi49_t<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(5).getT(0);
-		auto& add413 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).        // math::add<NV>
+		auto& add413 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).        // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(5).getT(1);
-		auto& chain462 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).              // Files_impl::chain462_t<NV>
+		auto& chain462 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).              // Files_impl::chain462_t<NV>
                          getT(3).getT(1).getT(7).getT(1).getT(0).getT(0).
                          getT(6);
-		auto& midi50 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).        // Files_impl::midi50_t<NV>
+		auto& midi50 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).        // Files_impl::midi50_t<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(6).getT(0);
-		auto& add414 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).getT(3).        // math::add<NV>
+		auto& add414 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).getT(3).        // math::add<NV>
                        getT(1).getT(7).getT(1).getT(0).getT(0).getT(6).getT(1);
-		auto& gain251 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).               // core::gain<NV>
+		auto& gain251 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).               // core::gain<NV>
                         getT(3).getT(1).getT(7).getT(1).getT(0).getT(1);
-		auto& peak38 = this->getT(0).getT(0).getT(0).getT(0).                                // Files_impl::peak38_t<NV>
+		auto& peak38 = this->getT(0).getT(0).getT(1).getT(1).                                // Files_impl::peak38_t<NV>
                        getT(2).getT(0).getT(3).getT(2);
-		auto& pma = this->getT(0).getT(0).getT(0).getT(0).                                   // Files_impl::pma_t<NV>
+		auto& pma = this->getT(0).getT(0).getT(1).getT(1).                                   // Files_impl::pma_t<NV>
                     getT(2).getT(0).getT(3).getT(3);
-		auto& gain1 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(1);                 // core::gain<NV>
-		auto& one_pole = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(2);              // filters::one_pole<NV>
-		auto& modchain8 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(3);             // Files_impl::modchain8_t<NV>
-		auto& split23 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(3).getT(0);       // Files_impl::split23_t<NV>
-		auto& chain178 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::chain178_t<NV>
+		auto& gain1 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(1);                 // core::gain<NV>
+		auto& one_pole = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(2);              // filters::one_pole<NV>
+		auto& modchain8 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(3);             // Files_impl::modchain8_t<NV>
+		auto& split23 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(3).getT(0);       // Files_impl::split23_t<NV>
+		auto& chain178 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::chain178_t<NV>
                          getT(2).getT(3).getT(0).getT(0);
-		auto& chain179 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::chain179_t<NV>
-                         getT(2).getT(3).getT(0).getT(0).
-                         getT(0);
-		auto& tempo_sync6 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                   // Files_impl::tempo_sync6_t<NV>
-                            getT(3).getT(0).getT(0).getT(0).getT(0);
-		auto& ramp5 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                         // Files_impl::ramp5_t<NV>
-                      getT(3).getT(0).getT(0).getT(0).getT(1);
-		auto& branch36 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::branch36_t<NV>
-                         getT(2).getT(3).getT(0).getT(0).
-                         getT(1);
-		auto& chain102 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain102_t
-                         getT(3).getT(0).getT(0).getT(1).getT(0);
-		auto& mod_inv = this->getT(0).getT(0).getT(0).getT(0).getT(2).                       // math::mod_inv<NV>
-                        getT(3).getT(0).getT(0).getT(1).getT(1);
-		auto& peak15 = this->getT(0).getT(0).getT(0).getT(0).                                // Files_impl::peak15_t<NV>
+		auto& branch = this->getT(0).getT(0).getT(1).getT(1).                                // Files_impl::branch_t<NV>
                        getT(2).getT(3).getT(0).getT(0).
-                       getT(2);
-		auto& clear26 = this->getT(0).getT(0).getT(0).getT(0).                               // math::clear<NV>
+                       getT(0);
+		auto& chain179 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain179_t<NV>
+                         getT(3).getT(0).getT(0).getT(0).getT(0);
+		auto& tempo_sync6 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                   // Files_impl::tempo_sync6_t<NV>
+                            getT(3).getT(0).getT(0).getT(0).getT(0).
+                            getT(0);
+		auto& ramp5 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                         // Files_impl::ramp5_t<NV>
+                      getT(3).getT(0).getT(0).getT(0).getT(0).
+                      getT(1);
+		auto& branch36 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::branch36_t<NV>
+                         getT(3).getT(0).getT(0).getT(0).getT(0).
+                         getT(2);
+		auto& chain102 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(3).              // Files_impl::chain102_t
+                         getT(0).getT(0).getT(0).getT(0).getT(2).getT(0);
+		auto& mod_inv = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(3).               // math::mod_inv<NV>
+                        getT(0).getT(0).getT(0).getT(0).getT(2).getT(1);
+		auto& chain1 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::chain1_t<NV>
+                       getT(3).getT(0).getT(0).getT(0).getT(1);
+		auto& phasor = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // core::phasor<NV>
+                       getT(3).getT(0).getT(0).getT(0).getT(1).
+                       getT(0);
+		auto& peak15 = this->getT(0).getT(0).getT(1).getT(1).                                // Files_impl::peak15_t<NV>
+                       getT(2).getT(3).getT(0).getT(0).
+                       getT(1);
+		auto& clear26 = this->getT(0).getT(0).getT(1).getT(1).                               // math::clear<NV>
                         getT(2).getT(3).getT(0).getT(0).
-                        getT(3);
-		auto& chain187 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::chain187_t<NV>
-                         getT(2).getT(3).getT(0).getT(1);
-		auto& chain188 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::chain188_t<NV>
+                        getT(2);
+		auto& branch1 = this->getT(0).getT(0).getT(1).getT(1).                               // Files_impl::branch1_t<NV>
+                        getT(2).getT(3).getT(0).getT(1);
+		auto& chain187 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::chain187_t<NV>
                          getT(2).getT(3).getT(0).getT(1).
                          getT(0);
-		auto& tempo_sync9 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                   // Files_impl::tempo_sync9_t<NV>
-                            getT(3).getT(0).getT(1).getT(0).getT(0);
-		auto& ramp8 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                         // Files_impl::ramp8_t<NV>
-                      getT(3).getT(0).getT(1).getT(0).getT(1);
-		auto& branch89 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::branch89_t<NV>
-                         getT(2).getT(3).getT(0).getT(1).
+		auto& chain188 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain188_t<NV>
+                         getT(3).getT(0).getT(1).getT(0).getT(0);
+		auto& tempo_sync9 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                   // Files_impl::tempo_sync9_t<NV>
+                            getT(3).getT(0).getT(1).getT(0).getT(0).
+                            getT(0);
+		auto& ramp8 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                         // Files_impl::ramp8_t<NV>
+                      getT(3).getT(0).getT(1).getT(0).getT(0).
+                      getT(1);
+		auto& branch89 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::branch89_t<NV>
+                         getT(3).getT(0).getT(1).getT(0).getT(1);
+		auto& chain105 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain105_t
+                         getT(3).getT(0).getT(1).getT(0).getT(1).
+                         getT(0);
+		auto& mod_inv3 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // math::mod_inv<NV>
+                         getT(3).getT(0).getT(1).getT(0).getT(1).
                          getT(1);
-		auto& chain105 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain105_t
-                         getT(3).getT(0).getT(1).getT(1).getT(0);
-		auto& mod_inv3 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // math::mod_inv<NV>
-                         getT(3).getT(0).getT(1).getT(1).getT(1);
-		auto& peak49 = this->getT(0).getT(0).getT(0).getT(0).                                // Files_impl::peak49_t<NV>
+		auto& peak49 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::peak49_t<NV>
+                       getT(3).getT(0).getT(1).getT(0).getT(2);
+		auto& clear32 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                       // math::clear<NV>
+                        getT(3).getT(0).getT(1).getT(0).getT(3);
+		auto& chain4 = this->getT(0).getT(0).getT(1).getT(1).                                // Files_impl::chain4_t<NV>
                        getT(2).getT(3).getT(0).getT(1).
-                       getT(2);
-		auto& clear32 = this->getT(0).getT(0).getT(0).getT(0).                               // math::clear<NV>
-                        getT(2).getT(3).getT(0).getT(1).
-                        getT(3);
-		auto& chain185 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::chain185_t<NV>
-                         getT(2).getT(3).getT(0).getT(2);
-		auto& chain186 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::chain186_t<NV>
+                       getT(1);
+		auto& phasor3 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                       // core::phasor<NV>
+                        getT(3).getT(0).getT(1).getT(1).getT(0);
+		auto& branch3 = this->getT(0).getT(0).getT(1).getT(1).                               // Files_impl::branch3_t<NV>
+                        getT(2).getT(3).getT(0).getT(2);
+		auto& chain185 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::chain185_t<NV>
                          getT(2).getT(3).getT(0).getT(2).
                          getT(0);
-		auto& tempo_sync8 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                   // Files_impl::tempo_sync8_t<NV>
-                            getT(3).getT(0).getT(2).getT(0).getT(0);
-		auto& ramp7 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                         // Files_impl::ramp7_t<NV>
-                      getT(3).getT(0).getT(2).getT(0).getT(1);
-		auto& branch46 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::branch46_t<NV>
-                         getT(2).getT(3).getT(0).getT(2).
+		auto& chain186 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain186_t<NV>
+                         getT(3).getT(0).getT(2).getT(0).getT(0);
+		auto& tempo_sync8 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                   // Files_impl::tempo_sync8_t<NV>
+                            getT(3).getT(0).getT(2).getT(0).getT(0).
+                            getT(0);
+		auto& ramp7 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                         // Files_impl::ramp7_t<NV>
+                      getT(3).getT(0).getT(2).getT(0).getT(0).
+                      getT(1);
+		auto& branch46 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::branch46_t<NV>
+                         getT(3).getT(0).getT(2).getT(0).getT(1);
+		auto& chain104 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain104_t
+                         getT(3).getT(0).getT(2).getT(0).getT(1).
+                         getT(0);
+		auto& mod_inv2 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // math::mod_inv<NV>
+                         getT(3).getT(0).getT(2).getT(0).getT(1).
                          getT(1);
-		auto& chain104 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain104_t
-                         getT(3).getT(0).getT(2).getT(1).getT(0);
-		auto& mod_inv2 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // math::mod_inv<NV>
-                         getT(3).getT(0).getT(2).getT(1).getT(1);
-		auto& peak48 = this->getT(0).getT(0).getT(0).getT(0).                                // Files_impl::peak48_t<NV>
+		auto& peak48 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::peak48_t<NV>
+                       getT(3).getT(0).getT(2).getT(0).getT(2);
+		auto& clear31 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                       // math::clear<NV>
+                        getT(3).getT(0).getT(2).getT(0).getT(3);
+		auto& chain3 = this->getT(0).getT(0).getT(1).getT(1).                                // Files_impl::chain3_t<NV>
                        getT(2).getT(3).getT(0).getT(2).
-                       getT(2);
-		auto& clear31 = this->getT(0).getT(0).getT(0).getT(0).                               // math::clear<NV>
-                        getT(2).getT(3).getT(0).getT(2).
-                        getT(3);
-		auto& chain183 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::chain183_t<NV>
-                         getT(2).getT(3).getT(0).getT(3);
-		auto& chain184 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::chain184_t<NV>
+                       getT(1);
+		auto& phasor2 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                       // core::phasor<NV>
+                        getT(3).getT(0).getT(2).getT(1).getT(0);
+		auto& branch2 = this->getT(0).getT(0).getT(1).getT(1).                               // Files_impl::branch2_t<NV>
+                        getT(2).getT(3).getT(0).getT(3);
+		auto& chain183 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::chain183_t<NV>
                          getT(2).getT(3).getT(0).getT(3).
                          getT(0);
-		auto& tempo_sync7 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                   // Files_impl::tempo_sync7_t<NV>
-                            getT(3).getT(0).getT(3).getT(0).getT(0);
-		auto& ramp6 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                         // Files_impl::ramp6_t<NV>
-                      getT(3).getT(0).getT(3).getT(0).getT(1);
-		auto& branch37 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::branch37_t<NV>
-                         getT(2).getT(3).getT(0).getT(3).
+		auto& chain184 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain184_t<NV>
+                         getT(3).getT(0).getT(3).getT(0).getT(0);
+		auto& tempo_sync7 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                   // Files_impl::tempo_sync7_t<NV>
+                            getT(3).getT(0).getT(3).getT(0).getT(0).
+                            getT(0);
+		auto& ramp6 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                         // Files_impl::ramp6_t<NV>
+                      getT(3).getT(0).getT(3).getT(0).getT(0).
+                      getT(1);
+		auto& branch37 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::branch37_t<NV>
+                         getT(3).getT(0).getT(3).getT(0).getT(1);
+		auto& chain103 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain103_t
+                         getT(3).getT(0).getT(3).getT(0).getT(1).
+                         getT(0);
+		auto& mod_inv1 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // math::mod_inv<NV>
+                         getT(3).getT(0).getT(3).getT(0).getT(1).
                          getT(1);
-		auto& chain103 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain103_t
-                         getT(3).getT(0).getT(3).getT(1).getT(0);
-		auto& mod_inv1 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // math::mod_inv<NV>
-                         getT(3).getT(0).getT(3).getT(1).getT(1);
-		auto& peak47 = this->getT(0).getT(0).getT(0).getT(0).                                // Files_impl::peak47_t<NV>
+		auto& peak47 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::peak47_t<NV>
+                       getT(3).getT(0).getT(3).getT(0).getT(2);
+		auto& clear30 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                       // math::clear<NV>
+                        getT(3).getT(0).getT(3).getT(0).getT(3);
+		auto& chain2 = this->getT(0).getT(0).getT(1).getT(1).                                // Files_impl::chain2_t<NV>
                        getT(2).getT(3).getT(0).getT(3).
-                       getT(2);
-		auto& clear30 = this->getT(0).getT(0).getT(0).getT(0).                               // math::clear<NV>
-                        getT(2).getT(3).getT(0).getT(3).
-                        getT(3);
-		auto& chain247 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4);              // Files_impl::chain247_t<NV>
-		auto& split10 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0);       // Files_impl::split10_t<NV>
-		auto& modchain13 = this->getT(0).getT(0).getT(0).getT(0).                            // Files_impl::modchain13_t<NV>
+                       getT(1);
+		auto& phasor1 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                       // core::phasor<NV>
+                        getT(3).getT(0).getT(3).getT(1).getT(0);
+		auto& chain247 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4);              // Files_impl::chain247_t<NV>
+		auto& split10 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0);       // Files_impl::split10_t<NV>
+		auto& modchain13 = this->getT(0).getT(0).getT(1).getT(1).                            // Files_impl::modchain13_t<NV>
                            getT(2).getT(4).getT(0).getT(0);
-		auto& sliderbank13 = this->getT(0).getT(0).getT(0).getT(0).                          // Files_impl::sliderbank13_t<NV>
+		auto& sliderbank13 = this->getT(0).getT(0).getT(1).getT(1).                          // Files_impl::sliderbank13_t<NV>
                              getT(2).getT(4).getT(0).getT(0).
                              getT(0);
-		auto& split27 = this->getT(0).getT(0).getT(0).getT(0).                               // Files_impl::split27_t<NV>
+		auto& split27 = this->getT(0).getT(0).getT(1).getT(1).                               // Files_impl::split27_t<NV>
                         getT(2).getT(4).getT(0).getT(0).
                         getT(1);
-		auto& chain508 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain508_t<NV>
+		auto& chain508 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain508_t<NV>
                          getT(4).getT(0).getT(0).getT(1).getT(0);
-		auto& xfader135 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                     // Files_impl::xfader135_t<NV>
+		auto& xfader135 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                     // Files_impl::xfader135_t<NV>
                           getT(4).getT(0).getT(0).getT(1).getT(0).
                           getT(0);
-		auto& soft_bypass129 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                // Files_impl::soft_bypass129_t<NV>
+		auto& soft_bypass129 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                // Files_impl::soft_bypass129_t<NV>
                                getT(4).getT(0).getT(0).getT(1).getT(0).
                                getT(1);
-		auto& chain230 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::chain230_t<NV>
+		auto& chain230 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::chain230_t<NV>
                          getT(0).getT(0).getT(1).getT(0).getT(1).getT(0);
-		auto& global_cable43 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).        // Files_impl::global_cable43_t<NV>
+		auto& global_cable43 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).        // Files_impl::global_cable43_t<NV>
                                getT(0).getT(0).getT(1).getT(0).getT(1).getT(0).
                                getT(0);
-		auto& add179 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add179 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(0).getT(1).getT(0).getT(1).getT(0).
                        getT(1);
-		auto& gain124 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).               // core::gain<NV>
+		auto& gain124 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).               // core::gain<NV>
                         getT(0).getT(0).getT(1).getT(0).getT(1).getT(0).
                         getT(2);
-		auto& chain525 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain525_t<NV>
+		auto& chain525 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain525_t<NV>
                          getT(4).getT(0).getT(0).getT(1).getT(1);
-		auto& xfader142 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                     // Files_impl::xfader142_t<NV>
+		auto& xfader142 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                     // Files_impl::xfader142_t<NV>
                           getT(4).getT(0).getT(0).getT(1).getT(1).
                           getT(0);
-		auto& soft_bypass136 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                // Files_impl::soft_bypass136_t<NV>
+		auto& soft_bypass136 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                // Files_impl::soft_bypass136_t<NV>
                                getT(4).getT(0).getT(0).getT(1).getT(1).
                                getT(1);
-		auto& chain231 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::chain231_t<NV>
+		auto& chain231 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::chain231_t<NV>
                          getT(0).getT(0).getT(1).getT(1).getT(1).getT(0);
-		auto& global_cable44 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).        // Files_impl::global_cable44_t<NV>
+		auto& global_cable44 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).        // Files_impl::global_cable44_t<NV>
                                getT(0).getT(0).getT(1).getT(1).getT(1).getT(0).
                                getT(0);
-		auto& add180 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add180 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(0).getT(1).getT(1).getT(1).getT(0).
                        getT(1);
-		auto& gain125 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).               // core::gain<NV>
+		auto& gain125 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).               // core::gain<NV>
                         getT(0).getT(0).getT(1).getT(1).getT(1).getT(0).
                         getT(2);
-		auto& chain524 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain524_t<NV>
+		auto& chain524 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain524_t<NV>
                          getT(4).getT(0).getT(0).getT(1).getT(2);
-		auto& xfader141 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                     // Files_impl::xfader141_t<NV>
+		auto& xfader141 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                     // Files_impl::xfader141_t<NV>
                           getT(4).getT(0).getT(0).getT(1).getT(2).
                           getT(0);
-		auto& soft_bypass135 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                // Files_impl::soft_bypass135_t<NV>
+		auto& soft_bypass135 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                // Files_impl::soft_bypass135_t<NV>
                                getT(4).getT(0).getT(0).getT(1).getT(2).
                                getT(1);
-		auto& chain232 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::chain232_t<NV>
+		auto& chain232 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::chain232_t<NV>
                          getT(0).getT(0).getT(1).getT(2).getT(1).getT(0);
-		auto& global_cable45 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).        // Files_impl::global_cable45_t<NV>
+		auto& global_cable45 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).        // Files_impl::global_cable45_t<NV>
                                getT(0).getT(0).getT(1).getT(2).getT(1).getT(0).
                                getT(0);
-		auto& add181 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add181 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(0).getT(1).getT(2).getT(1).getT(0).
                        getT(1);
-		auto& gain126 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).               // core::gain<NV>
+		auto& gain126 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).               // core::gain<NV>
                         getT(0).getT(0).getT(1).getT(2).getT(1).getT(0).
                         getT(2);
-		auto& chain523 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain523_t<NV>
+		auto& chain523 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain523_t<NV>
                          getT(4).getT(0).getT(0).getT(1).getT(3);
-		auto& xfader140 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                     // Files_impl::xfader140_t<NV>
+		auto& xfader140 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                     // Files_impl::xfader140_t<NV>
                           getT(4).getT(0).getT(0).getT(1).getT(3).
                           getT(0);
-		auto& soft_bypass134 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                // Files_impl::soft_bypass134_t<NV>
+		auto& soft_bypass134 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                // Files_impl::soft_bypass134_t<NV>
                                getT(4).getT(0).getT(0).getT(1).getT(3).
                                getT(1);
-		auto& chain233 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::chain233_t<NV>
+		auto& chain233 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::chain233_t<NV>
                          getT(0).getT(0).getT(1).getT(3).getT(1).getT(0);
-		auto& global_cable46 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).        // Files_impl::global_cable46_t<NV>
+		auto& global_cable46 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).        // Files_impl::global_cable46_t<NV>
                                getT(0).getT(0).getT(1).getT(3).getT(1).getT(0).
                                getT(0);
-		auto& add182 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add182 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(0).getT(1).getT(3).getT(1).getT(0).
                        getT(1);
-		auto& gain127 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).               // core::gain<NV>
+		auto& gain127 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).               // core::gain<NV>
                         getT(0).getT(0).getT(1).getT(3).getT(1).getT(0).
                         getT(2);
-		auto& chain522 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain522_t<NV>
+		auto& chain522 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain522_t<NV>
                          getT(4).getT(0).getT(0).getT(1).getT(4);
-		auto& xfader139 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                     // Files_impl::xfader139_t<NV>
+		auto& xfader139 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                     // Files_impl::xfader139_t<NV>
                           getT(4).getT(0).getT(0).getT(1).getT(4).
                           getT(0);
-		auto& soft_bypass133 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                // Files_impl::soft_bypass133_t<NV>
+		auto& soft_bypass133 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                // Files_impl::soft_bypass133_t<NV>
                                getT(4).getT(0).getT(0).getT(1).getT(4).
                                getT(1);
-		auto& chain234 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::chain234_t<NV>
+		auto& chain234 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::chain234_t<NV>
                          getT(0).getT(0).getT(1).getT(4).getT(1).getT(0);
-		auto& event_data_reader24 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).   // Files_impl::event_data_reader24_t<NV>
+		auto& event_data_reader24 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).   // Files_impl::event_data_reader24_t<NV>
                                     getT(0).getT(0).getT(1).getT(4).getT(1).getT(0).
                                     getT(0);
-		auto& add183 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add183 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(0).getT(1).getT(4).getT(1).getT(0).
                        getT(1);
-		auto& gain128 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).               // core::gain<NV>
+		auto& gain128 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).               // core::gain<NV>
                         getT(0).getT(0).getT(1).getT(4).getT(1).getT(0).
                         getT(2);
-		auto& chain521 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain521_t<NV>
+		auto& chain521 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain521_t<NV>
                          getT(4).getT(0).getT(0).getT(1).getT(5);
-		auto& xfader138 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                     // Files_impl::xfader138_t<NV>
+		auto& xfader138 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                     // Files_impl::xfader138_t<NV>
                           getT(4).getT(0).getT(0).getT(1).getT(5).
                           getT(0);
-		auto& soft_bypass132 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                // Files_impl::soft_bypass132_t<NV>
+		auto& soft_bypass132 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                // Files_impl::soft_bypass132_t<NV>
                                getT(4).getT(0).getT(0).getT(1).getT(5).
                                getT(1);
-		auto& chain235 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::chain235_t<NV>
+		auto& chain235 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::chain235_t<NV>
                          getT(0).getT(0).getT(1).getT(5).getT(1).getT(0);
-		auto& event_data_reader25 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).   // Files_impl::event_data_reader25_t<NV>
+		auto& event_data_reader25 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).   // Files_impl::event_data_reader25_t<NV>
                                     getT(0).getT(0).getT(1).getT(5).getT(1).getT(0).
                                     getT(0);
-		auto& add184 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add184 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(0).getT(1).getT(5).getT(1).getT(0).
                        getT(1);
-		auto& gain129 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).               // core::gain<NV>
+		auto& gain129 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).               // core::gain<NV>
                         getT(0).getT(0).getT(1).getT(5).getT(1).getT(0).
                         getT(2);
-		auto& chain520 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain520_t<NV>
+		auto& chain520 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain520_t<NV>
                          getT(4).getT(0).getT(0).getT(1).getT(6);
-		auto& xfader137 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                     // Files_impl::xfader137_t<NV>
+		auto& xfader137 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                     // Files_impl::xfader137_t<NV>
                           getT(4).getT(0).getT(0).getT(1).getT(6).
                           getT(0);
-		auto& soft_bypass131 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                // Files_impl::soft_bypass131_t<NV>
+		auto& soft_bypass131 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                // Files_impl::soft_bypass131_t<NV>
                                getT(4).getT(0).getT(0).getT(1).getT(6).
                                getT(1);
-		auto& chain236 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::chain236_t<NV>
+		auto& chain236 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::chain236_t<NV>
                          getT(0).getT(0).getT(1).getT(6).getT(1).getT(0);
-		auto& branch51 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::branch51_t<NV>
+		auto& branch51 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::branch51_t<NV>
                          getT(0).getT(0).getT(1).getT(6).getT(1).getT(0).
                          getT(0);
-		auto& add185 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).        // math::add<NV>
+		auto& add185 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).        // math::add<NV>
                        getT(0).getT(1).getT(6).getT(1).getT(0).getT(0).getT(0);
-		auto& add186 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).        // math::add<NV>
+		auto& add186 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).        // math::add<NV>
                        getT(0).getT(1).getT(6).getT(1).getT(0).getT(0).getT(1);
-		auto& add187 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).        // math::add<NV>
+		auto& add187 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).        // math::add<NV>
                        getT(0).getT(1).getT(6).getT(1).getT(0).getT(0).getT(2);
-		auto& add188 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).        // math::add<NV>
+		auto& add188 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).        // math::add<NV>
                        getT(0).getT(1).getT(6).getT(1).getT(0).getT(0).getT(3);
-		auto& add189 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add189 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(0).getT(1).getT(6).getT(1).getT(0).
                        getT(1);
-		auto& gain130 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).               // core::gain<NV>
+		auto& gain130 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).               // core::gain<NV>
                         getT(0).getT(0).getT(1).getT(6).getT(1).getT(0).
                         getT(2);
-		auto& chain509 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain509_t<NV>
+		auto& chain509 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain509_t<NV>
                          getT(4).getT(0).getT(0).getT(1).getT(7);
-		auto& xfader136 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                     // Files_impl::xfader136_t<NV>
+		auto& xfader136 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                     // Files_impl::xfader136_t<NV>
                           getT(4).getT(0).getT(0).getT(1).getT(7).
                           getT(0);
-		auto& soft_bypass130 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                // Files_impl::soft_bypass130_t<NV>
+		auto& soft_bypass130 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                // Files_impl::soft_bypass130_t<NV>
                                getT(4).getT(0).getT(0).getT(1).getT(7).
                                getT(1);
-		auto& chain237 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::chain237_t<NV>
+		auto& chain237 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::chain237_t<NV>
                          getT(0).getT(0).getT(1).getT(7).getT(1).getT(0);
-		auto& branch52 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::branch52_t<NV>
+		auto& branch52 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::branch52_t<NV>
                          getT(0).getT(0).getT(1).getT(7).getT(1).getT(0).
                          getT(0);
-		auto& chain238 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).      // Files_impl::chain238_t<NV>
+		auto& chain238 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).      // Files_impl::chain238_t<NV>
                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(0);
-		auto& midi_cc43 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).     // Files_impl::midi_cc43_t<NV>
+		auto& midi_cc43 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).     // Files_impl::midi_cc43_t<NV>
                           getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(0).
                           getT(0);
-		auto& add190 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).        // math::add<NV>
+		auto& add190 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).        // math::add<NV>
                        getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(0).
                        getT(1);
-		auto& chain239 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).      // Files_impl::chain239_t<NV>
+		auto& chain239 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).      // Files_impl::chain239_t<NV>
                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(1);
-		auto& midi_cc44 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).     // Files_impl::midi_cc44_t<NV>
+		auto& midi_cc44 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).     // Files_impl::midi_cc44_t<NV>
                           getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(1).
                           getT(0);
-		auto& add191 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).        // math::add<NV>
+		auto& add191 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).        // math::add<NV>
                        getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(1).
                        getT(1);
-		auto& chain240 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).      // Files_impl::chain240_t<NV>
+		auto& chain240 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).      // Files_impl::chain240_t<NV>
                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(2);
-		auto& midi_cc45 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).     // Files_impl::midi_cc45_t<NV>
+		auto& midi_cc45 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).     // Files_impl::midi_cc45_t<NV>
                           getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(2).
                           getT(0);
-		auto& add192 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).        // math::add<NV>
+		auto& add192 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).        // math::add<NV>
                        getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(2).
                        getT(1);
-		auto& chain241 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).      // Files_impl::chain241_t<NV>
+		auto& chain241 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).      // Files_impl::chain241_t<NV>
                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(3);
-		auto& midi_cc46 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).     // Files_impl::midi_cc46_t<NV>
+		auto& midi_cc46 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).     // Files_impl::midi_cc46_t<NV>
                           getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(3).
                           getT(0);
-		auto& add193 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).        // math::add<NV>
+		auto& add193 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).        // math::add<NV>
                        getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(3).
                        getT(1);
-		auto& chain242 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).      // Files_impl::chain242_t<NV>
+		auto& chain242 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).      // Files_impl::chain242_t<NV>
                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(4);
-		auto& midi32 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).        // Files_impl::midi32_t<NV>
+		auto& midi32 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).        // Files_impl::midi32_t<NV>
                        getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(4).
                        getT(0);
-		auto& add194 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).        // math::add<NV>
+		auto& add194 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).        // math::add<NV>
                        getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(4).
                        getT(1);
-		auto& chain243 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).      // Files_impl::chain243_t<NV>
+		auto& chain243 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).      // Files_impl::chain243_t<NV>
                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(5);
-		auto& midi33 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).        // Files_impl::midi33_t<NV>
+		auto& midi33 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).        // Files_impl::midi33_t<NV>
                        getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(5).
                        getT(0);
-		auto& add195 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).        // math::add<NV>
+		auto& add195 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).        // math::add<NV>
                        getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(5).
                        getT(1);
-		auto& chain244 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).      // Files_impl::chain244_t<NV>
+		auto& chain244 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).      // Files_impl::chain244_t<NV>
                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(6);
-		auto& midi34 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).        // Files_impl::midi34_t<NV>
+		auto& midi34 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).        // Files_impl::midi34_t<NV>
                        getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(6).
                        getT(0);
-		auto& add196 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(0).        // math::add<NV>
+		auto& add196 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(0).        // math::add<NV>
                        getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(6).
                        getT(1);
-		auto& gain131 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).               // core::gain<NV>
+		auto& gain131 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).               // core::gain<NV>
                         getT(0).getT(0).getT(1).getT(7).getT(1).getT(0).
                         getT(1);
-		auto& peak21 = this->getT(0).getT(0).getT(0).getT(0).                                // Files_impl::peak21_t<NV>
+		auto& peak21 = this->getT(0).getT(0).getT(1).getT(1).                                // Files_impl::peak21_t<NV>
                        getT(2).getT(4).getT(0).getT(0).
                        getT(2);
-		auto& clear2 = this->getT(0).getT(0).getT(0).getT(0).                                // math::clear<NV>
+		auto& clear2 = this->getT(0).getT(0).getT(1).getT(1).                                // math::clear<NV>
                        getT(2).getT(4).getT(0).getT(0).
                        getT(3);
-		auto& pma17 = this->getT(0).getT(0).getT(0).getT(0).                                 // Files_impl::pma17_t<NV>
+		auto& pma17 = this->getT(0).getT(0).getT(1).getT(1).                                 // Files_impl::pma17_t<NV>
                       getT(2).getT(4).getT(0).getT(0).
                       getT(4);
-		auto& chain248 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::chain248_t<NV>
+		auto& chain248 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::chain248_t<NV>
                          getT(2).getT(4).getT(0).getT(0).
                          getT(5);
-		auto& branch21 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::branch21_t<NV>
+		auto& branch21 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::branch21_t<NV>
                          getT(4).getT(0).getT(0).getT(5).getT(0);
-		auto& chain250 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain250_t<NV>
+		auto& chain250 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain250_t<NV>
                          getT(4).getT(0).getT(0).getT(5).getT(0).
                          getT(0);
-		auto& add213 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add213 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(0).getT(5).getT(0).getT(0).getT(0);
-		auto& chain251 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain251_t<NV>
+		auto& chain251 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain251_t<NV>
                          getT(4).getT(0).getT(0).getT(5).getT(0).
                          getT(1);
-		auto& minmax6 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).               // Files_impl::minmax6_t<NV>
+		auto& minmax6 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).               // Files_impl::minmax6_t<NV>
                         getT(0).getT(0).getT(5).getT(0).getT(1).getT(0);
-		auto& add214 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add214 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(0).getT(5).getT(0).getT(1).getT(1);
-		auto& chain252 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain252_t<NV>
+		auto& chain252 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain252_t<NV>
                          getT(4).getT(0).getT(0).getT(5).getT(0).
                          getT(2);
-		auto& minmax7 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).               // Files_impl::minmax7_t<NV>
+		auto& minmax7 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).               // Files_impl::minmax7_t<NV>
                         getT(0).getT(0).getT(5).getT(0).getT(2).getT(0);
-		auto& add215 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add215 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(0).getT(5).getT(0).getT(2).getT(1);
-		auto& chain253 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain253_t<NV>
+		auto& chain253 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain253_t<NV>
                          getT(4).getT(0).getT(0).getT(5).getT(0).
                          getT(3);
-		auto& minmax14 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax14_t<NV>
+		auto& minmax14 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax14_t<NV>
                          getT(0).getT(0).getT(5).getT(0).getT(3).getT(0);
-		auto& add216 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add216 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(0).getT(5).getT(0).getT(3).getT(1);
-		auto& chain254 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain254_t<NV>
+		auto& chain254 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain254_t<NV>
                          getT(4).getT(0).getT(0).getT(5).getT(0).
                          getT(4);
-		auto& minmax11 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax11_t<NV>
+		auto& minmax11 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax11_t<NV>
                          getT(0).getT(0).getT(5).getT(0).getT(4).getT(0);
-		auto& add217 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add217 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(0).getT(5).getT(0).getT(4).getT(1);
-		auto& chain255 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain255_t<NV>
+		auto& chain255 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain255_t<NV>
                          getT(4).getT(0).getT(0).getT(5).getT(0).
                          getT(5);
-		auto& minmax15 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax15_t<NV>
+		auto& minmax15 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax15_t<NV>
                          getT(0).getT(0).getT(5).getT(0).getT(5).getT(0);
-		auto& add218 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add218 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(0).getT(5).getT(0).getT(5).getT(1);
-		auto& chain256 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain256_t<NV>
+		auto& chain256 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain256_t<NV>
                          getT(4).getT(0).getT(0).getT(5).getT(0).
                          getT(6);
-		auto& minmax16 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax16_t<NV>
+		auto& minmax16 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax16_t<NV>
                          getT(0).getT(0).getT(5).getT(0).getT(6).getT(0);
-		auto& add219 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add219 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(0).getT(5).getT(0).getT(6).getT(1);
-		auto& chain257 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain257_t<NV>
+		auto& chain257 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain257_t<NV>
                          getT(4).getT(0).getT(0).getT(5).getT(0).
                          getT(7);
-		auto& minmax17 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax17_t<NV>
+		auto& minmax17 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax17_t<NV>
                          getT(0).getT(0).getT(5).getT(0).getT(7).getT(0);
-		auto& add220 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add220 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(0).getT(5).getT(0).getT(7).getT(1);
-		auto& chain258 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain258_t<NV>
+		auto& chain258 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain258_t<NV>
                          getT(4).getT(0).getT(0).getT(5).getT(0).
                          getT(8);
-		auto& minmax18 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax18_t<NV>
+		auto& minmax18 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax18_t<NV>
                          getT(0).getT(0).getT(5).getT(0).getT(8).getT(0);
-		auto& add221 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add221 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(0).getT(5).getT(0).getT(8).getT(1);
-		auto& peak18 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::peak18_t<NV>
+		auto& peak18 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::peak18_t<NV>
                        getT(4).getT(0).getT(0).getT(5).getT(1);
-		auto& cable_table5 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                  // Files_impl::cable_table5_t
+		auto& cable_table5 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                  // Files_impl::cable_table5_t
                              getT(4).getT(0).getT(0).getT(5).getT(2);
-		auto& modchain31 = this->getT(0).getT(0).getT(0).getT(0).                            // Files_impl::modchain31_t<NV>
+		auto& modchain31 = this->getT(0).getT(0).getT(1).getT(1).                            // Files_impl::modchain31_t<NV>
                            getT(2).getT(4).getT(0).getT(1);
-		auto& pma33 = this->getT(0).getT(0).getT(0).getT(0).                                 // Files_impl::pma33_t<NV>
+		auto& pma33 = this->getT(0).getT(0).getT(1).getT(1).                                 // Files_impl::pma33_t<NV>
                       getT(2).getT(4).getT(0).getT(1).
                       getT(0);
-		auto& chain535 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::chain535_t<NV>
+		auto& chain535 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::chain535_t<NV>
                          getT(2).getT(4).getT(0).getT(1).
                          getT(1);
-		auto& branch32 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::branch32_t<NV>
+		auto& branch32 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::branch32_t<NV>
                          getT(4).getT(0).getT(1).getT(1).getT(0);
-		auto& chain536 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain536_t<NV>
+		auto& chain536 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain536_t<NV>
                          getT(4).getT(0).getT(1).getT(1).getT(0).
                          getT(0);
-		auto& add551 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add551 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(1).getT(1).getT(0).getT(0).getT(0);
-		auto& chain537 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain537_t<NV>
+		auto& chain537 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain537_t<NV>
                          getT(4).getT(0).getT(1).getT(1).getT(0).
                          getT(1);
-		auto& minmax30 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax30_t<NV>
+		auto& minmax30 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax30_t<NV>
                          getT(0).getT(1).getT(1).getT(0).getT(1).getT(0);
-		auto& add552 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add552 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(1).getT(1).getT(0).getT(1).getT(1);
-		auto& chain538 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain538_t<NV>
+		auto& chain538 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain538_t<NV>
                          getT(4).getT(0).getT(1).getT(1).getT(0).
                          getT(2);
-		auto& minmax31 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax31_t<NV>
+		auto& minmax31 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax31_t<NV>
                          getT(0).getT(1).getT(1).getT(0).getT(2).getT(0);
-		auto& add553 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add553 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(1).getT(1).getT(0).getT(2).getT(1);
-		auto& chain539 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain539_t<NV>
+		auto& chain539 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain539_t<NV>
                          getT(4).getT(0).getT(1).getT(1).getT(0).
                          getT(3);
-		auto& minmax32 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax32_t<NV>
+		auto& minmax32 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax32_t<NV>
                          getT(0).getT(1).getT(1).getT(0).getT(3).getT(0);
-		auto& add554 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add554 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(1).getT(1).getT(0).getT(3).getT(1);
-		auto& chain540 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain540_t<NV>
+		auto& chain540 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain540_t<NV>
                          getT(4).getT(0).getT(1).getT(1).getT(0).
                          getT(4);
-		auto& minmax33 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax33_t<NV>
+		auto& minmax33 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax33_t<NV>
                          getT(0).getT(1).getT(1).getT(0).getT(4).getT(0);
-		auto& add555 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add555 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(1).getT(1).getT(0).getT(4).getT(1);
-		auto& chain541 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain541_t<NV>
+		auto& chain541 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain541_t<NV>
                          getT(4).getT(0).getT(1).getT(1).getT(0).
                          getT(5);
-		auto& minmax34 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax34_t<NV>
+		auto& minmax34 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax34_t<NV>
                          getT(0).getT(1).getT(1).getT(0).getT(5).getT(0);
-		auto& add556 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add556 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(1).getT(1).getT(0).getT(5).getT(1);
-		auto& chain542 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain542_t<NV>
+		auto& chain542 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain542_t<NV>
                          getT(4).getT(0).getT(1).getT(1).getT(0).
                          getT(6);
-		auto& minmax35 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax35_t<NV>
+		auto& minmax35 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax35_t<NV>
                          getT(0).getT(1).getT(1).getT(0).getT(6).getT(0);
-		auto& add557 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add557 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(1).getT(1).getT(0).getT(6).getT(1);
-		auto& chain543 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain543_t<NV>
+		auto& chain543 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain543_t<NV>
                          getT(4).getT(0).getT(1).getT(1).getT(0).
                          getT(7);
-		auto& minmax36 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax36_t<NV>
+		auto& minmax36 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax36_t<NV>
                          getT(0).getT(1).getT(1).getT(0).getT(7).getT(0);
-		auto& add558 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add558 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(1).getT(1).getT(0).getT(7).getT(1);
-		auto& chain544 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain544_t<NV>
+		auto& chain544 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain544_t<NV>
                          getT(4).getT(0).getT(1).getT(1).getT(0).
                          getT(8);
-		auto& minmax37 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax37_t<NV>
+		auto& minmax37 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax37_t<NV>
                          getT(0).getT(1).getT(1).getT(0).getT(8).getT(0);
-		auto& add559 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add559 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(1).getT(1).getT(0).getT(8).getT(1);
-		auto& peak43 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::peak43_t<NV>
+		auto& peak43 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::peak43_t<NV>
                        getT(4).getT(0).getT(1).getT(1).getT(1);
-		auto& clear4 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // math::clear<NV>
+		auto& clear4 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // math::clear<NV>
                        getT(4).getT(0).getT(1).getT(1).getT(2);
-		auto& clear5 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // math::clear<NV>
+		auto& clear5 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // math::clear<NV>
                        getT(4).getT(0).getT(1).getT(1).getT(3);
-		auto& cable_table9 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                  // Files_impl::cable_table9_t
+		auto& cable_table9 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                  // Files_impl::cable_table9_t
                              getT(4).getT(0).getT(1).getT(1).getT(4);
-		auto& modchain30 = this->getT(0).getT(0).getT(0).getT(0).                            // Files_impl::modchain30_t<NV>
+		auto& modchain30 = this->getT(0).getT(0).getT(1).getT(1).                            // Files_impl::modchain30_t<NV>
                            getT(2).getT(4).getT(0).getT(2);
-		auto& pma32 = this->getT(0).getT(0).getT(0).getT(0).                                 // Files_impl::pma32_t<NV>
+		auto& pma32 = this->getT(0).getT(0).getT(1).getT(1).                                 // Files_impl::pma32_t<NV>
                       getT(2).getT(4).getT(0).getT(2).
                       getT(0);
-		auto& chain510 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::chain510_t<NV>
+		auto& chain510 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::chain510_t<NV>
                          getT(2).getT(4).getT(0).getT(2).
                          getT(1);
-		auto& branch31 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::branch31_t<NV>
+		auto& branch31 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::branch31_t<NV>
                          getT(4).getT(0).getT(2).getT(1).getT(0);
-		auto& chain511 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain511_t<NV>
+		auto& chain511 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain511_t<NV>
                          getT(4).getT(0).getT(2).getT(1).getT(0).
                          getT(0);
-		auto& add524 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add524 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(2).getT(1).getT(0).getT(0).getT(0);
-		auto& chain512 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain512_t<NV>
+		auto& chain512 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain512_t<NV>
                          getT(4).getT(0).getT(2).getT(1).getT(0).
                          getT(1);
-		auto& minmax10 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax10_t<NV>
+		auto& minmax10 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax10_t<NV>
                          getT(0).getT(2).getT(1).getT(0).getT(1).getT(0);
-		auto& add525 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add525 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(2).getT(1).getT(0).getT(1).getT(1);
-		auto& chain513 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain513_t<NV>
+		auto& chain513 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain513_t<NV>
                          getT(4).getT(0).getT(2).getT(1).getT(0).
                          getT(2);
-		auto& minmax13 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax13_t<NV>
+		auto& minmax13 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax13_t<NV>
                          getT(0).getT(2).getT(1).getT(0).getT(2).getT(0);
-		auto& add526 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add526 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(2).getT(1).getT(0).getT(2).getT(1);
-		auto& chain514 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain514_t<NV>
+		auto& chain514 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain514_t<NV>
                          getT(4).getT(0).getT(2).getT(1).getT(0).
                          getT(3);
-		auto& minmax24 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax24_t<NV>
+		auto& minmax24 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax24_t<NV>
                          getT(0).getT(2).getT(1).getT(0).getT(3).getT(0);
-		auto& add527 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add527 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(2).getT(1).getT(0).getT(3).getT(1);
-		auto& chain515 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain515_t<NV>
+		auto& chain515 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain515_t<NV>
                          getT(4).getT(0).getT(2).getT(1).getT(0).
                          getT(4);
-		auto& minmax25 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax25_t<NV>
+		auto& minmax25 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax25_t<NV>
                          getT(0).getT(2).getT(1).getT(0).getT(4).getT(0);
-		auto& add528 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add528 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(2).getT(1).getT(0).getT(4).getT(1);
-		auto& chain516 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain516_t<NV>
+		auto& chain516 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain516_t<NV>
                          getT(4).getT(0).getT(2).getT(1).getT(0).
                          getT(5);
-		auto& minmax26 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax26_t<NV>
+		auto& minmax26 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax26_t<NV>
                          getT(0).getT(2).getT(1).getT(0).getT(5).getT(0);
-		auto& add529 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add529 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(2).getT(1).getT(0).getT(5).getT(1);
-		auto& chain517 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain517_t<NV>
+		auto& chain517 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain517_t<NV>
                          getT(4).getT(0).getT(2).getT(1).getT(0).
                          getT(6);
-		auto& minmax27 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax27_t<NV>
+		auto& minmax27 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax27_t<NV>
                          getT(0).getT(2).getT(1).getT(0).getT(6).getT(0);
-		auto& add530 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add530 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(2).getT(1).getT(0).getT(6).getT(1);
-		auto& chain518 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain518_t<NV>
+		auto& chain518 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain518_t<NV>
                          getT(4).getT(0).getT(2).getT(1).getT(0).
                          getT(7);
-		auto& minmax28 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax28_t<NV>
+		auto& minmax28 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax28_t<NV>
                          getT(0).getT(2).getT(1).getT(0).getT(7).getT(0);
-		auto& add531 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add531 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(2).getT(1).getT(0).getT(7).getT(1);
-		auto& chain519 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain519_t<NV>
+		auto& chain519 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain519_t<NV>
                          getT(4).getT(0).getT(2).getT(1).getT(0).
                          getT(8);
-		auto& minmax29 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax29_t<NV>
+		auto& minmax29 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax29_t<NV>
                          getT(0).getT(2).getT(1).getT(0).getT(8).getT(0);
-		auto& add532 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add532 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(2).getT(1).getT(0).getT(8).getT(1);
-		auto& peak31 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::peak31_t<NV>
+		auto& peak31 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::peak31_t<NV>
                        getT(4).getT(0).getT(2).getT(1).getT(1);
-		auto& cable_table7 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                  // Files_impl::cable_table7_t
+		auto& cable_table7 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                  // Files_impl::cable_table7_t
                              getT(4).getT(0).getT(2).getT(1).getT(2);
-		auto& modchain29 = this->getT(0).getT(0).getT(0).getT(0).                            // Files_impl::modchain29_t<NV>
+		auto& modchain29 = this->getT(0).getT(0).getT(1).getT(1).                            // Files_impl::modchain29_t<NV>
                            getT(2).getT(4).getT(0).getT(3);
-		auto& pma31 = this->getT(0).getT(0).getT(0).getT(0).                                 // Files_impl::pma31_t<NV>
+		auto& pma31 = this->getT(0).getT(0).getT(1).getT(1).                                 // Files_impl::pma31_t<NV>
                       getT(2).getT(4).getT(0).getT(3).
                       getT(0);
-		auto& chain485 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::chain485_t<NV>
+		auto& chain485 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::chain485_t<NV>
                          getT(2).getT(4).getT(0).getT(3).
                          getT(1);
-		auto& branch30 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::branch30_t<NV>
+		auto& branch30 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::branch30_t<NV>
                          getT(4).getT(0).getT(3).getT(1).getT(0);
-		auto& chain486 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain486_t<NV>
+		auto& chain486 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain486_t<NV>
                          getT(4).getT(0).getT(3).getT(1).getT(0).
                          getT(0);
-		auto& add497 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add497 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(3).getT(1).getT(0).getT(0).getT(0);
-		auto& chain487 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain487_t<NV>
+		auto& chain487 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain487_t<NV>
                          getT(4).getT(0).getT(3).getT(1).getT(0).
                          getT(1);
-		auto& minmax8 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).               // Files_impl::minmax8_t<NV>
+		auto& minmax8 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).               // Files_impl::minmax8_t<NV>
                         getT(0).getT(3).getT(1).getT(0).getT(1).getT(0);
-		auto& add498 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add498 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(3).getT(1).getT(0).getT(1).getT(1);
-		auto& chain488 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain488_t<NV>
+		auto& chain488 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain488_t<NV>
                          getT(4).getT(0).getT(3).getT(1).getT(0).
                          getT(2);
-		auto& minmax9 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).               // Files_impl::minmax9_t<NV>
+		auto& minmax9 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).               // Files_impl::minmax9_t<NV>
                         getT(0).getT(3).getT(1).getT(0).getT(2).getT(0);
-		auto& add499 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add499 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(3).getT(1).getT(0).getT(2).getT(1);
-		auto& chain489 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain489_t<NV>
+		auto& chain489 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain489_t<NV>
                          getT(4).getT(0).getT(3).getT(1).getT(0).
                          getT(3);
-		auto& minmax19 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax19_t<NV>
+		auto& minmax19 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax19_t<NV>
                          getT(0).getT(3).getT(1).getT(0).getT(3).getT(0);
-		auto& add500 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add500 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(3).getT(1).getT(0).getT(3).getT(1);
-		auto& chain490 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain490_t<NV>
+		auto& chain490 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain490_t<NV>
                          getT(4).getT(0).getT(3).getT(1).getT(0).
                          getT(4);
-		auto& minmax12 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax12_t<NV>
+		auto& minmax12 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax12_t<NV>
                          getT(0).getT(3).getT(1).getT(0).getT(4).getT(0);
-		auto& add501 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add501 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(3).getT(1).getT(0).getT(4).getT(1);
-		auto& chain491 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain491_t<NV>
+		auto& chain491 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain491_t<NV>
                          getT(4).getT(0).getT(3).getT(1).getT(0).
                          getT(5);
-		auto& minmax20 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax20_t<NV>
+		auto& minmax20 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax20_t<NV>
                          getT(0).getT(3).getT(1).getT(0).getT(5).getT(0);
-		auto& add502 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add502 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(3).getT(1).getT(0).getT(5).getT(1);
-		auto& chain492 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain492_t<NV>
+		auto& chain492 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain492_t<NV>
                          getT(4).getT(0).getT(3).getT(1).getT(0).
                          getT(6);
-		auto& minmax21 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax21_t<NV>
+		auto& minmax21 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax21_t<NV>
                          getT(0).getT(3).getT(1).getT(0).getT(6).getT(0);
-		auto& add503 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add503 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(3).getT(1).getT(0).getT(6).getT(1);
-		auto& chain493 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain493_t<NV>
+		auto& chain493 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain493_t<NV>
                          getT(4).getT(0).getT(3).getT(1).getT(0).
                          getT(7);
-		auto& minmax22 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax22_t<NV>
+		auto& minmax22 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax22_t<NV>
                          getT(0).getT(3).getT(1).getT(0).getT(7).getT(0);
-		auto& add504 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add504 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(3).getT(1).getT(0).getT(7).getT(1);
-		auto& chain494 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain494_t<NV>
+		auto& chain494 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain494_t<NV>
                          getT(4).getT(0).getT(3).getT(1).getT(0).
                          getT(8);
-		auto& minmax23 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax23_t<NV>
+		auto& minmax23 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax23_t<NV>
                          getT(0).getT(3).getT(1).getT(0).getT(8).getT(0);
-		auto& add505 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add505 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(3).getT(1).getT(0).getT(8).getT(1);
-		auto& peak29 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::peak29_t<NV>
+		auto& peak29 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::peak29_t<NV>
                        getT(4).getT(0).getT(3).getT(1).getT(1);
-		auto& cable_table6 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                  // Files_impl::cable_table6_t
+		auto& cable_table6 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                  // Files_impl::cable_table6_t
                              getT(4).getT(0).getT(3).getT(1).getT(2);
-		auto& modchain32 = this->getT(0).getT(0).getT(0).getT(0).                            // Files_impl::modchain32_t<NV>
+		auto& modchain32 = this->getT(0).getT(0).getT(1).getT(1).                            // Files_impl::modchain32_t<NV>
                            getT(2).getT(4).getT(0).getT(4);
-		auto& pma34 = this->getT(0).getT(0).getT(0).getT(0).                                 // Files_impl::pma34_t<NV>
+		auto& pma34 = this->getT(0).getT(0).getT(1).getT(1).                                 // Files_impl::pma34_t<NV>
                       getT(2).getT(4).getT(0).getT(4).
                       getT(0);
-		auto& chain560 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::chain560_t<NV>
+		auto& chain560 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::chain560_t<NV>
                          getT(2).getT(4).getT(0).getT(4).
                          getT(1);
-		auto& branch33 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::branch33_t<NV>
+		auto& branch33 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::branch33_t<NV>
                          getT(4).getT(0).getT(4).getT(1).getT(0);
-		auto& chain561 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain561_t<NV>
+		auto& chain561 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain561_t<NV>
                          getT(4).getT(0).getT(4).getT(1).getT(0).
                          getT(0);
-		auto& add578 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add578 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(4).getT(1).getT(0).getT(0).getT(0);
-		auto& chain562 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain562_t<NV>
+		auto& chain562 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain562_t<NV>
                          getT(4).getT(0).getT(4).getT(1).getT(0).
                          getT(1);
-		auto& minmax38 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax38_t<NV>
+		auto& minmax38 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax38_t<NV>
                          getT(0).getT(4).getT(1).getT(0).getT(1).getT(0);
-		auto& add579 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add579 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(4).getT(1).getT(0).getT(1).getT(1);
-		auto& chain563 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain563_t<NV>
+		auto& chain563 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain563_t<NV>
                          getT(4).getT(0).getT(4).getT(1).getT(0).
                          getT(2);
-		auto& minmax39 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax39_t<NV>
+		auto& minmax39 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax39_t<NV>
                          getT(0).getT(4).getT(1).getT(0).getT(2).getT(0);
-		auto& add580 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add580 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(4).getT(1).getT(0).getT(2).getT(1);
-		auto& chain564 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain564_t<NV>
+		auto& chain564 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain564_t<NV>
                          getT(4).getT(0).getT(4).getT(1).getT(0).
                          getT(3);
-		auto& minmax40 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax40_t<NV>
+		auto& minmax40 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax40_t<NV>
                          getT(0).getT(4).getT(1).getT(0).getT(3).getT(0);
-		auto& add581 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add581 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(4).getT(1).getT(0).getT(3).getT(1);
-		auto& chain565 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain565_t<NV>
+		auto& chain565 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain565_t<NV>
                          getT(4).getT(0).getT(4).getT(1).getT(0).
                          getT(4);
-		auto& minmax41 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax41_t<NV>
+		auto& minmax41 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax41_t<NV>
                          getT(0).getT(4).getT(1).getT(0).getT(4).getT(0);
-		auto& add582 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add582 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(4).getT(1).getT(0).getT(4).getT(1);
-		auto& chain566 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain566_t<NV>
+		auto& chain566 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain566_t<NV>
                          getT(4).getT(0).getT(4).getT(1).getT(0).
                          getT(5);
-		auto& minmax42 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax42_t<NV>
+		auto& minmax42 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax42_t<NV>
                          getT(0).getT(4).getT(1).getT(0).getT(5).getT(0);
-		auto& add583 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add583 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(4).getT(1).getT(0).getT(5).getT(1);
-		auto& chain567 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain567_t<NV>
+		auto& chain567 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain567_t<NV>
                          getT(4).getT(0).getT(4).getT(1).getT(0).
                          getT(6);
-		auto& minmax43 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax43_t<NV>
+		auto& minmax43 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax43_t<NV>
                          getT(0).getT(4).getT(1).getT(0).getT(6).getT(0);
-		auto& add584 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add584 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(4).getT(1).getT(0).getT(6).getT(1);
-		auto& chain568 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain568_t<NV>
+		auto& chain568 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain568_t<NV>
                          getT(4).getT(0).getT(4).getT(1).getT(0).
                          getT(7);
-		auto& minmax44 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax44_t<NV>
+		auto& minmax44 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax44_t<NV>
                          getT(0).getT(4).getT(1).getT(0).getT(7).getT(0);
-		auto& add585 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add585 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(4).getT(1).getT(0).getT(7).getT(1);
-		auto& chain569 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                      // Files_impl::chain569_t<NV>
+		auto& chain569 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                      // Files_impl::chain569_t<NV>
                          getT(4).getT(0).getT(4).getT(1).getT(0).
                          getT(8);
-		auto& minmax45 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).              // Files_impl::minmax45_t<NV>
+		auto& minmax45 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).              // Files_impl::minmax45_t<NV>
                          getT(0).getT(4).getT(1).getT(0).getT(8).getT(0);
-		auto& add586 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).                // math::add<NV>
+		auto& add586 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).                // math::add<NV>
                        getT(0).getT(4).getT(1).getT(0).getT(8).getT(1);
-		auto& peak45 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // Files_impl::peak45_t<NV>
+		auto& peak45 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // Files_impl::peak45_t<NV>
                        getT(4).getT(0).getT(4).getT(1).getT(1);
-		auto& cable_table10 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                 // Files_impl::cable_table10_t
+		auto& cable_table10 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                 // Files_impl::cable_table10_t
                               getT(4).getT(0).getT(4).getT(1).getT(2);
-		auto& split17 = this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).getT(1);       // Files_impl::split17_t<NV>
-		auto& chain174 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::chain174_t<NV>
+		auto& split17 = this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).getT(1);       // Files_impl::split17_t<NV>
+		auto& chain174 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::chain174_t<NV>
                          getT(2).getT(4).getT(1).getT(0);
-		auto& split11 = this->getT(0).getT(0).getT(0).getT(0).                               // Files_impl::split11_t<NV>
+		auto& split11 = this->getT(0).getT(0).getT(1).getT(1).                               // Files_impl::split11_t<NV>
                         getT(2).getT(4).getT(1).getT(0).
                         getT(0);
-		auto& add222 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // math::add<NV>
+		auto& add222 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // math::add<NV>
                        getT(4).getT(1).getT(0).getT(0).getT(0);
-		auto& add463 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // math::add<NV>
+		auto& add463 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // math::add<NV>
                        getT(4).getT(1).getT(0).getT(0).getT(1);
-		auto& branch22 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::branch22_t<NV>
+		auto& branch22 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::branch22_t<NV>
                          getT(2).getT(4).getT(1).getT(0).
                          getT(1);
-		auto& file_player6 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                  // Files_impl::file_player6_t<NV>
+		auto& file_player6 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                  // Files_impl::file_player6_t<NV>
                              getT(4).getT(1).getT(0).getT(1).getT(0);
-		auto& file_player7 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                  // Files_impl::file_player7_t<NV>
+		auto& file_player7 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                  // Files_impl::file_player7_t<NV>
                              getT(4).getT(1).getT(0).getT(1).getT(1);
-		auto& branch26 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::branch26_t<NV>
+		auto& branch26 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::branch26_t<NV>
                          getT(2).getT(4).getT(1).getT(0).
                          getT(2);
-		auto& gain4 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                         // core::gain<NV>
+		auto& gain4 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                         // core::gain<NV>
                       getT(4).getT(1).getT(0).getT(2).getT(0);
-		auto& gain10 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // core::gain<NV>
+		auto& gain10 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // core::gain<NV>
                        getT(4).getT(1).getT(0).getT(2).getT(1);
-		auto& gain9 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                         // core::gain<NV>
+		auto& gain9 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                         // core::gain<NV>
                       getT(4).getT(1).getT(0).getT(2).getT(2);
-		auto& gain7 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                         // core::gain<NV>
+		auto& gain7 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                         // core::gain<NV>
                       getT(4).getT(1).getT(0).getT(2).getT(3);
-		auto& chain175 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::chain175_t<NV>
+		auto& chain175 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::chain175_t<NV>
                          getT(2).getT(4).getT(1).getT(1);
-		auto& split40 = this->getT(0).getT(0).getT(0).getT(0).                               // Files_impl::split40_t<NV>
+		auto& split40 = this->getT(0).getT(0).getT(1).getT(1).                               // Files_impl::split40_t<NV>
                         getT(2).getT(4).getT(1).getT(1).
                         getT(0);
-		auto& add474 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // math::add<NV>
+		auto& add474 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // math::add<NV>
                        getT(4).getT(1).getT(1).getT(0).getT(0);
-		auto& add475 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // math::add<NV>
+		auto& add475 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // math::add<NV>
                        getT(4).getT(1).getT(1).getT(0).getT(1);
-		auto& branch40 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::branch40_t<NV>
+		auto& branch40 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::branch40_t<NV>
                          getT(2).getT(4).getT(1).getT(1).
                          getT(1);
-		auto& file_player8 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                  // Files_impl::file_player8_t<NV>
+		auto& file_player8 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                  // Files_impl::file_player8_t<NV>
                              getT(4).getT(1).getT(1).getT(1).getT(0);
-		auto& file_player9 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                  // Files_impl::file_player9_t<NV>
+		auto& file_player9 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                  // Files_impl::file_player9_t<NV>
                              getT(4).getT(1).getT(1).getT(1).getT(1);
-		auto& branch41 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::branch41_t<NV>
+		auto& branch41 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::branch41_t<NV>
                          getT(2).getT(4).getT(1).getT(1).
                          getT(2);
-		auto& gain72 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // core::gain<NV>
+		auto& gain72 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // core::gain<NV>
                        getT(4).getT(1).getT(1).getT(2).getT(0);
-		auto& gain89 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // core::gain<NV>
+		auto& gain89 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // core::gain<NV>
                        getT(4).getT(1).getT(1).getT(2).getT(1);
-		auto& gain90 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // core::gain<NV>
+		auto& gain90 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // core::gain<NV>
                        getT(4).getT(1).getT(1).getT(2).getT(2);
-		auto& gain91 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // core::gain<NV>
+		auto& gain91 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // core::gain<NV>
                        getT(4).getT(1).getT(1).getT(2).getT(3);
-		auto& chain176 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::chain176_t<NV>
+		auto& chain176 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::chain176_t<NV>
                          getT(2).getT(4).getT(1).getT(2);
-		auto& split21 = this->getT(0).getT(0).getT(0).getT(0).                               // Files_impl::split21_t<NV>
+		auto& split21 = this->getT(0).getT(0).getT(1).getT(1).                               // Files_impl::split21_t<NV>
                         getT(2).getT(4).getT(1).getT(2).
                         getT(0);
-		auto& add469 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // math::add<NV>
+		auto& add469 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // math::add<NV>
                        getT(4).getT(1).getT(2).getT(0).getT(0);
-		auto& add470 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // math::add<NV>
+		auto& add470 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // math::add<NV>
                        getT(4).getT(1).getT(2).getT(0).getT(1);
-		auto& branch42 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::branch42_t<NV>
+		auto& branch42 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::branch42_t<NV>
                          getT(2).getT(4).getT(1).getT(2).
                          getT(1);
-		auto& file_player10 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                 // Files_impl::file_player10_t<NV>
+		auto& file_player10 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                 // Files_impl::file_player10_t<NV>
                               getT(4).getT(1).getT(2).getT(1).getT(0);
-		auto& file_player11 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                 // Files_impl::file_player11_t<NV>
+		auto& file_player11 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                 // Files_impl::file_player11_t<NV>
                               getT(4).getT(1).getT(2).getT(1).getT(1);
-		auto& branch43 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::branch43_t<NV>
+		auto& branch43 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::branch43_t<NV>
                          getT(2).getT(4).getT(1).getT(2).
                          getT(2);
-		auto& gain92 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // core::gain<NV>
+		auto& gain92 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // core::gain<NV>
                        getT(4).getT(1).getT(2).getT(2).getT(0);
-		auto& gain93 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // core::gain<NV>
+		auto& gain93 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // core::gain<NV>
                        getT(4).getT(1).getT(2).getT(2).getT(1);
-		auto& gain94 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // core::gain<NV>
+		auto& gain94 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // core::gain<NV>
                        getT(4).getT(1).getT(2).getT(2).getT(2);
-		auto& gain95 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // core::gain<NV>
+		auto& gain95 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // core::gain<NV>
                        getT(4).getT(1).getT(2).getT(2).getT(3);
-		auto& chain177 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::chain177_t<NV>
+		auto& chain177 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::chain177_t<NV>
                          getT(2).getT(4).getT(1).getT(3);
-		auto& split19 = this->getT(0).getT(0).getT(0).getT(0).                               // Files_impl::split19_t<NV>
+		auto& split19 = this->getT(0).getT(0).getT(1).getT(1).                               // Files_impl::split19_t<NV>
                         getT(2).getT(4).getT(1).getT(3).
                         getT(0);
-		auto& add464 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // math::add<NV>
+		auto& add464 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // math::add<NV>
                        getT(4).getT(1).getT(3).getT(0).getT(0);
-		auto& add465 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // math::add<NV>
+		auto& add465 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // math::add<NV>
                        getT(4).getT(1).getT(3).getT(0).getT(1);
-		auto& branch44 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::branch44_t<NV>
+		auto& branch44 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::branch44_t<NV>
                          getT(2).getT(4).getT(1).getT(3).
                          getT(1);
-		auto& file_player12 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                 // Files_impl::file_player12_t<NV>
+		auto& file_player12 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                 // Files_impl::file_player12_t<NV>
                               getT(4).getT(1).getT(3).getT(1).getT(0);
-		auto& file_player13 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                 // Files_impl::file_player13_t<NV>
+		auto& file_player13 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                 // Files_impl::file_player13_t<NV>
                               getT(4).getT(1).getT(3).getT(1).getT(1);
-		auto& branch45 = this->getT(0).getT(0).getT(0).getT(0).                              // Files_impl::branch45_t<NV>
+		auto& branch45 = this->getT(0).getT(0).getT(1).getT(1).                              // Files_impl::branch45_t<NV>
                          getT(2).getT(4).getT(1).getT(3).
                          getT(2);
-		auto& gain96 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // core::gain<NV>
+		auto& gain96 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // core::gain<NV>
                        getT(4).getT(1).getT(3).getT(2).getT(0);
-		auto& gain97 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // core::gain<NV>
+		auto& gain97 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // core::gain<NV>
                        getT(4).getT(1).getT(3).getT(2).getT(1);
-		auto& gain98 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // core::gain<NV>
+		auto& gain98 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // core::gain<NV>
                        getT(4).getT(1).getT(3).getT(2).getT(2);
-		auto& gain99 = this->getT(0).getT(0).getT(0).getT(0).getT(2).                        // core::gain<NV>
+		auto& gain99 = this->getT(0).getT(0).getT(1).getT(1).getT(2).                        // core::gain<NV>
                        getT(4).getT(1).getT(3).getT(2).getT(3);
-		auto& branch23 = this->getT(0).getT(0).getT(0).getT(0).getT(3);                      // Files_impl::branch23_t<NV>
-		auto& chain261 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0);              // Files_impl::chain261_t<NV>
-		auto& tanh2 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(0);         // wrap::no_process<math::tanh<NV>>
-		auto& chain262 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(1);              // Files_impl::chain262_t<NV>
-		auto& receive2 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(1).getT(0);      // routing::receive<stereo_cable>
-		auto& faust3 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(1).getT(1);        // project::shfiter<NV>
-		auto& send2 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(1).getT(2);         // routing::send<stereo_cable>
-		auto& chain263 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(2);              // Files_impl::chain263_t<NV>
-		auto& midi42 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(2).getT(0);        // Files_impl::midi42_t<NV>
-		auto& cable_table15 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(2).getT(1); // Files_impl::cable_table15_t<NV>
-		auto& receive3 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(2).getT(2);      // routing::receive<stereo_cable>
-		auto& faust4 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(2).getT(3);        // project::ps2<NV>
-		auto& faust5 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(2).getT(4);        // project::shfiter<NV>
-		auto& send3 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(2).getT(5);         // routing::send<stereo_cable>
-		auto& chain101 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(3);              // Files_impl::chain101_t
+		auto& branch23 = this->getT(0).getT(0).getT(1).getT(1).getT(3);                      // Files_impl::branch23_t<NV>
+		auto& chain261 = this->getT(0).getT(0).getT(1).getT(1).getT(3).getT(0);              // Files_impl::chain261_t<NV>
+		auto& tanh2 = this->getT(0).getT(0).getT(1).getT(1).getT(3).getT(0).getT(0);         // wrap::no_process<math::tanh<NV>>
+		auto& chain262 = this->getT(0).getT(0).getT(1).getT(1).getT(3).getT(1);              // Files_impl::chain262_t<NV>
+		auto& receive2 = this->getT(0).getT(0).getT(1).getT(1).getT(3).getT(1).getT(0);      // routing::receive<stereo_cable>
+		auto& faust3 = this->getT(0).getT(0).getT(1).getT(1).getT(3).getT(1).getT(1);        // project::shfiter<NV>
+		auto& send2 = this->getT(0).getT(0).getT(1).getT(1).getT(3).getT(1).getT(2);         // routing::send<stereo_cable>
+		auto& chain263 = this->getT(0).getT(0).getT(1).getT(1).getT(3).getT(2);              // Files_impl::chain263_t<NV>
+		auto& midi42 = this->getT(0).getT(0).getT(1).getT(1).getT(3).getT(2).getT(0);        // Files_impl::midi42_t<NV>
+		auto& cable_table15 = this->getT(0).getT(0).getT(1).getT(1).getT(3).getT(2).getT(1); // Files_impl::cable_table15_t<NV>
+		auto& receive3 = this->getT(0).getT(0).getT(1).getT(1).getT(3).getT(2).getT(2);      // routing::receive<stereo_cable>
+		auto& faust4 = this->getT(0).getT(0).getT(1).getT(1).getT(3).getT(2).getT(3);        // project::ps2<NV>
+		auto& faust5 = this->getT(0).getT(0).getT(1).getT(1).getT(3).getT(2).getT(4);        // project::shfiter<NV>
+		auto& send3 = this->getT(0).getT(0).getT(1).getT(1).getT(3).getT(2).getT(5);         // routing::send<stereo_cable>
+		auto& chain101 = this->getT(0).getT(0).getT(1).getT(1).getT(3).getT(3);              // Files_impl::chain101_t
+		auto& gain2 = this->getT(0).getT(0).getT(1).getT(1).getT(4);                         // core::gain<NV>
 		auto& peak = this->getT(0).getT(1);                                                  // Files_impl::peak_t<NV>
 		auto& modchain = this->getT(0).getT(2);                                              // Files_impl::modchain_t<NV>
 		auto& event_data_writer = this->getT(0).getT(2).getT(0);                             // routing::event_data_writer<NV>
@@ -5773,8 +5883,21 @@ template <int NV> struct instance: public Files_impl::Files_t_<NV>
 		
 		this->getParameterT(53).connectT(0, pma); // InputMod -> pma::Multiply
 		
+		this->getParameterT(54).connectT(0, xfader); // Mix -> xfader::Value
+		
+		this->getParameterT(55).connectT(0, branch); // Trk1 -> branch::Index
+		
+		this->getParameterT(56).connectT(0, branch1); // trk2 -> branch1::Index
+		
+		this->getParameterT(57).connectT(0, branch3); // trk3 -> branch3::Index
+		
+		this->getParameterT(58).connectT(0, branch2); // trk4 -> branch2::Index
+		
 		// Modulation Connections ------------------------------------------------------------------
 		
+		auto& xfader_p = xfader.getWrappedObject().getParameter();
+		xfader_p.getParameterT(0).connectT(0, gain);  // xfader -> gain::Gain
+		xfader_p.getParameterT(1).connectT(0, gain2); // xfader -> gain2::Gain
 		auto& xfader1_p = xfader1.getWrappedObject().getParameter();
 		xfader1_p.getParameterT(0).connectT(0, gain4);  // xfader1 -> gain4::Gain
 		xfader1_p.getParameterT(1).connectT(0, gain72); // xfader1 -> gain72::Gain
@@ -6174,6 +6297,12 @@ template <int NV> struct instance: public Files_impl::Files_t_<NV>
 		send3.connect(receive3);
 		
 		// Default Values --------------------------------------------------------------------------
+		
+		; // xfader::Value is automated
+		
+		;                           // gain::Gain is automated
+		gain.setParameterT(1, 20.); // core::gain::Smoothing
+		gain.setParameterT(2, 0.);  // core::gain::ResetValue
 		
 		clear25.setParameterT(0, 0.); // math::clear::Value
 		
@@ -6742,6 +6871,8 @@ template <int NV> struct instance: public Files_impl::Files_t_<NV>
 		;                                // one_pole::Mode is automated
 		one_pole.setParameterT(5, 1.);   // filters::one_pole::Enabled
 		
+		; // branch::Index is automated
+		
 		;                                   // tempo_sync6::Tempo is automated
 		;                                   // tempo_sync6::Multiplier is automated
 		tempo_sync6.setParameterT(2, 10.);  // control::tempo_sync::Enabled
@@ -6755,7 +6886,14 @@ template <int NV> struct instance: public Files_impl::Files_t_<NV>
 		
 		mod_inv.setParameterT(0, 0.); // math::mod_inv::Value
 		
+		phasor.setParameterT(0, 1.);   // core::phasor::Gate
+		phasor.setParameterT(1, 220.); // core::phasor::Frequency
+		phasor.setParameterT(2, 0.);   // core::phasor::FreqRatio
+		phasor.setParameterT(3, 0.);   // core::phasor::Phase
+		
 		clear26.setParameterT(0, 0.); // math::clear::Value
+		
+		; // branch1::Index is automated
 		
 		;                                   // tempo_sync9::Tempo is automated
 		;                                   // tempo_sync9::Multiplier is automated
@@ -6772,6 +6910,13 @@ template <int NV> struct instance: public Files_impl::Files_t_<NV>
 		
 		clear32.setParameterT(0, 0.); // math::clear::Value
 		
+		phasor3.setParameterT(0, 1.);   // core::phasor::Gate
+		phasor3.setParameterT(1, 220.); // core::phasor::Frequency
+		phasor3.setParameterT(2, 0.);   // core::phasor::FreqRatio
+		phasor3.setParameterT(3, 0.);   // core::phasor::Phase
+		
+		; // branch3::Index is automated
+		
 		;                                   // tempo_sync8::Tempo is automated
 		;                                   // tempo_sync8::Multiplier is automated
 		tempo_sync8.setParameterT(2, 10.);  // control::tempo_sync::Enabled
@@ -6787,6 +6932,13 @@ template <int NV> struct instance: public Files_impl::Files_t_<NV>
 		
 		clear31.setParameterT(0, 0.); // math::clear::Value
 		
+		phasor2.setParameterT(0, 1.);   // core::phasor::Gate
+		phasor2.setParameterT(1, 220.); // core::phasor::Frequency
+		phasor2.setParameterT(2, 0.);   // core::phasor::FreqRatio
+		phasor2.setParameterT(3, 0.);   // core::phasor::Phase
+		
+		; // branch2::Index is automated
+		
 		;                                   // tempo_sync7::Tempo is automated
 		;                                   // tempo_sync7::Multiplier is automated
 		tempo_sync7.setParameterT(2, 10.);  // control::tempo_sync::Enabled
@@ -6801,6 +6953,11 @@ template <int NV> struct instance: public Files_impl::Files_t_<NV>
 		mod_inv1.setParameterT(0, 0.); // math::mod_inv::Value
 		
 		clear30.setParameterT(0, 0.); // math::clear::Value
+		
+		phasor1.setParameterT(0, 1.);   // core::phasor::Gate
+		phasor1.setParameterT(1, 220.); // core::phasor::Frequency
+		phasor1.setParameterT(2, 0.);   // core::phasor::FreqRatio
+		phasor1.setParameterT(3, 0.);   // core::phasor::Phase
 		
 		sliderbank13.setParameterT(0, 1.); // control::sliderbank::Value
 		
@@ -7496,54 +7653,58 @@ template <int NV> struct instance: public Files_impl::Files_t_<NV>
 		; // faust5::windowsamples is automated
 		; // faust5::xfadesamples is automated
 		
+		;                            // gain2::Gain is automated
+		gain2.setParameterT(1, 20.); // core::gain::Smoothing
+		gain2.setParameterT(2, 0.);  // core::gain::ResetValue
+		
 		event_data_writer.setParameterT(0, 2.); // routing::event_data_writer::SlotIndex
 		;                                       // event_data_writer::Value is automated
 		
 		this->setParameterT(0, 0.);
 		this->setParameterT(1, 0.);
 		this->setParameterT(2, 1.);
-		this->setParameterT(3, 20.);
-		this->setParameterT(4, 0.);
+		this->setParameterT(3, 3193.);
+		this->setParameterT(4, -24.);
 		this->setParameterT(5, 1.);
 		this->setParameterT(6, 0.);
-		this->setParameterT(7, 6324.);
+		this->setParameterT(7, 93.04);
 		this->setParameterT(8, 0.);
 		this->setParameterT(9, 0.);
 		this->setParameterT(10, 1.);
 		this->setParameterT(11, 1.);
 		this->setParameterT(12, 1.);
 		this->setParameterT(13, 1.);
-		this->setParameterT(14, 4.);
+		this->setParameterT(14, 2.);
 		this->setParameterT(15, 1.);
 		this->setParameterT(16, 0.);
-		this->setParameterT(17, 0.);
+		this->setParameterT(17, 1.);
 		this->setParameterT(18, 1.);
 		this->setParameterT(19, 4.);
 		this->setParameterT(20, 1.);
 		this->setParameterT(21, 1.);
-		this->setParameterT(22, 0.44);
+		this->setParameterT(22, 0.);
 		this->setParameterT(23, 1.);
 		this->setParameterT(24, 0.);
 		this->setParameterT(25, 0.);
-		this->setParameterT(26, 1.);
+		this->setParameterT(26, 0.43);
 		this->setParameterT(27, 0.);
-		this->setParameterT(28, 0.01);
-		this->setParameterT(29, 0.25);
+		this->setParameterT(28, 0.);
+		this->setParameterT(29, 0.);
 		this->setParameterT(30, 0.);
-		this->setParameterT(31, 0.25);
-		this->setParameterT(32, 0.);
+		this->setParameterT(31, 0.);
+		this->setParameterT(32, 1.);
 		this->setParameterT(33, 0.);
 		this->setParameterT(34, 0.243164);
-		this->setParameterT(35, 0.);
-		this->setParameterT(36, 0.);
+		this->setParameterT(35, 1.);
+		this->setParameterT(36, 1.);
 		this->setParameterT(37, 1.);
-		this->setParameterT(38, 4.);
+		this->setParameterT(38, 1.);
 		this->setParameterT(39, 0.);
 		this->setParameterT(40, 0.);
 		this->setParameterT(41, 0.);
 		this->setParameterT(42, 0.);
-		this->setParameterT(43, 10.);
-		this->setParameterT(44, 1.);
+		this->setParameterT(43, 1.);
+		this->setParameterT(44, 32.);
 		this->setParameterT(45, 0.);
 		this->setParameterT(46, 0.);
 		this->setParameterT(47, 0.);
@@ -7551,8 +7712,13 @@ template <int NV> struct instance: public Files_impl::Files_t_<NV>
 		this->setParameterT(49, 0.);
 		this->setParameterT(50, 0.);
 		this->setParameterT(51, 1.);
-		this->setParameterT(52, 0.704738);
+		this->setParameterT(52, 0.77);
 		this->setParameterT(53, 0.);
+		this->setParameterT(54, 1.);
+		this->setParameterT(55, 0.);
+		this->setParameterT(56, 0.);
+		this->setParameterT(57, 0.);
+		this->setParameterT(58, 0.);
 		this->setExternalData({}, -1);
 	}
 	~instance() override
@@ -7574,50 +7740,50 @@ template <int NV> struct instance: public Files_impl::Files_t_<NV>
 	{
 		// Runtime target Connections --------------------------------------------------------------
 		
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).  // Files_impl::global_cable51_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).  // Files_impl::global_cable51_t<NV>
         getT(0).getT(1).getT(0).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).  // Files_impl::global_cable52_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).  // Files_impl::global_cable52_t<NV>
         getT(0).getT(1).getT(1).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).          // Files_impl::global_cable53_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).          // Files_impl::global_cable53_t<NV>
         getT(0).getT(0).getT(1).getT(2).getT(2).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).  // Files_impl::global_cable54_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).  // Files_impl::global_cable54_t<NV>
         getT(0).getT(1).getT(3).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).  // Files_impl::global_cable55_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).  // Files_impl::global_cable55_t<NV>
         getT(1).getT(1).getT(0).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).  // Files_impl::global_cable56_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).  // Files_impl::global_cable56_t<NV>
         getT(1).getT(1).getT(1).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).  // Files_impl::global_cable57_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).  // Files_impl::global_cable57_t<NV>
         getT(1).getT(1).getT(2).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).          // Files_impl::global_cable58_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).          // Files_impl::global_cable58_t<NV>
         getT(0).getT(1).getT(1).getT(3).getT(2).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).  // Files_impl::global_cable59_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).  // Files_impl::global_cable59_t<NV>
         getT(2).getT(1).getT(0).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).  // Files_impl::global_cable60_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).  // Files_impl::global_cable60_t<NV>
         getT(2).getT(1).getT(1).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).  // Files_impl::global_cable61_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).  // Files_impl::global_cable61_t<NV>
         getT(2).getT(1).getT(2).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).  // Files_impl::global_cable62_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).  // Files_impl::global_cable62_t<NV>
         getT(2).getT(1).getT(3).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).  // Files_impl::global_cable63_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).  // Files_impl::global_cable63_t<NV>
         getT(3).getT(1).getT(0).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).  // Files_impl::global_cable64_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).  // Files_impl::global_cable64_t<NV>
         getT(3).getT(1).getT(1).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).  // Files_impl::global_cable65_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).  // Files_impl::global_cable65_t<NV>
         getT(3).getT(1).getT(2).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(0).  // Files_impl::global_cable66_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(0).  // Files_impl::global_cable66_t<NV>
         getT(3).getT(1).getT(3).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).  // Files_impl::global_cable43_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).  // Files_impl::global_cable43_t<NV>
         getT(0).getT(0).getT(1).getT(0).getT(1).getT(0).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).  // Files_impl::global_cable44_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).  // Files_impl::global_cable44_t<NV>
         getT(0).getT(0).getT(1).getT(1).getT(1).getT(0).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).  // Files_impl::global_cable45_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).  // Files_impl::global_cable45_t<NV>
         getT(0).getT(0).getT(1).getT(2).getT(1).getT(0).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).getT(4).  // Files_impl::global_cable46_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).getT(4).  // Files_impl::global_cable46_t<NV>
         getT(0).getT(0).getT(1).getT(3).getT(1).getT(0).
         getT(0).connectToRuntimeTarget(addConnection, c);
 	}
@@ -7626,88 +7792,89 @@ template <int NV> struct instance: public Files_impl::Files_t_<NV>
 	{
 		// External Data Connections ---------------------------------------------------------------
 		
-		this->getT(0).getT(0).getT(0).getT(0).getT(1).getT(3).setExternalData(b, index);         // Files_impl::sliderbank_t<NV>
-		this->getT(0).getT(0).getT(0).getT(0).                                                   // Files_impl::sliderbank15_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(1).getT(3).setExternalData(b, index);         // Files_impl::sliderbank_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).                                                   // Files_impl::sliderbank15_t<NV>
         getT(2).getT(0).getT(0).getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).                                                   // Files_impl::peak35_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).                                                   // Files_impl::peak35_t<NV>
         getT(2).getT(0).getT(0).getT(2).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).                                                   // Files_impl::sliderbank16_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).                                                   // Files_impl::sliderbank16_t<NV>
         getT(2).getT(0).getT(1).getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).                                                   // Files_impl::peak36_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).                                                   // Files_impl::peak36_t<NV>
         getT(2).getT(0).getT(1).getT(2).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).                                                   // Files_impl::sliderbank17_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).                                                   // Files_impl::sliderbank17_t<NV>
         getT(2).getT(0).getT(2).getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).                                                   // Files_impl::peak_unscaled_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).                                                   // Files_impl::peak_unscaled_t<NV>
         getT(2).getT(0).getT(2).getT(2).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).                                                   // Files_impl::peak37_t
+		this->getT(0).getT(0).getT(1).getT(1).                                                   // Files_impl::peak37_t
         getT(2).getT(0).getT(2).getT(3).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).                                                   // Files_impl::sliderbank18_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).                                                   // Files_impl::sliderbank18_t<NV>
         getT(2).getT(0).getT(3).getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).                                                   // Files_impl::peak38_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).                                                   // Files_impl::peak38_t<NV>
         getT(2).getT(0).getT(3).getT(2).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::ramp5_t<NV>
-        getT(3).getT(0).getT(0).getT(0).getT(1).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).                                                   // Files_impl::peak15_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::ramp5_t<NV>
+        getT(3).getT(0).getT(0).getT(0).getT(0).
+        getT(1).setExternalData(b, index);
+		this->getT(0).getT(0).getT(1).getT(1).                                                   // Files_impl::peak15_t<NV>
         getT(2).getT(3).getT(0).getT(0).
-        getT(2).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::ramp8_t<NV>
-        getT(3).getT(0).getT(1).getT(0).getT(1).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).                                                   // Files_impl::peak49_t<NV>
-        getT(2).getT(3).getT(0).getT(1).
-        getT(2).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::ramp7_t<NV>
-        getT(3).getT(0).getT(2).getT(0).getT(1).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).                                                   // Files_impl::peak48_t<NV>
-        getT(2).getT(3).getT(0).getT(2).
-        getT(2).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::ramp6_t<NV>
-        getT(3).getT(0).getT(3).getT(0).getT(1).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).                                                   // Files_impl::peak47_t<NV>
-        getT(2).getT(3).getT(0).getT(3).
-        getT(2).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).                                                   // Files_impl::sliderbank13_t<NV>
+        getT(1).setExternalData(b, index);
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::ramp8_t<NV>
+        getT(3).getT(0).getT(1).getT(0).getT(0).
+        getT(1).setExternalData(b, index);
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::peak49_t<NV>
+        getT(3).getT(0).getT(1).getT(0).getT(2).setExternalData(b, index);
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::ramp7_t<NV>
+        getT(3).getT(0).getT(2).getT(0).getT(0).
+        getT(1).setExternalData(b, index);
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::peak48_t<NV>
+        getT(3).getT(0).getT(2).getT(0).getT(2).setExternalData(b, index);
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::ramp6_t<NV>
+        getT(3).getT(0).getT(3).getT(0).getT(0).
+        getT(1).setExternalData(b, index);
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::peak47_t<NV>
+        getT(3).getT(0).getT(3).getT(0).getT(2).setExternalData(b, index);
+		this->getT(0).getT(0).getT(1).getT(1).                                                   // Files_impl::sliderbank13_t<NV>
         getT(2).getT(4).getT(0).getT(0).
         getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).                                                   // Files_impl::peak21_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).                                                   // Files_impl::peak21_t<NV>
         getT(2).getT(4).getT(0).getT(0).
         getT(2).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::peak18_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::peak18_t<NV>
         getT(4).getT(0).getT(0).getT(5).getT(1).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::cable_table5_t
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::cable_table5_t
         getT(4).getT(0).getT(0).getT(5).getT(2).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::peak43_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::peak43_t<NV>
         getT(4).getT(0).getT(1).getT(1).getT(1).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::cable_table9_t
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::cable_table9_t
         getT(4).getT(0).getT(1).getT(1).getT(4).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::peak31_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::peak31_t<NV>
         getT(4).getT(0).getT(2).getT(1).getT(1).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::cable_table7_t
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::cable_table7_t
         getT(4).getT(0).getT(2).getT(1).getT(2).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::peak29_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::peak29_t<NV>
         getT(4).getT(0).getT(3).getT(1).getT(1).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::cable_table6_t
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::cable_table6_t
         getT(4).getT(0).getT(3).getT(1).getT(2).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::peak45_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::peak45_t<NV>
         getT(4).getT(0).getT(4).getT(1).getT(1).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::cable_table10_t
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::cable_table10_t
         getT(4).getT(0).getT(4).getT(1).getT(2).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::file_player6_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::file_player6_t<NV>
         getT(4).getT(1).getT(0).getT(1).getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::file_player7_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::file_player7_t<NV>
         getT(4).getT(1).getT(0).getT(1).getT(1).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::file_player8_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::file_player8_t<NV>
         getT(4).getT(1).getT(1).getT(1).getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::file_player9_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::file_player9_t<NV>
         getT(4).getT(1).getT(1).getT(1).getT(1).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::file_player10_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::file_player10_t<NV>
         getT(4).getT(1).getT(2).getT(1).getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::file_player11_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::file_player11_t<NV>
         getT(4).getT(1).getT(2).getT(1).getT(1).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::file_player12_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::file_player12_t<NV>
         getT(4).getT(1).getT(3).getT(1).getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(2).                                           // Files_impl::file_player13_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(2).                                           // Files_impl::file_player13_t<NV>
         getT(4).getT(1).getT(3).getT(1).getT(1).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(2).getT(1).setExternalData(b, index); // Files_impl::cable_table15_t<NV>
+		this->getT(0).getT(0).getT(1).getT(1).getT(3).getT(2).getT(1).setExternalData(b, index); // Files_impl::cable_table15_t<NV>
 		this->getT(0).getT(1).setExternalData(b, index);                                         // Files_impl::peak_t<NV>
 	}
 };

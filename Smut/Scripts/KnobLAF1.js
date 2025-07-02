@@ -119,6 +119,8 @@ const var OscKnobs = [Content.getComponent("Bend1"),
                       Content.getComponent("Step2"),
                       Content.getComponent("Div1"),
                       Content.getComponent("Div2"),
+                      Content.getComponent("OscGain1"),
+                      Content.getComponent("OscGain2"),
                       Content.getComponent("Bend2")];
  
  for(s in OscKnobs)

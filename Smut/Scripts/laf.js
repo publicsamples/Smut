@@ -140,4 +140,14 @@ const var MiscButtons = [Content.getComponent("LpHpCt")];
 
  
  for(s in MiscButtons)
-       s.setLocalLookAndFeel(LAF_Button);                         
+       s.setLocalLookAndFeel(LAF_Button);         
+       
+       
+       const var Trackers = [Content.getComponent("RampOS5"),
+                             Content.getComponent("RampOS6"),
+                             Content.getComponent("RampOS7"),
+                             Content.getComponent("RampOS8")];
+       
+for(s in Trackers)
+      s.setLocalLookAndFeel(LAF_Button);          
+                       

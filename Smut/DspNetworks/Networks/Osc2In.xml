@@ -16,55 +16,6 @@
                          DefaultValue="1.0"/>
             </Parameters>
           </Node>
-          <Node ID="clear" FactoryPath="math.clear" Bypassed="0" Name="clear">
-            <Parameters>
-              <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.0"/>
-            </Parameters>
-          </Node>
-          <Node ID="branch" FactoryPath="container.branch" Bypassed="0" Name="branch"
-                ShowParameters="1">
-            <Nodes>
-              <Node ID="global_receive" FactoryPath="routing.global_receive" Bypassed="0"
-                    Name="global_receive" NodeColour="4283582386">
-                <Properties>
-                  <Property ID="Connection" Value="osc1Out"/>
-                </Properties>
-                <Parameters>
-                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="1.0"/>
-                </Parameters>
-              </Node>
-              <Node ID="global_receive2" FactoryPath="routing.global_receive" Bypassed="0"
-                    Name="global_receive" NodeColour="4289877062">
-                <Properties>
-                  <Property ID="Connection" Value="FileOut"/>
-                </Properties>
-                <Parameters>
-                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="1.0"/>
-                </Parameters>
-              </Node>
-              <Node ID="global_receive1" FactoryPath="routing.global_receive" Bypassed="0"
-                    Name="global_receive" NodeColour="4282954328">
-                <Properties>
-                  <Property ID="Connection" Value="FilerOut"/>
-                </Properties>
-                <Parameters>
-                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="1.0"/>
-                </Parameters>
-              </Node>
-              <Node ID="global_receive3" FactoryPath="routing.global_receive" Bypassed="0"
-                    Name="global_receive" NodeColour="4288983624">
-                <Properties>
-                  <Property ID="Connection" Value="f2out"/>
-                </Properties>
-                <Parameters>
-                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="1.0"/>
-                </Parameters>
-              </Node>
-            </Nodes>
-            <Parameters>
-              <Parameter MinValue="0.0" MaxValue="3" StepSize="1.0" ID="Index" Automated="1"/>
-            </Parameters>
-          </Node>
         </Nodes>
         <Parameters/>
       </Node>
@@ -80,11 +31,9 @@
       </Node>
     </Nodes>
     <Parameters>
-      <Parameter MinValue="1.0" MaxValue="4.0" StepSize="1" ID="InputSrc" Value="3.0"
+      <Parameter MinValue="1.0" MaxValue="4.0" StepSize="1" ID="InputSrc" Value="4.0"
                  DefaultValue="0.0">
-        <Connections>
-          <Connection NodeId="branch" ParameterId="Index"/>
-        </Connections>
+        <Connections/>
       </Parameter>
       <Parameter MinValue="0.0" MaxValue="1.0" ID="Gain" Value="1.0" DefaultValue="0.0">
         <Connections>

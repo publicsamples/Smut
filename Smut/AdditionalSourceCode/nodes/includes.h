@@ -22,6 +22,7 @@
 
 // Include compiled network files ------------------
 
+#include "bank_networkdata.h"
 #include "empty_networkdata.h"
 #include "FileIn_networkdata.h"
 #include "Files.h"
@@ -30,6 +31,7 @@
 #include "FilterIn_networkdata.h"
 #include "FilterOut_networkdata.h"
 #include "GainMod_networkdata.h"
+#include "gain_networkdata.h"
 #include "lfo.h"
 #include "lfo2_networkdata.h"
 #include "lfo3_networkdata.h"

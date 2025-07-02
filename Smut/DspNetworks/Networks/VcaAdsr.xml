@@ -90,7 +90,7 @@
         </Connections>
       </Parameter>
       <Parameter ID="Release" MinValue="0.0" MaxValue="40000.0" StepSize="0.1000000014901161"
-                 SkewFactor="0.1976716816425323" Value="40000.0" DefaultValue="1.0">
+                 SkewFactor="0.1976716816425323" Value="8232.000122666357" DefaultValue="1.0">
         <Connections>
           <Connection NodeId="ahdsr" ParameterId="Release"/>
         </Connections>

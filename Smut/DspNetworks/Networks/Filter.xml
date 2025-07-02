@@ -4,7 +4,8 @@
   <Node FactoryPath="container.chain" ID="Filter" Bypassed="0" Name="Filter"
         ShowParameters="1">
     <Nodes>
-      <Node ID="split" FactoryPath="container.split" Bypassed="0" Name="split">
+      <Node ID="split" FactoryPath="container.split" Bypassed="0" Name="split"
+            Folded="1">
         <Nodes>
           <Node ID="modchain19" FactoryPath="container.modchain" Bypassed="0"
                 Name="modchain" ShowParameters="1">
@@ -3607,7 +3608,7 @@
           <Connection NodeId="pma26" ParameterId="Multiply"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="3.0" MaxValue="3.0" ID="CutPK" Value="3.0" DefaultValue="0.0"
+      <Parameter MinValue="1.0" MaxValue="4.0" ID="CutPK" Value="3.0" DefaultValue="0.0"
                  StepSize="1.0">
         <Connections>
           <Connection NodeId="branch20" ParameterId="Index"/>

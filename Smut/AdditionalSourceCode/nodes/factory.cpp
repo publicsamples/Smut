@@ -42,11 +42,13 @@ struct Factory: public scriptnode::dll::StaticLibraryHostFactory
 		registerPolyNode<project::lfo<1>, wrap::illegal_poly<project::lfo<1>>>();
 		registerPolyNode<project::osc1<1>, project::osc1<NUM_POLYPHONIC_VOICES>>();
 		registerPolyNode<project::verb<1>, wrap::illegal_poly<project::verb<1>>>();
+		registerDataNode<project::bank_networkdata>();
 		registerDataNode<project::empty_networkdata>();
 		registerDataNode<project::FileIn_networkdata>();
 		registerDataNode<project::Filter2Out_networkdata>();
 		registerDataNode<project::FilterIn_networkdata>();
 		registerDataNode<project::FilterOut_networkdata>();
+		registerDataNode<project::gain_networkdata>();
 		registerDataNode<project::GainMod_networkdata>();
 		registerDataNode<project::lfo2_networkdata>();
 		registerDataNode<project::lfo3_networkdata>();

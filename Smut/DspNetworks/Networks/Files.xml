@@ -9,8 +9,44 @@
           <Node ID="xfade-2x-lin" FactoryPath="container.chain" Bypassed="0"
                 Name="xfade-2x-lin">
             <Nodes>
+              <Node ID="xfader" FactoryPath="control.xfader" Bypassed="0" Name="xfader">
+                <Properties>
+                  <Property ID="NumParameters" Value="2"/>
+                  <Property ID="Mode" Value="Overlap"/>
+                </Properties>
+                <SwitchTargets>
+                  <SwitchTarget>
+                    <Connections>
+                      <Connection NodeId="gain" ParameterId="Gain"/>
+                    </Connections>
+                  </SwitchTarget>
+                  <SwitchTarget>
+                    <Connections>
+                      <Connection NodeId="gain2" ParameterId="Gain"/>
+                    </Connections>
+                  </SwitchTarget>
+                </SwitchTargets>
+                <Parameters>
+                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Automated="1"/>
+                </Parameters>
+              </Node>
               <Node ID="split20" FactoryPath="container.split" Bypassed="0" Name="split12">
                 <Nodes>
+                  <Node ID="chain" FactoryPath="container.chain" Bypassed="0" Name="chain">
+                    <Nodes>
+                      <Node ID="gain" FactoryPath="core.gain" Bypassed="0" Name="gain">
+                        <Parameters>
+                          <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
+                                     SkewFactor="5.422270774841309" ID="Gain" Automated="1"/>
+                          <Parameter MinValue="0.0" MaxValue="1000.0" StepSize="0.1000000014901161"
+                                     SkewFactor="0.3010300099849701" ID="Smoothing" Value="20.0"/>
+                          <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
+                                     SkewFactor="5.422270774841309" ID="ResetValue" Value="0.0"/>
+                        </Parameters>
+                      </Node>
+                    </Nodes>
+                    <Parameters/>
+                  </Node>
                   <Node ID="chain73" FactoryPath="container.chain" Bypassed="0" Name="chain73"
                         ShowParameters="1">
                     <Nodes>
@@ -20,7 +56,7 @@
                         </Parameters>
                       </Node>
                       <Node ID="branch39" FactoryPath="container.branch" Bypassed="0" Name="branch39"
-                            ShowParameters="1" Folded="1">
+                            ShowParameters="1">
                         <Nodes>
                           <Node ID="xfader1" FactoryPath="control.xfader" Bypassed="0" Name="xfader1">
                             <Properties>
@@ -159,8 +195,7 @@
                       <Node ID="fix8_block" FactoryPath="container.fix8_block" Bypassed="0"
                             Name="fix8_block">
                         <Nodes>
-                          <Node ID="split2" FactoryPath="container.split" Bypassed="0" Name="split2"
-                                Folded="1">
+                          <Node ID="split2" FactoryPath="container.split" Bypassed="0" Name="split2">
                             <Nodes>
                               <Node ID="modchain15" FactoryPath="container.modchain" Bypassed="0"
                                     Name="modchain">
@@ -3559,58 +3594,82 @@
                             </Parameters>
                           </Node>
                           <Node ID="modchain8" FactoryPath="container.modchain" Bypassed="0"
-                                Name="modchain8" Folded="1">
+                                Name="modchain8">
                             <Nodes>
-                              <Node ID="split23" FactoryPath="container.split" Bypassed="0" Name="split23">
+                              <Node ID="split23" FactoryPath="container.split" Bypassed="0" Name="split23"
+                                    Folded="1">
                                 <Nodes>
                                   <Node ID="chain178" FactoryPath="container.chain" Bypassed="0" Name="chain94"
                                         ShowParameters="0">
                                     <Nodes>
-                                      <Node ID="chain179" FactoryPath="container.chain" Bypassed="0" Name="chain10">
-                                        <Nodes>
-                                          <Node ID="tempo_sync6" FactoryPath="control.tempo_sync" Bypassed="0"
-                                                Name="tempo_sync2">
-                                            <ModulationTargets>
-                                              <Connection NodeId="ramp5" ParameterId="PeriodTime"/>
-                                            </ModulationTargets>
-                                            <Parameters>
-                                              <Parameter MinValue="0.0" MaxValue="18.0" StepSize="1.0" ID="Tempo" Automated="1"/>
-                                              <Parameter MinValue="1.0" MaxValue="16.0" StepSize="1.0" ID="Multiplier"
-                                                         DefaultValue="1.0" Automated="1"/>
-                                              <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Enabled" Value="10.0"
-                                                         DefaultValue="0.0"/>
-                                              <Parameter MinValue="0.0" MaxValue="1000.0" StepSize="0.1000000014901161"
-                                                         ID="UnsyncedTime" Value="200.0"/>
-                                            </Parameters>
-                                          </Node>
-                                          <Node ID="ramp5" FactoryPath="core.ramp" Bypassed="0" Name="ramp">
-                                            <ComplexData>
-                                              <DisplayBuffers>
-                                                <DisplayBuffer Index="-1"/>
-                                              </DisplayBuffers>
-                                            </ComplexData>
-                                            <Parameters>
-                                              <Parameter MinValue="0.1000000014901161" MaxValue="1000.0" StepSize="0.1000000014901161"
-                                                         ID="PeriodTime" DefaultValue="100.0" Automated="1"/>
-                                              <Parameter MinValue="0.0" MaxValue="1.0" ID="LoopStart" DefaultValue="0.0"
-                                                         Automated="1"/>
-                                              <Parameter MinValue="0.0" MaxValue="1.0" ID="Gate" Value="1.0"/>
-                                            </Parameters>
-                                          </Node>
-                                        </Nodes>
-                                        <Parameters/>
-                                      </Node>
-                                      <Node ID="branch36" FactoryPath="container.branch" Bypassed="0" Name="branch36"
+                                      <Node ID="branch" FactoryPath="container.branch" Bypassed="0" Name="branch"
                                             ShowParameters="1">
                                         <Nodes>
-                                          <Node ID="chain102" FactoryPath="container.chain" Bypassed="0" Name="chain102">
-                                            <Nodes/>
+                                          <Node ID="chain179" FactoryPath="container.chain" Bypassed="0" Name="chain10">
+                                            <Nodes>
+                                              <Node ID="tempo_sync6" FactoryPath="control.tempo_sync" Bypassed="0"
+                                                    Name="tempo_sync2">
+                                                <ModulationTargets>
+                                                  <Connection NodeId="ramp5" ParameterId="PeriodTime"/>
+                                                </ModulationTargets>
+                                                <Parameters>
+                                                  <Parameter MinValue="0.0" MaxValue="18.0" StepSize="1.0" ID="Tempo" Automated="1"/>
+                                                  <Parameter MinValue="1.0" MaxValue="16.0" StepSize="1.0" ID="Multiplier"
+                                                             DefaultValue="1.0" Automated="1"/>
+                                                  <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Enabled" Value="10.0"
+                                                             DefaultValue="0.0"/>
+                                                  <Parameter MinValue="0.0" MaxValue="1000.0" StepSize="0.1000000014901161"
+                                                             ID="UnsyncedTime" Value="200.0"/>
+                                                </Parameters>
+                                              </Node>
+                                              <Node ID="ramp5" FactoryPath="core.ramp" Bypassed="0" Name="ramp">
+                                                <ComplexData>
+                                                  <DisplayBuffers>
+                                                    <DisplayBuffer Index="-1"/>
+                                                  </DisplayBuffers>
+                                                </ComplexData>
+                                                <Parameters>
+                                                  <Parameter MinValue="0.1000000014901161" MaxValue="1000.0" StepSize="0.1000000014901161"
+                                                             ID="PeriodTime" DefaultValue="100.0" Automated="1"/>
+                                                  <Parameter MinValue="0.0" MaxValue="1.0" ID="LoopStart" DefaultValue="0.0"
+                                                             Automated="1"/>
+                                                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Gate" Value="1.0"/>
+                                                </Parameters>
+                                              </Node>
+                                              <Node ID="branch36" FactoryPath="container.branch" Bypassed="0" Name="branch36"
+                                                    ShowParameters="1">
+                                                <Nodes>
+                                                  <Node ID="chain102" FactoryPath="container.chain" Bypassed="0" Name="chain102">
+                                                    <Nodes/>
+                                                    <Parameters/>
+                                                  </Node>
+                                                  <Node ID="mod_inv" FactoryPath="math.mod_inv" Bypassed="0" Name="mod_inv">
+                                                    <Parameters>
+                                                      <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.0"/>
+                                                    </Parameters>
+                                                  </Node>
+                                                </Nodes>
+                                                <Parameters>
+                                                  <Parameter MinValue="0.0" MaxValue="1" StepSize="1.0" ID="Index" Automated="1"/>
+                                                </Parameters>
+                                              </Node>
+                                            </Nodes>
                                             <Parameters/>
                                           </Node>
-                                          <Node ID="mod_inv" FactoryPath="math.mod_inv" Bypassed="0" Name="mod_inv">
-                                            <Parameters>
-                                              <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.0"/>
-                                            </Parameters>
+                                          <Node ID="chain1" FactoryPath="container.chain" Bypassed="0" Name="chain1">
+                                            <Nodes>
+                                              <Node ID="phasor" FactoryPath="core.phasor" Bypassed="0" Name="phasor">
+                                                <Parameters>
+                                                  <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Gate" Value="1.0"/>
+                                                  <Parameter MinValue="20.0" MaxValue="20000.0" StepSize="0.1000000014901161"
+                                                             SkewFactor="0.2299045622348785" ID="Frequency" Value="220.0"/>
+                                                  <Parameter MinValue="0.0" MaxValue="16.0" StepSize="1.0" ID="Freq Ratio"
+                                                             Value="0.0" DefaultValue="1.0"/>
+                                                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Phase" Value="0.0"/>
+                                                </Parameters>
+                                              </Node>
+                                            </Nodes>
+                                            <Parameters/>
                                           </Node>
                                         </Nodes>
                                         <Parameters>
@@ -3636,224 +3695,293 @@
                                     </Nodes>
                                     <Parameters/>
                                   </Node>
-                                  <Node ID="chain187" FactoryPath="container.chain" Bypassed="0" Name="chain94"
-                                        ShowParameters="0">
+                                  <Node ID="branch1" FactoryPath="container.branch" Bypassed="0" Name="branch1"
+                                        ShowParameters="1">
                                     <Nodes>
-                                      <Node ID="chain188" FactoryPath="container.chain" Bypassed="0" Name="chain10">
+                                      <Node ID="chain187" FactoryPath="container.chain" Bypassed="0" Name="chain94"
+                                            ShowParameters="0">
                                         <Nodes>
-                                          <Node ID="tempo_sync9" FactoryPath="control.tempo_sync" Bypassed="0"
-                                                Name="tempo_sync2">
-                                            <ModulationTargets>
-                                              <Connection NodeId="ramp8" ParameterId="PeriodTime"/>
-                                            </ModulationTargets>
+                                          <Node ID="chain188" FactoryPath="container.chain" Bypassed="0" Name="chain10">
+                                            <Nodes>
+                                              <Node ID="tempo_sync9" FactoryPath="control.tempo_sync" Bypassed="0"
+                                                    Name="tempo_sync2">
+                                                <ModulationTargets>
+                                                  <Connection NodeId="ramp8" ParameterId="PeriodTime"/>
+                                                </ModulationTargets>
+                                                <Parameters>
+                                                  <Parameter MinValue="0.0" MaxValue="18.0" StepSize="1.0" ID="Tempo" Automated="1"/>
+                                                  <Parameter MinValue="1.0" MaxValue="16.0" StepSize="1.0" ID="Multiplier"
+                                                             DefaultValue="1.0" Automated="1"/>
+                                                  <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Enabled" Value="10.0"
+                                                             DefaultValue="0.0"/>
+                                                  <Parameter MinValue="0.0" MaxValue="1000.0" StepSize="0.1000000014901161"
+                                                             ID="UnsyncedTime" Value="200.0"/>
+                                                </Parameters>
+                                              </Node>
+                                              <Node ID="ramp8" FactoryPath="core.ramp" Bypassed="0" Name="ramp">
+                                                <ComplexData>
+                                                  <DisplayBuffers>
+                                                    <DisplayBuffer Index="-1"/>
+                                                  </DisplayBuffers>
+                                                </ComplexData>
+                                                <Parameters>
+                                                  <Parameter MinValue="0.1000000014901161" MaxValue="1000.0" StepSize="0.1000000014901161"
+                                                             ID="PeriodTime" DefaultValue="100.0" Automated="1"/>
+                                                  <Parameter MinValue="0.0" MaxValue="1.0" ID="LoopStart" DefaultValue="0.0"
+                                                             Automated="1"/>
+                                                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Gate" Value="1.0"/>
+                                                </Parameters>
+                                              </Node>
+                                            </Nodes>
+                                            <Parameters/>
+                                          </Node>
+                                          <Node ID="branch89" FactoryPath="container.branch" Bypassed="0" Name="branch36"
+                                                ShowParameters="1">
+                                            <Nodes>
+                                              <Node ID="chain105" FactoryPath="container.chain" Bypassed="0" Name="chain102">
+                                                <Nodes/>
+                                                <Parameters/>
+                                              </Node>
+                                              <Node ID="mod_inv3" FactoryPath="math.mod_inv" Bypassed="0" Name="mod_inv">
+                                                <Parameters>
+                                                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.0"/>
+                                                </Parameters>
+                                              </Node>
+                                            </Nodes>
                                             <Parameters>
-                                              <Parameter MinValue="0.0" MaxValue="18.0" StepSize="1.0" ID="Tempo" Automated="1"/>
-                                              <Parameter MinValue="1.0" MaxValue="16.0" StepSize="1.0" ID="Multiplier"
-                                                         DefaultValue="1.0" Automated="1"/>
-                                              <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Enabled" Value="10.0"
-                                                         DefaultValue="0.0"/>
-                                              <Parameter MinValue="0.0" MaxValue="1000.0" StepSize="0.1000000014901161"
-                                                         ID="UnsyncedTime" Value="200.0"/>
+                                              <Parameter MinValue="0.0" MaxValue="1" StepSize="1.0" ID="Index" Automated="1"/>
                                             </Parameters>
                                           </Node>
-                                          <Node ID="ramp8" FactoryPath="core.ramp" Bypassed="0" Name="ramp">
+                                          <Node ID="peak49" FactoryPath="core.peak" Bypassed="0" Name="peak2">
+                                            <ModulationTargets>
+                                              <Connection NodeId="pma32" ParameterId="Value"/>
+                                            </ModulationTargets>
                                             <ComplexData>
                                               <DisplayBuffers>
                                                 <DisplayBuffer Index="-1"/>
                                               </DisplayBuffers>
                                             </ComplexData>
-                                            <Parameters>
-                                              <Parameter MinValue="0.1000000014901161" MaxValue="1000.0" StepSize="0.1000000014901161"
-                                                         ID="PeriodTime" DefaultValue="100.0" Automated="1"/>
-                                              <Parameter MinValue="0.0" MaxValue="1.0" ID="LoopStart" DefaultValue="0.0"
-                                                         Automated="1"/>
-                                              <Parameter MinValue="0.0" MaxValue="1.0" ID="Gate" Value="1.0"/>
-                                            </Parameters>
-                                          </Node>
-                                        </Nodes>
-                                        <Parameters/>
-                                      </Node>
-                                      <Node ID="branch89" FactoryPath="container.branch" Bypassed="0" Name="branch36"
-                                            ShowParameters="1">
-                                        <Nodes>
-                                          <Node ID="chain105" FactoryPath="container.chain" Bypassed="0" Name="chain102">
-                                            <Nodes/>
                                             <Parameters/>
                                           </Node>
-                                          <Node ID="mod_inv3" FactoryPath="math.mod_inv" Bypassed="0" Name="mod_inv">
+                                          <Node ID="clear32" FactoryPath="math.clear" Bypassed="0" Name="clear10">
                                             <Parameters>
                                               <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.0"/>
                                             </Parameters>
                                           </Node>
                                         </Nodes>
-                                        <Parameters>
-                                          <Parameter MinValue="0.0" MaxValue="1" StepSize="1.0" ID="Index" Automated="1"/>
-                                        </Parameters>
-                                      </Node>
-                                      <Node ID="peak49" FactoryPath="core.peak" Bypassed="0" Name="peak2">
-                                        <ModulationTargets>
-                                          <Connection NodeId="pma32" ParameterId="Value"/>
-                                        </ModulationTargets>
-                                        <ComplexData>
-                                          <DisplayBuffers>
-                                            <DisplayBuffer Index="-1"/>
-                                          </DisplayBuffers>
-                                        </ComplexData>
                                         <Parameters/>
                                       </Node>
-                                      <Node ID="clear32" FactoryPath="math.clear" Bypassed="0" Name="clear10">
-                                        <Parameters>
-                                          <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.0"/>
-                                        </Parameters>
+                                      <Node ID="chain4" FactoryPath="container.chain" Bypassed="0" Name="chain1">
+                                        <Nodes>
+                                          <Node ID="phasor3" FactoryPath="core.phasor" Bypassed="0" Name="phasor">
+                                            <Parameters>
+                                              <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Gate" Value="1.0"/>
+                                              <Parameter MinValue="20.0" MaxValue="20000.0" StepSize="0.1000000014901161"
+                                                         SkewFactor="0.2299045622348785" ID="Frequency" Value="220.0"/>
+                                              <Parameter MinValue="0.0" MaxValue="16.0" StepSize="1.0" ID="Freq Ratio"
+                                                         Value="0.0" DefaultValue="1.0"/>
+                                              <Parameter MinValue="0.0" MaxValue="1.0" ID="Phase" Value="0.0"/>
+                                            </Parameters>
+                                          </Node>
+                                        </Nodes>
+                                        <Parameters/>
                                       </Node>
                                     </Nodes>
-                                    <Parameters/>
+                                    <Parameters>
+                                      <Parameter MinValue="0.0" MaxValue="1" StepSize="1.0" ID="Index" Automated="1"/>
+                                    </Parameters>
                                   </Node>
-                                  <Node ID="chain185" FactoryPath="container.chain" Bypassed="0" Name="chain94"
-                                        ShowParameters="0">
+                                  <Node ID="branch3" FactoryPath="container.branch" Bypassed="0" Name="branch1"
+                                        ShowParameters="1">
                                     <Nodes>
-                                      <Node ID="chain186" FactoryPath="container.chain" Bypassed="0" Name="chain10">
+                                      <Node ID="chain185" FactoryPath="container.chain" Bypassed="0" Name="chain94"
+                                            ShowParameters="0">
                                         <Nodes>
-                                          <Node ID="tempo_sync8" FactoryPath="control.tempo_sync" Bypassed="0"
-                                                Name="tempo_sync2">
-                                            <ModulationTargets>
-                                              <Connection NodeId="ramp7" ParameterId="PeriodTime"/>
-                                            </ModulationTargets>
+                                          <Node ID="chain186" FactoryPath="container.chain" Bypassed="0" Name="chain10">
+                                            <Nodes>
+                                              <Node ID="tempo_sync8" FactoryPath="control.tempo_sync" Bypassed="0"
+                                                    Name="tempo_sync2">
+                                                <ModulationTargets>
+                                                  <Connection NodeId="ramp7" ParameterId="PeriodTime"/>
+                                                </ModulationTargets>
+                                                <Parameters>
+                                                  <Parameter MinValue="0.0" MaxValue="18.0" StepSize="1.0" ID="Tempo" Automated="1"/>
+                                                  <Parameter MinValue="1.0" MaxValue="16.0" StepSize="1.0" ID="Multiplier"
+                                                             DefaultValue="1.0" Automated="1"/>
+                                                  <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Enabled" Value="10.0"
+                                                             DefaultValue="0.0"/>
+                                                  <Parameter MinValue="0.0" MaxValue="1000.0" StepSize="0.1000000014901161"
+                                                             ID="UnsyncedTime" Value="200.0"/>
+                                                </Parameters>
+                                              </Node>
+                                              <Node ID="ramp7" FactoryPath="core.ramp" Bypassed="0" Name="ramp">
+                                                <ComplexData>
+                                                  <DisplayBuffers>
+                                                    <DisplayBuffer Index="-1"/>
+                                                  </DisplayBuffers>
+                                                </ComplexData>
+                                                <Parameters>
+                                                  <Parameter MinValue="0.1000000014901161" MaxValue="1000.0" StepSize="0.1000000014901161"
+                                                             ID="PeriodTime" DefaultValue="100.0" Automated="1"/>
+                                                  <Parameter MinValue="0.0" MaxValue="1.0" ID="LoopStart" DefaultValue="0.0"
+                                                             Automated="1"/>
+                                                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Gate" Value="1.0"/>
+                                                </Parameters>
+                                              </Node>
+                                            </Nodes>
+                                            <Parameters/>
+                                          </Node>
+                                          <Node ID="branch46" FactoryPath="container.branch" Bypassed="0" Name="branch36"
+                                                ShowParameters="1">
+                                            <Nodes>
+                                              <Node ID="chain104" FactoryPath="container.chain" Bypassed="0" Name="chain102">
+                                                <Nodes/>
+                                                <Parameters/>
+                                              </Node>
+                                              <Node ID="mod_inv2" FactoryPath="math.mod_inv" Bypassed="0" Name="mod_inv">
+                                                <Parameters>
+                                                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.0"/>
+                                                </Parameters>
+                                              </Node>
+                                            </Nodes>
                                             <Parameters>
-                                              <Parameter MinValue="0.0" MaxValue="18.0" StepSize="1.0" ID="Tempo" Automated="1"/>
-                                              <Parameter MinValue="1.0" MaxValue="16.0" StepSize="1.0" ID="Multiplier"
-                                                         DefaultValue="1.0" Automated="1"/>
-                                              <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Enabled" Value="10.0"
-                                                         DefaultValue="0.0"/>
-                                              <Parameter MinValue="0.0" MaxValue="1000.0" StepSize="0.1000000014901161"
-                                                         ID="UnsyncedTime" Value="200.0"/>
+                                              <Parameter MinValue="0.0" MaxValue="1" StepSize="1.0" ID="Index" Automated="1"/>
                                             </Parameters>
                                           </Node>
-                                          <Node ID="ramp7" FactoryPath="core.ramp" Bypassed="0" Name="ramp">
+                                          <Node ID="peak48" FactoryPath="core.peak" Bypassed="0" Name="peak2">
+                                            <ModulationTargets>
+                                              <Connection NodeId="pma31" ParameterId="Value"/>
+                                            </ModulationTargets>
                                             <ComplexData>
                                               <DisplayBuffers>
                                                 <DisplayBuffer Index="-1"/>
                                               </DisplayBuffers>
                                             </ComplexData>
-                                            <Parameters>
-                                              <Parameter MinValue="0.1000000014901161" MaxValue="1000.0" StepSize="0.1000000014901161"
-                                                         ID="PeriodTime" DefaultValue="100.0" Automated="1"/>
-                                              <Parameter MinValue="0.0" MaxValue="1.0" ID="LoopStart" DefaultValue="0.0"
-                                                         Automated="1"/>
-                                              <Parameter MinValue="0.0" MaxValue="1.0" ID="Gate" Value="1.0"/>
-                                            </Parameters>
-                                          </Node>
-                                        </Nodes>
-                                        <Parameters/>
-                                      </Node>
-                                      <Node ID="branch46" FactoryPath="container.branch" Bypassed="0" Name="branch36"
-                                            ShowParameters="1">
-                                        <Nodes>
-                                          <Node ID="chain104" FactoryPath="container.chain" Bypassed="0" Name="chain102">
-                                            <Nodes/>
                                             <Parameters/>
                                           </Node>
-                                          <Node ID="mod_inv2" FactoryPath="math.mod_inv" Bypassed="0" Name="mod_inv">
+                                          <Node ID="clear31" FactoryPath="math.clear" Bypassed="0" Name="clear10">
                                             <Parameters>
                                               <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.0"/>
                                             </Parameters>
                                           </Node>
                                         </Nodes>
-                                        <Parameters>
-                                          <Parameter MinValue="0.0" MaxValue="1" StepSize="1.0" ID="Index" Automated="1"/>
-                                        </Parameters>
-                                      </Node>
-                                      <Node ID="peak48" FactoryPath="core.peak" Bypassed="0" Name="peak2">
-                                        <ModulationTargets>
-                                          <Connection NodeId="pma31" ParameterId="Value"/>
-                                        </ModulationTargets>
-                                        <ComplexData>
-                                          <DisplayBuffers>
-                                            <DisplayBuffer Index="-1"/>
-                                          </DisplayBuffers>
-                                        </ComplexData>
                                         <Parameters/>
                                       </Node>
-                                      <Node ID="clear31" FactoryPath="math.clear" Bypassed="0" Name="clear10">
-                                        <Parameters>
-                                          <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.0"/>
-                                        </Parameters>
+                                      <Node ID="chain3" FactoryPath="container.chain" Bypassed="0" Name="chain1">
+                                        <Nodes>
+                                          <Node ID="phasor2" FactoryPath="core.phasor" Bypassed="0" Name="phasor">
+                                            <Parameters>
+                                              <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Gate" Value="1.0"/>
+                                              <Parameter MinValue="20.0" MaxValue="20000.0" StepSize="0.1000000014901161"
+                                                         SkewFactor="0.2299045622348785" ID="Frequency" Value="220.0"/>
+                                              <Parameter MinValue="0.0" MaxValue="16.0" StepSize="1.0" ID="Freq Ratio"
+                                                         Value="0.0" DefaultValue="1.0"/>
+                                              <Parameter MinValue="0.0" MaxValue="1.0" ID="Phase" Value="0.0"/>
+                                            </Parameters>
+                                          </Node>
+                                        </Nodes>
+                                        <Parameters/>
                                       </Node>
                                     </Nodes>
-                                    <Parameters/>
+                                    <Parameters>
+                                      <Parameter MinValue="0.0" MaxValue="1" StepSize="1.0" ID="Index" Automated="1"/>
+                                    </Parameters>
                                   </Node>
-                                  <Node ID="chain183" FactoryPath="container.chain" Bypassed="0" Name="chain94"
-                                        ShowParameters="0">
+                                  <Node ID="branch2" FactoryPath="container.branch" Bypassed="0" Name="branch1"
+                                        ShowParameters="1">
                                     <Nodes>
-                                      <Node ID="chain184" FactoryPath="container.chain" Bypassed="0" Name="chain10">
+                                      <Node ID="chain183" FactoryPath="container.chain" Bypassed="0" Name="chain94"
+                                            ShowParameters="0">
                                         <Nodes>
-                                          <Node ID="tempo_sync7" FactoryPath="control.tempo_sync" Bypassed="0"
-                                                Name="tempo_sync2">
-                                            <ModulationTargets>
-                                              <Connection NodeId="ramp6" ParameterId="PeriodTime"/>
-                                            </ModulationTargets>
+                                          <Node ID="chain184" FactoryPath="container.chain" Bypassed="0" Name="chain10">
+                                            <Nodes>
+                                              <Node ID="tempo_sync7" FactoryPath="control.tempo_sync" Bypassed="0"
+                                                    Name="tempo_sync2">
+                                                <ModulationTargets>
+                                                  <Connection NodeId="ramp6" ParameterId="PeriodTime"/>
+                                                </ModulationTargets>
+                                                <Parameters>
+                                                  <Parameter MinValue="0.0" MaxValue="18.0" StepSize="1.0" ID="Tempo" Automated="1"/>
+                                                  <Parameter MinValue="1.0" MaxValue="16.0" StepSize="1.0" ID="Multiplier"
+                                                             DefaultValue="1.0" Automated="1"/>
+                                                  <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Enabled" Value="10.0"
+                                                             DefaultValue="0.0"/>
+                                                  <Parameter MinValue="0.0" MaxValue="1000.0" StepSize="0.1000000014901161"
+                                                             ID="UnsyncedTime" Value="200.0"/>
+                                                </Parameters>
+                                              </Node>
+                                              <Node ID="ramp6" FactoryPath="core.ramp" Bypassed="0" Name="ramp">
+                                                <ComplexData>
+                                                  <DisplayBuffers>
+                                                    <DisplayBuffer Index="-1"/>
+                                                  </DisplayBuffers>
+                                                </ComplexData>
+                                                <Parameters>
+                                                  <Parameter MinValue="0.1000000014901161" MaxValue="1000.0" StepSize="0.1000000014901161"
+                                                             ID="PeriodTime" DefaultValue="100.0" Automated="1"/>
+                                                  <Parameter MinValue="0.0" MaxValue="1.0" ID="LoopStart" DefaultValue="0.0"
+                                                             Automated="1"/>
+                                                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Gate" Value="1.0"/>
+                                                </Parameters>
+                                              </Node>
+                                            </Nodes>
+                                            <Parameters/>
+                                          </Node>
+                                          <Node ID="branch37" FactoryPath="container.branch" Bypassed="0" Name="branch36"
+                                                ShowParameters="1">
+                                            <Nodes>
+                                              <Node ID="chain103" FactoryPath="container.chain" Bypassed="0" Name="chain102">
+                                                <Nodes/>
+                                                <Parameters/>
+                                              </Node>
+                                              <Node ID="mod_inv1" FactoryPath="math.mod_inv" Bypassed="0" Name="mod_inv">
+                                                <Parameters>
+                                                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.0"/>
+                                                </Parameters>
+                                              </Node>
+                                            </Nodes>
                                             <Parameters>
-                                              <Parameter MinValue="0.0" MaxValue="18.0" StepSize="1.0" ID="Tempo" Automated="1"/>
-                                              <Parameter MinValue="1.0" MaxValue="16.0" StepSize="1.0" ID="Multiplier"
-                                                         DefaultValue="1.0" Automated="1"/>
-                                              <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Enabled" Value="10.0"
-                                                         DefaultValue="0.0"/>
-                                              <Parameter MinValue="0.0" MaxValue="1000.0" StepSize="0.1000000014901161"
-                                                         ID="UnsyncedTime" Value="200.0"/>
+                                              <Parameter MinValue="0.0" MaxValue="1" StepSize="1.0" ID="Index" Automated="1"/>
                                             </Parameters>
                                           </Node>
-                                          <Node ID="ramp6" FactoryPath="core.ramp" Bypassed="0" Name="ramp">
+                                          <Node ID="peak47" FactoryPath="core.peak" Bypassed="0" Name="peak2">
+                                            <ModulationTargets>
+                                              <Connection NodeId="pma34" ParameterId="Value"/>
+                                            </ModulationTargets>
                                             <ComplexData>
                                               <DisplayBuffers>
                                                 <DisplayBuffer Index="-1"/>
                                               </DisplayBuffers>
                                             </ComplexData>
-                                            <Parameters>
-                                              <Parameter MinValue="0.1000000014901161" MaxValue="1000.0" StepSize="0.1000000014901161"
-                                                         ID="PeriodTime" DefaultValue="100.0" Automated="1"/>
-                                              <Parameter MinValue="0.0" MaxValue="1.0" ID="LoopStart" DefaultValue="0.0"
-                                                         Automated="1"/>
-                                              <Parameter MinValue="0.0" MaxValue="1.0" ID="Gate" Value="1.0"/>
-                                            </Parameters>
-                                          </Node>
-                                        </Nodes>
-                                        <Parameters/>
-                                      </Node>
-                                      <Node ID="branch37" FactoryPath="container.branch" Bypassed="0" Name="branch36"
-                                            ShowParameters="1">
-                                        <Nodes>
-                                          <Node ID="chain103" FactoryPath="container.chain" Bypassed="0" Name="chain102">
-                                            <Nodes/>
                                             <Parameters/>
                                           </Node>
-                                          <Node ID="mod_inv1" FactoryPath="math.mod_inv" Bypassed="0" Name="mod_inv">
+                                          <Node ID="clear30" FactoryPath="math.clear" Bypassed="0" Name="clear10">
                                             <Parameters>
                                               <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.0"/>
                                             </Parameters>
                                           </Node>
                                         </Nodes>
-                                        <Parameters>
-                                          <Parameter MinValue="0.0" MaxValue="1" StepSize="1.0" ID="Index" Automated="1"/>
-                                        </Parameters>
-                                      </Node>
-                                      <Node ID="peak47" FactoryPath="core.peak" Bypassed="0" Name="peak2">
-                                        <ModulationTargets>
-                                          <Connection NodeId="pma34" ParameterId="Value"/>
-                                        </ModulationTargets>
-                                        <ComplexData>
-                                          <DisplayBuffers>
-                                            <DisplayBuffer Index="-1"/>
-                                          </DisplayBuffers>
-                                        </ComplexData>
                                         <Parameters/>
                                       </Node>
-                                      <Node ID="clear30" FactoryPath="math.clear" Bypassed="0" Name="clear10">
-                                        <Parameters>
-                                          <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.0"/>
-                                        </Parameters>
+                                      <Node ID="chain2" FactoryPath="container.chain" Bypassed="0" Name="chain1">
+                                        <Nodes>
+                                          <Node ID="phasor1" FactoryPath="core.phasor" Bypassed="0" Name="phasor">
+                                            <Parameters>
+                                              <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Gate" Value="1.0"/>
+                                              <Parameter MinValue="20.0" MaxValue="20000.0" StepSize="0.1000000014901161"
+                                                         SkewFactor="0.2299045622348785" ID="Frequency" Value="220.0"/>
+                                              <Parameter MinValue="0.0" MaxValue="16.0" StepSize="1.0" ID="Freq Ratio"
+                                                         Value="0.0" DefaultValue="1.0"/>
+                                              <Parameter MinValue="0.0" MaxValue="1.0" ID="Phase" Value="0.0"/>
+                                            </Parameters>
+                                          </Node>
+                                        </Nodes>
+                                        <Parameters/>
                                       </Node>
                                     </Nodes>
-                                    <Parameters/>
+                                    <Parameters>
+                                      <Parameter MinValue="0.0" MaxValue="1" StepSize="1.0" ID="Index" Automated="1"/>
+                                    </Parameters>
                                   </Node>
                                 </Nodes>
                                 <Parameters/>
@@ -6057,7 +6185,7 @@
                                                 Name="file_player1">
                                             <ComplexData>
                                               <AudioFiles>
-                                                <AudioFile Index="0" MinValue="0" MaxValue="4096"/>
+                                                <AudioFile Index="0" MinValue="0" MaxValue="256"/>
                                               </AudioFiles>
                                             </ComplexData>
                                             <Parameters>
@@ -6172,7 +6300,7 @@
                                                 Name="file_player1">
                                             <ComplexData>
                                               <AudioFiles>
-                                                <AudioFile Index="1" MinValue="0" MaxValue="4096"/>
+                                                <AudioFile Index="1" MinValue="0" MaxValue="2099200"/>
                                               </AudioFiles>
                                             </ComplexData>
                                             <Parameters>
@@ -6286,7 +6414,7 @@
                                                 Name="file_player1">
                                             <ComplexData>
                                               <AudioFiles>
-                                                <AudioFile Index="2" MinValue="0" MaxValue="256"/>
+                                                <AudioFile Index="2" MinValue="0" MaxValue="1048576"/>
                                               </AudioFiles>
                                             </ComplexData>
                                             <Parameters>
@@ -6399,7 +6527,7 @@
                                                 Name="file_player1">
                                             <ComplexData>
                                               <AudioFiles>
-                                                <AudioFile Index="3" MinValue="0" MaxValue="4096"/>
+                                                <AudioFile Index="3" MinValue="0" MaxValue="2099200"/>
                                               </AudioFiles>
                                             </ComplexData>
                                             <Parameters>
@@ -6620,6 +6748,16 @@
                           <Parameter MinValue="0.0" MaxValue="3" StepSize="1.0" ID="Index" Automated="1"/>
                         </Parameters>
                       </Node>
+                      <Node ID="gain2" FactoryPath="core.gain" Bypassed="0" Name="gain2">
+                        <Parameters>
+                          <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
+                                     SkewFactor="5.422270774841309" ID="Gain" Automated="1"/>
+                          <Parameter MinValue="0.0" MaxValue="1000.0" StepSize="0.1000000014901161"
+                                     SkewFactor="0.3010300099849701" ID="Smoothing" Value="20.0"/>
+                          <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
+                                     SkewFactor="5.422270774841309" ID="ResetValue" Value="0.0"/>
+                        </Parameters>
+                      </Node>
                     </Nodes>
                     <Parameters/>
                   </Node>
@@ -6678,13 +6816,14 @@
           <Connection NodeId="branch33" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="20.0" MaxValue="20000.0" ID="PosSmooth" Value="20.0"
+      <Parameter MinValue="20.0" MaxValue="20000.0" ID="PosSmooth" Value="3193.0"
                  DefaultValue="0.0" SkewFactor="0.2299045622348785">
         <Connections>
           <Connection NodeId="one_pole" ParameterId="Frequency"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="-24.0" MaxValue="24.0" ID="FilePitch" Value="0.0">
+      <Parameter MinValue="-24.0" MaxValue="24.0" ID="FilePitch" Value="-24.0"
+                 DefaultValue="0.0">
         <Connections>
           <Connection NodeId="pma20" ParameterId="Add"/>
         </Connections>
@@ -6700,7 +6839,7 @@
           <Connection NodeId="pma20" ParameterId="Multiply"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="50.0" MaxValue="10000.0" ID="PitchWin" Value="6324.0"
+      <Parameter MinValue="50.0" MaxValue="10000.0" ID="PitchWin" Value="93.04000091552734"
                  DefaultValue="0.0">
         <Connections>
           <Connection NodeId="pma_unscaled" ParameterId="Add"/>
@@ -6742,7 +6881,7 @@
           <Connection NodeId="branch60" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="1.0" MaxValue="4.0" ID="FileMidPk" Value="4.0" DefaultValue="0.0">
+      <Parameter MinValue="1.0" MaxValue="4.0" ID="FileMidPk" Value="2.0" DefaultValue="0.0">
         <Connections>
           <Connection NodeId="branch51" ParameterId="Index"/>
         </Connections>
@@ -6758,8 +6897,7 @@
           <Connection NodeId="pma19" ParameterId="Add"/>
         </Connections>
       </Parameter>
-      <Parameter ID="FileXrossFadeMod" MinValue="-1.0" MaxValue="1.0" Value="0.0"
-                 DefaultValue="1.0">
+      <Parameter ID="FileXrossFadeMod" MinValue="-1.0" MaxValue="1.0" Value="1.0">
         <Connections>
           <Connection NodeId="pma19" ParameterId="Multiply"/>
         </Connections>
@@ -6791,8 +6929,7 @@
           <Connection NodeId="branch16" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="feed" Value="0.4399999976158142"
-                 DefaultValue="0.0">
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="feed" Value="0.0">
         <Connections>
           <Connection NodeId="receive2" ParameterId="Feedback"/>
           <Connection NodeId="receive3" ParameterId="Feedback"/>
@@ -6812,7 +6949,8 @@
           <Connection NodeId="pma33" ParameterId="Multiply"/>
         </Connections>
       </Parameter>
-      <Parameter ID="PosA" MinValue="0.0" MaxValue="1.0" Value="1.0">
+      <Parameter ID="PosA" MinValue="0.0" MaxValue="1.0" Value="0.4300000071525574"
+                 DefaultValue="1.0">
         <Connections>
           <Connection NodeId="pma33" ParameterId="Add"/>
         </Connections>
@@ -6822,13 +6960,12 @@
           <Connection NodeId="pma32" ParameterId="Add"/>
         </Connections>
       </Parameter>
-      <Parameter ID="PosBmod" MinValue="-1.0" MaxValue="1.0" Value="0.009999999776482582"
-                 DefaultValue="1.0">
+      <Parameter ID="PosBmod" MinValue="-1.0" MaxValue="1.0" Value="0.0" DefaultValue="1.0">
         <Connections>
           <Connection NodeId="pma32" ParameterId="Multiply"/>
         </Connections>
       </Parameter>
-      <Parameter ID="PosC" MinValue="0.0" MaxValue="1.0" Value="0.25" DefaultValue="1.0">
+      <Parameter ID="PosC" MinValue="0.0" MaxValue="1.0" Value="0.0" DefaultValue="1.0">
         <Connections>
           <Connection NodeId="pma31" ParameterId="Add"/>
         </Connections>
@@ -6838,12 +6975,12 @@
           <Connection NodeId="pma31" ParameterId="Multiply"/>
         </Connections>
       </Parameter>
-      <Parameter ID="PosD" MinValue="0.0" MaxValue="1.0" Value="0.25" DefaultValue="1.0">
+      <Parameter ID="PosD" MinValue="0.0" MaxValue="1.0" Value="0.0" DefaultValue="1.0">
         <Connections>
           <Connection NodeId="pma34" ParameterId="Add"/>
         </Connections>
       </Parameter>
-      <Parameter ID="PosDMod" MinValue="-1.0" MaxValue="1.0" Value="0.0" DefaultValue="1.0">
+      <Parameter ID="PosDMod" MinValue="-1.0" MaxValue="1.0" Value="1.0">
         <Connections>
           <Connection NodeId="pma34" ParameterId="Multiply"/>
         </Connections>
@@ -6856,13 +6993,13 @@
         <Connections/>
       </Parameter>
       <Parameter ID="RampTempo1" MinValue="0.0" MaxValue="18.0" StepSize="1.0"
-                 Value="0.0" DefaultValue="1.0">
+                 Value="1.0">
         <Connections>
           <Connection NodeId="tempo_sync6" ParameterId="Tempo"/>
         </Connections>
       </Parameter>
       <Parameter ID="RampTempo2" MinValue="0.0" MaxValue="18.0" StepSize="1.0"
-                 Value="0.0" DefaultValue="1.0">
+                 Value="1.0">
         <Connections>
           <Connection NodeId="tempo_sync9" ParameterId="Tempo"/>
         </Connections>
@@ -6872,8 +7009,7 @@
           <Connection NodeId="tempo_sync6" ParameterId="Multiplier"/>
         </Connections>
       </Parameter>
-      <Parameter ID="RampDiv2" MinValue="1.0" MaxValue="32.0" StepSize="1.0" Value="4.0"
-                 DefaultValue="1.0">
+      <Parameter ID="RampDiv2" MinValue="1.0" MaxValue="32.0" StepSize="1.0" Value="1.0">
         <Connections>
           <Connection NodeId="tempo_sync9" ParameterId="Multiplier"/>
         </Connections>
@@ -6902,13 +7038,13 @@
           <Connection NodeId="tempo_sync7" ParameterId="Tempo"/>
         </Connections>
       </Parameter>
-      <Parameter ID="RampDiv3" MinValue="1.0" MaxValue="32.0" StepSize="1.0" Value="10.0"
-                 DefaultValue="1.0">
+      <Parameter ID="RampDiv3" MinValue="1.0" MaxValue="32.0" StepSize="1.0" Value="1.0">
         <Connections>
           <Connection NodeId="tempo_sync8" ParameterId="Multiplier"/>
         </Connections>
       </Parameter>
-      <Parameter ID="RampDiv4" MinValue="1.0" MaxValue="32.0" StepSize="1.0" Value="1.0">
+      <Parameter ID="RampDiv4" MinValue="1.0" MaxValue="32.0" StepSize="1.0" Value="32.0"
+                 DefaultValue="1.0">
         <Connections>
           <Connection NodeId="tempo_sync7" ParameterId="Multiplier"/>
         </Connections>
@@ -6951,7 +7087,7 @@
           <Connection NodeId="branch61" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="Input" Value="0.7047384510869565"
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="Input" Value="0.7699999809265137"
                  DefaultValue="0.0">
         <Connections>
           <Connection NodeId="pma" ParameterId="Add"/>
@@ -6960,6 +7096,31 @@
       <Parameter MinValue="-1.0" MaxValue="1.0" ID="InputMod" Value="0.0">
         <Connections>
           <Connection NodeId="pma" ParameterId="Multiply"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="Mix" Value="1.0" DefaultValue="0.0">
+        <Connections>
+          <Connection NodeId="xfader" ParameterId="Value"/>
+        </Connections>
+      </Parameter>
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="Trk1" Value="0.0">
+        <Connections>
+          <Connection NodeId="branch" ParameterId="Index"/>
+        </Connections>
+      </Parameter>
+      <Parameter ID="trk2" MinValue="0.0" MaxValue="1.0" Value="0.0" DefaultValue="1.0">
+        <Connections>
+          <Connection NodeId="branch1" ParameterId="Index"/>
+        </Connections>
+      </Parameter>
+      <Parameter ID="trk3" MinValue="0.0" MaxValue="1.0" Value="0.0" DefaultValue="1.0">
+        <Connections>
+          <Connection NodeId="branch3" ParameterId="Index"/>
+        </Connections>
+      </Parameter>
+      <Parameter ID="trk4" MinValue="0.0" MaxValue="1.0" Value="0.0" DefaultValue="1.0">
+        <Connections>
+          <Connection NodeId="branch2" ParameterId="Index"/>
         </Connections>
       </Parameter>
     </Parameters>
