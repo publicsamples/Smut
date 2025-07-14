@@ -552,6 +552,7 @@
                           <Connection NodeId="expr2" ParameterId="Value"/>
                           <Connection NodeId="smoother1" ParameterId="SmoothingTime"/>
                           <Connection NodeId="gain" ParameterId="Gain"/>
+                          <Connection NodeId="fix_delay" ParameterId="DelayTime"/>
                         </ModulationTargets>
                         <Parameters>
                           <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Automated="1"/>
@@ -1260,6 +1261,28 @@
                                   <Parameter MinValue="0.0" MaxValue="1.0" ID="Gain" Value="1.0"/>
                                 </Parameters>
                               </Node>
+                              <Node ID="branch6" FactoryPath="container.branch" Bypassed="0" Name="branch6"
+                                    ShowParameters="1">
+                                <Nodes>
+                                  <Node ID="sampleandhold" FactoryPath="fx.sampleandhold" Bypassed="0"
+                                        Name="sampleandhold">
+                                    <Parameters>
+                                      <Parameter MinValue="1.0" MaxValue="64.0" StepSize="1.0" ID="Counter" DefaultValue="1.0"
+                                                 Automated="1"/>
+                                    </Parameters>
+                                  </Node>
+                                  <Node ID="sampleandhold2" FactoryPath="fx.sampleandhold" Bypassed="0"
+                                        Name="sampleandhold">
+                                    <Parameters>
+                                      <Parameter MinValue="1.0" MaxValue="64.0" StepSize="1.0" ID="Counter" DefaultValue="1.0"
+                                                 Automated="1"/>
+                                    </Parameters>
+                                  </Node>
+                                </Nodes>
+                                <Parameters>
+                                  <Parameter MinValue="0.0" MaxValue="1" StepSize="1.0" ID="Index" Automated="1"/>
+                                </Parameters>
+                              </Node>
                               <Node ID="sig2mod1" FactoryPath="math.sig2mod" Bypassed="0" Name="sig2mod1">
                                 <Parameters>
                                   <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.0"/>
@@ -1416,27 +1439,26 @@
                           </Node>
                           <Node ID="chain22" FactoryPath="container.chain" Bypassed="0" Name="chain">
                             <Nodes>
-                              <Node ID="branch6" FactoryPath="container.branch" Bypassed="0" Name="branch6"
-                                    ShowParameters="1">
-                                <Nodes>
-                                  <Node ID="sampleandhold" FactoryPath="fx.sampleandhold" Bypassed="0"
-                                        Name="sampleandhold">
-                                    <Parameters>
-                                      <Parameter MinValue="1.0" MaxValue="64.0" StepSize="1.0" ID="Counter" DefaultValue="1.0"
-                                                 Automated="1"/>
-                                    </Parameters>
-                                  </Node>
-                                  <Node ID="sampleandhold2" FactoryPath="fx.sampleandhold" Bypassed="0"
-                                        Name="sampleandhold">
-                                    <Parameters>
-                                      <Parameter MinValue="1.0" MaxValue="64.0" StepSize="1.0" ID="Counter" DefaultValue="1.0"
-                                                 Automated="1"/>
-                                    </Parameters>
-                                  </Node>
-                                </Nodes>
+                              <Node ID="receive" FactoryPath="routing.receive" Bypassed="0" Name="receive">
                                 <Parameters>
-                                  <Parameter MinValue="0.0" MaxValue="1" StepSize="1.0" ID="Index" Automated="1"/>
+                                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Feedback" Value="0.75286328125"
+                                             DefaultValue="0.0"/>
                                 </Parameters>
+                              </Node>
+                              <Node ID="fix_delay" FactoryPath="core.fix_delay" Bypassed="0" Name="fix_delay">
+                                <Parameters>
+                                  <Parameter MinValue="0.0" MaxValue="1000.0" StepSize="0.1000000014901161"
+                                             SkewFactor="0.3010300099849701" ID="DelayTime" DefaultValue="100.0"
+                                             Automated="1"/>
+                                  <Parameter MinValue="0.0" MaxValue="1024.0" StepSize="1.0" ID="FadeTime"
+                                             Value="512.0"/>
+                                </Parameters>
+                              </Node>
+                              <Node ID="send" FactoryPath="routing.send" Bypassed="0" Name="send">
+                                <Properties>
+                                  <Property ID="Connection" Value="receive"/>
+                                </Properties>
+                                <Parameters/>
                               </Node>
                               <Node ID="gain" FactoryPath="core.gain" Bypassed="0" Name="gain">
                                 <Parameters>

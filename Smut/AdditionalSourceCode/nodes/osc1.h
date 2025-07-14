@@ -956,6 +956,11 @@ using branch12_t = container::branch<parameter::empty,
                                      chain154_t<NV>, 
                                      chain155_t<NV>>;
 
+template <int NV> using converter1_t = converter_t<NV>;
+template <int NV>
+using minmax3_t = control::minmax<NV, 
+                                  parameter::plain<converter1_t<NV>, 0>>;
+
 template <int NV> using converter6_mod = converter5_mod<NV>;
 
 template <int NV>
@@ -964,20 +969,15 @@ using converter6_t = control::converter<converter6_mod<NV>,
 template <int NV>
 using tempo_sync1_t = wrap::mod<parameter::plain<converter6_t<NV>, 0>, 
                                 control::tempo_sync<NV>>;
-
-template <int NV> using converter1_t = converter_t<NV>;
 template <int NV>
-using minmax3_t = control::minmax<NV, 
-                                  parameter::plain<converter1_t<NV>, 0>>;
-template <int NV>
-using peak1_mod_0 = parameter::from0To1<tempo_sync1_t<NV>, 
+using peak1_mod_1 = parameter::from0To1<tempo_sync1_t<NV>, 
                                         0, 
                                         peak_mod_1Range>;
 
 template <int NV>
 using peak1_mod = parameter::chain<ranges::Identity, 
-                                   peak1_mod_0<NV>, 
-                                   parameter::plain<minmax3_t<NV>, 0>>;
+                                   parameter::plain<minmax3_t<NV>, 0>, 
+                                   peak1_mod_1<NV>>;
 
 template <int NV>
 using peak1_t = wrap::mod<peak1_mod<NV>, 
@@ -2702,7 +2702,7 @@ DECLARE_PARAMETER_RANGE_SKEW(pma6_mod_5Range,
                              0.229905);
 
 template <int NV>
-using pma6_mod_5 = parameter::from0To1<wrap::no_process<fx::phase_delay<NV>>, 
+using pma6_mod_5 = parameter::from0To1<fx::phase_delay<NV>, 
                                        0, 
                                        pma6_mod_5Range>;
 
@@ -3171,7 +3171,10 @@ using pma7_mod_4 = parameter::from0To1<math::expr<NV, custom::expr11>,
                                        0, 
                                        pma6_mod_4Range>;
 
-template <int NV> using pma7_mod_5 = pma6_mod_5<NV>;
+template <int NV>
+using pma7_mod_5 = parameter::from0To1<wrap::no_process<fx::phase_delay<NV>>, 
+                                       0, 
+                                       pma6_mod_5Range>;
 
 template <int NV> using pma7_mod_7 = pma6_mod_1<NV>;
 
@@ -3597,7 +3600,14 @@ using split28_t = container::split<parameter::empty,
                                    chain386_t<NV>, 
                                    chain385_t<NV>>;
 
-template <int NV> using pma18_mod = pma2_mod<NV>;
+DECLARE_PARAMETER_RANGE(pma18_modRange, 
+                        -1., 
+                        1.);
+
+template <int NV>
+using pma18_mod = parameter::from0To1<jdsp::jpanner<NV>, 
+                                      0, 
+                                      pma18_modRange>;
 
 template <int NV>
 using pma18_t = control::pma<NV, pma18_mod<NV>>;
@@ -5315,18 +5325,10 @@ using split35_t = container::split<parameter::empty,
                                    chain433_t<NV>, 
                                    chain425_t<NV>>;
 
-template <int NV> using xfader_c0 = sliderbank3_c0_0<NV>;
-
-template <int NV> using xfader_c1 = sliderbank3_c0_0<NV>;
+template <int NV> using pma22_mod = pma4_mod<NV>;
 
 template <int NV>
-using xfader_multimod = parameter::list<xfader_c0<NV>, xfader_c1<NV>>;
-
-template <int NV>
-using xfader_t = control::xfader<xfader_multimod<NV>, faders::linear>;
-template <int NV>
-using pma22_t = control::pma<NV, 
-                             parameter::plain<xfader_t<NV>, 0>>;
+using pma22_t = control::pma<NV, pma22_mod<NV>>;
 template <int NV>
 using peak38_t = wrap::mod<parameter::plain<pma22_t<NV>, 0>, 
                            wrap::no_data<core::peak>>;
@@ -5737,114 +5739,15 @@ using split36_t = container::split<parameter::empty,
                                    chain441_t<NV>, 
                                    chain440_t<NV>>;
 
-DECLARE_PARAMETER_RANGE_STEP(cable_table3_modRange, 
+DECLARE_PARAMETER_RANGE_STEP(cable_table_modRange, 
                              0., 
-                             100., 
+                             1, 
                              0.01);
 
 template <int NV>
-using cable_table3_mod = parameter::from0To1<project::Comb<NV>, 
-                                             1, 
-                                             cable_table3_modRange>;
-
-struct cable_table3_t_data
-{
-	span<float, 512> data =
-	{
-		1.f, 0.998043f, 0.996086f, 0.994129f, 0.992172f, 0.990215f,
-		0.988258f, 0.986301f, 0.984344f, 0.982387f, 0.980431f, 0.978474f,
-		0.976517f, 0.97456f, 0.972603f, 0.970646f, 0.968689f, 0.966732f,
-		0.964775f, 0.962818f, 0.960861f, 0.958904f, 0.956947f, 0.95499f,
-		0.953033f, 0.951076f, 0.949119f, 0.947162f, 0.945205f, 0.943249f,
-		0.941292f, 0.939335f, 0.937378f, 0.935421f, 0.933464f, 0.931507f,
-		0.92955f, 0.927593f, 0.925636f, 0.923679f, 0.921722f, 0.919765f,
-		0.917808f, 0.915851f, 0.913894f, 0.911937f, 0.90998f, 0.908023f,
-		0.906067f, 0.90411f, 0.902153f, 0.900196f, 0.898239f, 0.896282f,
-		0.894325f, 0.892368f, 0.890411f, 0.888454f, 0.886497f, 0.88454f,
-		0.882583f, 0.880626f, 0.878669f, 0.876712f, 0.874755f, 0.872798f,
-		0.870842f, 0.868885f, 0.866928f, 0.864971f, 0.863014f, 0.861057f,
-		0.8591f, 0.857143f, 0.855186f, 0.853229f, 0.851272f, 0.849315f,
-		0.847358f, 0.845401f, 0.843444f, 0.841487f, 0.83953f, 0.837573f,
-		0.835616f, 0.833659f, 0.831703f, 0.829746f, 0.827789f, 0.825832f,
-		0.823875f, 0.821918f, 0.819961f, 0.818004f, 0.816047f, 0.81409f,
-		0.812133f, 0.810176f, 0.808219f, 0.806262f, 0.804305f, 0.802348f,
-		0.800391f, 0.798434f, 0.796477f, 0.794521f, 0.792564f, 0.790607f,
-		0.78865f, 0.786693f, 0.784736f, 0.782779f, 0.780822f, 0.778865f,
-		0.776908f, 0.774951f, 0.772994f, 0.771037f, 0.76908f, 0.767123f,
-		0.765166f, 0.763209f, 0.761252f, 0.759295f, 0.757339f, 0.755382f,
-		0.753425f, 0.751468f, 0.749511f, 0.747554f, 0.745597f, 0.74364f,
-		0.741683f, 0.739726f, 0.737769f, 0.735812f, 0.733855f, 0.731898f,
-		0.729941f, 0.727984f, 0.726027f, 0.72407f, 0.722113f, 0.720157f,
-		0.7182f, 0.716243f, 0.714286f, 0.712329f, 0.710372f, 0.708415f,
-		0.706458f, 0.704501f, 0.702544f, 0.700587f, 0.69863f, 0.696673f,
-		0.694716f, 0.692759f, 0.690802f, 0.688845f, 0.686888f, 0.684932f,
-		0.682975f, 0.681018f, 0.679061f, 0.677104f, 0.675147f, 0.67319f,
-		0.671233f, 0.669276f, 0.667319f, 0.665362f, 0.663405f, 0.661448f,
-		0.659491f, 0.657534f, 0.655577f, 0.65362f, 0.651663f, 0.649706f,
-		0.64775f, 0.645793f, 0.643836f, 0.641879f, 0.639922f, 0.637965f,
-		0.636008f, 0.634051f, 0.632094f, 0.630137f, 0.62818f, 0.626223f,
-		0.624266f, 0.622309f, 0.620352f, 0.618395f, 0.616438f, 0.614481f,
-		0.612524f, 0.610568f, 0.608611f, 0.606654f, 0.604697f, 0.60274f,
-		0.600783f, 0.598826f, 0.596869f, 0.594912f, 0.592955f, 0.590998f,
-		0.589041f, 0.587084f, 0.585127f, 0.58317f, 0.581213f, 0.579256f,
-		0.577299f, 0.575342f, 0.573385f, 0.571429f, 0.569472f, 0.567515f,
-		0.565558f, 0.563601f, 0.561644f, 0.559687f, 0.55773f, 0.555773f,
-		0.553816f, 0.551859f, 0.549902f, 0.547945f, 0.545988f, 0.544031f,
-		0.542074f, 0.540117f, 0.53816f, 0.536204f, 0.534247f, 0.53229f,
-		0.530333f, 0.528376f, 0.526419f, 0.524462f, 0.522505f, 0.520548f,
-		0.518591f, 0.516634f, 0.514677f, 0.51272f, 0.510763f, 0.508806f,
-		0.506849f, 0.504892f, 0.502935f, 0.500978f, 0.499022f, 0.497065f,
-		0.495108f, 0.493151f, 0.491194f, 0.489237f, 0.48728f, 0.485323f,
-		0.483366f, 0.481409f, 0.479452f, 0.477495f, 0.475538f, 0.473581f,
-		0.471624f, 0.469667f, 0.46771f, 0.465753f, 0.463796f, 0.46184f,
-		0.459883f, 0.457926f, 0.455969f, 0.454012f, 0.452055f, 0.450098f,
-		0.448141f, 0.446184f, 0.444227f, 0.44227f, 0.440313f, 0.438356f,
-		0.436399f, 0.434442f, 0.432485f, 0.430528f, 0.428571f, 0.426614f,
-		0.424658f, 0.422701f, 0.420744f, 0.418787f, 0.41683f, 0.414873f,
-		0.412916f, 0.410959f, 0.409002f, 0.407045f, 0.405088f, 0.403131f,
-		0.401174f, 0.399217f, 0.39726f, 0.395303f, 0.393346f, 0.391389f,
-		0.389432f, 0.387476f, 0.385519f, 0.383562f, 0.381605f, 0.379648f,
-		0.377691f, 0.375734f, 0.373777f, 0.37182f, 0.369863f, 0.367906f,
-		0.365949f, 0.363992f, 0.362035f, 0.360078f, 0.358121f, 0.356164f,
-		0.354207f, 0.352251f, 0.350294f, 0.348337f, 0.34638f, 0.344423f,
-		0.342466f, 0.340509f, 0.338552f, 0.336595f, 0.334638f, 0.332681f,
-		0.330724f, 0.328767f, 0.32681f, 0.324853f, 0.322896f, 0.320939f,
-		0.318982f, 0.317025f, 0.315068f, 0.313112f, 0.311155f, 0.309198f,
-		0.307241f, 0.305284f, 0.303327f, 0.30137f, 0.299413f, 0.297456f,
-		0.295499f, 0.293542f, 0.291585f, 0.289628f, 0.287671f, 0.285714f,
-		0.283757f, 0.2818f, 0.279843f, 0.277887f, 0.27593f, 0.273973f,
-		0.272016f, 0.270059f, 0.268102f, 0.266145f, 0.264188f, 0.262231f,
-		0.260274f, 0.258317f, 0.25636f, 0.254403f, 0.252446f, 0.250489f,
-		0.248532f, 0.246575f, 0.244618f, 0.242661f, 0.240704f, 0.238748f,
-		0.236791f, 0.234834f, 0.232877f, 0.23092f, 0.228963f, 0.227006f,
-		0.225049f, 0.223092f, 0.221135f, 0.219178f, 0.217221f, 0.215264f,
-		0.213307f, 0.21135f, 0.209393f, 0.207436f, 0.205479f, 0.203523f,
-		0.201566f, 0.199609f, 0.197652f, 0.195695f, 0.193738f, 0.191781f,
-		0.189824f, 0.187867f, 0.18591f, 0.183953f, 0.181996f, 0.180039f,
-		0.178082f, 0.176125f, 0.174168f, 0.172211f, 0.170254f, 0.168297f,
-		0.166341f, 0.164384f, 0.162427f, 0.16047f, 0.158513f, 0.156556f,
-		0.154599f, 0.152642f, 0.150685f, 0.148728f, 0.146771f, 0.144814f,
-		0.142857f, 0.1409f, 0.138943f, 0.136986f, 0.135029f, 0.133072f,
-		0.131115f, 0.129158f, 0.127202f, 0.125245f, 0.123288f, 0.121331f,
-		0.119374f, 0.117417f, 0.11546f, 0.113503f, 0.111546f, 0.109589f,
-		0.107632f, 0.105675f, 0.103718f, 0.101761f, 0.0998043f, 0.0978474f,
-		0.0958903f, 0.0939335f, 0.0919765f, 0.0900196f, 0.0880627f, 0.0861056f,
-		0.0841488f, 0.0821917f, 0.0802348f, 0.0782779f, 0.0763209f, 0.0743641f,
-		0.072407f, 0.0704501f, 0.0684931f, 0.0665362f, 0.0645792f, 0.0626223f,
-		0.0606654f, 0.0587084f, 0.0567515f, 0.0547945f, 0.0528376f, 0.0508806f,
-		0.0489237f, 0.0469668f, 0.0450097f, 0.0430529f, 0.0410959f, 0.039139f,
-		0.037182f, 0.035225f, 0.0332682f, 0.0313111f, 0.0293542f, 0.0273973f,
-		0.0254403f, 0.0234835f, 0.0215264f, 0.0195695f, 0.0176125f, 0.0156556f,
-		0.0136986f, 0.0117417f, 0.00978482f, 0.00782776f, 0.00587088f, 0.00391382f,
-		0.00195694f, 0.f
-	};
-};
-
-template <int NV>
-using cable_table3_t = wrap::data<control::cable_table<cable_table3_mod<NV>>, 
-                                  data::embedded::table<cable_table3_t_data>>;
-
-template <int NV> using cable_table_mod = cable_table3_mod<NV>;
+using cable_table_mod = parameter::from0To1<project::Comb<NV>, 
+                                            1, 
+                                            cable_table_modRange>;
 
 struct cable_table_t_data
 {
@@ -5942,16 +5845,28 @@ struct cable_table_t_data
 template <int NV>
 using cable_table_t = wrap::data<control::cable_table<cable_table_mod<NV>>, 
                                  data::embedded::table<cable_table_t_data>>;
+DECLARE_PARAMETER_RANGE_SKEW(pma23_mod_3Range, 
+                             20., 
+                             20000., 
+                             0.229905);
+
+template <int NV>
+using pma23_mod_3 = parameter::from0To1<filters::allpass<NV>, 
+                                        0, 
+                                        pma23_mod_3Range>;
+
+template <int NV>
+using pma23_mod_4 = parameter::from0To1<filters::svf<NV>, 
+                                        0, 
+                                        pma23_mod_3Range>;
 
 template <int NV>
 using pma23_mod = parameter::chain<ranges::Identity, 
                                    parameter::plain<project::klp<NV>, 1>, 
-                                   parameter::plain<cable_table3_t<NV>, 0>, 
-                                   parameter::plain<project::klp<NV>, 1>, 
-                                   parameter::plain<project::klp<NV>, 1>, 
                                    parameter::plain<cable_table_t<NV>, 0>, 
-                                   parameter::plain<project::klp<NV>, 1>, 
-                                   parameter::plain<project::khp<NV>, 1>>;
+                                   parameter::plain<project::khp2<NV>, 1>, 
+                                   pma23_mod_3<NV>, 
+                                   pma23_mod_4<NV>>;
 
 template <int NV>
 using pma23_t = control::pma<NV, pma23_mod<NV>>;
@@ -5960,10 +5875,15 @@ using peak39_t = wrap::mod<parameter::plain<pma23_t<NV>, 0>,
                            wrap::no_data<core::peak>>;
 
 template <int NV>
+using smoothed_parameter_t = wrap::mod<parameter::plain<pma23_t<NV>, 2>, 
+                                       control::smoothed_parameter<NV, smoothers::linear_ramp<NV>>>;
+
+template <int NV>
 using modchain20_t_ = container::chain<parameter::empty, 
                                        wrap::fix<1, sliderbank19_t<NV>>, 
                                        split36_t<NV>, 
                                        peak39_t<NV>, 
+                                       smoothed_parameter_t<NV>, 
                                        pma23_t<NV>>;
 
 template <int NV>
@@ -6365,9 +6285,17 @@ using split37_t = container::split<parameter::empty,
                                    chain449_t<NV>, 
                                    chain448_t<NV>>;
 
-template <int NV> using cable_table4_mod = cable_table3_mod<NV>;
+DECLARE_PARAMETER_RANGE_STEP(cable_table16_modRange, 
+                             0., 
+                             1000., 
+                             0.01);
 
-struct cable_table4_t_data
+template <int NV>
+using cable_table16_mod = parameter::from0To1<project::Comb<NV>, 
+                                              1, 
+                                              cable_table16_modRange>;
+
+struct cable_table16_t_data
 {
 	span<float, 512> data =
 	{
@@ -6461,117 +6389,19 @@ struct cable_table4_t_data
 };
 
 template <int NV>
-using cable_table4_t = wrap::data<control::cable_table<cable_table4_mod<NV>>, 
-                                  data::embedded::table<cable_table4_t_data>>;
+using cable_table16_t = wrap::data<control::cable_table<cable_table16_mod<NV>>, 
+                                   data::embedded::table<cable_table16_t_data>>;
+template <int NV> using pma24_mod_3 = pma23_mod_4<NV>;
 
-template <int NV> using cable_table2_mod = cable_table3_mod<NV>;
-
-struct cable_table2_t_data
-{
-	span<float, 512> data =
-	{
-		1.f, 0.998043f, 0.996086f, 0.994129f, 0.992172f, 0.990215f,
-		0.988258f, 0.986301f, 0.984344f, 0.982387f, 0.980431f, 0.978474f,
-		0.976517f, 0.97456f, 0.972603f, 0.970646f, 0.968689f, 0.966732f,
-		0.964775f, 0.962818f, 0.960861f, 0.958904f, 0.956947f, 0.95499f,
-		0.953033f, 0.951076f, 0.949119f, 0.947162f, 0.945205f, 0.943249f,
-		0.941292f, 0.939335f, 0.937378f, 0.935421f, 0.933464f, 0.931507f,
-		0.92955f, 0.927593f, 0.925636f, 0.923679f, 0.921722f, 0.919765f,
-		0.917808f, 0.915851f, 0.913894f, 0.911937f, 0.90998f, 0.908023f,
-		0.906067f, 0.90411f, 0.902153f, 0.900196f, 0.898239f, 0.896282f,
-		0.894325f, 0.892368f, 0.890411f, 0.888454f, 0.886497f, 0.88454f,
-		0.882583f, 0.880626f, 0.878669f, 0.876712f, 0.874755f, 0.872798f,
-		0.870842f, 0.868885f, 0.866928f, 0.864971f, 0.863014f, 0.861057f,
-		0.8591f, 0.857143f, 0.855186f, 0.853229f, 0.851272f, 0.849315f,
-		0.847358f, 0.845401f, 0.843444f, 0.841487f, 0.83953f, 0.837573f,
-		0.835616f, 0.833659f, 0.831703f, 0.829746f, 0.827789f, 0.825832f,
-		0.823875f, 0.821918f, 0.819961f, 0.818004f, 0.816047f, 0.81409f,
-		0.812133f, 0.810176f, 0.808219f, 0.806262f, 0.804305f, 0.802348f,
-		0.800391f, 0.798434f, 0.796477f, 0.794521f, 0.792564f, 0.790607f,
-		0.78865f, 0.786693f, 0.784736f, 0.782779f, 0.780822f, 0.778865f,
-		0.776908f, 0.774951f, 0.772994f, 0.771037f, 0.76908f, 0.767123f,
-		0.765166f, 0.763209f, 0.761252f, 0.759295f, 0.757339f, 0.755382f,
-		0.753425f, 0.751468f, 0.749511f, 0.747554f, 0.745597f, 0.74364f,
-		0.741683f, 0.739726f, 0.737769f, 0.735812f, 0.733855f, 0.731898f,
-		0.729941f, 0.727984f, 0.726027f, 0.72407f, 0.722113f, 0.720157f,
-		0.7182f, 0.716243f, 0.714286f, 0.712329f, 0.710372f, 0.708415f,
-		0.706458f, 0.704501f, 0.702544f, 0.700587f, 0.69863f, 0.696673f,
-		0.694716f, 0.692759f, 0.690802f, 0.688845f, 0.686888f, 0.684932f,
-		0.682975f, 0.681018f, 0.679061f, 0.677104f, 0.675147f, 0.67319f,
-		0.671233f, 0.669276f, 0.667319f, 0.665362f, 0.663405f, 0.661448f,
-		0.659491f, 0.657534f, 0.655577f, 0.65362f, 0.651663f, 0.649706f,
-		0.64775f, 0.645793f, 0.643836f, 0.641879f, 0.639922f, 0.637965f,
-		0.636008f, 0.634051f, 0.632094f, 0.630137f, 0.62818f, 0.626223f,
-		0.624266f, 0.622309f, 0.620352f, 0.618395f, 0.616438f, 0.614481f,
-		0.612524f, 0.610568f, 0.608611f, 0.606654f, 0.604697f, 0.60274f,
-		0.600783f, 0.598826f, 0.596869f, 0.594912f, 0.592955f, 0.590998f,
-		0.589041f, 0.587084f, 0.585127f, 0.58317f, 0.581213f, 0.579256f,
-		0.577299f, 0.575342f, 0.573385f, 0.571429f, 0.569472f, 0.567515f,
-		0.565558f, 0.563601f, 0.561644f, 0.559687f, 0.55773f, 0.555773f,
-		0.553816f, 0.551859f, 0.549902f, 0.547945f, 0.545988f, 0.544031f,
-		0.542074f, 0.540117f, 0.53816f, 0.536204f, 0.534247f, 0.53229f,
-		0.530333f, 0.528376f, 0.526419f, 0.524462f, 0.522505f, 0.520548f,
-		0.518591f, 0.516634f, 0.514677f, 0.51272f, 0.510763f, 0.508806f,
-		0.506849f, 0.504892f, 0.502935f, 0.500978f, 0.499022f, 0.497065f,
-		0.495108f, 0.493151f, 0.491194f, 0.489237f, 0.48728f, 0.485323f,
-		0.483366f, 0.481409f, 0.479452f, 0.477495f, 0.475538f, 0.473581f,
-		0.471624f, 0.469667f, 0.46771f, 0.465753f, 0.463796f, 0.46184f,
-		0.459883f, 0.457926f, 0.455969f, 0.454012f, 0.452055f, 0.450098f,
-		0.448141f, 0.446184f, 0.444227f, 0.44227f, 0.440313f, 0.438356f,
-		0.436399f, 0.434442f, 0.432485f, 0.430528f, 0.428571f, 0.426614f,
-		0.424658f, 0.422701f, 0.420744f, 0.418787f, 0.41683f, 0.414873f,
-		0.412916f, 0.410959f, 0.409002f, 0.407045f, 0.405088f, 0.403131f,
-		0.401174f, 0.399217f, 0.39726f, 0.395303f, 0.393346f, 0.391389f,
-		0.389432f, 0.387476f, 0.385519f, 0.383562f, 0.381605f, 0.379648f,
-		0.377691f, 0.375734f, 0.373777f, 0.37182f, 0.369863f, 0.367906f,
-		0.365949f, 0.363992f, 0.362035f, 0.360078f, 0.358121f, 0.356164f,
-		0.354207f, 0.352251f, 0.350294f, 0.348337f, 0.34638f, 0.344423f,
-		0.342466f, 0.340509f, 0.338552f, 0.336595f, 0.334638f, 0.332681f,
-		0.330724f, 0.328767f, 0.32681f, 0.324853f, 0.322896f, 0.320939f,
-		0.318982f, 0.317025f, 0.315068f, 0.313112f, 0.311155f, 0.309198f,
-		0.307241f, 0.305284f, 0.303327f, 0.30137f, 0.299413f, 0.297456f,
-		0.295499f, 0.293542f, 0.291585f, 0.289628f, 0.287671f, 0.285714f,
-		0.283757f, 0.2818f, 0.279843f, 0.277887f, 0.27593f, 0.273973f,
-		0.272016f, 0.270059f, 0.268102f, 0.266145f, 0.264188f, 0.262231f,
-		0.260274f, 0.258317f, 0.25636f, 0.254403f, 0.252446f, 0.250489f,
-		0.248532f, 0.246575f, 0.244618f, 0.242661f, 0.240704f, 0.238748f,
-		0.236791f, 0.234834f, 0.232877f, 0.23092f, 0.228963f, 0.227006f,
-		0.225049f, 0.223092f, 0.221135f, 0.219178f, 0.217221f, 0.215264f,
-		0.213307f, 0.21135f, 0.209393f, 0.207436f, 0.205479f, 0.203523f,
-		0.201566f, 0.199609f, 0.197652f, 0.195695f, 0.193738f, 0.191781f,
-		0.189824f, 0.187867f, 0.18591f, 0.183953f, 0.181996f, 0.180039f,
-		0.178082f, 0.176125f, 0.174168f, 0.172211f, 0.170254f, 0.168297f,
-		0.166341f, 0.164384f, 0.162427f, 0.16047f, 0.158513f, 0.156556f,
-		0.154599f, 0.152642f, 0.150685f, 0.148728f, 0.146771f, 0.144814f,
-		0.142857f, 0.1409f, 0.138943f, 0.136986f, 0.135029f, 0.133072f,
-		0.131115f, 0.129158f, 0.127202f, 0.125245f, 0.123288f, 0.121331f,
-		0.119374f, 0.117417f, 0.11546f, 0.113503f, 0.111546f, 0.109589f,
-		0.107632f, 0.105675f, 0.103718f, 0.101761f, 0.0998043f, 0.0978474f,
-		0.0958903f, 0.0939335f, 0.0919765f, 0.0900196f, 0.0880627f, 0.0861056f,
-		0.0841488f, 0.0821917f, 0.0802348f, 0.0782779f, 0.0763209f, 0.0743641f,
-		0.072407f, 0.0704501f, 0.0684931f, 0.0665362f, 0.0645792f, 0.0626223f,
-		0.0606654f, 0.0587084f, 0.0567515f, 0.0547945f, 0.0528376f, 0.0508806f,
-		0.0489237f, 0.0469668f, 0.0450097f, 0.0430529f, 0.0410959f, 0.039139f,
-		0.037182f, 0.035225f, 0.0332682f, 0.0313111f, 0.0293542f, 0.0273973f,
-		0.0254403f, 0.0234835f, 0.0215264f, 0.0195695f, 0.0176125f, 0.0156556f,
-		0.0136986f, 0.0117417f, 0.00978482f, 0.00782776f, 0.00587088f, 0.00391382f,
-		0.00195694f, 0.f
-	};
-};
-
-template <int NV>
-using cable_table2_t = wrap::data<control::cable_table<cable_table2_mod<NV>>, 
-                                  data::embedded::table<cable_table2_t_data>>;
+template <int NV> using pma24_mod_4 = pma23_mod_3<NV>;
 
 template <int NV>
 using pma24_mod = parameter::chain<ranges::Identity, 
-                                   parameter::plain<cable_table4_t<NV>, 0>, 
-                                   parameter::plain<project::khp<NV>, 1>, 
-                                   parameter::plain<project::klp<NV>, 1>, 
-                                   parameter::plain<cable_table2_t<NV>, 0>, 
                                    parameter::plain<project::klp<NV>, 1>, 
                                    parameter::plain<project::khp2<NV>, 1>, 
-                                   parameter::plain<project::khp2<NV>, 1>>;
+                                   parameter::plain<cable_table16_t<NV>, 0>, 
+                                   pma24_mod_3<NV>, 
+                                   pma24_mod_4<NV>>;
 
 template <int NV>
 using pma24_t = control::pma<NV, pma24_mod<NV>>;
@@ -6580,10 +6410,15 @@ using peak40_t = wrap::mod<parameter::plain<pma24_t<NV>, 0>,
                            wrap::no_data<core::peak>>;
 
 template <int NV>
+using smoothed_parameter1_t = wrap::mod<parameter::plain<pma24_t<NV>, 2>, 
+                                        control::smoothed_parameter<NV, smoothers::linear_ramp<NV>>>;
+
+template <int NV>
 using modchain21_t_ = container::chain<parameter::empty, 
                                        wrap::fix<1, sliderbank20_t<NV>>, 
                                        split37_t<NV>, 
                                        peak40_t<NV>, 
+                                       smoothed_parameter1_t<NV>, 
                                        pma24_t<NV>>;
 
 template <int NV>
@@ -7392,14 +7227,7 @@ using split39_t = container::split<parameter::empty,
                                    chain502_t<NV>, 
                                    chain501_t<NV>>;
 
-DECLARE_PARAMETER_RANGE(pma26_modRange, 
-                        -1., 
-                        1.);
-
-template <int NV>
-using pma26_mod = parameter::from0To1<jdsp::jpanner<NV>, 
-                                      0, 
-                                      pma26_modRange>;
+template <int NV> using pma26_mod = pma18_mod<NV>;
 
 template <int NV>
 using pma26_t = control::pma<NV, pma26_mod<NV>>;
@@ -7618,11 +7446,64 @@ using modchain6_t_ = container::chain<parameter::empty,
 
 template <int NV>
 using modchain6_t = wrap::control_rate<modchain6_t_<NV>>;
-using stereo_cable = cable::block<2>;
-using branch38_t = container::branch<parameter::empty, 
-                                     wrap::fix<2, routing::receive<stereo_cable>>, 
-                                     routing::receive<stereo_cable>, 
-                                     routing::receive<stereo_cable>>;
+
+template <int NV>
+using stereo_cable = cable::block<NV, 2>;
+template <int NV> using sliderbank9_c0_0 = pma2_mod<NV>;
+
+template <int NV>
+using sliderbank9_c0 = parameter::chain<ranges::Identity, 
+                                        sliderbank9_c0_0<NV>, 
+                                        parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>>;
+
+template <int NV> using sliderbank9_c1_0 = pma2_mod<NV>;
+
+template <int NV>
+using sliderbank9_c1 = parameter::chain<ranges::Identity, 
+                                        sliderbank9_c1_0<NV>, 
+                                        parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>>;
+
+template <int NV> using sliderbank9_c2_0 = pma2_mod<NV>;
+
+template <int NV>
+using sliderbank9_c2 = parameter::chain<ranges::Identity, 
+                                        sliderbank9_c2_0<NV>, 
+                                        parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>>;
+
+template <int NV> using sliderbank9_c3_0 = pma2_mod<NV>;
+
+template <int NV>
+using sliderbank9_c3 = parameter::chain<ranges::Identity, 
+                                        sliderbank9_c3_0<NV>, 
+                                        parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>>;
+
+template <int NV>
+using sliderbank9_multimod = parameter::list<sliderbank9_c0<NV>, 
+                                             sliderbank9_c1<NV>, 
+                                             sliderbank9_c2<NV>, 
+                                             sliderbank9_c3<NV>>;
+
+template <int NV>
+using sliderbank9_t = wrap::data<control::sliderbank<sliderbank9_multimod<NV>>, 
+                                 data::external::sliderpack<23>>;
+
+template <int NV>
+using chain581_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, routing::receive<NV, stereo_cable<NV>>>, 
+                                    core::gain<NV>>;
+
+template <int NV> using chain582_t = chain581_t<NV>;
+
+template <int NV> using chain583_t = chain581_t<NV>;
+
+template <int NV> using chain584_t = chain581_t<NV>;
+
+template <int NV>
+using split52_t = container::split<parameter::empty, 
+                                   wrap::fix<2, chain581_t<NV>>, 
+                                   chain582_t<NV>, 
+                                   chain583_t<NV>, 
+                                   chain584_t<NV>>;
 using peak8_t = peak37_t;
 
 template <int NV>
@@ -7662,6 +7543,27 @@ using branch1_t = container::branch<parameter::empty,
                                     wrap::fix<2, chain1_t<NV>>, 
                                     chain2_t<NV>, 
                                     no_midi_t<NV>>;
+
+template <int NV>
+using chain580_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, sliderbank9_t<NV>>, 
+                                    split52_t<NV>, 
+                                    core::gain<NV>, 
+                                    peak8_t, 
+                                    modchain_t<NV>, 
+                                    branch1_t<NV>>;
+
+template <int NV>
+using chain59_t = container::chain<parameter::empty, 
+                                   wrap::fix<2, math::clear<NV>>, 
+                                   chain580_t<NV>>;
+
+using chain399_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, core::empty>>;
+template <int NV>
+using branch8_t = container::branch<parameter::empty, 
+                                    wrap::fix<2, chain59_t<NV>>, 
+                                    chain399_t>;
 
 template <int NV>
 using chain74_t = container::chain<parameter::empty, 
@@ -7720,6 +7622,18 @@ using chain79_t = container::chain<parameter::empty,
 namespace custom
 {
 
+struct expr5
+{
+	static float op(float input, float value)
+	{
+		return (1.0f - value) * input + value * Math.sin(Math.PI * 2.0 * value * input);;
+	}
+};
+}
+
+namespace custom
+{
+
 struct expr7
 {
 	static float op(float input, float value)
@@ -7731,11 +7645,24 @@ struct expr7
 
 template <int NV>
 using chain80_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, math::pi<NV>>, 
+                                   wrap::fix<2, math::expr<NV, custom::expr5>>, 
+                                   math::pi<NV>, 
                                    wrap::no_process<math::sin<NV>>, 
                                    core::gain<NV>, 
                                    math::sin<NV>, 
                                    math::expr<NV, custom::expr7>>;
+namespace custom
+{
+
+struct expr9
+{
+	static float op(float input, float value)
+	{
+		return (1.0f - value) * input + value * Math.sin(Math.PI * 2.0 * value * input);;
+	}
+};
+}
+
 namespace custom
 {
 
@@ -7750,11 +7677,12 @@ struct expr8
 
 template <int NV>
 using chain81_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, wrap::no_process<math::pi<NV>>>, 
-                                   wrap::no_process<fx::phase_delay<NV>>, 
+                                   wrap::fix<2, math::pi<NV>>, 
+                                   math::sin<NV>, 
                                    core::gain<NV>, 
+                                   math::expr<NV, custom::expr9>, 
                                    math::expr<NV, custom::expr8>, 
-                                   math::sin<NV>>;
+                                   fx::phase_delay<NV>>;
 using table5_t = wrap::data<math::table, 
                             data::external::table<0>>;
 
@@ -7775,18 +7703,48 @@ using branch2_t = container::branch<parameter::empty,
 
 template <int NV>
 using chain77_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, math::clear<NV>>, 
-                                   branch38_t, 
-                                   peak8_t, 
-                                   core::gain<NV>, 
-                                   modchain_t<NV>, 
-                                   branch1_t<NV>, 
+                                   wrap::fix<2, branch8_t<NV>>, 
                                    core::mono2stereo, 
                                    pma6_t<NV>, 
                                    branch2_t<NV>>;
 
-using chain197_t = container::chain<parameter::empty, 
-                                    wrap::fix<2, routing::send<stereo_cable>>>;
+using chain197_t = chain399_t;
+
+template <int NV>
+using converter2_t = control::converter<parameter::plain<fx::sampleandhold<NV>, 0>, 
+                                        conversion_logic::ms2samples>;
+template <int NV>
+using tempo_sync3_t = wrap::mod<parameter::plain<converter2_t<NV>, 0>, 
+                                control::tempo_sync<NV>>;
+
+template <int NV> using xfader63_c0 = sliderbank3_c0_0<NV>;
+
+template <int NV> using xfader63_c1 = sliderbank3_c0_0<NV>;
+
+template <int NV>
+using xfader63_multimod = parameter::list<xfader63_c0<NV>, xfader63_c1<NV>>;
+
+template <int NV>
+using xfader63_t = control::xfader<xfader63_multimod<NV>, faders::linear>;
+
+template <int NV>
+using chain61_t = container::chain<parameter::empty, 
+                                   wrap::fix<2, core::gain<NV>>>;
+
+template <int NV>
+using chain71_t = container::chain<parameter::empty, 
+                                   wrap::fix<2, fx::sampleandhold<NV>>, 
+                                   core::gain<NV>>;
+
+template <int NV>
+using split13_t = container::split<parameter::empty, 
+                                   wrap::fix<2, chain61_t<NV>>, 
+                                   chain71_t<NV>>;
+
+template <int NV>
+using xfade_2x_lin1_t = container::chain<parameter::empty, 
+                                         wrap::fix<2, xfader63_t<NV>>, 
+                                         split13_t<NV>>;
 
 template <int NV>
 using peak17_mod = parameter::chain<ranges::Identity, 
@@ -7814,7 +7772,12 @@ using peak17_t = wrap::mod<peak17_mod<NV>,
 
 template <int NV>
 using chain196_t = container::chain<parameter::empty, 
-                                    wrap::fix<2, peak17_t<NV>>>;
+                                    wrap::fix<2, core::smoother<NV>>, 
+                                    tempo_sync3_t<NV>, 
+                                    converter2_t<NV>, 
+                                    xfade_2x_lin1_t<NV>, 
+                                    peak17_t<NV>, 
+                                    math::clear<NV>>;
 
 template <int NV>
 using split32_t = container::split<parameter::empty, 
@@ -7831,9 +7794,67 @@ using chain19_t = container::chain<parameter::empty,
                                    core::gain<NV>, 
                                    filters::one_pole<NV>, 
                                    core::gain<NV>, 
+                                   routing::send<NV, stereo_cable<NV>>, 
                                    chain168_t<NV>, 
                                    math::clear<NV>>;
-using branch27_t = branch38_t;
+
+template <int NV> using sliderbank10_c0_0 = pma2_mod<NV>;
+
+template <int NV>
+using sliderbank10_c0 = parameter::chain<ranges::Identity, 
+                                         sliderbank10_c0_0<NV>, 
+                                         parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>>;
+
+template <int NV> using sliderbank10_c1_0 = pma2_mod<NV>;
+
+template <int NV>
+using sliderbank10_c1 = parameter::chain<ranges::Identity, 
+                                         sliderbank10_c1_0<NV>, 
+                                         parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>>;
+
+template <int NV> using sliderbank10_c2_0 = pma2_mod<NV>;
+
+template <int NV>
+using sliderbank10_c2 = parameter::chain<ranges::Identity, 
+                                         sliderbank10_c2_0<NV>, 
+                                         parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>>;
+
+template <int NV> using sliderbank10_c3_0 = pma2_mod<NV>;
+
+template <int NV>
+using sliderbank10_c3 = parameter::chain<ranges::Identity, 
+                                         sliderbank10_c3_0<NV>, 
+                                         parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>>;
+
+template <int NV>
+using sliderbank10_multimod = parameter::list<sliderbank10_c0<NV>, 
+                                              sliderbank10_c1<NV>, 
+                                              sliderbank10_c2<NV>, 
+                                              sliderbank10_c3<NV>>;
+
+template <int NV>
+using sliderbank10_t = wrap::data<control::sliderbank<sliderbank10_multimod<NV>>, 
+                                  data::external::sliderpack<24>>;
+
+template <int NV> using chain586_t = chain581_t<NV>;
+
+template <int NV> using chain587_t = chain581_t<NV>;
+
+template <int NV> using chain588_t = chain581_t<NV>;
+
+template <int NV> using chain589_t = chain581_t<NV>;
+
+template <int NV>
+using split53_t = container::split<parameter::empty, 
+                                   wrap::fix<2, chain586_t<NV>>, 
+                                   chain587_t<NV>, 
+                                   chain588_t<NV>, 
+                                   chain589_t<NV>>;
+
+template <int NV>
+using chain585_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, sliderbank10_t<NV>>, 
+                                    split53_t<NV>>;
 
 template <int NV>
 using chain83_t = container::chain<parameter::empty, 
@@ -7978,13 +7999,52 @@ using branch10_t = container::branch<parameter::empty,
 template <int NV>
 using chain82_t = container::chain<parameter::empty, 
                                    wrap::fix<2, math::clear<NV>>, 
-                                   branch27_t, 
+                                   chain585_t<NV>, 
                                    core::gain<NV>, 
                                    modchain3_t<NV>, 
                                    branch7_t<NV>, 
                                    core::mono2stereo, 
                                    pma7_t<NV>, 
                                    branch10_t<NV>>;
+
+template <int NV>
+using chain170_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, routing::send<NV, stereo_cable<NV>>>>;
+
+using chain384_t = chain399_t;
+
+template <int NV> using converter3_t = converter2_t<NV>;
+template <int NV>
+using tempo_sync4_t = wrap::mod<parameter::plain<converter3_t<NV>, 0>, 
+                                control::tempo_sync<NV>>;
+
+template <int NV> using xfader147_c0 = sliderbank3_c0_0<NV>;
+
+template <int NV> using xfader147_c1 = sliderbank3_c0_0<NV>;
+
+template <int NV>
+using xfader147_multimod = parameter::list<xfader147_c0<NV>, xfader147_c1<NV>>;
+
+template <int NV>
+using xfader147_t = control::xfader<xfader147_multimod<NV>, faders::linear>;
+
+template <int NV> using chain526_t = chain61_t<NV>;
+
+template <int NV>
+using chain527_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, converter3_t<NV>>, 
+                                    fx::sampleandhold<NV>, 
+                                    core::gain<NV>>;
+
+template <int NV>
+using split45_t = container::split<parameter::empty, 
+                                   wrap::fix<2, chain526_t<NV>>, 
+                                   chain527_t<NV>>;
+
+template <int NV>
+using xfade_2x_lin5_t = container::chain<parameter::empty, 
+                                         wrap::fix<2, xfader147_t<NV>>, 
+                                         split45_t<NV>>;
 
 template <int NV> using peak20_mod = peak17_mod<NV>;
 
@@ -7993,34 +8053,89 @@ using peak20_t = wrap::mod<peak20_mod<NV>,
                            wrap::no_data<core::peak>>;
 
 template <int NV>
-using chain170_t = container::chain<parameter::empty, 
-                                    wrap::fix<2, peak20_t<NV>>>;
+using chain393_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, core::smoother<NV>>, 
+                                    tempo_sync4_t<NV>, 
+                                    xfade_2x_lin5_t<NV>, 
+                                    peak20_t<NV>, 
+                                    math::clear<NV>>;
+
+template <int NV>
+using split42_t = container::split<parameter::empty, 
+                                   wrap::fix<2, chain384_t>, 
+                                   chain393_t<NV>>;
+
+template <int NV>
+using chain191_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, split42_t<NV>>>;
 
 template <int NV>
 using chain86_t = container::chain<parameter::empty, 
                                    wrap::fix<2, chain82_t<NV>>, 
                                    filters::one_pole<NV>, 
-                                   routing::send<stereo_cable>, 
                                    chain170_t<NV>, 
-                                   core::gain<NV>, 
+                                   chain191_t<NV>, 
                                    core::gain<NV>, 
                                    math::clear<NV>>;
 
-template <int NV>
-using chain191_t = container::chain<parameter::empty, 
-                                    wrap::fix<2, routing::receive<stereo_cable>>, 
-                                    core::gain<NV>>;
-
-template <int NV> using chain192_t = chain191_t<NV>;
+template <int NV> using sliderbank8_c0_0 = pma2_mod<NV>;
 
 template <int NV>
-using split30_t = container::split<parameter::empty, 
-                                   wrap::fix<2, chain191_t<NV>>, 
-                                   chain192_t<NV>>;
+using sliderbank8_c0 = parameter::chain<ranges::Identity, 
+                                        sliderbank8_c0_0<NV>, 
+                                        parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>>;
+
+template <int NV> using sliderbank8_c1_0 = pma2_mod<NV>;
 
 template <int NV>
-using chain87_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, split30_t<NV>>>;
+using sliderbank8_c1 = parameter::chain<ranges::Identity, 
+                                        sliderbank8_c1_0<NV>, 
+                                        parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>>;
+
+template <int NV> using sliderbank8_c2_0 = pma2_mod<NV>;
+
+template <int NV>
+using sliderbank8_c2 = parameter::chain<ranges::Identity, 
+                                        sliderbank8_c2_0<NV>, 
+                                        parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>>;
+
+template <int NV> using sliderbank8_c3_0 = pma2_mod<NV>;
+
+template <int NV>
+using sliderbank8_c3 = parameter::chain<ranges::Identity, 
+                                        sliderbank8_c3_0<NV>, 
+                                        parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>>;
+
+template <int NV>
+using sliderbank8_multimod = parameter::list<sliderbank8_c0<NV>, 
+                                             sliderbank8_c1<NV>, 
+                                             sliderbank8_c2<NV>, 
+                                             sliderbank8_c3<NV>>;
+
+template <int NV>
+using sliderbank8_t = wrap::data<control::sliderbank<sliderbank8_multimod<NV>>, 
+                                 data::external::sliderpack<20>>;
+
+template <int NV> using chain576_t = chain581_t<NV>;
+
+template <int NV> using chain577_t = chain581_t<NV>;
+
+template <int NV> using chain578_t = chain581_t<NV>;
+
+template <int NV> using chain579_t = chain581_t<NV>;
+
+template <int NV>
+using split51_t = container::split<parameter::empty, 
+                                   wrap::fix<2, chain576_t<NV>>, 
+                                   chain577_t<NV>, 
+                                   chain578_t<NV>, 
+                                   chain579_t<NV>>;
+
+template <int NV>
+using chain575_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, wrap::no_process<core::gain<NV>>>, 
+                                    sliderbank8_t<NV>, 
+                                    split51_t<NV>>;
 
 template <int NV> using sliderbank_c0 = sliderbank3_c0_0<NV>;
 
@@ -9231,12 +9346,9 @@ using chain247_t = container::chain<parameter::empty,
                                     split17_t<NV>>;
 
 template <int NV>
-using fix8_block_t_ = container::chain<parameter::empty, 
-                                       wrap::fix<2, modchain8_t<NV>>, 
-                                       chain247_t<NV>>;
-
-template <int NV>
-using fix8_block_t = wrap::fix_block<8, fix8_block_t_<NV>>;
+using fix8_block_t = container::chain<parameter::empty, 
+                                      wrap::fix<2, modchain8_t<NV>>, 
+                                      chain247_t<NV>>;
 
 template <int NV>
 using chain261_t = container::chain<parameter::empty, 
@@ -9244,9 +9356,9 @@ using chain261_t = container::chain<parameter::empty,
 
 template <int NV>
 using chain262_t = container::chain<parameter::empty, 
-                                    wrap::fix<2, routing::receive<stereo_cable>>, 
+                                    wrap::fix<2, routing::receive<NV, stereo_cable<NV>>>, 
                                     project::shfiter<NV>, 
-                                    routing::send<stereo_cable>>;
+                                    routing::send<NV, stereo_cable<NV>>>;
 
 DECLARE_PARAMETER_RANGE_STEP(cable_table15_modRange, 
                              -64., 
@@ -9362,19 +9474,49 @@ template <int NV>
 using chain263_t = container::chain<parameter::empty, 
                                     wrap::fix<2, midi42_t<NV>>, 
                                     cable_table15_t<NV>, 
-                                    routing::receive<stereo_cable>, 
+                                    routing::receive<NV, stereo_cable<NV>>, 
                                     project::ps2<NV>, 
                                     project::shfiter<NV>, 
-                                    routing::send<stereo_cable>>;
+                                    routing::send<NV, stereo_cable<NV>>>;
 
-using chain101_t = container::chain<parameter::empty, 
-                                    wrap::fix<2, core::empty>>;
+using chain101_t = chain399_t;
 template <int NV>
 using branch23_t = container::branch<parameter::empty, 
                                      wrap::fix<2, chain261_t<NV>>, 
                                      chain262_t<NV>, 
                                      chain263_t<NV>, 
                                      chain101_t>;
+
+using chain394_t = chain399_t;
+
+template <int NV> using converter4_t = converter2_t<NV>;
+template <int NV>
+using tempo_sync10_t = wrap::mod<parameter::plain<converter4_t<NV>, 0>, 
+                                 control::tempo_sync<NV>>;
+
+template <int NV> using xfader144_c0 = sliderbank3_c0_0<NV>;
+
+template <int NV> using xfader144_c1 = sliderbank3_c0_0<NV>;
+
+template <int NV>
+using xfader144_multimod = parameter::list<xfader144_c0<NV>, xfader144_c1<NV>>;
+
+template <int NV>
+using xfader144_t = control::xfader<xfader144_multimod<NV>, faders::linear>;
+
+template <int NV> using chain72_t = chain61_t<NV>;
+
+template <int NV> using chain87_t = chain71_t<NV>;
+
+template <int NV>
+using split14_t = container::split<parameter::empty, 
+                                   wrap::fix<2, chain72_t<NV>>, 
+                                   chain87_t<NV>>;
+
+template <int NV>
+using xfade_2x_lin2_t = container::chain<parameter::empty, 
+                                         wrap::fix<2, xfader144_t<NV>>, 
+                                         split14_t<NV>>;
 
 template <int NV> using peak22_mod = peak17_mod<NV>;
 
@@ -9383,108 +9525,113 @@ using peak22_t = wrap::mod<peak22_mod<NV>,
                            wrap::no_data<core::peak>>;
 
 template <int NV>
+using chain395_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, core::smoother<NV>>, 
+                                    tempo_sync10_t<NV>, 
+                                    converter4_t<NV>, 
+                                    xfade_2x_lin2_t<NV>, 
+                                    peak22_t<NV>, 
+                                    math::clear<NV>>;
+
+template <int NV>
+using split43_t = container::split<parameter::empty, 
+                                   wrap::fix<2, chain394_t>, 
+                                   chain395_t<NV>>;
+
+template <int NV>
+using chain192_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, split43_t<NV>>>;
+
+template <int NV>
 using chain73_t = container::chain<parameter::empty, 
                                    wrap::fix<2, math::clear<NV>>, 
-                                   chain87_t<NV>, 
+                                   chain575_t<NV>, 
+                                   core::gain<NV>, 
                                    branch39_t<NV>, 
                                    filters::one_pole<NV>, 
                                    fix8_block_t<NV>, 
                                    branch23_t<NV>, 
-                                   routing::send<stereo_cable>, 
-                                   peak22_t<NV>, 
+                                   routing::send<NV, stereo_cable<NV>>, 
+                                   chain192_t<NV>, 
                                    math::clear<NV>>;
 
-template <int NV> using chain193_t = chain191_t<NV>;
+template <int NV> using sliderbank2_c0 = pma2_mod<NV>;
 
-template <int NV> using chain195_t = chain191_t<NV>;
+template <int NV> using sliderbank2_c1 = pma2_mod<NV>;
 
-template <int NV> using chain194_t = chain191_t<NV>;
+template <int NV> using sliderbank2_c2 = pma2_mod<NV>;
 
-template <int NV>
-using split31_t = container::split<parameter::empty, 
-                                   wrap::fix<2, chain193_t<NV>>, 
-                                   chain195_t<NV>, 
-                                   chain194_t<NV>>;
+template <int NV> using sliderbank2_c3 = pma2_mod<NV>;
 
 template <int NV>
-using chain14_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, core::gain<NV>>>;
+using sliderbank2_multimod = parameter::list<sliderbank2_c0<NV>, 
+                                             sliderbank2_c1<NV>, 
+                                             sliderbank2_c2<NV>, 
+                                             sliderbank2_c3<NV>>;
+
+template <int NV>
+using sliderbank2_t = wrap::data<control::sliderbank<sliderbank2_multimod<NV>>, 
+                                 data::external::sliderpack<21>>;
+
+template <int NV> using chain571_t = chain581_t<NV>;
+
+template <int NV> using chain572_t = chain581_t<NV>;
+
+template <int NV> using chain573_t = chain581_t<NV>;
+
+template <int NV> using chain574_t = chain581_t<NV>;
+
+template <int NV>
+using split50_t = container::split<parameter::empty, 
+                                   wrap::fix<2, chain571_t<NV>>, 
+                                   chain572_t<NV>, 
+                                   chain573_t<NV>, 
+                                   chain574_t<NV>>;
+
+template <int NV>
+using chain570_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, sliderbank2_t<NV>>, 
+                                    split50_t<NV>>;
+
+template <int NV> using xfader_c0 = sliderbank3_c0_0<NV>;
+
+template <int NV> using xfader_c1 = sliderbank3_c0_0<NV>;
+
+template <int NV>
+using xfader_multimod = parameter::list<xfader_c0<NV>, xfader_c1<NV>>;
+
+template <int NV>
+using xfader_t = control::xfader<xfader_multimod<NV>, faders::linear>;
+
+template <int NV> using chain14_t = chain61_t<NV>;
 
 template <int NV>
 using chain16_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, project::klp<NV>>, 
-                                   project::khp2<NV>>;
-
-template <int NV>
-using split1_t = container::split<parameter::empty, 
-                                  wrap::fix<2, project::klp<NV>>, 
-                                  project::khp2<NV>>;
+                                   wrap::fix<2, project::klp<NV>>>;
 
 template <int NV>
 using chain35_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, split1_t<NV>>>;
+                                   wrap::fix<2, project::khp2<NV>>>;
+
+template <int NV>
+using chain37_t = container::chain<parameter::empty, 
+                                   wrap::fix<2, filters::svf<NV>>>;
 
 template <int NV>
 using chain36_t = container::chain<parameter::empty, 
                                    wrap::fix<2, cable_table_t<NV>>, 
-                                   project::Comb<NV>, 
-                                   project::klp<NV>>;
-
-template <int NV>
-using chain37_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, cable_table2_t<NV>>, 
-                                   project::klp<NV>, 
                                    project::Comb<NV>>;
 
 template <int NV>
 using chain55_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, project::klp<NV>>, 
-                                   jdsp::jpanner<NV>>;
-
-template <int NV> using chain56_t = chain55_t<NV>;
-
-template <int NV>
-using split9_t = container::split<parameter::empty, 
-                                  wrap::fix<2, chain55_t<NV>>, 
-                                  chain56_t<NV>>;
-
-template <int NV>
-using chain60_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, project::khp<NV>>, 
-                                   jdsp::jpanner<NV>>;
-
-template <int NV> using chain61_t = chain60_t<NV>;
-
-template <int NV>
-using split13_t = container::split<parameter::empty, 
-                                   wrap::fix<2, chain60_t<NV>>, 
-                                   chain61_t<NV>>;
-
-template <int NV>
-using chain71_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, cable_table3_t<NV>>, 
-                                   project::Comb<NV>, 
-                                   jdsp::jpanner<NV>>;
-
-template <int NV>
-using chain72_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, cable_table4_t<NV>>, 
-                                   project::Comb<NV>, 
-                                   jdsp::jpanner<NV>>;
-
-template <int NV>
-using split14_t = container::split<parameter::empty, 
-                                   wrap::fix<2, chain71_t<NV>>, 
-                                   chain72_t<NV>>;
+                                   wrap::fix<2, filters::allpass<NV>>>;
 template <int NV>
 using branch_t = container::branch<parameter::empty, 
                                    wrap::fix<2, chain16_t<NV>>, 
                                    chain35_t<NV>, 
-                                   chain36_t<NV>, 
                                    chain37_t<NV>, 
-                                   split9_t<NV>, 
-                                   split13_t<NV>, 
-                                   split14_t<NV>>;
+                                   chain36_t<NV>, 
+                                   chain55_t<NV>>;
 
 template <int NV>
 using chain15_t = container::chain<parameter::empty, 
@@ -9493,13 +9640,172 @@ using chain15_t = container::chain<parameter::empty,
 template <int NV>
 using chain57_t = container::chain<parameter::empty, 
                                    wrap::fix<2, chain15_t<NV>>, 
-                                   routing::send<stereo_cable>, 
                                    core::gain<NV>>;
 
 template <int NV>
 using split12_t = container::split<parameter::empty, 
                                    wrap::fix<2, chain14_t<NV>>, 
                                    chain57_t<NV>>;
+
+template <int NV>
+using chain546_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, chain570_t<NV>>, 
+                                    core::gain<NV>, 
+                                    xfader_t<NV>, 
+                                    split12_t<NV>, 
+                                    routing::send<NV, stereo_cable<NV>>, 
+                                    core::gain<NV>, 
+                                    jdsp::jpanner<NV>>;
+
+template <int NV> using sliderbank1_c0_0 = pma2_mod<NV>;
+
+template <int NV>
+using sliderbank1_c0 = parameter::chain<ranges::Identity, 
+                                        sliderbank1_c0_0<NV>, 
+                                        parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>>;
+
+template <int NV> using sliderbank1_c1_0 = pma2_mod<NV>;
+
+template <int NV>
+using sliderbank1_c1 = parameter::chain<ranges::Identity, 
+                                        sliderbank1_c1_0<NV>, 
+                                        parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>>;
+
+template <int NV> using sliderbank1_c2_0 = pma2_mod<NV>;
+
+template <int NV>
+using sliderbank1_c2 = parameter::chain<ranges::Identity, 
+                                        sliderbank1_c2_0<NV>, 
+                                        parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>>;
+
+template <int NV> using sliderbank1_c3_0 = pma2_mod<NV>;
+
+template <int NV>
+using sliderbank1_c3 = parameter::chain<ranges::Identity, 
+                                        sliderbank1_c3_0<NV>, 
+                                        parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>>;
+
+template <int NV>
+using sliderbank1_multimod = parameter::list<sliderbank1_c0<NV>, 
+                                             sliderbank1_c1<NV>, 
+                                             sliderbank1_c2<NV>, 
+                                             sliderbank1_c3<NV>>;
+
+template <int NV>
+using sliderbank1_t = wrap::data<control::sliderbank<sliderbank1_multimod<NV>>, 
+                                 data::external::sliderpack<22>>;
+
+template <int NV> using chain549_t = chain581_t<NV>;
+
+template <int NV> using chain550_t = chain581_t<NV>;
+
+template <int NV> using chain551_t = chain581_t<NV>;
+
+template <int NV> using chain552_t = chain581_t<NV>;
+
+template <int NV>
+using split48_t = container::split<parameter::empty, 
+                                   wrap::fix<2, chain549_t<NV>>, 
+                                   chain550_t<NV>, 
+                                   chain551_t<NV>, 
+                                   chain552_t<NV>>;
+
+template <int NV>
+using chain559_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, sliderbank1_t<NV>>, 
+                                    split48_t<NV>>;
+
+template <int NV> using xfader143_c0 = sliderbank3_c0_0<NV>;
+
+template <int NV> using xfader143_c1 = sliderbank3_c0_0<NV>;
+
+template <int NV>
+using xfader143_multimod = parameter::list<xfader143_c0<NV>, xfader143_c1<NV>>;
+
+template <int NV>
+using xfader143_t = control::xfader<xfader143_multimod<NV>, faders::linear>;
+
+template <int NV> using chain553_t = chain61_t<NV>;
+
+template <int NV> using chain556_t = chain16_t<NV>;
+
+template <int NV> using chain557_t = chain35_t<NV>;
+
+template <int NV> using chain60_t = chain37_t<NV>;
+
+template <int NV>
+using chain558_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, cable_table16_t<NV>>, 
+                                    project::Comb<NV>>;
+
+template <int NV> using chain56_t = chain55_t<NV>;
+template <int NV>
+using branch9_t = container::branch<parameter::empty, 
+                                    wrap::fix<2, chain556_t<NV>>, 
+                                    chain557_t<NV>, 
+                                    chain60_t<NV>, 
+                                    chain558_t<NV>, 
+                                    chain56_t<NV>>;
+
+template <int NV>
+using chain555_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, branch9_t<NV>>>;
+
+template <int NV>
+using chain554_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, chain555_t<NV>>, 
+                                    core::gain<NV>>;
+
+template <int NV>
+using split49_t = container::split<parameter::empty, 
+                                   wrap::fix<2, chain553_t<NV>>, 
+                                   chain554_t<NV>>;
+
+template <int NV>
+using chain548_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, chain559_t<NV>>, 
+                                    core::gain<NV>, 
+                                    xfader143_t<NV>, 
+                                    split49_t<NV>, 
+                                    routing::send<NV, stereo_cable<NV>>, 
+                                    core::gain<NV>, 
+                                    jdsp::jpanner<NV>>;
+
+template <int NV>
+using split47_t = container::split<parameter::empty, 
+                                   wrap::fix<2, chain546_t<NV>>, 
+                                   chain548_t<NV>>;
+
+using chain396_t = chain399_t;
+
+template <int NV> using converter7_t = converter2_t<NV>;
+template <int NV>
+using tempo_sync11_t = wrap::mod<parameter::plain<converter7_t<NV>, 0>, 
+                                 control::tempo_sync<NV>>;
+
+template <int NV> using xfader145_c0 = sliderbank3_c0_0<NV>;
+
+template <int NV> using xfader145_c1 = sliderbank3_c0_0<NV>;
+
+template <int NV>
+using xfader145_multimod = parameter::list<xfader145_c0<NV>, xfader145_c1<NV>>;
+
+template <int NV>
+using xfader145_t = control::xfader<xfader145_multimod<NV>, faders::linear>;
+
+template <int NV> using chain194_t = chain61_t<NV>;
+
+template <int NV> using chain195_t = chain71_t<NV>;
+
+template <int NV>
+using split30_t = container::split<parameter::empty, 
+                                   wrap::fix<2, chain194_t<NV>>, 
+                                   chain195_t<NV>>;
+
+template <int NV>
+using xfade_2x_lin3_t = container::chain<parameter::empty, 
+                                         wrap::fix<2, xfader145_t<NV>>, 
+                                         split30_t<NV>>;
 
 template <int NV> using peak33_mod = peak7_mod<NV>;
 
@@ -9508,12 +9814,28 @@ using peak33_t = wrap::mod<peak33_mod<NV>,
                            wrap::no_data<core::peak>>;
 
 template <int NV>
+using chain397_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, core::smoother<NV>>, 
+                                    tempo_sync11_t<NV>, 
+                                    converter7_t<NV>, 
+                                    xfade_2x_lin3_t<NV>, 
+                                    peak33_t<NV>, 
+                                    math::clear<NV>>;
+
+template <int NV>
+using split44_t = container::split<parameter::empty, 
+                                   wrap::fix<2, chain396_t>, 
+                                   chain397_t<NV>>;
+
+template <int NV>
+using chain193_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, split44_t<NV>>>;
+
+template <int NV>
 using chain58_t = container::chain<parameter::empty, 
                                    wrap::fix<2, math::clear<NV>>, 
-                                   split31_t<NV>, 
-                                   xfader_t<NV>, 
-                                   split12_t<NV>, 
-                                   peak33_t<NV>>;
+                                   split47_t<NV>, 
+                                   chain193_t<NV>>;
 
 template <int NV>
 using split20_t = container::split<parameter::empty, 
@@ -9527,9 +9849,15 @@ using xfade_2x_lin_t = container::chain<parameter::empty,
                                         wrap::fix<2, split20_t<NV>>>;
 
 template <int NV>
-using chain59_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, modchain6_t<NV>>, 
-                                   xfade_2x_lin_t<NV>>;
+using fix8_block1_t_ = container::chain<parameter::empty, 
+                                        wrap::fix<2, xfade_2x_lin_t<NV>>>;
+
+template <int NV>
+using fix8_block1_t = wrap::fix_block<8, fix8_block1_t_<NV>>;
+
+template <int NV>
+using fix16_block_t = container::chain<parameter::empty, 
+                                       wrap::fix<2, fix8_block1_t<NV>>>;
 using oscilloscope_t = wrap::data<analyse::oscilloscope, 
                                   data::external::displaybuffer<2>>;
 
@@ -9579,12 +9907,7 @@ using pitchmode_1 = parameter::from0To1<osc1_impl::branch3_t<NV>,
                                         pitchmode_0Range>;
 
 template <int NV>
-using pitchmode_2 = parameter::from0To1<osc1_impl::branch7_t<NV>, 
-                                        0, 
-                                        pitchmode_0Range>;
-
-template <int NV>
-using pitchmode_3 = parameter::from0To1<osc1_impl::branch12_t<NV>, 
+using pitchmode_2 = parameter::from0To1<osc1_impl::branch12_t<NV>, 
                                         0, 
                                         pitchmode_0Range>;
 
@@ -9592,13 +9915,7 @@ template <int NV>
 using pitchmode = parameter::chain<pitchmode_InputRange, 
                                    pitchmode_0<NV>, 
                                    pitchmode_1<NV>, 
-                                   pitchmode_2<NV>, 
-                                   pitchmode_3<NV>>;
-
-template <int NV>
-using step = parameter::chain<ranges::Identity, 
-                              parameter::plain<osc1_impl::minmax2_t<NV>, 4>, 
-                              parameter::plain<osc1_impl::minmax3_t<NV>, 4>>;
+                                   pitchmode_2<NV>>;
 
 template <int NV>
 using PitchMod = parameter::chain<ranges::Identity, 
@@ -9741,6 +10058,14 @@ template <int NV>
 using PtichShiftOn = parameter::chain<PtichShiftOn_InputRange, 
                                       PtichShiftOn_0<NV>>;
 
+DECLARE_PARAMETER_RANGE(Pan2_InputRange, 
+                        -1., 
+                        1.);
+
+template <int NV>
+using Pan2 = parameter::chain<Pan2_InputRange, 
+                              parameter::plain<osc1_impl::pma18_t<NV>, 2>>;
+
 template <int NV>
 using FileUser = parameter::chain<ranges::Identity, 
                                   parameter::plain<osc1_impl::branch40_t<NV>, 0>, 
@@ -9811,35 +10136,52 @@ using FileMidiInput = parameter::chain<FileMidiInput_InputRange,
                                        FileMidiInput_0<NV>>;
 
 DECLARE_PARAMETER_RANGE_STEP(Q_0Range, 
+                             0., 
+                             1, 
+                             0.01);
+
+template <int NV>
+using Q_0 = parameter::from0To1<project::Comb<NV>, 
+                                0, 
+                                Q_0Range>;
+
+DECLARE_PARAMETER_RANGE_STEP(Q_1Range, 
                              0.5, 
                              10., 
                              0.01);
 
 template <int NV>
-using Q_0 = parameter::from0To1<project::khp<NV>, 
-                                0, 
-                                Q_0Range>;
-
-template <int NV>
 using Q_1 = parameter::from0To1<project::klp<NV>, 
                                 0, 
-                                Q_0Range>;
+                                Q_1Range>;
 
-template <int NV> using Q_3 = Q_1<NV>;
+template <int NV>
+using Q_2 = parameter::from0To1<project::khp2<NV>, 
+                                0, 
+                                Q_1Range>;
 
-template <int NV> using Q_5 = Q_1<NV>;
+DECLARE_PARAMETER_RANGE_SKEW(Q_3Range, 
+                             0.3, 
+                             9.9, 
+                             0.264718);
 
-template <int NV> using Q_6 = Q_1<NV>;
+template <int NV>
+using Q_3 = parameter::from0To1<filters::svf<NV>, 
+                                1, 
+                                Q_3Range>;
+
+template <int NV>
+using Q_4 = parameter::from0To1<filters::allpass<NV>, 
+                                1, 
+                                Q_3Range>;
 
 template <int NV>
 using Q = parameter::chain<ranges::Identity, 
                            Q_0<NV>, 
                            Q_1<NV>, 
-                           parameter::plain<project::Comb<NV>, 0>, 
+                           Q_2<NV>, 
                            Q_3<NV>, 
-                           parameter::plain<project::Comb<NV>, 0>, 
-                           Q_5<NV>, 
-                           Q_6<NV>>;
+                           Q_4<NV>>;
 
 DECLARE_PARAMETER_RANGE_SKEW(Cut1_InputRange, 
                              20., 
@@ -9848,7 +10190,7 @@ DECLARE_PARAMETER_RANGE_SKEW(Cut1_InputRange,
 
 template <int NV>
 using Cut1 = parameter::chain<Cut1_InputRange, 
-                              parameter::plain<osc1_impl::pma23_t<NV>, 2>>;
+                              parameter::plain<osc1_impl::smoothed_parameter_t<NV>, 0>>;
 
 DECLARE_PARAMETER_RANGE_SKEW(Cut2_InputRange, 
                              20., 
@@ -9857,7 +10199,7 @@ DECLARE_PARAMETER_RANGE_SKEW(Cut2_InputRange,
 
 template <int NV>
 using Cut2 = parameter::chain<Cut2_InputRange, 
-                              parameter::plain<osc1_impl::pma24_t<NV>, 2>>;
+                              parameter::plain<osc1_impl::smoothed_parameter1_t<NV>, 0>>;
 
 DECLARE_PARAMETER_RANGE(FilterMidiMix_InputRange, 
                         1., 
@@ -9897,46 +10239,36 @@ using FilterMidiCut2 = parameter::chain<FilterMidiCut2_InputRange,
 
 DECLARE_PARAMETER_RANGE_STEP(FilterMode_InputRange, 
                              1., 
-                             7., 
+                             5., 
                              1.);
+DECLARE_PARAMETER_RANGE_STEP(FilterMode_0Range, 
+                             0., 
+                             4., 
+                             1.);
+
 template <int NV>
 using FilterMode_0 = parameter::from0To1<osc1_impl::branch_t<NV>, 
                                          0, 
-                                         MidiSlotPitch_0Range>;
+                                         FilterMode_0Range>;
 
 template <int NV>
 using FilterMode = parameter::chain<FilterMode_InputRange, FilterMode_0<NV>>;
 
-template <int NV> using q2_1 = Q_0<NV>;
+template <int NV> using q2_0 = Q_1<NV>;
 
-template <int NV> using q2_2 = Q_1<NV>;
+template <int NV> using q2_1 = Q_2<NV>;
 
-template <int NV> using q2_4 = Q_1<NV>;
+template <int NV> using q2_3 = Q_3<NV>;
 
-template <int NV>
-using q2_5 = parameter::from0To1<project::khp2<NV>, 
-                                 0, 
-                                 Q_0Range>;
-
-DECLARE_PARAMETER_RANGE_STEP(q2_6Range, 
-                             0.5, 
-                             1, 
-                             0.01);
-
-template <int NV>
-using q2_6 = parameter::from0To1<project::khp2<NV>, 
-                                 0, 
-                                 q2_6Range>;
+template <int NV> using q2_4 = Q_4<NV>;
 
 template <int NV>
 using q2 = parameter::chain<ranges::Identity, 
-                            parameter::plain<project::Comb<NV>, 0>, 
+                            q2_0<NV>, 
                             q2_1<NV>, 
-                            q2_2<NV>, 
                             parameter::plain<project::Comb<NV>, 0>, 
-                            q2_4<NV>, 
-                            q2_5<NV>, 
-                            q2_6<NV>>;
+                            q2_3<NV>, 
+                            q2_4<NV>>;
 
 template <int NV>
 using EnvTempo1 = parameter::chain<ranges::Identity, 
@@ -10007,35 +10339,6 @@ using Pitch2PkModSrc_0 = parameter::from0To1<osc1_impl::branch16_t<NV>,
 template <int NV>
 using Pitch2PkModSrc = parameter::chain<Pitch2PkModSrc_InputRange, 
                                         Pitch2PkModSrc_0<NV>>;
-
-DECLARE_PARAMETER_RANGE_STEP(InSrcOsc1_InputRange, 
-                             1., 
-                             3., 
-                             1.);
-using InSrcOsc1_0 = parameter::from0To1<osc1_impl::branch38_t, 
-                                        0, 
-                                        pitchmode_0Range>;
-
-using InSrcOsc1 = parameter::chain<InSrcOsc1_InputRange, InSrcOsc1_0>;
-
-DECLARE_PARAMETER_RANGE_STEP(InSrcOsc2_InputRange, 
-                             1., 
-                             3., 
-                             1.);
-using InSrcOsc2_0 = parameter::from0To1<osc1_impl::branch27_t, 
-                                        0, 
-                                        pitchmode_0Range>;
-
-using InSrcOsc2 = parameter::chain<InSrcOsc2_InputRange, InSrcOsc2_0>;
-
-template <int NV>
-using FilerInOsc1 = parameter::from0To1<core::gain<NV>, 
-                                        0, 
-                                        osc1_impl::pma2_modRange>;
-
-template <int NV> using FilterInOSc2 = FilerInOsc1<NV>;
-
-template <int NV> using FilterInFile = FilerInOsc1<NV>;
 
 DECLARE_PARAMETER_RANGE(OscMixPkIn_InputRange, 
                         1., 
@@ -10285,47 +10588,26 @@ DECLARE_PARAMETER_RANGE(feed_0Range,
                         0., 
                         0.9);
 
-using feed_0 = parameter::from0To1<routing::receive<stereo_cable>, 
+template <int NV>
+using feed_0 = parameter::from0To1<routing::receive<NV, stereo_cable<NV>>, 
                                    0, 
                                    feed_0Range>;
 
-using feed_1 = feed_0;
+template <int NV> using feed_1 = feed_0<NV>;
 
+template <int NV>
 using feed = parameter::chain<ranges::Identity, 
-                              feed_0, 
-                              feed_1>;
-
-DECLARE_PARAMETER_RANGE_SKEW(FileIn_InputRange, 
-                             0., 
-                             0.5, 
-                             0.620929);
-DECLARE_PARAMETER_RANGE_SKEW(FileIn_0Range, 
-                             0., 
-                             0.5, 
-                             0.380025);
-
-using FileIn_0 = parameter::from0To1<routing::receive<stereo_cable>, 
-                                     0, 
-                                     FileIn_0Range>;
-
-DECLARE_PARAMETER_RANGE_SKEW(FileIn_1Range, 
-                             0., 
-                             0.5, 
-                             0.253636);
-
-using FileIn_1 = parameter::from0To1<routing::receive<stereo_cable>, 
-                                     0, 
-                                     FileIn_1Range>;
-
-using FileIn = parameter::chain<FileIn_InputRange, 
-                                FileIn_0, 
-                                FileIn_1>;
+                              feed_0<NV>, 
+                              feed_1<NV>>;
 
 DECLARE_PARAMETER_RANGE_SKEW(OscsOut_InputRange, 
                              -100., 
                              0., 
                              5.42227);
-template <int NV> using OscsOut_0 = FilerInOsc1<NV>;
+template <int NV>
+using OscsOut_0 = parameter::from0To1<core::gain<NV>, 
+                                      0, 
+                                      osc1_impl::pma2_modRange>;
 
 template <int NV>
 using OscsOut_1 = parameter::from0To1<core::gain<NV>, 
@@ -10377,42 +10659,6 @@ using EnvDiv2 = parameter::chain<ranges::Identity,
                                  EnvDiv2_0<NV>, 
                                  EnvDiv2_1<NV>>;
 
-DECLARE_PARAMETER_RANGE_STEP(RampDiv1_InputRange, 
-                             1., 
-                             32., 
-                             1.);
-template <int NV>
-using RampDiv1_0 = parameter::from0To1<osc1_impl::tempo_sync6_t<NV>, 
-                                       1, 
-                                       EnvDiv_0Range>;
-
-template <int NV>
-using RampDiv1 = parameter::chain<RampDiv1_InputRange, RampDiv1_0<NV>>;
-
-DECLARE_PARAMETER_RANGE_STEP(RampDiv2_InputRange, 
-                             1., 
-                             32., 
-                             1.);
-template <int NV>
-using RampDiv2_0 = parameter::from0To1<osc1_impl::tempo_sync9_t<NV>, 
-                                       1, 
-                                       EnvDiv_0Range>;
-
-template <int NV>
-using RampDiv2 = parameter::chain<RampDiv2_InputRange, RampDiv2_0<NV>>;
-
-DECLARE_PARAMETER_RANGE_STEP(RampDiv3_InputRange, 
-                             1., 
-                             32., 
-                             1.);
-template <int NV>
-using RampDiv3_0 = parameter::from0To1<osc1_impl::tempo_sync8_t<NV>, 
-                                       1, 
-                                       EnvDiv_0Range>;
-
-template <int NV>
-using RampDiv3 = parameter::chain<RampDiv3_InputRange, RampDiv3_0<NV>>;
-
 DECLARE_PARAMETER_RANGE_STEP(RampDiv4_InputRange, 
                              1., 
                              32., 
@@ -10425,6 +10671,63 @@ using RampDiv4_0 = parameter::from0To1<osc1_impl::tempo_sync7_t<NV>,
 template <int NV>
 using RampDiv4 = parameter::chain<RampDiv4_InputRange, RampDiv4_0<NV>>;
 
+DECLARE_PARAMETER_RANGE_STEP(PitchMode2_InputRange, 
+                             1., 
+                             3., 
+                             1.);
+template <int NV>
+using PitchMode2_0 = parameter::from0To1<osc1_impl::branch7_t<NV>, 
+                                         0, 
+                                         pitchmode_0Range>;
+
+template <int NV>
+using PitchMode2 = parameter::chain<PitchMode2_InputRange, PitchMode2_0<NV>>;
+
+DECLARE_PARAMETER_RANGE_STEP(FilterMode2_InputRange, 
+                             1., 
+                             5., 
+                             1.);
+template <int NV>
+using FilterMode2_0 = parameter::from0To1<osc1_impl::branch9_t<NV>, 
+                                          0, 
+                                          FilterMode_0Range>;
+
+template <int NV>
+using FilterMode2 = parameter::chain<FilterMode2_InputRange, FilterMode2_0<NV>>;
+
+template <int NV> using FinputMasterGain_0 = OscsOut_1<NV>;
+
+template <int NV> using FinputMasterGain_1 = OscsOut_1<NV>;
+
+template <int NV>
+using FinputMasterGain = parameter::chain<ranges::Identity, 
+                                          FinputMasterGain_0<NV>, 
+                                          FinputMasterGain_1<NV>>;
+
+template <int NV>
+using FileInMaster = parameter::from0To1<wrap::no_process<core::gain<NV>>, 
+                                         0, 
+                                         osc1_impl::sliderbank3_c0_0Range>;
+
+DECLARE_PARAMETER_RANGE_SKEW(OscPeakSmooth1Range, 
+                             0., 
+                             2000., 
+                             0.231378);
+
+template <int NV>
+using OscPeakSmooth1 = parameter::from0To1<core::smoother<NV>, 
+                                           0, 
+                                           OscPeakSmooth1Range>;
+
+template <int NV> using OscPeakSmooth2 = OscPeakSmooth1<NV>;
+
+template <int NV> using FilePeakSmooth1 = OscPeakSmooth1<NV>;
+
+template <int NV> using FilPeakSmooth1 = OscPeakSmooth1<NV>;
+
+template <int NV>
+using step = parameter::plain<osc1_impl::minmax2_t<NV>, 
+                              4>;
 template <int NV>
 using OsMix = parameter::plain<osc1_impl::pma2_t<NV>, 2>;
 template <int NV>
@@ -10459,9 +10762,7 @@ template <int NV>
 using WinMod = parameter::plain<osc1_impl::pma_unscaled_t<NV>, 
                                 1>;
 template <int NV>
-using FileInput = parameter::plain<osc1_impl::pma18_t<NV>, 2>;
-template <int NV>
-using FileInputMod = parameter::plain<osc1_impl::pma18_t<NV>, 1>;
+using Pan2Mod = parameter::plain<osc1_impl::pma18_t<NV>, 1>;
 template <int NV>
 using FilterMix = parameter::plain<osc1_impl::pma22_t<NV>, 2>;
 template <int NV>
@@ -10517,8 +10818,13 @@ using EnvType1 = parameter::plain<osc1_impl::branch14_t<NV>,
 template <int NV>
 using EnvType2 = parameter::plain<osc1_impl::branch18_t<NV>, 
                                   0>;
+using InSrcOsc1 = FilterOsc;
+using InSrcOsc2 = FilterOsc;
 using FileInOsc1 = FilterOsc;
 using FileInOsc2 = FilterOsc;
+using FilerInOsc1 = FilterOsc;
+using FilterInOSc2 = FilterOsc;
+using FilterInFile = FilterOsc;
 template <int NV>
 using OscInput2 = parameter::plain<osc1_impl::pma5_t<NV>, 2>;
 template <int NV>
@@ -10538,6 +10844,7 @@ using GainH = FilterOsc;
 using GainD = FilterOsc;
 using GainS = FilterOsc;
 using GainR = FilterOsc;
+using FileIn = FilterOsc;
 template <int NV>
 using _1pMod = parameter::plain<filters::one_pole<NV>, 4>;
 template <int NV>
@@ -10567,6 +10874,12 @@ template <int NV>
 using RampTempo2 = parameter::plain<osc1_impl::tempo_sync9_t<NV>, 
                                     0>;
 template <int NV>
+using RampDiv1 = parameter::plain<osc1_impl::tempo_sync6_t<NV>, 
+                                  1>;
+template <int NV>
+using RampDiv2 = parameter::plain<osc1_impl::tempo_sync9_t<NV>, 
+                                  1>;
+template <int NV>
 using RampInv1 = parameter::plain<osc1_impl::branch36_t<NV>, 
                                   0>;
 template <int NV>
@@ -10578,6 +10891,9 @@ using RampTemo3 = parameter::plain<osc1_impl::tempo_sync8_t<NV>,
 template <int NV>
 using RampTempo4 = parameter::plain<osc1_impl::tempo_sync7_t<NV>, 
                                     0>;
+template <int NV>
+using RampDiv3 = parameter::plain<osc1_impl::tempo_sync8_t<NV>, 
+                                  1>;
 template <int NV>
 using RampInv3 = parameter::plain<osc1_impl::branch46_t<NV>, 
                                   0>;
@@ -10592,6 +10908,42 @@ template <int NV>
 using RampOS3 = parameter::plain<osc1_impl::ramp7_t<NV>, 1>;
 template <int NV>
 using RampOS4 = parameter::plain<osc1_impl::ramp6_t<NV>, 1>;
+template <int NV>
+using FilterMix2 = parameter::plain<osc1_impl::xfader143_t<NV>, 
+                                    0>;
+template <int NV>
+using Fmix = parameter::plain<osc1_impl::xfader_t<NV>, 
+                              0>;
+template <int NV>
+using Step2 = parameter::plain<osc1_impl::minmax3_t<NV>, 
+                               4>;
+template <int NV>
+using OscPeakSH1 = parameter::plain<osc1_impl::xfader63_t<NV>, 
+                                    0>;
+template <int NV>
+using FilePeakSH1 = parameter::plain<osc1_impl::xfader144_t<NV>, 
+                                     0>;
+template <int NV>
+using FilPeakSH1 = parameter::plain<osc1_impl::xfader145_t<NV>, 
+                                    0>;
+template <int NV>
+using OscPeakSHtempo1 = parameter::plain<osc1_impl::tempo_sync3_t<NV>, 
+                                         0>;
+template <int NV>
+using OscPeakSHtempo2 = parameter::plain<osc1_impl::tempo_sync4_t<NV>, 
+                                         0>;
+template <int NV>
+using FilePeakSHtempo = parameter::plain<osc1_impl::tempo_sync10_t<NV>, 
+                                         0>;
+template <int NV>
+using FilPeakSHtempo = parameter::plain<osc1_impl::tempo_sync11_t<NV>, 
+                                        0>;
+template <int NV>
+using OscPeakSH2 = parameter::plain<osc1_impl::xfader147_t<NV>, 
+                                    0>;
+template <int NV>
+using WtIn = parameter::plain<osc1_impl::branch8_t<NV>, 
+                              0>;
 template <int NV>
 using osc1_t_plist = parameter::list<Pitch<NV>, 
                                      tempo<NV>, 
@@ -10624,8 +10976,8 @@ using osc1_t_plist = parameter::list<Pitch<NV>,
                                      FilePitchMod<NV>, 
                                      PitchWin<NV>, 
                                      WinMod<NV>, 
-                                     FileInput<NV>, 
-                                     FileInputMod<NV>, 
+                                     Pan2<NV>, 
+                                     Pan2Mod<NV>, 
                                      FileUser<NV>, 
                                      FileMidiPitch<NV>, 
                                      FileMidipos2<NV>, 
@@ -10674,9 +11026,9 @@ using osc1_t_plist = parameter::list<Pitch<NV>,
                                      InSrcOsc2, 
                                      FileInOsc1, 
                                      FileInOsc2, 
-                                     FilerInOsc1<NV>, 
-                                     FilterInOSc2<NV>, 
-                                     FilterInFile<NV>, 
+                                     FilerInOsc1, 
+                                     FilterInOSc2, 
+                                     FilterInFile, 
                                      OscMixPkIn<NV>, 
                                      OscInput2<NV>, 
                                      Osc2InMod<NV>, 
@@ -10709,7 +11061,7 @@ using osc1_t_plist = parameter::list<Pitch<NV>,
                                      GainD, 
                                      GainS, 
                                      GainR, 
-                                     feed, 
+                                     feed<NV>, 
                                      FileIn, 
                                      OscsOut<NV>, 
                                      Pitch2<NV>, 
@@ -10742,16 +11094,35 @@ using osc1_t_plist = parameter::list<Pitch<NV>,
                                      RampOS1<NV>, 
                                      RampOS2<NV>, 
                                      RampOS3<NV>, 
-                                     RampOS4<NV>>;
+                                     RampOS4<NV>, 
+                                     PitchMode2<NV>, 
+                                     FilterMix2<NV>, 
+                                     FilterMode2<NV>, 
+                                     FinputMasterGain<NV>, 
+                                     FileInMaster<NV>, 
+                                     Fmix<NV>, 
+                                     Step2<NV>, 
+                                     OscPeakSmooth1<NV>, 
+                                     OscPeakSmooth2<NV>, 
+                                     FilePeakSmooth1<NV>, 
+                                     FilPeakSmooth1<NV>, 
+                                     OscPeakSH1<NV>, 
+                                     FilePeakSH1<NV>, 
+                                     FilPeakSH1<NV>, 
+                                     OscPeakSHtempo1<NV>, 
+                                     OscPeakSHtempo2<NV>, 
+                                     FilePeakSHtempo<NV>, 
+                                     FilPeakSHtempo<NV>, 
+                                     OscPeakSH2<NV>, 
+                                     WtIn<NV>>;
 }
 
 template <int NV>
 using osc1_t_ = container::chain<osc1_t_parameters::osc1_t_plist<NV>, 
                                  wrap::fix<2, split2_t<NV>>, 
-                                 chain59_t<NV>, 
-                                 core::gain<NV>, 
-                                 oscilloscope_t, 
-                                 jdsp::jpanner<NV>>;
+                                 modchain6_t<NV>, 
+                                 fix16_block_t<NV>, 
+                                 oscilloscope_t>;
 
 // =================================| Root node initialiser class |=================================
 
@@ -10761,333 +11132,395 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 	struct metadata
 	{
 		static const int NumTables = 13;
-		static const int NumSliderPacks = 20;
+		static const int NumSliderPacks = 25;
 		static const int NumAudioFiles = 8;
 		static const int NumFilters = 0;
 		static const int NumDisplayBuffers = 3;
 		
 		SNEX_METADATA_ID(osc1);
 		SNEX_METADATA_NUM_CHANNELS(2);
-		SNEX_METADATA_ENCODED_PARAMETERS(2546)
+		SNEX_METADATA_ENCODED_PARAMETERS(3000)
 		{
-			0x005B, 0x0000, 0x5000, 0x7469, 0x6863, 0x0000, 0xC000, 0x00C1, 
-            0xC000, 0xCE41, 0x4CCC, 0x0040, 0x8000, 0x003F, 0x0000, 0x5B00, 
-            0x0001, 0x0000, 0x6574, 0x706D, 0x006F, 0x0000, 0x0000, 0x0000, 
-            0x4190, 0x0000, 0x4180, 0x0000, 0x3F80, 0x0000, 0x0000, 0x025B, 
-            0x0000, 0x6400, 0x7669, 0x0000, 0x8000, 0x003F, 0x0000, 0x0042, 
-            0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5B3F, 0x0003, 0x0000, 
-            0x6970, 0x6374, 0x6D68, 0x646F, 0x0065, 0x0000, 0x3F80, 0x0000, 
-            0x4040, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x045B, 
-            0x0000, 0x7300, 0x6574, 0x0070, 0x0000, 0x0000, 0x0000, 0x3F80, 
-            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x055B, 0x0000, 
-            0x4F00, 0x4D73, 0x7869, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 
-            0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0006, 0x0000, 
-            0x6950, 0x6374, 0x4D68, 0x646F, 0x0000, 0x8000, 0x00BF, 0x8000, 
-            0x003F, 0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0007, 
-            0x0000, 0x734F, 0x4D63, 0x7869, 0x6F4D, 0x0064, 0x0000, 0xBF80, 
-            0x0000, 0x3F80, 0xAE14, 0x3F47, 0x0000, 0x3F80, 0x0000, 0x0000, 
-            0x085B, 0x0000, 0x4900, 0x706E, 0x7475, 0x0031, 0x0000, 0x0000, 
-            0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 
-            0x095B, 0x0000, 0x4900, 0x4D6E, 0x646F, 0x0031, 0x0000, 0xBF80, 
-            0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 
-            0x0A5B, 0x0000, 0x5400, 0x6D65, 0x6F70, 0x0032, 0x0000, 0x0000, 
-            0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 
-            0x0B5B, 0x0000, 0x4D00, 0x6469, 0x5369, 0x6F6C, 0x5074, 0x7469, 
-            0x6863, 0x0000, 0x8000, 0x003F, 0xE000, 0x0040, 0x8000, 0x003F, 
-            0x8000, 0x003F, 0x0000, 0x5B00, 0x000C, 0x0000, 0x6957, 0x7464, 
-            0x3268, 0x0000, 0x0000, 0x0000, 0x8000, 0x483F, 0x7AE1, 0x003F, 
-            0x8000, 0x003F, 0x0000, 0x5B00, 0x000D, 0x0000, 0x6957, 0x7464, 
-            0x3268, 0x6F4D, 0x0064, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 
-            0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0E5B, 0x0000, 0x4200, 
-            0x6E65, 0x3264, 0x0000, 0x0000, 0x0000, 0x9C40, 0x0046, 0xA000, 
-            0x6941, 0x6CEE, 0xCD3E, 0xCCCC, 0x5B3D, 0x000F, 0x0000, 0x6542, 
-            0x646E, 0x0000, 0x0000, 0x0000, 0x9C40, 0x0046, 0xA000, 0x6941, 
-            0x6CEE, 0xCD3E, 0xCCCC, 0x5B3D, 0x0010, 0x0000, 0x6853, 0x7061, 
-            0x3265, 0x0000, 0x8000, 0x003F, 0xE000, 0x0040, 0x8000, 0x003F, 
-            0x8000, 0x003F, 0x0000, 0x5B00, 0x0011, 0x0000, 0x6853, 0x7061, 
-            0x0065, 0x0000, 0x3F80, 0x0000, 0x40E0, 0x0000, 0x3F80, 0x0000, 
-            0x3F80, 0x0000, 0x3F80, 0x125B, 0x0000, 0x5700, 0x6469, 0x4D68, 
-            0x646F, 0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 
-            0x8000, 0x003F, 0x0000, 0x5B00, 0x0013, 0x0000, 0x6957, 0x7464, 
-            0x0068, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 
-            0x3F80, 0x0000, 0x0000, 0x145B, 0x0000, 0x4D00, 0x6469, 0x5769, 
-            0x6469, 0x6874, 0x0032, 0x0000, 0x3F80, 0x0000, 0x40E0, 0x0000, 
-            0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x155B, 0x0000, 0x4D00, 
-            0x6469, 0x5769, 0x6469, 0x6874, 0x0000, 0x8000, 0x003F, 0xE000, 
-            0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0016, 
-            0x0000, 0x6F50, 0x6973, 0x6974, 0x6E6F, 0x6F4D, 0x0064, 0x0000, 
-            0xBF80, 0x0000, 0x3F80, 0xA3D7, 0x3F70, 0x0000, 0x3F80, 0x0000, 
-            0x0000, 0x175B, 0x0000, 0x5000, 0x736F, 0x7469, 0x6F69, 0x006E, 
-            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 
-            0x0000, 0x0000, 0x185B, 0x0000, 0x5100, 0x6175, 0x746E, 0x7369, 
-            0x5065, 0x736F, 0x7469, 0x6969, 0x6E6F, 0x0000, 0x8000, 0x003F, 
-            0x1000, 0x0041, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5B3F, 
-            0x0019, 0x0000, 0x6F50, 0x5373, 0x6F6D, 0x746F, 0x0068, 0x0000, 
-            0x41A0, 0x4000, 0x469C, 0x0000, 0x41A0, 0x6C1A, 0x3E6B, 0x0000, 
-            0x0000, 0x1A5B, 0x0000, 0x4600, 0x6C69, 0x5065, 0x7469, 0x6863, 
-            0x0000, 0xC000, 0x00C1, 0xC000, 0x0041, 0xC000, 0x0034, 0x8000, 
-            0x003F, 0x0000, 0x5B00, 0x001B, 0x0000, 0x7450, 0x6369, 0x5368, 
-            0x6968, 0x7466, 0x6E4F, 0x0000, 0x8000, 0x003F, 0x8000, 0x0040, 
-            0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5B3F, 0x001C, 0x0000, 
-            0x6946, 0x656C, 0x6950, 0x6374, 0x4D68, 0x646F, 0x0000, 0x8000, 
-            0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 
-            0x5B00, 0x001D, 0x0000, 0x6950, 0x6374, 0x5768, 0x6E69, 0x0000, 
-            0x4800, 0x0042, 0x1C40, 0xB846, 0x7B56, 0x0045, 0x8000, 0x003F, 
-            0x0000, 0x5B00, 0x001E, 0x0000, 0x6957, 0x4D6E, 0x646F, 0x0000, 
-            0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 
-            0x0000, 0x5B00, 0x001F, 0x0000, 0x6946, 0x656C, 0x6E49, 0x7570, 
-            0x0074, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 
-            0x3F80, 0x0000, 0x0000, 0x205B, 0x0000, 0x4600, 0x6C69, 0x4965, 
-            0x706E, 0x7475, 0x6F4D, 0x0064, 0x0000, 0xBF80, 0x0000, 0x3F80, 
-            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x215B, 0x0000, 
-            0x4600, 0x6C69, 0x5565, 0x6573, 0x0072, 0x0000, 0x0000, 0x0000, 
-            0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x225B, 
-            0x0000, 0x4600, 0x6C69, 0x4D65, 0x6469, 0x5069, 0x7469, 0x6863, 
-            0x0000, 0x8000, 0x003F, 0x8000, 0x0040, 0x8000, 0x003F, 0x8000, 
-            0x003F, 0x8000, 0x5B3F, 0x0023, 0x0000, 0x6946, 0x656C, 0x694D, 
-            0x6964, 0x6F70, 0x3273, 0x0000, 0x8000, 0x003F, 0xE000, 0x0040, 
-            0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5B3F, 0x0024, 0x0000, 
-            0x6946, 0x656C, 0x6957, 0x506E, 0x006B, 0x0000, 0x3F80, 0x0000, 
-            0x4080, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x255B, 
-            0x0000, 0x4600, 0x6C69, 0x4D65, 0x6469, 0x7769, 0x6E69, 0x6F64, 
-            0x0077, 0x0000, 0x3F80, 0x0000, 0x40E0, 0x0000, 0x3F80, 0x0000, 
-            0x3F80, 0x0000, 0x3F80, 0x265B, 0x0000, 0x4600, 0x6C69, 0x4D65, 
-            0x6469, 0x4969, 0x706E, 0x7475, 0x0000, 0x8000, 0x003F, 0xE000, 
-            0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0027, 
-            0x0000, 0x0051, 0x0000, 0x0000, 0x0000, 0x3F80, 0x70A4, 0x3F7D, 
-            0x0000, 0x3F80, 0x0000, 0x0000, 0x285B, 0x0000, 0x4600, 0x6C69, 
-            0x6574, 0x4D72, 0x7869, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 
-            0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0029, 0x0000, 
-            0x6946, 0x746C, 0x7265, 0x6F4D, 0x0064, 0x0000, 0xBF80, 0x0000, 
-            0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x2A5B, 
-            0x0000, 0x4300, 0x7475, 0x0031, 0x0000, 0x41A0, 0x4000, 0x469C, 
-            0x9000, 0x45B3, 0x6C1A, 0x3E6B, 0x0000, 0x0000, 0x2B5B, 0x0000, 
-            0x4300, 0x7475, 0x4D31, 0x646F, 0x0000, 0x8000, 0x00BF, 0x8000, 
-            0x003F, 0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5B00, 0x002C, 
-            0x0000, 0x7543, 0x3274, 0x0000, 0xA000, 0x0041, 0x9C40, 0x0046, 
-            0x3200, 0x1A43, 0x6B6C, 0x003E, 0x0000, 0x5B00, 0x002D, 0x0000, 
-            0x7543, 0x3274, 0x6F4D, 0x0064, 0x0000, 0xBF80, 0x0000, 0x3F80, 
-            0x851F, 0x3F6B, 0x0000, 0x3F80, 0x0000, 0x0000, 0x2E5B, 0x0000, 
-            0x4600, 0x6C69, 0x6574, 0x4D72, 0x6469, 0x4D69, 0x7869, 0x0000, 
+			0x005C, 0x0000, 0x0000, 0x6950, 0x6374, 0x0068, 0x0000, 0xC1C0, 
+            0x0000, 0x41C0, 0x6666, 0xC0B6, 0x0000, 0x3F80, 0x0000, 0x0000, 
+            0x005C, 0x0001, 0x0000, 0x6574, 0x706D, 0x006F, 0x0000, 0x0000, 
+            0x0000, 0x4190, 0x0000, 0x40C0, 0x0000, 0x3F80, 0x0000, 0x0000, 
+            0x005C, 0x0002, 0x0000, 0x6964, 0x0076, 0x0000, 0x3F80, 0x0000, 
+            0x4200, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
+            0x0003, 0x0000, 0x6970, 0x6374, 0x6D68, 0x646F, 0x0065, 0x0000, 
+            0x3F80, 0x0000, 0x4040, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
+            0x3F80, 0x005C, 0x0004, 0x0000, 0x7473, 0x7065, 0x0000, 0x0000, 
+            0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 
+            0x5C00, 0x0500, 0x0000, 0x4F00, 0x4D73, 0x7869, 0x0000, 0x0000, 
+            0x0000, 0x8000, 0xC33F, 0x28F5, 0x003F, 0x8000, 0x003F, 0x0000, 
+            0x5C00, 0x0600, 0x0000, 0x5000, 0x7469, 0x6863, 0x6F4D, 0x0064, 
+            0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 
+            0x0000, 0x0000, 0x005C, 0x0007, 0x0000, 0x734F, 0x4D63, 0x7869, 
+            0x6F4D, 0x0064, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0008, 0x0000, 0x6E49, 
+            0x7570, 0x3174, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 
+            0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x0900, 0x0000, 0x4900, 
+            0x4D6E, 0x646F, 0x0031, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 
+            0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x000A, 0x0000, 
+            0x6554, 0x706D, 0x326F, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 
+            0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x0B00, 0x0000, 
+            0x4D00, 0x6469, 0x5369, 0x6F6C, 0x5074, 0x7469, 0x6863, 0x0000, 
             0x8000, 0x003F, 0xE000, 0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 
-            0x0000, 0x5B00, 0x002F, 0x0000, 0x6946, 0x746C, 0x7265, 0x694D, 
-            0x6964, 0x7543, 0x3174, 0x0000, 0x8000, 0x003F, 0xE000, 0x0040, 
-            0xC000, 0x0040, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0030, 0x0000, 
-            0x6946, 0x746C, 0x7265, 0x694D, 0x6964, 0x7543, 0x3274, 0x0000, 
-            0x8000, 0x003F, 0xE000, 0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 
-            0x0000, 0x5B00, 0x0031, 0x0000, 0x6946, 0x746C, 0x7265, 0x734F, 
-            0x0063, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
-            0x3F80, 0x0000, 0x0000, 0x325B, 0x0000, 0x4F00, 0x6373, 0x4632, 
-            0x6C69, 0x6574, 0x3272, 0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 
-            0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0033, 0x0000, 
-            0x736F, 0x3263, 0x6147, 0x6E69, 0x0000, 0x8000, 0x00BF, 0x8000, 
-            0xCD3F, 0x4CCC, 0x003F, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0034, 
-            0x0000, 0x7250, 0x4665, 0x6C69, 0x6574, 0x4772, 0x6961, 0x006E, 
-            0x0000, 0xC2C8, 0x0000, 0x41C0, 0x0000, 0x35C8, 0x833E, 0x40AD, 
-            0xCCCD, 0x3DCC, 0x355B, 0x0000, 0x4600, 0x6C69, 0x6574, 0x4D72, 
-            0x646F, 0x0065, 0x0000, 0x3F80, 0x0000, 0x40E0, 0x0000, 0x40E0, 
-            0x0000, 0x3F80, 0x0000, 0x3F80, 0x365B, 0x0000, 0x7100, 0x0032, 
-            0x0000, 0x0000, 0x0000, 0x3F80, 0xCCCD, 0x3F4C, 0x0000, 0x3F80, 
-            0x0000, 0x0000, 0x375B, 0x0000, 0x6100, 0x0031, 0x0000, 0x0000, 
-            0x4000, 0x461C, 0x4000, 0x461C, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 
-            0x385B, 0x0000, 0x6800, 0x0031, 0x0000, 0x0000, 0x4000, 0x461C, 
-            0x4000, 0x445F, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 0x395B, 0x0000, 
-            0x6400, 0x0031, 0x0000, 0x0000, 0x4000, 0x461C, 0x0000, 0x0000, 
-            0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 0x3A5B, 0x0000, 0x7300, 0x0031, 
+            0x0000, 0x5C00, 0x0C00, 0x0000, 0x5700, 0x6469, 0x6874, 0x0032, 
             0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 
-            0x0000, 0x0000, 0x3B5B, 0x0000, 0x7200, 0x0031, 0x0000, 0x0000, 
-            0x4000, 0x461C, 0x7000, 0x456B, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 
-            0x3C5B, 0x0000, 0x6100, 0x0032, 0x0000, 0x0000, 0x4000, 0x461C, 
-            0x8000, 0x43C8, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 0x3D5B, 0x0000, 
-            0x6800, 0x0032, 0x0000, 0x0000, 0x4000, 0x461C, 0x0000, 0x0000, 
-            0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 0x3E5B, 0x0000, 0x6400, 0x0032, 
-            0x0000, 0x0000, 0x4000, 0x461C, 0x0000, 0x4188, 0x6A72, 0x3E4A, 
-            0xCCCD, 0x3DCC, 0x3F5B, 0x0000, 0x7300, 0x0032, 0x0000, 0x0000, 
-            0x0000, 0x3F80, 0x851F, 0x3EEB, 0x0000, 0x3F80, 0x0000, 0x0000, 
-            0x405B, 0x0000, 0x7200, 0x0032, 0x0000, 0x0000, 0x4000, 0x461C, 
-            0x4000, 0x4455, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 0x415B, 0x0000, 
-            0x4500, 0x766E, 0x6C43, 0x636F, 0x316B, 0x0000, 0x0000, 0x0000, 
-            0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x5B3F, 
-            0x0042, 0x0000, 0x6E45, 0x4376, 0x6F6C, 0x6B63, 0x3231, 0x0000, 
-            0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 
-            0x8000, 0x5B3F, 0x0043, 0x0000, 0x6E45, 0x5476, 0x6D65, 0x6F70, 
-            0x0031, 0x0000, 0x0000, 0x0000, 0x4190, 0x0000, 0x4130, 0x0000, 
-            0x3F80, 0x0000, 0x3F80, 0x445B, 0x0000, 0x4500, 0x766E, 0x6554, 
-            0x706D, 0x326F, 0x0000, 0x0000, 0x0000, 0x9000, 0x0041, 0x0000, 
-            0x0000, 0x8000, 0x003F, 0x8000, 0x5B3F, 0x0045, 0x0000, 0x6E45, 
-            0x4476, 0x7669, 0x0000, 0x8000, 0x003F, 0x0000, 0x0042, 0x8000, 
-            0x003F, 0x8000, 0x003F, 0x8000, 0x5B3F, 0x0046, 0x0000, 0x6E45, 
-            0x5476, 0x6972, 0x4967, 0x316E, 0x0000, 0x0000, 0x0000, 0x8000, 
-            0x003F, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5B3F, 0x0047, 
-            0x0000, 0x6E45, 0x5476, 0x6972, 0x4967, 0x326E, 0x0000, 0x0000, 
-            0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 
-            0x5B3F, 0x0048, 0x0000, 0x6E45, 0x5476, 0x7079, 0x3165, 0x0000, 
-            0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 
-            0x8000, 0x5B3F, 0x0049, 0x0000, 0x6E45, 0x5476, 0x7079, 0x3265, 
-            0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 
-            0x003F, 0x8000, 0x5B3F, 0x004A, 0x0000, 0x6950, 0x6374, 0x5068, 
-            0x4D6B, 0x646F, 0x7253, 0x3163, 0x0000, 0x8000, 0x003F, 0x8000, 
-            0x0040, 0x0000, 0x0040, 0x8000, 0x003F, 0x0000, 0x5B00, 0x004B, 
-            0x0000, 0x6950, 0x6374, 0x3268, 0x694D, 0x6964, 0x0000, 0x8000, 
-            0x003F, 0xE000, 0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 
-            0x5B00, 0x004C, 0x0000, 0x6950, 0x6374, 0x3268, 0x6B50, 0x6F4D, 
-            0x5364, 0x6372, 0x0000, 0x8000, 0x003F, 0x8000, 0x0040, 0x8000, 
-            0x0040, 0x8000, 0x003F, 0x8000, 0x5B3F, 0x004D, 0x0000, 0x6E49, 
-            0x7253, 0x4F63, 0x6373, 0x0031, 0x0000, 0x3F80, 0x0000, 0x4040, 
-            0x0000, 0x4040, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x4E5B, 0x0000, 
-            0x4900, 0x536E, 0x6372, 0x734F, 0x3263, 0x0000, 0x8000, 0x003F, 
-            0x4000, 0x0040, 0x0000, 0x0040, 0x8000, 0x003F, 0x8000, 0x5B3F, 
-            0x004F, 0x0000, 0x6946, 0x656C, 0x6E49, 0x734F, 0x3163, 0x0000, 
-            0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x003F, 
-            0x0000, 0x5B00, 0x0050, 0x0000, 0x6946, 0x656C, 0x6E49, 0x734F, 
-            0x3263, 0x0000, 0x0000, 0x0000, 0x8000, 0x103F, 0x5E58, 0x003F, 
-            0x8000, 0x003F, 0x0000, 0x5B00, 0x0051, 0x0000, 0x6946, 0x656C, 
-            0x4972, 0x4F6E, 0x6373, 0x0031, 0x0000, 0x0000, 0x0000, 0x3F80, 
-            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x525B, 0x0000, 
-            0x4600, 0x6C69, 0x6574, 0x4972, 0x4F6E, 0x6353, 0x0032, 0x0000, 
-            0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
-            0x0000, 0x535B, 0x0000, 0x4600, 0x6C69, 0x6574, 0x4972, 0x466E, 
-            0x6C69, 0x0065, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 
-            0x0000, 0x3F80, 0x0000, 0x0000, 0x545B, 0x0000, 0x4F00, 0x6373, 
-            0x694D, 0x5078, 0x496B, 0x006E, 0x0000, 0x3F80, 0x0000, 0x4080, 
-            0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x555B, 0x0000, 
-            0x4F00, 0x6373, 0x6E49, 0x7570, 0x3274, 0x0000, 0x0000, 0x0000, 
-            0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5B00, 
-            0x0056, 0x0000, 0x734F, 0x3263, 0x6E49, 0x6F4D, 0x0064, 0x0000, 
-            0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
-            0x0000, 0x575B, 0x0000, 0x4F00, 0x6373, 0x6E49, 0x6550, 0x6B61, 
-            0x0000, 0x8000, 0x003F, 0x8000, 0x0040, 0x8000, 0x003F, 0x8000, 
-            0x003F, 0x0000, 0x5B00, 0x0058, 0x0000, 0x734F, 0x4963, 0x506E, 
-            0x6145, 0x326B, 0x0000, 0x8000, 0x003F, 0x8000, 0x0040, 0x8000, 
-            0x003F, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0059, 0x0000, 0x734F, 
-            0x3263, 0x694D, 0x0064, 0x0000, 0x3F80, 0x0000, 0x40E0, 0x0000, 
-            0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x5A5B, 0x0000, 0x4F00, 
-            0x6373, 0x6957, 0x7464, 0x5068, 0x006B, 0x0000, 0x3F80, 0x0000, 
-            0x4080, 0x0000, 0x4000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x5B5B, 
-            0x0000, 0x4F00, 0x6373, 0x6957, 0x7464, 0x5068, 0x326B, 0x0000, 
-            0x8000, 0x003F, 0x8000, 0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 
-            0x0000, 0x5B00, 0x005C, 0x0000, 0x6946, 0x656C, 0x694D, 0x5064, 
-            0x006B, 0x0000, 0x3F80, 0x0000, 0x4080, 0x0000, 0x4080, 0x0000, 
-            0x3F80, 0x0000, 0x0000, 0x5D5B, 0x0000, 0x4600, 0x6C69, 0x4965, 
-            0x506E, 0x006B, 0x0000, 0x3F80, 0x0000, 0x4080, 0x0000, 0x3F80, 
-            0x0000, 0x3F80, 0x0000, 0x0000, 0x5E5B, 0x0000, 0x4600, 0x6C69, 
-            0x5865, 0x6F72, 0x7373, 0x6146, 0x6564, 0x0000, 0x0000, 0x0000, 
-            0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5B00, 
-            0x005F, 0x0000, 0x6946, 0x656C, 0x7258, 0x736F, 0x4673, 0x6461, 
-            0x4D65, 0x646F, 0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 
-            0x0000, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0060, 0x0000, 0x6946, 
-            0x656C, 0x7258, 0x736F, 0x4673, 0x6461, 0x5065, 0x006B, 0x0000, 
-            0x3F80, 0x0000, 0x4080, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
-            0x0000, 0x615B, 0x0000, 0x4600, 0x6C69, 0x5865, 0x6F72, 0x7373, 
-            0x6146, 0x6564, 0x6F4D, 0x6564, 0x0000, 0x8000, 0x003F, 0x8000, 
-            0x0040, 0x8000, 0x0040, 0x8000, 0x003F, 0x8000, 0x5B3F, 0x0062, 
-            0x0000, 0x6946, 0x656C, 0x7258, 0x736F, 0x4673, 0x6461, 0x4D65, 
-            0x6469, 0x0069, 0x0000, 0x3F80, 0x0000, 0x40E0, 0x0000, 0x3F80, 
-            0x0000, 0x3F80, 0x0000, 0x0000, 0x635B, 0x0000, 0x4600, 0x6C69, 
-            0x5065, 0x7469, 0x6863, 0x6B50, 0x0000, 0x8000, 0x003F, 0x8000, 
-            0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5B3F, 0x0064, 
-            0x0000, 0x6147, 0x6E69, 0x0000, 0x0000, 0x0000, 0x8000, 0xC33F, 
-            0x68F5, 0x003F, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0065, 0x0000, 
-            0x6147, 0x6E69, 0x6F4D, 0x0064, 0x0000, 0xBF80, 0x0000, 0x3F80, 
-            0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x665B, 0x0000, 
-            0x5000, 0x6E41, 0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 
-            0x0000, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0067, 0x0000, 0x6150, 
+            0x0000, 0x0000, 0x005C, 0x000D, 0x0000, 0x6957, 0x7464, 0x3268, 
+            0x6F4D, 0x0064, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 
+            0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x000E, 0x0000, 0x6542, 
+            0x646E, 0x0032, 0x0000, 0x0000, 0x4000, 0x469C, 0x0000, 0x41A0, 
+            0xEE69, 0x3E6C, 0xCCCD, 0x3DCC, 0x005C, 0x000F, 0x0000, 0x6542, 
+            0x646E, 0x0000, 0x0000, 0x0000, 0x9C40, 0xCD46, 0xB0CC, 0x6941, 
+            0x6CEE, 0xCD3E, 0xCCCC, 0x5C3D, 0x1000, 0x0000, 0x5300, 0x6168, 
+            0x6570, 0x0032, 0x0000, 0x3F80, 0x0000, 0x40E0, 0x0000, 0x40A0, 
+            0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0011, 0x0000, 0x6853, 
+            0x7061, 0x0065, 0x0000, 0x3F80, 0x0000, 0x40E0, 0x0000, 0x4040, 
+            0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0012, 0x0000, 0x6957, 
+            0x6864, 0x6F4D, 0x0064, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 
+            0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0013, 0x0000, 
+            0x6957, 0x7464, 0x0068, 0x0000, 0x0000, 0x0000, 0x3F80, 0xD70A, 
+            0x3D23, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0014, 0x0000, 
+            0x694D, 0x6964, 0x6957, 0x7464, 0x3268, 0x0000, 0x8000, 0x003F, 
+            0xE000, 0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 
+            0x1500, 0x0000, 0x4D00, 0x6469, 0x5769, 0x6469, 0x6874, 0x0000, 
+            0x8000, 0x003F, 0xE000, 0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 
+            0x0000, 0x5C00, 0x1600, 0x0000, 0x5000, 0x736F, 0x7469, 0x6F69, 
             0x4D6E, 0x646F, 0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 
-            0x0000, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0068, 0x0000, 0x7543, 
-            0x5074, 0x004B, 0x0000, 0x4040, 0x0000, 0x4160, 0x0000, 0x4040, 
-            0x0000, 0x3F80, 0x0000, 0x3F80, 0x695B, 0x0000, 0x4300, 0x7475, 
-            0x5032, 0x006B, 0x0000, 0x3F80, 0x0000, 0x4080, 0x0000, 0x3F80, 
-            0x0000, 0x3F80, 0x0000, 0x3F80, 0x6A5B, 0x0000, 0x4700, 0x6961, 
-            0x4D6E, 0x6469, 0x0069, 0x0000, 0x3F80, 0x0000, 0x40E0, 0x0000, 
-            0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x6B5B, 0x0000, 0x4700, 
-            0x6961, 0x506E, 0x006B, 0x0000, 0x3F80, 0x0000, 0x4080, 0x0000, 
-            0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x6C5B, 0x0000, 0x5000, 
-            0x6E61, 0x694D, 0x6964, 0x0000, 0x8000, 0x003F, 0xE000, 0x0040, 
-            0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5B00, 0x006D, 0x0000, 
-            0x6150, 0x506E, 0x006B, 0x0000, 0x3F80, 0x0000, 0x4080, 0x0000, 
-            0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x6E5B, 0x0000, 0x4600, 
-            0x6C69, 0x6574, 0x4D72, 0x7869, 0x6B50, 0x0000, 0x0000, 0x0000, 
-            0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5B00, 
-            0x006F, 0x0000, 0x6147, 0x6E69, 0x0041, 0x0000, 0x0000, 0x0000, 
-            0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x705B, 
-            0x0000, 0x4700, 0x6961, 0x486E, 0x0000, 0x0000, 0x0000, 0x8000, 
-            0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0071, 
-            0x0000, 0x6147, 0x6E69, 0x0044, 0x0000, 0x0000, 0x0000, 0x3F80, 
-            0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x725B, 0x0000, 
-            0x4700, 0x6961, 0x536E, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 
-            0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0073, 0x0000, 
-            0x6147, 0x6E69, 0x0052, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
-            0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x745B, 0x0000, 0x6600, 
-            0x6565, 0x0064, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 
-            0x0000, 0x3F80, 0x0000, 0x0000, 0x755B, 0x0000, 0x4600, 0x6C69, 
-            0x4965, 0x006E, 0x0000, 0x0000, 0x0000, 0x3F00, 0x0000, 0x0000, 
-            0xF532, 0x3F1E, 0x0000, 0x0000, 0x765B, 0x0000, 0x4F00, 0x6373, 
-            0x4F73, 0x7475, 0x0000, 0xC800, 0x00C2, 0x0000, 0x0000, 0x0000, 
-            0x3E00, 0xAD83, 0xCD40, 0xCCCC, 0x5B3D, 0x0077, 0x0000, 0x6950, 
-            0x6374, 0x3268, 0x0000, 0xC000, 0x00C1, 0xC000, 0xCD41, 0xBCCC, 
-            0x00C1, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0078, 0x0000, 0x6950, 
-            0x6374, 0x3268, 0x6F4D, 0x0064, 0x0000, 0xBF80, 0x0000, 0x3F80, 
-            0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x795B, 0x0000, 
+            0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x1700, 0x0000, 0x5000, 
+            0x736F, 0x7469, 0x6F69, 0x006E, 0x0000, 0x0000, 0x0000, 0x3F80, 
+            0xE148, 0x3EFA, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0018, 
+            0x0000, 0x7551, 0x6E61, 0x6974, 0x6573, 0x6F50, 0x6973, 0x6974, 
+            0x6F69, 0x006E, 0x0000, 0x3F80, 0x0000, 0x4110, 0x0000, 0x3F80, 
+            0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0019, 0x0000, 0x6F50, 
+            0x5373, 0x6F6D, 0x746F, 0x0068, 0x0000, 0x41A0, 0x4000, 0x469C, 
+            0x76DB, 0x44C8, 0x6C1A, 0x3E6B, 0x0000, 0x0000, 0x005C, 0x001A, 
+            0x0000, 0x6946, 0x656C, 0x6950, 0x6374, 0x0068, 0x0000, 0xC1C0, 
+            0x0000, 0x41C0, 0x0001, 0x4110, 0x0000, 0x3F80, 0x0000, 0x0000, 
+            0x005C, 0x001B, 0x0000, 0x7450, 0x6369, 0x5368, 0x6968, 0x7466, 
+            0x6E4F, 0x0000, 0x8000, 0x003F, 0x8000, 0x0040, 0x8000, 0x0040, 
+            0x8000, 0x003F, 0x8000, 0x5C3F, 0x1C00, 0x0000, 0x4600, 0x6C69, 
+            0x5065, 0x7469, 0x6863, 0x6F4D, 0x0064, 0x0000, 0xBF80, 0x0000, 
+            0x3F80, 0x947B, 0x3F6C, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 
+            0x001D, 0x0000, 0x6950, 0x6374, 0x5768, 0x6E69, 0x0000, 0x4800, 
+            0x0042, 0x1C40, 0xA446, 0x02F0, 0x0044, 0x8000, 0x003F, 0x0000, 
+            0x5C00, 0x1E00, 0x0000, 0x5700, 0x6E69, 0x6F4D, 0x0064, 0x0000, 
+            0xBF80, 0x0000, 0x3F80, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 
+            0x0000, 0x005C, 0x001F, 0x0000, 0x6150, 0x326E, 0x0000, 0x8000, 
+            0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 
+            0x5C00, 0x2000, 0x0000, 0x5000, 0x6E61, 0x4D32, 0x646F, 0x0000, 
+            0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 
+            0x0000, 0x5C00, 0x2100, 0x0000, 0x4600, 0x6C69, 0x5565, 0x6573, 
+            0x0072, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 
+            0x3F80, 0x0000, 0x3F80, 0x005C, 0x0022, 0x0000, 0x6946, 0x656C, 
+            0x694D, 0x6964, 0x6950, 0x6374, 0x0068, 0x0000, 0x3F80, 0x0000, 
+            0x4080, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
+            0x0023, 0x0000, 0x6946, 0x656C, 0x694D, 0x6964, 0x6F70, 0x3273, 
+            0x0000, 0x8000, 0x003F, 0xE000, 0x0040, 0x8000, 0x003F, 0x8000, 
+            0x003F, 0x8000, 0x5C3F, 0x2400, 0x0000, 0x4600, 0x6C69, 0x5765, 
+            0x6E69, 0x6B50, 0x0000, 0x8000, 0x003F, 0x8000, 0x0040, 0x8000, 
+            0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 0x2500, 0x0000, 0x4600, 
+            0x6C69, 0x4D65, 0x6469, 0x7769, 0x6E69, 0x6F64, 0x0077, 0x0000, 
+            0x3F80, 0x0000, 0x40E0, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
+            0x3F80, 0x005C, 0x0026, 0x0000, 0x6946, 0x656C, 0x694D, 0x6964, 
+            0x6E49, 0x7570, 0x0074, 0x0000, 0x3F80, 0x0000, 0x40E0, 0x0000, 
+            0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0027, 0x0000, 
+            0x0051, 0x0000, 0x0000, 0x0000, 0x3F80, 0x3333, 0x3F33, 0x0000, 
+            0x3F80, 0x0000, 0x0000, 0x005C, 0x0028, 0x0000, 0x6946, 0x746C, 
+            0x7265, 0x694D, 0x0078, 0x0000, 0x0000, 0x0000, 0x3F80, 0x3D71, 
+            0x3F0A, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0029, 0x0000, 
+            0x6946, 0x746C, 0x7265, 0x6F4D, 0x0064, 0x0000, 0xBF80, 0x0000, 
+            0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 
+            0x002A, 0x0000, 0x7543, 0x3174, 0x0000, 0xA000, 0x0041, 0x9C40, 
+            0x0046, 0x3900, 0x1A43, 0x6B6C, 0x003E, 0x0000, 0x5C00, 0x2B00, 
+            0x0000, 0x4300, 0x7475, 0x4D31, 0x646F, 0x0000, 0x8000, 0x00BF, 
+            0x8000, 0xC33F, 0x28F5, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 
+            0x2C00, 0x0000, 0x4300, 0x7475, 0x0032, 0x0000, 0x41A0, 0x4000, 
+            0x469C, 0xF000, 0x456B, 0x6C1A, 0x3E6B, 0x0000, 0x0000, 0x005C, 
+            0x002D, 0x0000, 0x7543, 0x3274, 0x6F4D, 0x0064, 0x0000, 0xBF80, 
+            0x0000, 0x3F80, 0x851F, 0x3E6B, 0x0000, 0x3F80, 0x0000, 0x0000, 
+            0x005C, 0x002E, 0x0000, 0x6946, 0x746C, 0x7265, 0x694D, 0x6964, 
+            0x694D, 0x0078, 0x0000, 0x3F80, 0x0000, 0x40E0, 0x0000, 0x3F80, 
+            0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x002F, 0x0000, 0x6946, 
+            0x746C, 0x7265, 0x694D, 0x6964, 0x7543, 0x3174, 0x0000, 0x8000, 
+            0x003F, 0xE000, 0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 
+            0x5C00, 0x3000, 0x0000, 0x4600, 0x6C69, 0x6574, 0x4D72, 0x6469, 
+            0x4369, 0x7475, 0x0032, 0x0000, 0x3F80, 0x0000, 0x40E0, 0x0000, 
+            0x40C0, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0031, 0x0000, 
+            0x6946, 0x746C, 0x7265, 0x734F, 0x0063, 0x0000, 0xBF80, 0x0000, 
+            0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 
+            0x0032, 0x0000, 0x734F, 0x3263, 0x6946, 0x746C, 0x7265, 0x0032, 
+            0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x0000, 0x0000, 0x005C, 0x0033, 0x0000, 0x736F, 0x3263, 0x6147, 
+            0x6E69, 0x0000, 0x8000, 0x00BF, 0x8000, 0xCD3F, 0x4CCC, 0x003F, 
+            0x8000, 0x003F, 0x0000, 0x5C00, 0x3400, 0x0000, 0x5000, 0x6572, 
+            0x6946, 0x746C, 0x7265, 0x6147, 0x6E69, 0x0000, 0xC800, 0x00C2, 
+            0xC000, 0x0041, 0xC800, 0x3E35, 0xAD83, 0xCD40, 0xCCCC, 0x5C3D, 
+            0x3500, 0x0000, 0x4600, 0x6C69, 0x6574, 0x4D72, 0x646F, 0x0065, 
+            0x0000, 0x3F80, 0x0000, 0x40A0, 0x0000, 0x4040, 0x0000, 0x3F80, 
+            0x0000, 0x3F80, 0x005C, 0x0036, 0x0000, 0x3271, 0x0000, 0x0000, 
+            0x0000, 0x8000, 0x1F3F, 0x6B85, 0x003F, 0x8000, 0x003F, 0x0000, 
+            0x5C00, 0x3700, 0x0000, 0x6100, 0x0031, 0x0000, 0x0000, 0x4000, 
+            0x461C, 0x0000, 0x4120, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 0x005C, 
+            0x0038, 0x0000, 0x3168, 0x0000, 0x0000, 0x0000, 0x1C40, 0x0046, 
+            0x0000, 0x7200, 0x4A6A, 0xCD3E, 0xCCCC, 0x5C3D, 0x3900, 0x0000, 
+            0x6400, 0x0031, 0x0000, 0x0000, 0x4000, 0x461C, 0xC000, 0x4415, 
+            0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 0x005C, 0x003A, 0x0000, 0x3173, 
+            0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 
+            0x003F, 0x0000, 0x5C00, 0x3B00, 0x0000, 0x7200, 0x0031, 0x0000, 
+            0x0000, 0x4000, 0x461C, 0xF800, 0x45DB, 0x6A72, 0x3E4A, 0xCCCD, 
+            0x3DCC, 0x005C, 0x003C, 0x0000, 0x3261, 0x0000, 0x0000, 0x0000, 
+            0x1C40, 0x0046, 0x5000, 0x7243, 0x4A6A, 0xCD3E, 0xCCCC, 0x5C3D, 
+            0x3D00, 0x0000, 0x6800, 0x0032, 0x0000, 0x0000, 0x4000, 0x461C, 
+            0x8000, 0x440A, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 0x005C, 0x003E, 
+            0x0000, 0x3264, 0x0000, 0x0000, 0x0000, 0x1C40, 0x0046, 0x9000, 
+            0x7241, 0x4A6A, 0xCD3E, 0xCCCC, 0x5C3D, 0x3F00, 0x0000, 0x7300, 
+            0x0032, 0x0000, 0x0000, 0x0000, 0x3F80, 0x51EC, 0x3DB8, 0x0000, 
+            0x3F80, 0x0000, 0x0000, 0x005C, 0x0040, 0x0000, 0x3272, 0x0000, 
+            0x0000, 0x0000, 0x1C40, 0x0046, 0x0000, 0x7200, 0x4A6A, 0xCD3E, 
+            0xCCCC, 0x5C3D, 0x4100, 0x0000, 0x4500, 0x766E, 0x6C43, 0x636F, 
+            0x316B, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 
+            0x8000, 0x003F, 0x8000, 0x5C3F, 0x4200, 0x0000, 0x4500, 0x766E, 
+            0x6C43, 0x636F, 0x316B, 0x0032, 0x0000, 0x0000, 0x0000, 0x3F80, 
+            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0043, 
+            0x0000, 0x6E45, 0x5476, 0x6D65, 0x6F70, 0x0031, 0x0000, 0x0000, 
+            0x0000, 0x4190, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x005C, 0x0044, 0x0000, 0x6E45, 0x5476, 0x6D65, 0x6F70, 0x0032, 
+            0x0000, 0x0000, 0x0000, 0x4190, 0x0000, 0x4080, 0x0000, 0x3F80, 
+            0x0000, 0x3F80, 0x005C, 0x0045, 0x0000, 0x6E45, 0x4476, 0x7669, 
+            0x0000, 0x8000, 0x003F, 0x0000, 0x0042, 0x8000, 0x003F, 0x8000, 
+            0x003F, 0x8000, 0x5C3F, 0x4600, 0x0000, 0x4500, 0x766E, 0x7254, 
+            0x6769, 0x6E49, 0x0031, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
+            0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0047, 0x0000, 
+            0x6E45, 0x5476, 0x6972, 0x4967, 0x326E, 0x0000, 0x0000, 0x0000, 
+            0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 
+            0x4800, 0x0000, 0x4500, 0x766E, 0x7954, 0x6570, 0x0031, 0x0000, 
+            0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
+            0x3F80, 0x005C, 0x0049, 0x0000, 0x6E45, 0x5476, 0x7079, 0x3265, 
+            0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 
+            0x003F, 0x8000, 0x5C3F, 0x4A00, 0x0000, 0x5000, 0x7469, 0x6863, 
+            0x6B50, 0x6F4D, 0x5364, 0x6372, 0x0031, 0x0000, 0x3F80, 0x0000, 
+            0x4080, 0x0000, 0x4040, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 
+            0x004B, 0x0000, 0x6950, 0x6374, 0x3268, 0x694D, 0x6964, 0x0000, 
+            0x8000, 0x003F, 0xE000, 0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 
+            0x0000, 0x5C00, 0x4C00, 0x0000, 0x5000, 0x7469, 0x6863, 0x5032, 
+            0x4D6B, 0x646F, 0x7253, 0x0063, 0x0000, 0x3F80, 0x0000, 0x4080, 
+            0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x004D, 
+            0x0000, 0x6E49, 0x7253, 0x4F63, 0x6373, 0x0031, 0x0000, 0x3F80, 
+            0x0000, 0x4080, 0x0000, 0x4040, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x005C, 0x004E, 0x0000, 0x6E49, 0x7253, 0x4F63, 0x6373, 0x0032, 
+            0x0000, 0x3F80, 0x0000, 0x4080, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x0000, 0x3F80, 0x005C, 0x004F, 0x0000, 0x6946, 0x656C, 0x6E49, 
+            0x734F, 0x3163, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 
+            0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 0x5000, 0x0000, 0x4600, 
+            0x6C69, 0x4965, 0x4F6E, 0x6373, 0x0032, 0x0000, 0x0000, 0x0000, 
+            0x3F80, 0x5810, 0x3F5E, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 
+            0x0051, 0x0000, 0x6946, 0x656C, 0x4972, 0x4F6E, 0x6373, 0x0031, 
+            0x0000, 0x0000, 0x0000, 0x3F80, 0x999A, 0x3D31, 0x0000, 0x3F80, 
+            0x0000, 0x0000, 0x005C, 0x0052, 0x0000, 0x6946, 0x746C, 0x7265, 
+            0x6E49, 0x534F, 0x3263, 0x0000, 0x0000, 0x0000, 0x8000, 0x333F, 
+            0x2093, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 0x5300, 0x0000, 
+            0x4600, 0x6C69, 0x6574, 0x4972, 0x466E, 0x6C69, 0x0065, 0x0000, 
+            0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
+            0x0000, 0x005C, 0x0054, 0x0000, 0x734F, 0x4D63, 0x7869, 0x6B50, 
+            0x6E49, 0x0000, 0x8000, 0x003F, 0x8000, 0x0040, 0x8000, 0x003F, 
+            0x8000, 0x003F, 0x0000, 0x5C00, 0x5500, 0x0000, 0x4F00, 0x6373, 
+            0x6E49, 0x7570, 0x3274, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 
+            0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x5600, 0x0000, 
+            0x4F00, 0x6373, 0x4932, 0x4D6E, 0x646F, 0x0000, 0x8000, 0x00BF, 
+            0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 
+            0x5700, 0x0000, 0x4F00, 0x6373, 0x6E49, 0x6550, 0x6B61, 0x0000, 
+            0x8000, 0x003F, 0x8000, 0x0040, 0x4000, 0x0040, 0x8000, 0x003F, 
+            0x0000, 0x5C00, 0x5800, 0x0000, 0x4F00, 0x6373, 0x6E49, 0x4550, 
+            0x6B61, 0x0032, 0x0000, 0x3F80, 0x0000, 0x4080, 0x0000, 0x3F80, 
+            0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0059, 0x0000, 0x734F, 
+            0x3263, 0x694D, 0x0064, 0x0000, 0x3F80, 0x0000, 0x40E0, 0x0000, 
+            0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x005A, 0x0000, 
+            0x734F, 0x5763, 0x6469, 0x6874, 0x6B50, 0x0000, 0x8000, 0x003F, 
+            0x8000, 0x0040, 0x8000, 0x0040, 0x8000, 0x003F, 0x0000, 0x5C00, 
+            0x5B00, 0x0000, 0x4F00, 0x6373, 0x6957, 0x7464, 0x5068, 0x326B, 
+            0x0000, 0x8000, 0x003F, 0x8000, 0x0040, 0x8000, 0x003F, 0x8000, 
+            0x003F, 0x0000, 0x5C00, 0x5C00, 0x0000, 0x4600, 0x6C69, 0x4D65, 
+            0x6469, 0x6B50, 0x0000, 0x8000, 0x003F, 0x8000, 0x0040, 0x8000, 
+            0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 0x5D00, 0x0000, 0x4600, 
+            0x6C69, 0x4965, 0x506E, 0x006B, 0x0000, 0x3F80, 0x0000, 0x4080, 
+            0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x005E, 
+            0x0000, 0x6946, 0x656C, 0x7258, 0x736F, 0x4673, 0x6461, 0x0065, 
+            0x0000, 0x0000, 0x0000, 0x3F80, 0x3D71, 0x3F0A, 0x0000, 0x3F80, 
+            0x0000, 0x0000, 0x005C, 0x005F, 0x0000, 0x6946, 0x656C, 0x7258, 
+            0x736F, 0x4673, 0x6461, 0x4D65, 0x646F, 0x0000, 0x8000, 0x00BF, 
+            0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 
+            0x6000, 0x0000, 0x4600, 0x6C69, 0x5865, 0x6F72, 0x7373, 0x6146, 
+            0x6564, 0x6B50, 0x0000, 0x8000, 0x003F, 0x8000, 0x0040, 0x8000, 
+            0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 0x6100, 0x0000, 0x4600, 
+            0x6C69, 0x5865, 0x6F72, 0x7373, 0x6146, 0x6564, 0x6F4D, 0x6564, 
+            0x0000, 0x8000, 0x003F, 0x8000, 0x0040, 0x8000, 0x003F, 0x8000, 
+            0x003F, 0x8000, 0x5C3F, 0x6200, 0x0000, 0x4600, 0x6C69, 0x5865, 
+            0x6F72, 0x7373, 0x6146, 0x6564, 0x694D, 0x6964, 0x0000, 0x8000, 
+            0x003F, 0xE000, 0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 
+            0x5C00, 0x6300, 0x0000, 0x4600, 0x6C69, 0x5065, 0x7469, 0x6863, 
+            0x6B50, 0x0000, 0x8000, 0x003F, 0x8000, 0x0040, 0x8000, 0x003F, 
+            0x8000, 0x003F, 0x8000, 0x5C3F, 0x6400, 0x0000, 0x4700, 0x6961, 
+            0x006E, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
+            0x3F80, 0x0000, 0x0000, 0x005C, 0x0065, 0x0000, 0x6147, 0x6E69, 
+            0x6F4D, 0x0064, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0066, 0x0000, 0x4150, 
+            0x006E, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 
+            0x3F80, 0x0000, 0x0000, 0x005C, 0x0067, 0x0000, 0x6150, 0x4D6E, 
+            0x646F, 0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 
+            0x8000, 0x003F, 0x0000, 0x5C00, 0x6800, 0x0000, 0x4300, 0x7475, 
+            0x4B50, 0x0000, 0x4000, 0x0040, 0x6000, 0x0041, 0x4000, 0x0040, 
+            0x8000, 0x003F, 0x8000, 0x5C3F, 0x6900, 0x0000, 0x4300, 0x7475, 
+            0x5032, 0x006B, 0x0000, 0x3F80, 0x0000, 0x4080, 0x0000, 0x4040, 
+            0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x006A, 0x0000, 0x6147, 
+            0x6E69, 0x694D, 0x6964, 0x0000, 0x8000, 0x003F, 0xE000, 0x0040, 
+            0xC000, 0x0040, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x6B00, 0x0000, 
+            0x4700, 0x6961, 0x506E, 0x006B, 0x0000, 0x3F80, 0x0000, 0x4080, 
+            0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x006C, 
+            0x0000, 0x6150, 0x4D6E, 0x6469, 0x0069, 0x0000, 0x3F80, 0x0000, 
+            0x40E0, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 
+            0x006D, 0x0000, 0x6150, 0x506E, 0x006B, 0x0000, 0x3F80, 0x0000, 
+            0x4080, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 
+            0x006E, 0x0000, 0x6946, 0x746C, 0x7265, 0x694D, 0x5078, 0x006B, 
+            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x0000, 0x0000, 0x005C, 0x006F, 0x0000, 0x6147, 0x6E69, 0x0041, 
+            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 
+            0x0000, 0x0000, 0x005C, 0x0070, 0x0000, 0x6147, 0x6E69, 0x0048, 
+            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 
+            0x0000, 0x0000, 0x005C, 0x0071, 0x0000, 0x6147, 0x6E69, 0x0044, 
+            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x0000, 0x0000, 0x005C, 0x0072, 0x0000, 0x6147, 0x6E69, 0x0053, 
+            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x0000, 0x0000, 0x005C, 0x0073, 0x0000, 0x6147, 0x6E69, 0x0052, 
+            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x0000, 0x0000, 0x005C, 0x0074, 0x0000, 0x6566, 0x6465, 0x0000, 
+            0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 
+            0x0000, 0x5C00, 0x7500, 0x0000, 0x4600, 0x6C69, 0x4965, 0x006E, 
+            0x0000, 0x0000, 0x0000, 0x3F00, 0x0000, 0x0000, 0xF532, 0x3F1E, 
+            0x0000, 0x0000, 0x005C, 0x0076, 0x0000, 0x734F, 0x7363, 0x754F, 
+            0x0074, 0x0000, 0xC2C8, 0x0000, 0x0000, 0x0000, 0x0000, 0x833E, 
+            0x40AD, 0xCCCD, 0x3DCC, 0x005C, 0x0077, 0x0000, 0x6950, 0x6374, 
+            0x3268, 0x0000, 0xC000, 0x00C1, 0xC000, 0x0041, 0x2000, 0x0041, 
+            0x8000, 0x003F, 0x0000, 0x5C00, 0x7800, 0x0000, 0x5000, 0x7469, 
+            0x6863, 0x4D32, 0x646F, 0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 
+            0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x7900, 0x0000, 
             0x4900, 0x706E, 0x7475, 0x4D31, 0x6469, 0x0069, 0x0000, 0x3F80, 
             0x0000, 0x40E0, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 
-            0x7A5B, 0x0000, 0x5F00, 0x7031, 0x6F4D, 0x0064, 0x0000, 0x0000, 
-            0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 
-            0x7B5B, 0x0000, 0x4500, 0x766E, 0x6944, 0x3276, 0x0000, 0x0000, 
-            0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 
-            0x5B00, 0x007C, 0x0000, 0x6F50, 0x4173, 0x6F4D, 0x0064, 0x0000, 
-            0xBF80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
-            0x0000, 0x7D5B, 0x0000, 0x5000, 0x736F, 0x0041, 0x0000, 0x0000, 
-            0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 
-            0x7E5B, 0x0000, 0x5000, 0x736F, 0x0042, 0x0000, 0x0000, 0x0000, 
-            0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x7F5B, 
-            0x0000, 0x5000, 0x736F, 0x6D42, 0x646F, 0x0000, 0x8000, 0x00BF, 
-            0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5B00, 
-            0x0080, 0x0000, 0x6F50, 0x4373, 0x0000, 0x0000, 0x0000, 0x8000, 
-            0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0081, 
-            0x0000, 0x6F50, 0x4373, 0x6F4D, 0x0064, 0x0000, 0xBF80, 0x0000, 
-            0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x825B, 
-            0x0000, 0x5000, 0x736F, 0x0044, 0x0000, 0x0000, 0x0000, 0x3F80, 
-            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x835B, 0x0000, 
-            0x5000, 0x736F, 0x4D44, 0x646F, 0x0000, 0x8000, 0x00BF, 0x8000, 
-            0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0084, 
-            0x0000, 0x6E45, 0x4F76, 0x3153, 0x0000, 0x0000, 0x0000, 0x8000, 
-            0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0085, 
-            0x0000, 0x6E45, 0x4F76, 0x3253, 0x0000, 0x0000, 0x0000, 0x8000, 
-            0x003F, 0x7900, 0x003E, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0086, 
-            0x0000, 0x6152, 0x706D, 0x6554, 0x706D, 0x316F, 0x0000, 0x0000, 
-            0x0000, 0x9000, 0x0041, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 
-            0x5B3F, 0x0087, 0x0000, 0x6152, 0x706D, 0x6554, 0x706D, 0x326F, 
-            0x0000, 0x0000, 0x0000, 0x9000, 0x0041, 0x0000, 0x0000, 0x8000, 
-            0x003F, 0x8000, 0x5B3F, 0x0088, 0x0000, 0x6152, 0x706D, 0x6944, 
-            0x3176, 0x0000, 0x8000, 0x003F, 0x0000, 0x0042, 0x8000, 0x003F, 
-            0x8000, 0x003F, 0x8000, 0x5B3F, 0x0089, 0x0000, 0x6152, 0x706D, 
-            0x6944, 0x3276, 0x0000, 0x8000, 0x003F, 0x0000, 0x0042, 0x8000, 
-            0x0040, 0x8000, 0x003F, 0x8000, 0x5B3F, 0x008A, 0x0000, 0x6152, 
-            0x706D, 0x6E49, 0x3176, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 
-            0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x5B3F, 0x008B, 0x0000, 
-            0x6152, 0x706D, 0x6E49, 0x3276, 0x0000, 0x0000, 0x0000, 0x8000, 
-            0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x5B3F, 0x008C, 
-            0x0000, 0x6152, 0x706D, 0x6554, 0x6F6D, 0x0033, 0x0000, 0x0000, 
-            0x0000, 0x4190, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 
-            0x8D5B, 0x0000, 0x5200, 0x6D61, 0x5470, 0x6D65, 0x6F70, 0x0034, 
-            0x0000, 0x0000, 0x0000, 0x4190, 0x0000, 0x0000, 0x0000, 0x3F80, 
-            0x0000, 0x3F80, 0x8E5B, 0x0000, 0x5200, 0x6D61, 0x4470, 0x7669, 
-            0x0033, 0x0000, 0x3F80, 0x0000, 0x4200, 0x0000, 0x4080, 0x0000, 
-            0x3F80, 0x0000, 0x3F80, 0x8F5B, 0x0000, 0x5200, 0x6D61, 0x4470, 
-            0x7669, 0x0034, 0x0000, 0x3F80, 0x0000, 0x4200, 0x0000, 0x3F80, 
-            0x0000, 0x3F80, 0x0000, 0x3F80, 0x905B, 0x0000, 0x5200, 0x6D61, 
-            0x4970, 0x766E, 0x0033, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
-            0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x915B, 0x0000, 0x5200, 
-            0x6D61, 0x4970, 0x766E, 0x0034, 0x0000, 0x0000, 0x0000, 0x3F80, 
-            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x925B, 0x0000, 
-            0x5200, 0x6D61, 0x4F70, 0x3153, 0x0000, 0x0000, 0x0000, 0x8000, 
-            0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0093, 
-            0x0000, 0x6152, 0x706D, 0x534F, 0x0032, 0x0000, 0x0000, 0x0000, 
-            0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x945B, 
-            0x0000, 0x5200, 0x6D61, 0x4F70, 0x3353, 0x0000, 0x0000, 0x0000, 
-            0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5B00, 
-            0x0095, 0x0000, 0x6152, 0x706D, 0x534F, 0x0034, 0x0000, 0x0000, 
-            0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 
+            0x005C, 0x007A, 0x0000, 0x315F, 0x4D70, 0x646F, 0x0000, 0x0000, 
+            0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 
+            0x5C3F, 0x7B00, 0x0000, 0x4500, 0x766E, 0x6944, 0x3276, 0x0000, 
+            0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x003F, 
+            0x0000, 0x5C00, 0x7C00, 0x0000, 0x5000, 0x736F, 0x4D41, 0x646F, 
+            0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 
+            0x003F, 0x0000, 0x5C00, 0x7D00, 0x0000, 0x5000, 0x736F, 0x0041, 
+            0x0000, 0x0000, 0x0000, 0x3F80, 0xC28F, 0x3F35, 0x0000, 0x3F80, 
+            0x0000, 0x0000, 0x005C, 0x007E, 0x0000, 0x6F50, 0x4273, 0x0000, 
+            0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x003F, 
+            0x0000, 0x5C00, 0x7F00, 0x0000, 0x5000, 0x736F, 0x6D42, 0x646F, 
+            0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 
+            0x003F, 0x0000, 0x5C00, 0x8000, 0x0000, 0x5000, 0x736F, 0x0043, 
+            0x0000, 0x0000, 0x0000, 0x3F80, 0xD70A, 0x3E23, 0x0000, 0x3F80, 
+            0x0000, 0x0000, 0x005C, 0x0081, 0x0000, 0x6F50, 0x4373, 0x6F4D, 
+            0x0064, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 
+            0x3F80, 0x0000, 0x0000, 0x005C, 0x0082, 0x0000, 0x6F50, 0x4473, 
+            0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 
+            0x003F, 0x0000, 0x5C00, 0x8300, 0x0000, 0x5000, 0x736F, 0x4D44, 
+            0x646F, 0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 
+            0x8000, 0x003F, 0x0000, 0x5C00, 0x8400, 0x0000, 0x4500, 0x766E, 
+            0x534F, 0x0031, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 
+            0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0085, 0x0000, 0x6E45, 
+            0x4F76, 0x3253, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x7900, 
+            0x003E, 0x8000, 0x003F, 0x0000, 0x5C00, 0x8600, 0x0000, 0x5200, 
+            0x6D61, 0x5470, 0x6D65, 0x6F70, 0x0031, 0x0000, 0x0000, 0x0000, 
+            0x4190, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
+            0x0087, 0x0000, 0x6152, 0x706D, 0x6554, 0x706D, 0x326F, 0x0000, 
+            0x0000, 0x0000, 0x9000, 0x0041, 0x0000, 0x0000, 0x8000, 0x003F, 
+            0x8000, 0x5C3F, 0x8800, 0x0000, 0x5200, 0x6D61, 0x4470, 0x7669, 
+            0x0031, 0x0000, 0x3F80, 0x0000, 0x4180, 0x0000, 0x4080, 0x0000, 
+            0x3F80, 0x0000, 0x3F80, 0x005C, 0x0089, 0x0000, 0x6152, 0x706D, 
+            0x6944, 0x3276, 0x0000, 0x8000, 0x003F, 0x8000, 0x0041, 0x0000, 
+            0x0041, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x8A00, 0x0000, 0x5200, 
+            0x6D61, 0x4970, 0x766E, 0x0031, 0x0000, 0x0000, 0x0000, 0x3F80, 
+            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x008B, 
+            0x0000, 0x6152, 0x706D, 0x6E49, 0x3276, 0x0000, 0x0000, 0x0000, 
+            0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x5C3F, 
+            0x8C00, 0x0000, 0x5200, 0x6D61, 0x5470, 0x6D65, 0x336F, 0x0000, 
+            0x0000, 0x0000, 0x9000, 0x0041, 0x0000, 0x0000, 0x8000, 0x003F, 
+            0x8000, 0x5C3F, 0x8D00, 0x0000, 0x5200, 0x6D61, 0x5470, 0x6D65, 
+            0x6F70, 0x0034, 0x0000, 0x0000, 0x0000, 0x4190, 0x0000, 0x0000, 
+            0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x008E, 0x0000, 0x6152, 
+            0x706D, 0x6944, 0x3376, 0x0000, 0x8000, 0x003F, 0x8000, 0x0041, 
+            0x8000, 0x0040, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x8F00, 0x0000, 
+            0x5200, 0x6D61, 0x4470, 0x7669, 0x0034, 0x0000, 0x3F80, 0x0000, 
+            0x4200, 0x0000, 0x4000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
+            0x0090, 0x0000, 0x6152, 0x706D, 0x6E49, 0x3376, 0x0000, 0x0000, 
+            0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 
+            0x5C3F, 0x9100, 0x0000, 0x5200, 0x6D61, 0x4970, 0x766E, 0x0034, 
+            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 
+            0x0000, 0x3F80, 0x005C, 0x0092, 0x0000, 0x6152, 0x706D, 0x534F, 
+            0x0031, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 
+            0x3F80, 0x0000, 0x0000, 0x005C, 0x0093, 0x0000, 0x6152, 0x706D, 
+            0x534F, 0x0032, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 
+            0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0094, 0x0000, 0x6152, 
+            0x706D, 0x534F, 0x0033, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
+            0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0095, 0x0000, 
+            0x6152, 0x706D, 0x534F, 0x0034, 0x0000, 0x0000, 0x0000, 0x3F80, 
+            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0096, 
+            0x0000, 0x6950, 0x6374, 0x4D68, 0x646F, 0x3265, 0x0000, 0x8000, 
+            0x003F, 0x4000, 0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 
+            0x5C3F, 0x9700, 0x0000, 0x4600, 0x6C69, 0x6574, 0x4D72, 0x7869, 
+            0x0032, 0x0000, 0x0000, 0x0000, 0x3F80, 0x28F6, 0x3F5C, 0x0000, 
+            0x3F80, 0x0000, 0x0000, 0x005C, 0x0098, 0x0000, 0x6946, 0x746C, 
+            0x7265, 0x6F4D, 0x6564, 0x0032, 0x0000, 0x3F80, 0x0000, 0x40A0, 
+            0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0099, 
+            0x0000, 0x6946, 0x706E, 0x7475, 0x614D, 0x7473, 0x7265, 0x6147, 
+            0x6E69, 0x0000, 0x0000, 0x0000, 0x8000, 0x593F, 0xF9C8, 0x003E, 
+            0x8000, 0x003F, 0x0000, 0x5C00, 0x9A00, 0x0000, 0x4600, 0x6C69, 
+            0x4965, 0x4D6E, 0x7361, 0x6574, 0x0072, 0x0000, 0x0000, 0x0000, 
+            0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 
+            0x009B, 0x0000, 0x6D46, 0x7869, 0x0000, 0x0000, 0x0000, 0x8000, 
+            0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x9C00, 
+            0x0000, 0x5300, 0x6574, 0x3270, 0x0000, 0x0000, 0x0000, 0x8000, 
+            0x003F, 0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 0x9D00, 
+            0x0000, 0x4F00, 0x6373, 0x6550, 0x6B61, 0x6D53, 0x6F6F, 0x6874, 
+            0x0031, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
+            0x3F80, 0x0000, 0x0000, 0x005C, 0x009E, 0x0000, 0x734F, 0x5063, 
+            0x6165, 0x536B, 0x6F6D, 0x746F, 0x3268, 0x0000, 0x0000, 0x0000, 
+            0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 
+            0x9F00, 0x0000, 0x4600, 0x6C69, 0x5065, 0x6165, 0x536B, 0x6F6D, 
+            0x746F, 0x3168, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 
+            0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 0xA000, 0x0000, 0x4600, 
+            0x6C69, 0x6550, 0x6B61, 0x6D53, 0x6F6F, 0x6874, 0x0031, 0x0000, 
+            0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
+            0x0000, 0x005C, 0x00A1, 0x0000, 0x734F, 0x5063, 0x6165, 0x536B, 
+            0x3148, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x003F, 
+            0x8000, 0x003F, 0x0000, 0x5C00, 0xA200, 0x0000, 0x4600, 0x6C69, 
+            0x5065, 0x6165, 0x536B, 0x3148, 0x0000, 0x0000, 0x0000, 0x8000, 
+            0x003F, 0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 0xA300, 
+            0x0000, 0x4600, 0x6C69, 0x6550, 0x6B61, 0x4853, 0x0031, 0x0000, 
+            0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
+            0x0000, 0x005C, 0x00A4, 0x0000, 0x734F, 0x5063, 0x6165, 0x536B, 
+            0x7448, 0x6D65, 0x6F70, 0x0031, 0x0000, 0x0000, 0x0000, 0x4190, 
+            0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x00A5, 
+            0x0000, 0x734F, 0x5063, 0x6165, 0x536B, 0x7448, 0x6D65, 0x6F70, 
+            0x0032, 0x0000, 0x0000, 0x0000, 0x4190, 0x0000, 0x3F80, 0x0000, 
+            0x3F80, 0x0000, 0x3F80, 0x005C, 0x00A6, 0x0000, 0x6946, 0x656C, 
+            0x6550, 0x6B61, 0x4853, 0x6574, 0x706D, 0x006F, 0x0000, 0x0000, 
+            0x0000, 0x4190, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x005C, 0x00A7, 0x0000, 0x6946, 0x506C, 0x6165, 0x536B, 0x7448, 
+            0x6D65, 0x6F70, 0x0000, 0x0000, 0x0000, 0x9000, 0x0041, 0x8000, 
+            0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 0xA800, 0x0000, 0x4F00, 
+            0x6373, 0x6550, 0x6B61, 0x4853, 0x0032, 0x0000, 0x0000, 0x0000, 
+            0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 
+            0x00A9, 0x0000, 0x7457, 0x6E49, 0x0000, 0x0000, 0x0000, 0x8000, 
+            0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x0000
+		};
+		SNEX_METADATA_ENCODED_MOD_INFO(18)
+		{
+			0x013A, 0x0010, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+            0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
             0x0000, 0x0000
 		};
 	};
@@ -11096,3254 +11529,3716 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 	{
 		// Node References -------------------------------------------------------------------------
 		
-		auto& split2 = this->getT(0);                                                          // osc1_impl::split2_t<NV>
-		auto& modchain1 = this->getT(0).getT(0);                                               // osc1_impl::modchain1_t<NV>
-		auto& sliderbank3 = this->getT(0).getT(0).getT(0);                                     // osc1_impl::sliderbank3_t<NV>
-		auto& split3 = this->getT(0).getT(0).getT(1);                                          // osc1_impl::split3_t<NV>
-		auto& chain106 = this->getT(0).getT(0).getT(1).getT(0);                                // osc1_impl::chain106_t<NV>
-		auto& xfader2 = this->getT(0).getT(0).getT(1).getT(0).getT(0);                         // osc1_impl::xfader2_t<NV>
-		auto& soft_bypass = this->getT(0).getT(0).getT(1).getT(0).getT(1);                     // osc1_impl::soft_bypass_t<NV>
-		auto& chain39 = this->getT(0).getT(0).getT(1).getT(0).getT(1).getT(0);                 // osc1_impl::chain39_t<NV>
-		auto& global_cable3 = this->getT(0).getT(0).getT(1).getT(0).getT(1).getT(0).getT(0);   // osc1_impl::global_cable3_t<NV>
-		auto& add4 = this->getT(0).getT(0).getT(1).getT(0).getT(1).getT(0).getT(1);            // math::add<NV>
-		auto& gain13 = this->getT(0).getT(0).getT(1).getT(0).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain113 = this->getT(0).getT(0).getT(1).getT(1);                                // osc1_impl::chain113_t<NV>
-		auto& xfader13 = this->getT(0).getT(0).getT(1).getT(1).getT(0);                        // osc1_impl::xfader13_t<NV>
-		auto& soft_bypass7 = this->getT(0).getT(0).getT(1).getT(1).getT(1);                    // osc1_impl::soft_bypass7_t<NV>
-		auto& chain41 = this->getT(0).getT(0).getT(1).getT(1).getT(1).getT(0);                 // osc1_impl::chain41_t<NV>
-		auto& global_cable11 = this->getT(0).getT(0).getT(1).getT(1).getT(1).getT(0).getT(0);  // osc1_impl::global_cable11_t<NV>
-		auto& add26 = this->getT(0).getT(0).getT(1).getT(1).getT(1).getT(0).getT(1);           // math::add<NV>
-		auto& gain15 = this->getT(0).getT(0).getT(1).getT(1).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain112 = this->getT(0).getT(0).getT(1).getT(2);                                // osc1_impl::chain112_t<NV>
-		auto& xfader12 = this->getT(0).getT(0).getT(1).getT(2).getT(0);                        // osc1_impl::xfader12_t<NV>
-		auto& soft_bypass6 = this->getT(0).getT(0).getT(1).getT(2).getT(1);                    // osc1_impl::soft_bypass6_t<NV>
-		auto& chain40 = this->getT(0).getT(0).getT(1).getT(2).getT(1).getT(0);                 // osc1_impl::chain40_t<NV>
-		auto& global_cable10 = this->getT(0).getT(0).getT(1).getT(2).getT(1).getT(0).getT(0);  // osc1_impl::global_cable10_t<NV>
-		auto& add5 = this->getT(0).getT(0).getT(1).getT(2).getT(1).getT(0).getT(1);            // math::add<NV>
-		auto& gain14 = this->getT(0).getT(0).getT(1).getT(2).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain111 = this->getT(0).getT(0).getT(1).getT(3);                                // osc1_impl::chain111_t<NV>
-		auto& xfader11 = this->getT(0).getT(0).getT(1).getT(3).getT(0);                        // osc1_impl::xfader11_t<NV>
-		auto& soft_bypass5 = this->getT(0).getT(0).getT(1).getT(3).getT(1);                    // osc1_impl::soft_bypass5_t<NV>
-		auto& chain42 = this->getT(0).getT(0).getT(1).getT(3).getT(1).getT(0);                 // osc1_impl::chain42_t<NV>
-		auto& global_cable14 = this->getT(0).getT(0).getT(1).getT(3).getT(1).getT(0).getT(0);  // osc1_impl::global_cable14_t<NV>
-		auto& add27 = this->getT(0).getT(0).getT(1).getT(3).getT(1).getT(0).getT(1);           // math::add<NV>
-		auto& gain16 = this->getT(0).getT(0).getT(1).getT(3).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain110 = this->getT(0).getT(0).getT(1).getT(4);                                // osc1_impl::chain110_t<NV>
-		auto& xfader10 = this->getT(0).getT(0).getT(1).getT(4).getT(0);                        // osc1_impl::xfader10_t<NV>
-		auto& soft_bypass4 = this->getT(0).getT(0).getT(1).getT(4).getT(1);                    // osc1_impl::soft_bypass4_t<NV>
-		auto& chain44 = this->getT(0).getT(0).getT(1).getT(4).getT(1).getT(0);                 // osc1_impl::chain44_t<NV>
-		auto& add29 = this->getT(0).getT(0).getT(1).getT(4).getT(1).getT(0).getT(0);           // math::add<NV>
-		auto& gain32 = this->getT(0).getT(0).getT(1).getT(4).getT(1).getT(0).getT(1);          // core::gain<NV>
-		auto& chain109 = this->getT(0).getT(0).getT(1).getT(5);                                // osc1_impl::chain109_t<NV>
-		auto& xfader9 = this->getT(0).getT(0).getT(1).getT(5).getT(0);                         // osc1_impl::xfader9_t<NV>
-		auto& soft_bypass3 = this->getT(0).getT(0).getT(1).getT(5).getT(1);                    // osc1_impl::soft_bypass3_t<NV>
-		auto& chain43 = this->getT(0).getT(0).getT(1).getT(5).getT(1).getT(0);                 // osc1_impl::chain43_t<NV>
-		auto& add28 = this->getT(0).getT(0).getT(1).getT(5).getT(1).getT(0).getT(0);           // math::add<NV>
-		auto& gain26 = this->getT(0).getT(0).getT(1).getT(5).getT(1).getT(0).getT(1);          // core::gain<NV>
-		auto& chain108 = this->getT(0).getT(0).getT(1).getT(6);                                // osc1_impl::chain108_t<NV>
-		auto& xfader8 = this->getT(0).getT(0).getT(1).getT(6).getT(0);                         // osc1_impl::xfader8_t<NV>
-		auto& soft_bypass2 = this->getT(0).getT(0).getT(1).getT(6).getT(1);                    // osc1_impl::soft_bypass2_t<NV>
-		auto& chain45 = this->getT(0).getT(0).getT(1).getT(6).getT(1).getT(0);                 // osc1_impl::chain45_t<NV>
-		auto& branch15 = this->getT(0).getT(0).getT(1).getT(6).getT(1).getT(0).getT(0);        // osc1_impl::branch15_t<NV>
-		auto& add3 = this->getT(0).getT(0).getT(1).getT(6).                                    // math::add<NV>
+		auto& split2 = this->getT(0);                                                             // osc1_impl::split2_t<NV>
+		auto& modchain1 = this->getT(0).getT(0);                                                  // osc1_impl::modchain1_t<NV>
+		auto& sliderbank3 = this->getT(0).getT(0).getT(0);                                        // osc1_impl::sliderbank3_t<NV>
+		auto& split3 = this->getT(0).getT(0).getT(1);                                             // osc1_impl::split3_t<NV>
+		auto& chain106 = this->getT(0).getT(0).getT(1).getT(0);                                   // osc1_impl::chain106_t<NV>
+		auto& xfader2 = this->getT(0).getT(0).getT(1).getT(0).getT(0);                            // osc1_impl::xfader2_t<NV>
+		auto& soft_bypass = this->getT(0).getT(0).getT(1).getT(0).getT(1);                        // osc1_impl::soft_bypass_t<NV>
+		auto& chain39 = this->getT(0).getT(0).getT(1).getT(0).getT(1).getT(0);                    // osc1_impl::chain39_t<NV>
+		auto& global_cable3 = this->getT(0).getT(0).getT(1).getT(0).getT(1).getT(0).getT(0);      // osc1_impl::global_cable3_t<NV>
+		auto& add4 = this->getT(0).getT(0).getT(1).getT(0).getT(1).getT(0).getT(1);               // math::add<NV>
+		auto& gain13 = this->getT(0).getT(0).getT(1).getT(0).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain113 = this->getT(0).getT(0).getT(1).getT(1);                                   // osc1_impl::chain113_t<NV>
+		auto& xfader13 = this->getT(0).getT(0).getT(1).getT(1).getT(0);                           // osc1_impl::xfader13_t<NV>
+		auto& soft_bypass7 = this->getT(0).getT(0).getT(1).getT(1).getT(1);                       // osc1_impl::soft_bypass7_t<NV>
+		auto& chain41 = this->getT(0).getT(0).getT(1).getT(1).getT(1).getT(0);                    // osc1_impl::chain41_t<NV>
+		auto& global_cable11 = this->getT(0).getT(0).getT(1).getT(1).getT(1).getT(0).getT(0);     // osc1_impl::global_cable11_t<NV>
+		auto& add26 = this->getT(0).getT(0).getT(1).getT(1).getT(1).getT(0).getT(1);              // math::add<NV>
+		auto& gain15 = this->getT(0).getT(0).getT(1).getT(1).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain112 = this->getT(0).getT(0).getT(1).getT(2);                                   // osc1_impl::chain112_t<NV>
+		auto& xfader12 = this->getT(0).getT(0).getT(1).getT(2).getT(0);                           // osc1_impl::xfader12_t<NV>
+		auto& soft_bypass6 = this->getT(0).getT(0).getT(1).getT(2).getT(1);                       // osc1_impl::soft_bypass6_t<NV>
+		auto& chain40 = this->getT(0).getT(0).getT(1).getT(2).getT(1).getT(0);                    // osc1_impl::chain40_t<NV>
+		auto& global_cable10 = this->getT(0).getT(0).getT(1).getT(2).getT(1).getT(0).getT(0);     // osc1_impl::global_cable10_t<NV>
+		auto& add5 = this->getT(0).getT(0).getT(1).getT(2).getT(1).getT(0).getT(1);               // math::add<NV>
+		auto& gain14 = this->getT(0).getT(0).getT(1).getT(2).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain111 = this->getT(0).getT(0).getT(1).getT(3);                                   // osc1_impl::chain111_t<NV>
+		auto& xfader11 = this->getT(0).getT(0).getT(1).getT(3).getT(0);                           // osc1_impl::xfader11_t<NV>
+		auto& soft_bypass5 = this->getT(0).getT(0).getT(1).getT(3).getT(1);                       // osc1_impl::soft_bypass5_t<NV>
+		auto& chain42 = this->getT(0).getT(0).getT(1).getT(3).getT(1).getT(0);                    // osc1_impl::chain42_t<NV>
+		auto& global_cable14 = this->getT(0).getT(0).getT(1).getT(3).getT(1).getT(0).getT(0);     // osc1_impl::global_cable14_t<NV>
+		auto& add27 = this->getT(0).getT(0).getT(1).getT(3).getT(1).getT(0).getT(1);              // math::add<NV>
+		auto& gain16 = this->getT(0).getT(0).getT(1).getT(3).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain110 = this->getT(0).getT(0).getT(1).getT(4);                                   // osc1_impl::chain110_t<NV>
+		auto& xfader10 = this->getT(0).getT(0).getT(1).getT(4).getT(0);                           // osc1_impl::xfader10_t<NV>
+		auto& soft_bypass4 = this->getT(0).getT(0).getT(1).getT(4).getT(1);                       // osc1_impl::soft_bypass4_t<NV>
+		auto& chain44 = this->getT(0).getT(0).getT(1).getT(4).getT(1).getT(0);                    // osc1_impl::chain44_t<NV>
+		auto& add29 = this->getT(0).getT(0).getT(1).getT(4).getT(1).getT(0).getT(0);              // math::add<NV>
+		auto& gain32 = this->getT(0).getT(0).getT(1).getT(4).getT(1).getT(0).getT(1);             // core::gain<NV>
+		auto& chain109 = this->getT(0).getT(0).getT(1).getT(5);                                   // osc1_impl::chain109_t<NV>
+		auto& xfader9 = this->getT(0).getT(0).getT(1).getT(5).getT(0);                            // osc1_impl::xfader9_t<NV>
+		auto& soft_bypass3 = this->getT(0).getT(0).getT(1).getT(5).getT(1);                       // osc1_impl::soft_bypass3_t<NV>
+		auto& chain43 = this->getT(0).getT(0).getT(1).getT(5).getT(1).getT(0);                    // osc1_impl::chain43_t<NV>
+		auto& add28 = this->getT(0).getT(0).getT(1).getT(5).getT(1).getT(0).getT(0);              // math::add<NV>
+		auto& gain26 = this->getT(0).getT(0).getT(1).getT(5).getT(1).getT(0).getT(1);             // core::gain<NV>
+		auto& chain108 = this->getT(0).getT(0).getT(1).getT(6);                                   // osc1_impl::chain108_t<NV>
+		auto& xfader8 = this->getT(0).getT(0).getT(1).getT(6).getT(0);                            // osc1_impl::xfader8_t<NV>
+		auto& soft_bypass2 = this->getT(0).getT(0).getT(1).getT(6).getT(1);                       // osc1_impl::soft_bypass2_t<NV>
+		auto& chain45 = this->getT(0).getT(0).getT(1).getT(6).getT(1).getT(0);                    // osc1_impl::chain45_t<NV>
+		auto& branch15 = this->getT(0).getT(0).getT(1).getT(6).getT(1).getT(0).getT(0);           // osc1_impl::branch15_t<NV>
+		auto& add3 = this->getT(0).getT(0).getT(1).getT(6).                                       // math::add<NV>
                      getT(1).getT(0).getT(0).getT(0);
-		auto& add23 = this->getT(0).getT(0).getT(1).getT(6).                                   // math::add<NV>
+		auto& add23 = this->getT(0).getT(0).getT(1).getT(6).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(1);
-		auto& add21 = this->getT(0).getT(0).getT(1).getT(6).                                   // math::add<NV>
+		auto& add21 = this->getT(0).getT(0).getT(1).getT(6).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(2);
-		auto& add9 = this->getT(0).getT(0).getT(1).getT(6).                                    // math::add<NV>
+		auto& add9 = this->getT(0).getT(0).getT(1).getT(6).                                       // math::add<NV>
                      getT(1).getT(0).getT(0).getT(3);
-		auto& gain33 = this->getT(0).getT(0).getT(1).getT(6).getT(1).getT(0).getT(1);          // core::gain<NV>
-		auto& chain107 = this->getT(0).getT(0).getT(1).getT(7);                                // osc1_impl::chain107_t<NV>
-		auto& xfader7 = this->getT(0).getT(0).getT(1).getT(7).getT(0);                         // osc1_impl::xfader7_t<NV>
-		auto& soft_bypass1 = this->getT(0).getT(0).getT(1).getT(7).getT(1);                    // osc1_impl::soft_bypass1_t<NV>
-		auto& chain46 = this->getT(0).getT(0).getT(1).getT(7).getT(1).getT(0);                 // osc1_impl::chain46_t<NV>
-		auto& branch5 = this->getT(0).getT(0).getT(1).getT(7).getT(1).getT(0).getT(0);         // osc1_impl::branch5_t<NV>
-		auto& chain13 = this->getT(0).getT(0).getT(1).getT(7).                                 // osc1_impl::chain13_t<NV>
+		auto& gain33 = this->getT(0).getT(0).getT(1).getT(6).getT(1).getT(0).getT(1);             // core::gain<NV>
+		auto& chain107 = this->getT(0).getT(0).getT(1).getT(7);                                   // osc1_impl::chain107_t<NV>
+		auto& xfader7 = this->getT(0).getT(0).getT(1).getT(7).getT(0);                            // osc1_impl::xfader7_t<NV>
+		auto& soft_bypass1 = this->getT(0).getT(0).getT(1).getT(7).getT(1);                       // osc1_impl::soft_bypass1_t<NV>
+		auto& chain46 = this->getT(0).getT(0).getT(1).getT(7).getT(1).getT(0);                    // osc1_impl::chain46_t<NV>
+		auto& branch5 = this->getT(0).getT(0).getT(1).getT(7).getT(1).getT(0).getT(0);            // osc1_impl::branch5_t<NV>
+		auto& chain13 = this->getT(0).getT(0).getT(1).getT(7).                                    // osc1_impl::chain13_t<NV>
                         getT(1).getT(0).getT(0).getT(0);
-		auto& midi_cc10 = this->getT(0).getT(0).getT(1).getT(7).                               // osc1_impl::midi_cc10_t<NV>
+		auto& midi_cc10 = this->getT(0).getT(0).getT(1).getT(7).                                  // osc1_impl::midi_cc10_t<NV>
                           getT(1).getT(0).getT(0).getT(0).
                           getT(0);
-		auto& add50 = this->getT(0).getT(0).getT(1).getT(7).                                   // math::add<NV>
+		auto& add50 = this->getT(0).getT(0).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(0).
                       getT(1);
-		auto& chain18 = this->getT(0).getT(0).getT(1).getT(7).                                 // osc1_impl::chain18_t<NV>
+		auto& chain18 = this->getT(0).getT(0).getT(1).getT(7).                                    // osc1_impl::chain18_t<NV>
                         getT(1).getT(0).getT(0).getT(1);
-		auto& midi_cc11 = this->getT(0).getT(0).getT(1).getT(7).                               // osc1_impl::midi_cc11_t<NV>
+		auto& midi_cc11 = this->getT(0).getT(0).getT(1).getT(7).                                  // osc1_impl::midi_cc11_t<NV>
                           getT(1).getT(0).getT(0).getT(1).
                           getT(0);
-		auto& add51 = this->getT(0).getT(0).getT(1).getT(7).                                   // math::add<NV>
+		auto& add51 = this->getT(0).getT(0).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(1).
                       getT(1);
-		auto& chain22 = this->getT(0).getT(0).getT(1).getT(7).                                 // osc1_impl::chain22_t<NV>
+		auto& chain22 = this->getT(0).getT(0).getT(1).getT(7).                                    // osc1_impl::chain22_t<NV>
                         getT(1).getT(0).getT(0).getT(2);
-		auto& midi_cc12 = this->getT(0).getT(0).getT(1).getT(7).                               // osc1_impl::midi_cc12_t<NV>
+		auto& midi_cc12 = this->getT(0).getT(0).getT(1).getT(7).                                  // osc1_impl::midi_cc12_t<NV>
                           getT(1).getT(0).getT(0).getT(2).
                           getT(0);
-		auto& add52 = this->getT(0).getT(0).getT(1).getT(7).                                   // math::add<NV>
+		auto& add52 = this->getT(0).getT(0).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(2).
                       getT(1);
-		auto& chain24 = this->getT(0).getT(0).getT(1).getT(7).                                 // osc1_impl::chain24_t<NV>
+		auto& chain24 = this->getT(0).getT(0).getT(1).getT(7).                                    // osc1_impl::chain24_t<NV>
                         getT(1).getT(0).getT(0).getT(3);
-		auto& midi_cc13 = this->getT(0).getT(0).getT(1).getT(7).                               // osc1_impl::midi_cc13_t<NV>
+		auto& midi_cc13 = this->getT(0).getT(0).getT(1).getT(7).                                  // osc1_impl::midi_cc13_t<NV>
                           getT(1).getT(0).getT(0).getT(3).
                           getT(0);
-		auto& add53 = this->getT(0).getT(0).getT(1).getT(7).                                   // math::add<NV>
+		auto& add53 = this->getT(0).getT(0).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(3).
                       getT(1);
-		auto& chain25 = this->getT(0).getT(0).getT(1).getT(7).                                 // osc1_impl::chain25_t<NV>
+		auto& chain25 = this->getT(0).getT(0).getT(1).getT(7).                                    // osc1_impl::chain25_t<NV>
                         getT(1).getT(0).getT(0).getT(4);
-		auto& midi6 = this->getT(0).getT(0).getT(1).getT(7).                                   // osc1_impl::midi6_t<NV>
+		auto& midi6 = this->getT(0).getT(0).getT(1).getT(7).                                      // osc1_impl::midi6_t<NV>
                       getT(1).getT(0).getT(0).getT(4).
                       getT(0);
-		auto& add54 = this->getT(0).getT(0).getT(1).getT(7).                                   // math::add<NV>
+		auto& add54 = this->getT(0).getT(0).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(4).
                       getT(1);
-		auto& chain26 = this->getT(0).getT(0).getT(1).getT(7).                                 // osc1_impl::chain26_t<NV>
+		auto& chain26 = this->getT(0).getT(0).getT(1).getT(7).                                    // osc1_impl::chain26_t<NV>
                         getT(1).getT(0).getT(0).getT(5);
-		auto& midi7 = this->getT(0).getT(0).getT(1).getT(7).                                   // osc1_impl::midi7_t<NV>
+		auto& midi7 = this->getT(0).getT(0).getT(1).getT(7).                                      // osc1_impl::midi7_t<NV>
                       getT(1).getT(0).getT(0).getT(5).
                       getT(0);
-		auto& add55 = this->getT(0).getT(0).getT(1).getT(7).                                   // math::add<NV>
+		auto& add55 = this->getT(0).getT(0).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(5).
                       getT(1);
-		auto& chain27 = this->getT(0).getT(0).getT(1).getT(7).                                 // osc1_impl::chain27_t<NV>
+		auto& chain27 = this->getT(0).getT(0).getT(1).getT(7).                                    // osc1_impl::chain27_t<NV>
                         getT(1).getT(0).getT(0).getT(6);
-		auto& midi8 = this->getT(0).getT(0).getT(1).getT(7).                                   // osc1_impl::midi8_t<NV>
+		auto& midi8 = this->getT(0).getT(0).getT(1).getT(7).                                      // osc1_impl::midi8_t<NV>
                       getT(1).getT(0).getT(0).getT(6).
                       getT(0);
-		auto& add56 = this->getT(0).getT(0).getT(1).getT(7).                                   // math::add<NV>
+		auto& add56 = this->getT(0).getT(0).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(6).
                       getT(1);
-		auto& gain34 = this->getT(0).getT(0).getT(1).getT(7).getT(1).getT(0).getT(1);          // core::gain<NV>
-		auto& peak3 = this->getT(0).getT(0).getT(2);                                           // osc1_impl::peak3_t<NV>
-		auto& clear = this->getT(0).getT(0).getT(3);                                           // math::clear<NV>
-		auto& chain20 = this->getT(0).getT(0).getT(4);                                         // osc1_impl::chain20_t<NV>
-		auto& branch3 = this->getT(0).getT(0).getT(4).getT(0);                                 // osc1_impl::branch3_t<NV>
-		auto& chain17 = this->getT(0).getT(0).getT(4).getT(0).getT(0);                         // osc1_impl::chain17_t<NV>
-		auto& pma1 = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(0);                    // osc1_impl::pma1_t<NV>
-		auto& add = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(1);                     // math::add<NV>
-		auto& chain21 = this->getT(0).getT(0).getT(4).getT(0).getT(1);                         // osc1_impl::chain21_t<NV>
-		auto& pma8 = this->getT(0).getT(0).getT(4).getT(0).getT(1).getT(0);                    // osc1_impl::pma8_t<NV>
-		auto& add19 = this->getT(0).getT(0).getT(4).getT(0).getT(1).getT(1);                   // math::add<NV>
-		auto& chain23 = this->getT(0).getT(0).getT(4).getT(0).getT(2);                         // osc1_impl::chain23_t<NV>
-		auto& pma11 = this->getT(0).getT(0).getT(4).getT(0).getT(2).getT(0);                   // osc1_impl::pma11_t<NV>
-		auto& add20 = this->getT(0).getT(0).getT(4).getT(0).getT(2).getT(1);                   // math::add<NV>
-		auto& smoother = this->getT(0).getT(0).getT(4).getT(1);                                // core::smoother<NV>
-		auto& peak = this->getT(0).getT(0).getT(4).getT(2);                                    // osc1_impl::peak_t<NV>
-		auto& modchain5 = this->getT(0).getT(1);                                               // osc1_impl::modchain5_t<NV>
-		auto& sliderbank5 = this->getT(0).getT(1).getT(0);                                     // osc1_impl::sliderbank5_t<NV>
-		auto& split8 = this->getT(0).getT(1).getT(1);                                          // osc1_impl::split8_t<NV>
-		auto& chain114 = this->getT(0).getT(1).getT(1).getT(0);                                // osc1_impl::chain114_t<NV>
-		auto& xfader14 = this->getT(0).getT(1).getT(1).getT(0).getT(0);                        // osc1_impl::xfader14_t<NV>
-		auto& soft_bypass8 = this->getT(0).getT(1).getT(1).getT(0).getT(1);                    // osc1_impl::soft_bypass8_t<NV>
-		auto& chain136 = this->getT(0).getT(1).getT(1).getT(0).getT(1).getT(0);                // osc1_impl::chain136_t<NV>
-		auto& global_cable5 = this->getT(0).getT(1).getT(1).getT(0).getT(1).getT(0).getT(0);   // osc1_impl::global_cable5_t<NV>
-		auto& add8 = this->getT(0).getT(1).getT(1).getT(0).getT(1).getT(0).getT(1);            // math::add<NV>
-		auto& gain21 = this->getT(0).getT(1).getT(1).getT(0).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain122 = this->getT(0).getT(1).getT(1).getT(1);                                // osc1_impl::chain122_t<NV>
-		auto& xfader22 = this->getT(0).getT(1).getT(1).getT(1).getT(0);                        // osc1_impl::xfader22_t<NV>
-		auto& soft_bypass16 = this->getT(0).getT(1).getT(1).getT(1).getT(1);                   // osc1_impl::soft_bypass16_t<NV>
-		auto& chain137 = this->getT(0).getT(1).getT(1).getT(1).getT(1).getT(0);                // osc1_impl::chain137_t<NV>
-		auto& global_cable15 = this->getT(0).getT(1).getT(1).getT(1).getT(1).getT(0).getT(0);  // osc1_impl::global_cable15_t<NV>
-		auto& add37 = this->getT(0).getT(1).getT(1).getT(1).getT(1).getT(0).getT(1);           // math::add<NV>
-		auto& gain22 = this->getT(0).getT(1).getT(1).getT(1).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain121 = this->getT(0).getT(1).getT(1).getT(2);                                // osc1_impl::chain121_t<NV>
-		auto& xfader21 = this->getT(0).getT(1).getT(1).getT(2).getT(0);                        // osc1_impl::xfader21_t<NV>
-		auto& soft_bypass15 = this->getT(0).getT(1).getT(1).getT(2).getT(1);                   // osc1_impl::soft_bypass15_t<NV>
-		auto& chain138 = this->getT(0).getT(1).getT(1).getT(2).getT(1).getT(0);                // osc1_impl::chain138_t<NV>
-		auto& global_cable18 = this->getT(0).getT(1).getT(1).getT(2).getT(1).getT(0).getT(0);  // osc1_impl::global_cable18_t<NV>
-		auto& add12 = this->getT(0).getT(1).getT(1).getT(2).getT(1).getT(0).getT(1);           // math::add<NV>
-		auto& gain23 = this->getT(0).getT(1).getT(1).getT(2).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain120 = this->getT(0).getT(1).getT(1).getT(3);                                // osc1_impl::chain120_t<NV>
-		auto& xfader20 = this->getT(0).getT(1).getT(1).getT(3).getT(0);                        // osc1_impl::xfader20_t<NV>
-		auto& soft_bypass14 = this->getT(0).getT(1).getT(1).getT(3).getT(1);                   // osc1_impl::soft_bypass14_t<NV>
-		auto& chain139 = this->getT(0).getT(1).getT(1).getT(3).getT(1).getT(0);                // osc1_impl::chain139_t<NV>
-		auto& global_cable19 = this->getT(0).getT(1).getT(1).getT(3).getT(1).getT(0).getT(0);  // osc1_impl::global_cable19_t<NV>
-		auto& add49 = this->getT(0).getT(1).getT(1).getT(3).getT(1).getT(0).getT(1);           // math::add<NV>
-		auto& gain24 = this->getT(0).getT(1).getT(1).getT(3).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain119 = this->getT(0).getT(1).getT(1).getT(4);                                // osc1_impl::chain119_t<NV>
-		auto& xfader19 = this->getT(0).getT(1).getT(1).getT(4).getT(0);                        // osc1_impl::xfader19_t
-		auto& soft_bypass13 = this->getT(0).getT(1).getT(1).getT(4).getT(1);                   // osc1_impl::soft_bypass13_t
-		auto& chain140 = this->getT(0).getT(1).getT(1).getT(4).getT(2);                        // osc1_impl::chain140_t<NV>
-		auto& add64 = this->getT(0).getT(1).getT(1).getT(4).getT(2).getT(0);                   // math::add<NV>
-		auto& gain38 = this->getT(0).getT(1).getT(1).getT(4).getT(2).getT(1);                  // core::gain<NV>
-		auto& chain118 = this->getT(0).getT(1).getT(1).getT(5);                                // osc1_impl::chain118_t<NV>
-		auto& xfader18 = this->getT(0).getT(1).getT(1).getT(5).getT(0);                        // osc1_impl::xfader18_t<NV>
-		auto& soft_bypass12 = this->getT(0).getT(1).getT(1).getT(5).getT(1);                   // osc1_impl::soft_bypass12_t<NV>
-		auto& chain141 = this->getT(0).getT(1).getT(1).getT(5).getT(1).getT(0);                // osc1_impl::chain141_t<NV>
-		auto& add65 = this->getT(0).getT(1).getT(1).getT(5).getT(1).getT(0).getT(0);           // math::add<NV>
-		auto& gain28 = this->getT(0).getT(1).getT(1).getT(5).getT(1).getT(0).getT(1);          // core::gain<NV>
-		auto& chain117 = this->getT(0).getT(1).getT(1).getT(6);                                // osc1_impl::chain117_t<NV>
-		auto& xfader17 = this->getT(0).getT(1).getT(1).getT(6).getT(0);                        // osc1_impl::xfader17_t<NV>
-		auto& soft_bypass11 = this->getT(0).getT(1).getT(1).getT(6).getT(1);                   // osc1_impl::soft_bypass11_t<NV>
-		auto& chain142 = this->getT(0).getT(1).getT(1).getT(6).getT(1).getT(0);                // osc1_impl::chain142_t<NV>
-		auto& branch16 = this->getT(0).getT(1).getT(1).getT(6).getT(1).getT(0).getT(0);        // osc1_impl::branch16_t<NV>
-		auto& add25 = this->getT(0).getT(1).getT(1).getT(6).                                   // math::add<NV>
+		auto& gain34 = this->getT(0).getT(0).getT(1).getT(7).getT(1).getT(0).getT(1);             // core::gain<NV>
+		auto& peak3 = this->getT(0).getT(0).getT(2);                                              // osc1_impl::peak3_t<NV>
+		auto& clear = this->getT(0).getT(0).getT(3);                                              // math::clear<NV>
+		auto& chain20 = this->getT(0).getT(0).getT(4);                                            // osc1_impl::chain20_t<NV>
+		auto& branch3 = this->getT(0).getT(0).getT(4).getT(0);                                    // osc1_impl::branch3_t<NV>
+		auto& chain17 = this->getT(0).getT(0).getT(4).getT(0).getT(0);                            // osc1_impl::chain17_t<NV>
+		auto& pma1 = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(0);                       // osc1_impl::pma1_t<NV>
+		auto& add = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(1);                        // math::add<NV>
+		auto& chain21 = this->getT(0).getT(0).getT(4).getT(0).getT(1);                            // osc1_impl::chain21_t<NV>
+		auto& pma8 = this->getT(0).getT(0).getT(4).getT(0).getT(1).getT(0);                       // osc1_impl::pma8_t<NV>
+		auto& add19 = this->getT(0).getT(0).getT(4).getT(0).getT(1).getT(1);                      // math::add<NV>
+		auto& chain23 = this->getT(0).getT(0).getT(4).getT(0).getT(2);                            // osc1_impl::chain23_t<NV>
+		auto& pma11 = this->getT(0).getT(0).getT(4).getT(0).getT(2).getT(0);                      // osc1_impl::pma11_t<NV>
+		auto& add20 = this->getT(0).getT(0).getT(4).getT(0).getT(2).getT(1);                      // math::add<NV>
+		auto& smoother = this->getT(0).getT(0).getT(4).getT(1);                                   // core::smoother<NV>
+		auto& peak = this->getT(0).getT(0).getT(4).getT(2);                                       // osc1_impl::peak_t<NV>
+		auto& modchain5 = this->getT(0).getT(1);                                                  // osc1_impl::modchain5_t<NV>
+		auto& sliderbank5 = this->getT(0).getT(1).getT(0);                                        // osc1_impl::sliderbank5_t<NV>
+		auto& split8 = this->getT(0).getT(1).getT(1);                                             // osc1_impl::split8_t<NV>
+		auto& chain114 = this->getT(0).getT(1).getT(1).getT(0);                                   // osc1_impl::chain114_t<NV>
+		auto& xfader14 = this->getT(0).getT(1).getT(1).getT(0).getT(0);                           // osc1_impl::xfader14_t<NV>
+		auto& soft_bypass8 = this->getT(0).getT(1).getT(1).getT(0).getT(1);                       // osc1_impl::soft_bypass8_t<NV>
+		auto& chain136 = this->getT(0).getT(1).getT(1).getT(0).getT(1).getT(0);                   // osc1_impl::chain136_t<NV>
+		auto& global_cable5 = this->getT(0).getT(1).getT(1).getT(0).getT(1).getT(0).getT(0);      // osc1_impl::global_cable5_t<NV>
+		auto& add8 = this->getT(0).getT(1).getT(1).getT(0).getT(1).getT(0).getT(1);               // math::add<NV>
+		auto& gain21 = this->getT(0).getT(1).getT(1).getT(0).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain122 = this->getT(0).getT(1).getT(1).getT(1);                                   // osc1_impl::chain122_t<NV>
+		auto& xfader22 = this->getT(0).getT(1).getT(1).getT(1).getT(0);                           // osc1_impl::xfader22_t<NV>
+		auto& soft_bypass16 = this->getT(0).getT(1).getT(1).getT(1).getT(1);                      // osc1_impl::soft_bypass16_t<NV>
+		auto& chain137 = this->getT(0).getT(1).getT(1).getT(1).getT(1).getT(0);                   // osc1_impl::chain137_t<NV>
+		auto& global_cable15 = this->getT(0).getT(1).getT(1).getT(1).getT(1).getT(0).getT(0);     // osc1_impl::global_cable15_t<NV>
+		auto& add37 = this->getT(0).getT(1).getT(1).getT(1).getT(1).getT(0).getT(1);              // math::add<NV>
+		auto& gain22 = this->getT(0).getT(1).getT(1).getT(1).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain121 = this->getT(0).getT(1).getT(1).getT(2);                                   // osc1_impl::chain121_t<NV>
+		auto& xfader21 = this->getT(0).getT(1).getT(1).getT(2).getT(0);                           // osc1_impl::xfader21_t<NV>
+		auto& soft_bypass15 = this->getT(0).getT(1).getT(1).getT(2).getT(1);                      // osc1_impl::soft_bypass15_t<NV>
+		auto& chain138 = this->getT(0).getT(1).getT(1).getT(2).getT(1).getT(0);                   // osc1_impl::chain138_t<NV>
+		auto& global_cable18 = this->getT(0).getT(1).getT(1).getT(2).getT(1).getT(0).getT(0);     // osc1_impl::global_cable18_t<NV>
+		auto& add12 = this->getT(0).getT(1).getT(1).getT(2).getT(1).getT(0).getT(1);              // math::add<NV>
+		auto& gain23 = this->getT(0).getT(1).getT(1).getT(2).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain120 = this->getT(0).getT(1).getT(1).getT(3);                                   // osc1_impl::chain120_t<NV>
+		auto& xfader20 = this->getT(0).getT(1).getT(1).getT(3).getT(0);                           // osc1_impl::xfader20_t<NV>
+		auto& soft_bypass14 = this->getT(0).getT(1).getT(1).getT(3).getT(1);                      // osc1_impl::soft_bypass14_t<NV>
+		auto& chain139 = this->getT(0).getT(1).getT(1).getT(3).getT(1).getT(0);                   // osc1_impl::chain139_t<NV>
+		auto& global_cable19 = this->getT(0).getT(1).getT(1).getT(3).getT(1).getT(0).getT(0);     // osc1_impl::global_cable19_t<NV>
+		auto& add49 = this->getT(0).getT(1).getT(1).getT(3).getT(1).getT(0).getT(1);              // math::add<NV>
+		auto& gain24 = this->getT(0).getT(1).getT(1).getT(3).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain119 = this->getT(0).getT(1).getT(1).getT(4);                                   // osc1_impl::chain119_t<NV>
+		auto& xfader19 = this->getT(0).getT(1).getT(1).getT(4).getT(0);                           // osc1_impl::xfader19_t
+		auto& soft_bypass13 = this->getT(0).getT(1).getT(1).getT(4).getT(1);                      // osc1_impl::soft_bypass13_t
+		auto& chain140 = this->getT(0).getT(1).getT(1).getT(4).getT(2);                           // osc1_impl::chain140_t<NV>
+		auto& add64 = this->getT(0).getT(1).getT(1).getT(4).getT(2).getT(0);                      // math::add<NV>
+		auto& gain38 = this->getT(0).getT(1).getT(1).getT(4).getT(2).getT(1);                     // core::gain<NV>
+		auto& chain118 = this->getT(0).getT(1).getT(1).getT(5);                                   // osc1_impl::chain118_t<NV>
+		auto& xfader18 = this->getT(0).getT(1).getT(1).getT(5).getT(0);                           // osc1_impl::xfader18_t<NV>
+		auto& soft_bypass12 = this->getT(0).getT(1).getT(1).getT(5).getT(1);                      // osc1_impl::soft_bypass12_t<NV>
+		auto& chain141 = this->getT(0).getT(1).getT(1).getT(5).getT(1).getT(0);                   // osc1_impl::chain141_t<NV>
+		auto& add65 = this->getT(0).getT(1).getT(1).getT(5).getT(1).getT(0).getT(0);              // math::add<NV>
+		auto& gain28 = this->getT(0).getT(1).getT(1).getT(5).getT(1).getT(0).getT(1);             // core::gain<NV>
+		auto& chain117 = this->getT(0).getT(1).getT(1).getT(6);                                   // osc1_impl::chain117_t<NV>
+		auto& xfader17 = this->getT(0).getT(1).getT(1).getT(6).getT(0);                           // osc1_impl::xfader17_t<NV>
+		auto& soft_bypass11 = this->getT(0).getT(1).getT(1).getT(6).getT(1);                      // osc1_impl::soft_bypass11_t<NV>
+		auto& chain142 = this->getT(0).getT(1).getT(1).getT(6).getT(1).getT(0);                   // osc1_impl::chain142_t<NV>
+		auto& branch16 = this->getT(0).getT(1).getT(1).getT(6).getT(1).getT(0).getT(0);           // osc1_impl::branch16_t<NV>
+		auto& add25 = this->getT(0).getT(1).getT(1).getT(6).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(0);
-		auto& add30 = this->getT(0).getT(1).getT(1).getT(6).                                   // math::add<NV>
+		auto& add30 = this->getT(0).getT(1).getT(1).getT(6).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(1);
-		auto& add74 = this->getT(0).getT(1).getT(1).getT(6).                                   // math::add<NV>
+		auto& add74 = this->getT(0).getT(1).getT(1).getT(6).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(2);
-		auto& add99 = this->getT(0).getT(1).getT(1).getT(6).                                   // math::add<NV>
+		auto& add99 = this->getT(0).getT(1).getT(1).getT(6).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(3);
-		auto& gain39 = this->getT(0).getT(1).getT(1).getT(6).getT(1).getT(0).getT(1);          // core::gain<NV>
-		auto& chain116 = this->getT(0).getT(1).getT(1).getT(7);                                // osc1_impl::chain116_t<NV>
-		auto& xfader16 = this->getT(0).getT(1).getT(1).getT(7).getT(0);                        // osc1_impl::xfader16_t<NV>
-		auto& soft_bypass10 = this->getT(0).getT(1).getT(1).getT(7).getT(1);                   // osc1_impl::soft_bypass10_t<NV>
-		auto& chain143 = this->getT(0).getT(1).getT(1).getT(7).getT(1).getT(0);                // osc1_impl::chain143_t<NV>
-		auto& branch11 = this->getT(0).getT(1).getT(1).getT(7).getT(1).getT(0).getT(0);        // osc1_impl::branch11_t<NV>
-		auto& chain144 = this->getT(0).getT(1).getT(1).getT(7).                                // osc1_impl::chain144_t<NV>
+		auto& gain39 = this->getT(0).getT(1).getT(1).getT(6).getT(1).getT(0).getT(1);             // core::gain<NV>
+		auto& chain116 = this->getT(0).getT(1).getT(1).getT(7);                                   // osc1_impl::chain116_t<NV>
+		auto& xfader16 = this->getT(0).getT(1).getT(1).getT(7).getT(0);                           // osc1_impl::xfader16_t<NV>
+		auto& soft_bypass10 = this->getT(0).getT(1).getT(1).getT(7).getT(1);                      // osc1_impl::soft_bypass10_t<NV>
+		auto& chain143 = this->getT(0).getT(1).getT(1).getT(7).getT(1).getT(0);                   // osc1_impl::chain143_t<NV>
+		auto& branch11 = this->getT(0).getT(1).getT(1).getT(7).getT(1).getT(0).getT(0);           // osc1_impl::branch11_t<NV>
+		auto& chain144 = this->getT(0).getT(1).getT(1).getT(7).                                   // osc1_impl::chain144_t<NV>
                          getT(1).getT(0).getT(0).getT(0);
-		auto& midi_cc18 = this->getT(0).getT(1).getT(1).getT(7).                               // osc1_impl::midi_cc18_t<NV>
+		auto& midi_cc18 = this->getT(0).getT(1).getT(1).getT(7).                                  // osc1_impl::midi_cc18_t<NV>
                           getT(1).getT(0).getT(0).getT(0).
                           getT(0);
-		auto& add67 = this->getT(0).getT(1).getT(1).getT(7).                                   // math::add<NV>
+		auto& add67 = this->getT(0).getT(1).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(0).
                       getT(1);
-		auto& chain145 = this->getT(0).getT(1).getT(1).getT(7).                                // osc1_impl::chain145_t<NV>
+		auto& chain145 = this->getT(0).getT(1).getT(1).getT(7).                                   // osc1_impl::chain145_t<NV>
                          getT(1).getT(0).getT(0).getT(1);
-		auto& midi_cc19 = this->getT(0).getT(1).getT(1).getT(7).                               // osc1_impl::midi_cc19_t<NV>
+		auto& midi_cc19 = this->getT(0).getT(1).getT(1).getT(7).                                  // osc1_impl::midi_cc19_t<NV>
                           getT(1).getT(0).getT(0).getT(1).
                           getT(0);
-		auto& add68 = this->getT(0).getT(1).getT(1).getT(7).                                   // math::add<NV>
+		auto& add68 = this->getT(0).getT(1).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(1).
                       getT(1);
-		auto& chain146 = this->getT(0).getT(1).getT(1).getT(7).                                // osc1_impl::chain146_t<NV>
+		auto& chain146 = this->getT(0).getT(1).getT(1).getT(7).                                   // osc1_impl::chain146_t<NV>
                          getT(1).getT(0).getT(0).getT(2);
-		auto& midi_cc20 = this->getT(0).getT(1).getT(1).getT(7).                               // osc1_impl::midi_cc20_t<NV>
+		auto& midi_cc20 = this->getT(0).getT(1).getT(1).getT(7).                                  // osc1_impl::midi_cc20_t<NV>
                           getT(1).getT(0).getT(0).getT(2).
                           getT(0);
-		auto& add69 = this->getT(0).getT(1).getT(1).getT(7).                                   // math::add<NV>
+		auto& add69 = this->getT(0).getT(1).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(2).
                       getT(1);
-		auto& chain147 = this->getT(0).getT(1).getT(1).getT(7).                                // osc1_impl::chain147_t<NV>
+		auto& chain147 = this->getT(0).getT(1).getT(1).getT(7).                                   // osc1_impl::chain147_t<NV>
                          getT(1).getT(0).getT(0).getT(3);
-		auto& midi_cc21 = this->getT(0).getT(1).getT(1).getT(7).                               // osc1_impl::midi_cc21_t<NV>
+		auto& midi_cc21 = this->getT(0).getT(1).getT(1).getT(7).                                  // osc1_impl::midi_cc21_t<NV>
                           getT(1).getT(0).getT(0).getT(3).
                           getT(0);
-		auto& add70 = this->getT(0).getT(1).getT(1).getT(7).                                   // math::add<NV>
+		auto& add70 = this->getT(0).getT(1).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(3).
                       getT(1);
-		auto& chain148 = this->getT(0).getT(1).getT(1).getT(7).                                // osc1_impl::chain148_t<NV>
+		auto& chain148 = this->getT(0).getT(1).getT(1).getT(7).                                   // osc1_impl::chain148_t<NV>
                          getT(1).getT(0).getT(0).getT(4);
-		auto& midi12 = this->getT(0).getT(1).getT(1).getT(7).                                  // osc1_impl::midi12_t<NV>
+		auto& midi12 = this->getT(0).getT(1).getT(1).getT(7).                                     // osc1_impl::midi12_t<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(0);
-		auto& add71 = this->getT(0).getT(1).getT(1).getT(7).                                   // math::add<NV>
+		auto& add71 = this->getT(0).getT(1).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(4).
                       getT(1);
-		auto& chain149 = this->getT(0).getT(1).getT(1).getT(7).                                // osc1_impl::chain149_t<NV>
+		auto& chain149 = this->getT(0).getT(1).getT(1).getT(7).                                   // osc1_impl::chain149_t<NV>
                          getT(1).getT(0).getT(0).getT(5);
-		auto& midi13 = this->getT(0).getT(1).getT(1).getT(7).                                  // osc1_impl::midi13_t<NV>
+		auto& midi13 = this->getT(0).getT(1).getT(1).getT(7).                                     // osc1_impl::midi13_t<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(0);
-		auto& add72 = this->getT(0).getT(1).getT(1).getT(7).                                   // math::add<NV>
+		auto& add72 = this->getT(0).getT(1).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(5).
                       getT(1);
-		auto& chain150 = this->getT(0).getT(1).getT(1).getT(7).                                // osc1_impl::chain150_t<NV>
+		auto& chain150 = this->getT(0).getT(1).getT(1).getT(7).                                   // osc1_impl::chain150_t<NV>
                          getT(1).getT(0).getT(0).getT(6);
-		auto& midi14 = this->getT(0).getT(1).getT(1).getT(7).                                  // osc1_impl::midi14_t<NV>
+		auto& midi14 = this->getT(0).getT(1).getT(1).getT(7).                                     // osc1_impl::midi14_t<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(0);
-		auto& add73 = this->getT(0).getT(1).getT(1).getT(7).                                   // math::add<NV>
+		auto& add73 = this->getT(0).getT(1).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(6).
                       getT(1);
-		auto& gain40 = this->getT(0).getT(1).getT(1).getT(7).getT(1).getT(0).getT(1);          // core::gain<NV>
-		auto& peak5 = this->getT(0).getT(1).getT(2);                                           // osc1_impl::peak5_t<NV>
-		auto& clear3 = this->getT(0).getT(1).getT(3);                                          // math::clear<NV>
-		auto& chain151 = this->getT(0).getT(1).getT(4);                                        // osc1_impl::chain151_t<NV>
-		auto& branch12 = this->getT(0).getT(1).getT(4).getT(0);                                // osc1_impl::branch12_t<NV>
-		auto& chain152 = this->getT(0).getT(1).getT(4).getT(0).getT(0);                        // osc1_impl::chain152_t<NV>
-		auto& pma3 = this->getT(0).getT(1).getT(4).getT(0).getT(0).getT(0);                    // osc1_impl::pma3_t<NV>
-		auto& add1 = this->getT(0).getT(1).getT(4).getT(0).getT(0).getT(1);                    // math::add<NV>
-		auto& chain154 = this->getT(0).getT(1).getT(4).getT(0).getT(1);                        // osc1_impl::chain154_t<NV>
-		auto& pma14 = this->getT(0).getT(1).getT(4).getT(0).getT(1).getT(0);                   // osc1_impl::pma14_t<NV>
-		auto& add18 = this->getT(0).getT(1).getT(4).getT(0).getT(1).getT(1);                   // math::add<NV>
-		auto& chain155 = this->getT(0).getT(1).getT(4).getT(0).getT(2);                        // osc1_impl::chain155_t<NV>
-		auto& pma15 = this->getT(0).getT(1).getT(4).getT(0).getT(2).getT(0);                   // osc1_impl::pma15_t<NV>
-		auto& add13 = this->getT(0).getT(1).getT(4).getT(0).getT(2).getT(1);                   // math::add<NV>
-		auto& smoother1 = this->getT(0).getT(1).getT(4).getT(1);                               // core::smoother<NV>
-		auto& peak1 = this->getT(0).getT(1).getT(4).getT(2);                                   // osc1_impl::peak1_t<NV>
-		auto& modchain2 = this->getT(0).getT(2);                                               // osc1_impl::modchain2_t<NV>
-		auto& sliderbank4 = this->getT(0).getT(2).getT(0);                                     // osc1_impl::sliderbank4_t<NV>
-		auto& split4 = this->getT(0).getT(2).getT(1);                                          // osc1_impl::split4_t<NV>
-		auto& chain115 = this->getT(0).getT(2).getT(1).getT(0);                                // osc1_impl::chain115_t<NV>
-		auto& xfader15 = this->getT(0).getT(2).getT(1).getT(0).getT(0);                        // osc1_impl::xfader15_t<NV>
-		auto& soft_bypass9 = this->getT(0).getT(2).getT(1).getT(0).getT(1);                    // osc1_impl::soft_bypass9_t<NV>
-		auto& chain47 = this->getT(0).getT(2).getT(1).getT(0).getT(1).getT(0);                 // osc1_impl::chain47_t<NV>
-		auto& global_cable4 = this->getT(0).getT(2).getT(1).getT(0).getT(1).getT(0).getT(0);   // osc1_impl::global_cable4_t<NV>
-		auto& add6 = this->getT(0).getT(2).getT(1).getT(0).getT(1).getT(0).getT(1);            // math::add<NV>
-		auto& gain17 = this->getT(0).getT(2).getT(1).getT(0).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain130 = this->getT(0).getT(2).getT(1).getT(1);                                // osc1_impl::chain130_t<NV>
-		auto& xfader30 = this->getT(0).getT(2).getT(1).getT(1).getT(0);                        // osc1_impl::xfader30_t<NV>
-		auto& soft_bypass24 = this->getT(0).getT(2).getT(1).getT(1).getT(1);                   // osc1_impl::soft_bypass24_t<NV>
-		auto& chain48 = this->getT(0).getT(2).getT(1).getT(1).getT(1).getT(0);                 // osc1_impl::chain48_t<NV>
-		auto& global_cable12 = this->getT(0).getT(2).getT(1).getT(1).getT(1).getT(0).getT(0);  // osc1_impl::global_cable12_t<NV>
-		auto& add32 = this->getT(0).getT(2).getT(1).getT(1).getT(1).getT(0).getT(1);           // math::add<NV>
-		auto& gain18 = this->getT(0).getT(2).getT(1).getT(1).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain129 = this->getT(0).getT(2).getT(1).getT(2);                                // osc1_impl::chain129_t<NV>
-		auto& xfader29 = this->getT(0).getT(2).getT(1).getT(2).getT(0);                        // osc1_impl::xfader29_t<NV>
-		auto& soft_bypass23 = this->getT(0).getT(2).getT(1).getT(2).getT(1);                   // osc1_impl::soft_bypass23_t<NV>
-		auto& chain49 = this->getT(0).getT(2).getT(1).getT(2).getT(1).getT(0);                 // osc1_impl::chain49_t<NV>
-		auto& global_cable13 = this->getT(0).getT(2).getT(1).getT(2).getT(1).getT(0).getT(0);  // osc1_impl::global_cable13_t<NV>
-		auto& add7 = this->getT(0).getT(2).getT(1).getT(2).getT(1).getT(0).getT(1);            // math::add<NV>
-		auto& gain19 = this->getT(0).getT(2).getT(1).getT(2).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain128 = this->getT(0).getT(2).getT(1).getT(3);                                // osc1_impl::chain128_t<NV>
-		auto& xfader28 = this->getT(0).getT(2).getT(1).getT(3).getT(0);                        // osc1_impl::xfader28_t<NV>
-		auto& soft_bypass22 = this->getT(0).getT(2).getT(1).getT(3).getT(1);                   // osc1_impl::soft_bypass22_t<NV>
-		auto& chain50 = this->getT(0).getT(2).getT(1).getT(3).getT(1).getT(0);                 // osc1_impl::chain50_t<NV>
-		auto& global_cable25 = this->getT(0).getT(2).getT(1).getT(3).getT(1).getT(0).getT(0);  // osc1_impl::global_cable25_t<NV>
-		auto& add33 = this->getT(0).getT(2).getT(1).getT(3).getT(1).getT(0).getT(1);           // math::add<NV>
-		auto& gain20 = this->getT(0).getT(2).getT(1).getT(3).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain127 = this->getT(0).getT(2).getT(1).getT(4);                                // osc1_impl::chain127_t<NV>
-		auto& xfader27 = this->getT(0).getT(2).getT(1).getT(4).getT(0);                        // osc1_impl::xfader27_t<NV>
-		auto& soft_bypass21 = this->getT(0).getT(2).getT(1).getT(4).getT(1);                   // osc1_impl::soft_bypass21_t<NV>
-		auto& chain51 = this->getT(0).getT(2).getT(1).getT(4).getT(1).getT(0);                 // osc1_impl::chain51_t<NV>
-		auto& add34 = this->getT(0).getT(2).getT(1).getT(4).getT(1).getT(0).getT(0);           // math::add<NV>
-		auto& gain35 = this->getT(0).getT(2).getT(1).getT(4).getT(1).getT(0).getT(1);          // core::gain<NV>
-		auto& chain126 = this->getT(0).getT(2).getT(1).getT(5);                                // osc1_impl::chain126_t<NV>
-		auto& xfader26 = this->getT(0).getT(2).getT(1).getT(5).getT(0);                        // osc1_impl::xfader26_t<NV>
-		auto& soft_bypass20 = this->getT(0).getT(2).getT(1).getT(5).getT(1);                   // osc1_impl::soft_bypass20_t<NV>
-		auto& chain52 = this->getT(0).getT(2).getT(1).getT(5).getT(1).getT(0);                 // osc1_impl::chain52_t<NV>
-		auto& add35 = this->getT(0).getT(2).getT(1).getT(5).getT(1).getT(0).getT(0);           // math::add<NV>
-		auto& gain27 = this->getT(0).getT(2).getT(1).getT(5).getT(1).getT(0).getT(1);          // core::gain<NV>
-		auto& chain125 = this->getT(0).getT(2).getT(1).getT(6);                                // osc1_impl::chain125_t<NV>
-		auto& xfader25 = this->getT(0).getT(2).getT(1).getT(6).getT(0);                        // osc1_impl::xfader25_t<NV>
-		auto& soft_bypass19 = this->getT(0).getT(2).getT(1).getT(6).getT(1);                   // osc1_impl::soft_bypass19_t<NV>
-		auto& chain53 = this->getT(0).getT(2).getT(1).getT(6).getT(1).getT(0);                 // osc1_impl::chain53_t<NV>
-		auto& branch19 = this->getT(0).getT(2).getT(1).getT(6).getT(1).getT(0).getT(0);        // osc1_impl::branch19_t<NV>
-		auto& add103 = this->getT(0).getT(2).getT(1).getT(6).                                  // math::add<NV>
+		auto& gain40 = this->getT(0).getT(1).getT(1).getT(7).getT(1).getT(0).getT(1);             // core::gain<NV>
+		auto& peak5 = this->getT(0).getT(1).getT(2);                                              // osc1_impl::peak5_t<NV>
+		auto& clear3 = this->getT(0).getT(1).getT(3);                                             // math::clear<NV>
+		auto& chain151 = this->getT(0).getT(1).getT(4);                                           // osc1_impl::chain151_t<NV>
+		auto& branch12 = this->getT(0).getT(1).getT(4).getT(0);                                   // osc1_impl::branch12_t<NV>
+		auto& chain152 = this->getT(0).getT(1).getT(4).getT(0).getT(0);                           // osc1_impl::chain152_t<NV>
+		auto& pma3 = this->getT(0).getT(1).getT(4).getT(0).getT(0).getT(0);                       // osc1_impl::pma3_t<NV>
+		auto& add1 = this->getT(0).getT(1).getT(4).getT(0).getT(0).getT(1);                       // math::add<NV>
+		auto& chain154 = this->getT(0).getT(1).getT(4).getT(0).getT(1);                           // osc1_impl::chain154_t<NV>
+		auto& pma14 = this->getT(0).getT(1).getT(4).getT(0).getT(1).getT(0);                      // osc1_impl::pma14_t<NV>
+		auto& add18 = this->getT(0).getT(1).getT(4).getT(0).getT(1).getT(1);                      // math::add<NV>
+		auto& chain155 = this->getT(0).getT(1).getT(4).getT(0).getT(2);                           // osc1_impl::chain155_t<NV>
+		auto& pma15 = this->getT(0).getT(1).getT(4).getT(0).getT(2).getT(0);                      // osc1_impl::pma15_t<NV>
+		auto& add13 = this->getT(0).getT(1).getT(4).getT(0).getT(2).getT(1);                      // math::add<NV>
+		auto& smoother1 = this->getT(0).getT(1).getT(4).getT(1);                                  // core::smoother<NV>
+		auto& peak1 = this->getT(0).getT(1).getT(4).getT(2);                                      // osc1_impl::peak1_t<NV>
+		auto& modchain2 = this->getT(0).getT(2);                                                  // osc1_impl::modchain2_t<NV>
+		auto& sliderbank4 = this->getT(0).getT(2).getT(0);                                        // osc1_impl::sliderbank4_t<NV>
+		auto& split4 = this->getT(0).getT(2).getT(1);                                             // osc1_impl::split4_t<NV>
+		auto& chain115 = this->getT(0).getT(2).getT(1).getT(0);                                   // osc1_impl::chain115_t<NV>
+		auto& xfader15 = this->getT(0).getT(2).getT(1).getT(0).getT(0);                           // osc1_impl::xfader15_t<NV>
+		auto& soft_bypass9 = this->getT(0).getT(2).getT(1).getT(0).getT(1);                       // osc1_impl::soft_bypass9_t<NV>
+		auto& chain47 = this->getT(0).getT(2).getT(1).getT(0).getT(1).getT(0);                    // osc1_impl::chain47_t<NV>
+		auto& global_cable4 = this->getT(0).getT(2).getT(1).getT(0).getT(1).getT(0).getT(0);      // osc1_impl::global_cable4_t<NV>
+		auto& add6 = this->getT(0).getT(2).getT(1).getT(0).getT(1).getT(0).getT(1);               // math::add<NV>
+		auto& gain17 = this->getT(0).getT(2).getT(1).getT(0).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain130 = this->getT(0).getT(2).getT(1).getT(1);                                   // osc1_impl::chain130_t<NV>
+		auto& xfader30 = this->getT(0).getT(2).getT(1).getT(1).getT(0);                           // osc1_impl::xfader30_t<NV>
+		auto& soft_bypass24 = this->getT(0).getT(2).getT(1).getT(1).getT(1);                      // osc1_impl::soft_bypass24_t<NV>
+		auto& chain48 = this->getT(0).getT(2).getT(1).getT(1).getT(1).getT(0);                    // osc1_impl::chain48_t<NV>
+		auto& global_cable12 = this->getT(0).getT(2).getT(1).getT(1).getT(1).getT(0).getT(0);     // osc1_impl::global_cable12_t<NV>
+		auto& add32 = this->getT(0).getT(2).getT(1).getT(1).getT(1).getT(0).getT(1);              // math::add<NV>
+		auto& gain18 = this->getT(0).getT(2).getT(1).getT(1).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain129 = this->getT(0).getT(2).getT(1).getT(2);                                   // osc1_impl::chain129_t<NV>
+		auto& xfader29 = this->getT(0).getT(2).getT(1).getT(2).getT(0);                           // osc1_impl::xfader29_t<NV>
+		auto& soft_bypass23 = this->getT(0).getT(2).getT(1).getT(2).getT(1);                      // osc1_impl::soft_bypass23_t<NV>
+		auto& chain49 = this->getT(0).getT(2).getT(1).getT(2).getT(1).getT(0);                    // osc1_impl::chain49_t<NV>
+		auto& global_cable13 = this->getT(0).getT(2).getT(1).getT(2).getT(1).getT(0).getT(0);     // osc1_impl::global_cable13_t<NV>
+		auto& add7 = this->getT(0).getT(2).getT(1).getT(2).getT(1).getT(0).getT(1);               // math::add<NV>
+		auto& gain19 = this->getT(0).getT(2).getT(1).getT(2).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain128 = this->getT(0).getT(2).getT(1).getT(3);                                   // osc1_impl::chain128_t<NV>
+		auto& xfader28 = this->getT(0).getT(2).getT(1).getT(3).getT(0);                           // osc1_impl::xfader28_t<NV>
+		auto& soft_bypass22 = this->getT(0).getT(2).getT(1).getT(3).getT(1);                      // osc1_impl::soft_bypass22_t<NV>
+		auto& chain50 = this->getT(0).getT(2).getT(1).getT(3).getT(1).getT(0);                    // osc1_impl::chain50_t<NV>
+		auto& global_cable25 = this->getT(0).getT(2).getT(1).getT(3).getT(1).getT(0).getT(0);     // osc1_impl::global_cable25_t<NV>
+		auto& add33 = this->getT(0).getT(2).getT(1).getT(3).getT(1).getT(0).getT(1);              // math::add<NV>
+		auto& gain20 = this->getT(0).getT(2).getT(1).getT(3).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain127 = this->getT(0).getT(2).getT(1).getT(4);                                   // osc1_impl::chain127_t<NV>
+		auto& xfader27 = this->getT(0).getT(2).getT(1).getT(4).getT(0);                           // osc1_impl::xfader27_t<NV>
+		auto& soft_bypass21 = this->getT(0).getT(2).getT(1).getT(4).getT(1);                      // osc1_impl::soft_bypass21_t<NV>
+		auto& chain51 = this->getT(0).getT(2).getT(1).getT(4).getT(1).getT(0);                    // osc1_impl::chain51_t<NV>
+		auto& add34 = this->getT(0).getT(2).getT(1).getT(4).getT(1).getT(0).getT(0);              // math::add<NV>
+		auto& gain35 = this->getT(0).getT(2).getT(1).getT(4).getT(1).getT(0).getT(1);             // core::gain<NV>
+		auto& chain126 = this->getT(0).getT(2).getT(1).getT(5);                                   // osc1_impl::chain126_t<NV>
+		auto& xfader26 = this->getT(0).getT(2).getT(1).getT(5).getT(0);                           // osc1_impl::xfader26_t<NV>
+		auto& soft_bypass20 = this->getT(0).getT(2).getT(1).getT(5).getT(1);                      // osc1_impl::soft_bypass20_t<NV>
+		auto& chain52 = this->getT(0).getT(2).getT(1).getT(5).getT(1).getT(0);                    // osc1_impl::chain52_t<NV>
+		auto& add35 = this->getT(0).getT(2).getT(1).getT(5).getT(1).getT(0).getT(0);              // math::add<NV>
+		auto& gain27 = this->getT(0).getT(2).getT(1).getT(5).getT(1).getT(0).getT(1);             // core::gain<NV>
+		auto& chain125 = this->getT(0).getT(2).getT(1).getT(6);                                   // osc1_impl::chain125_t<NV>
+		auto& xfader25 = this->getT(0).getT(2).getT(1).getT(6).getT(0);                           // osc1_impl::xfader25_t<NV>
+		auto& soft_bypass19 = this->getT(0).getT(2).getT(1).getT(6).getT(1);                      // osc1_impl::soft_bypass19_t<NV>
+		auto& chain53 = this->getT(0).getT(2).getT(1).getT(6).getT(1).getT(0);                    // osc1_impl::chain53_t<NV>
+		auto& branch19 = this->getT(0).getT(2).getT(1).getT(6).getT(1).getT(0).getT(0);           // osc1_impl::branch19_t<NV>
+		auto& add103 = this->getT(0).getT(2).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0);
-		auto& add104 = this->getT(0).getT(2).getT(1).getT(6).                                  // math::add<NV>
+		auto& add104 = this->getT(0).getT(2).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1);
-		auto& add105 = this->getT(0).getT(2).getT(1).getT(6).                                  // math::add<NV>
+		auto& add105 = this->getT(0).getT(2).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2);
-		auto& add106 = this->getT(0).getT(2).getT(1).getT(6).                                  // math::add<NV>
+		auto& add106 = this->getT(0).getT(2).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3);
-		auto& add36 = this->getT(0).getT(2).getT(1).getT(6).getT(1).getT(0).getT(1);           // math::add<NV>
-		auto& gain36 = this->getT(0).getT(2).getT(1).getT(6).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain124 = this->getT(0).getT(2).getT(1).getT(7);                                // osc1_impl::chain124_t<NV>
-		auto& xfader24 = this->getT(0).getT(2).getT(1).getT(7).getT(0);                        // osc1_impl::xfader24_t<NV>
-		auto& soft_bypass18 = this->getT(0).getT(2).getT(1).getT(7).getT(1);                   // osc1_impl::soft_bypass18_t<NV>
-		auto& chain54 = this->getT(0).getT(2).getT(1).getT(7).getT(1).getT(0);                 // osc1_impl::chain54_t<NV>
-		auto& branch4 = this->getT(0).getT(2).getT(1).getT(7).getT(1).getT(0).getT(0);         // osc1_impl::branch4_t<NV>
-		auto& chain = this->getT(0).getT(2).getT(1).getT(7).                                   // osc1_impl::chain_t<NV>
+		auto& add36 = this->getT(0).getT(2).getT(1).getT(6).getT(1).getT(0).getT(1);              // math::add<NV>
+		auto& gain36 = this->getT(0).getT(2).getT(1).getT(6).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain124 = this->getT(0).getT(2).getT(1).getT(7);                                   // osc1_impl::chain124_t<NV>
+		auto& xfader24 = this->getT(0).getT(2).getT(1).getT(7).getT(0);                           // osc1_impl::xfader24_t<NV>
+		auto& soft_bypass18 = this->getT(0).getT(2).getT(1).getT(7).getT(1);                      // osc1_impl::soft_bypass18_t<NV>
+		auto& chain54 = this->getT(0).getT(2).getT(1).getT(7).getT(1).getT(0);                    // osc1_impl::chain54_t<NV>
+		auto& branch4 = this->getT(0).getT(2).getT(1).getT(7).getT(1).getT(0).getT(0);            // osc1_impl::branch4_t<NV>
+		auto& chain = this->getT(0).getT(2).getT(1).getT(7).                                      // osc1_impl::chain_t<NV>
                       getT(1).getT(0).getT(0).getT(0);
-		auto& midi_cc3 = this->getT(0).getT(2).getT(1).getT(7).                                // osc1_impl::midi_cc3_t<NV>
+		auto& midi_cc3 = this->getT(0).getT(2).getT(1).getT(7).                                   // osc1_impl::midi_cc3_t<NV>
                          getT(1).getT(0).getT(0).getT(0).
                          getT(0);
-		auto& add31 = this->getT(0).getT(2).getT(1).getT(7).                                   // math::add<NV>
+		auto& add31 = this->getT(0).getT(2).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(0).
                       getT(1);
-		auto& chain4 = this->getT(0).getT(2).getT(1).getT(7).                                  // osc1_impl::chain4_t<NV>
+		auto& chain4 = this->getT(0).getT(2).getT(1).getT(7).                                     // osc1_impl::chain4_t<NV>
                        getT(1).getT(0).getT(0).getT(1);
-		auto& midi_cc5 = this->getT(0).getT(2).getT(1).getT(7).                                // osc1_impl::midi_cc5_t<NV>
+		auto& midi_cc5 = this->getT(0).getT(2).getT(1).getT(7).                                   // osc1_impl::midi_cc5_t<NV>
                          getT(1).getT(0).getT(0).getT(1).
                          getT(0);
-		auto& add38 = this->getT(0).getT(2).getT(1).getT(7).                                   // math::add<NV>
+		auto& add38 = this->getT(0).getT(2).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(1).
                       getT(1);
-		auto& chain5 = this->getT(0).getT(2).getT(1).getT(7).                                  // osc1_impl::chain5_t<NV>
+		auto& chain5 = this->getT(0).getT(2).getT(1).getT(7).                                     // osc1_impl::chain5_t<NV>
                        getT(1).getT(0).getT(0).getT(2);
-		auto& midi_cc7 = this->getT(0).getT(2).getT(1).getT(7).                                // osc1_impl::midi_cc7_t<NV>
+		auto& midi_cc7 = this->getT(0).getT(2).getT(1).getT(7).                                   // osc1_impl::midi_cc7_t<NV>
                          getT(1).getT(0).getT(0).getT(2).
                          getT(0);
-		auto& add39 = this->getT(0).getT(2).getT(1).getT(7).                                   // math::add<NV>
+		auto& add39 = this->getT(0).getT(2).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(2).
                       getT(1);
-		auto& chain6 = this->getT(0).getT(2).getT(1).getT(7).                                  // osc1_impl::chain6_t<NV>
+		auto& chain6 = this->getT(0).getT(2).getT(1).getT(7).                                     // osc1_impl::chain6_t<NV>
                        getT(1).getT(0).getT(0).getT(3);
-		auto& midi_cc8 = this->getT(0).getT(2).getT(1).getT(7).                                // osc1_impl::midi_cc8_t<NV>
+		auto& midi_cc8 = this->getT(0).getT(2).getT(1).getT(7).                                   // osc1_impl::midi_cc8_t<NV>
                          getT(1).getT(0).getT(0).getT(3).
                          getT(0);
-		auto& add40 = this->getT(0).getT(2).getT(1).getT(7).                                   // math::add<NV>
+		auto& add40 = this->getT(0).getT(2).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(3).
                       getT(1);
-		auto& chain7 = this->getT(0).getT(2).getT(1).getT(7).                                  // osc1_impl::chain7_t<NV>
+		auto& chain7 = this->getT(0).getT(2).getT(1).getT(7).                                     // osc1_impl::chain7_t<NV>
                        getT(1).getT(0).getT(0).getT(4);
-		auto& midi1 = this->getT(0).getT(2).getT(1).getT(7).                                   // osc1_impl::midi1_t<NV>
+		auto& midi1 = this->getT(0).getT(2).getT(1).getT(7).                                      // osc1_impl::midi1_t<NV>
                       getT(1).getT(0).getT(0).getT(4).
                       getT(0);
-		auto& add41 = this->getT(0).getT(2).getT(1).getT(7).                                   // math::add<NV>
+		auto& add41 = this->getT(0).getT(2).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(4).
                       getT(1);
-		auto& chain9 = this->getT(0).getT(2).getT(1).getT(7).                                  // osc1_impl::chain9_t<NV>
+		auto& chain9 = this->getT(0).getT(2).getT(1).getT(7).                                     // osc1_impl::chain9_t<NV>
                        getT(1).getT(0).getT(0).getT(5);
-		auto& midi3 = this->getT(0).getT(2).getT(1).getT(7).                                   // osc1_impl::midi3_t<NV>
+		auto& midi3 = this->getT(0).getT(2).getT(1).getT(7).                                      // osc1_impl::midi3_t<NV>
                       getT(1).getT(0).getT(0).getT(5).
                       getT(0);
-		auto& add42 = this->getT(0).getT(2).getT(1).getT(7).                                   // math::add<NV>
+		auto& add42 = this->getT(0).getT(2).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(5).
                       getT(1);
-		auto& chain11 = this->getT(0).getT(2).getT(1).getT(7).                                 // osc1_impl::chain11_t<NV>
+		auto& chain11 = this->getT(0).getT(2).getT(1).getT(7).                                    // osc1_impl::chain11_t<NV>
                         getT(1).getT(0).getT(0).getT(6);
-		auto& midi5 = this->getT(0).getT(2).getT(1).getT(7).                                   // osc1_impl::midi5_t<NV>
+		auto& midi5 = this->getT(0).getT(2).getT(1).getT(7).                                      // osc1_impl::midi5_t<NV>
                       getT(1).getT(0).getT(0).getT(6).
                       getT(0);
-		auto& add43 = this->getT(0).getT(2).getT(1).getT(7).                                   // math::add<NV>
+		auto& add43 = this->getT(0).getT(2).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(6).
                       getT(1);
-		auto& gain37 = this->getT(0).getT(2).getT(1).getT(7).getT(1).getT(0).getT(1);          // core::gain<NV>
-		auto& peak4 = this->getT(0).getT(2).getT(2);                                           // osc1_impl::peak4_t<NV>
-		auto& pma2 = this->getT(0).getT(2).getT(3);                                            // osc1_impl::pma2_t<NV>
-		auto& modchain4 = this->getT(0).getT(3);                                               // osc1_impl::modchain4_t<NV>
-		auto& sliderbank6 = this->getT(0).getT(3).getT(0);                                     // osc1_impl::sliderbank6_t<NV>
-		auto& split6 = this->getT(0).getT(3).getT(1);                                          // osc1_impl::split6_t<NV>
-		auto& chain123 = this->getT(0).getT(3).getT(1).getT(0);                                // osc1_impl::chain123_t<NV>
-		auto& xfader23 = this->getT(0).getT(3).getT(1).getT(0).getT(0);                        // osc1_impl::xfader23_t<NV>
-		auto& soft_bypass17 = this->getT(0).getT(3).getT(1).getT(0).getT(1);                   // osc1_impl::soft_bypass17_t<NV>
-		auto& chain63 = this->getT(0).getT(3).getT(1).getT(0).getT(1).getT(0);                 // osc1_impl::chain63_t<NV>
-		auto& global_cable6 = this->getT(0).getT(3).getT(1).getT(0).getT(1).getT(0).getT(0);   // osc1_impl::global_cable6_t<NV>
-		auto& add10 = this->getT(0).getT(3).getT(1).getT(0).getT(1).getT(0).getT(1);           // math::add<NV>
-		auto& gain25 = this->getT(0).getT(3).getT(1).getT(0).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain249 = this->getT(0).getT(3).getT(1).getT(1);                                // osc1_impl::chain249_t<NV>
-		auto& xfader38 = this->getT(0).getT(3).getT(1).getT(1).getT(0);                        // osc1_impl::xfader38_t<NV>
-		auto& soft_bypass32 = this->getT(0).getT(3).getT(1).getT(1).getT(1);                   // osc1_impl::soft_bypass32_t<NV>
-		auto& chain64 = this->getT(0).getT(3).getT(1).getT(1).getT(1).getT(0);                 // osc1_impl::chain64_t<NV>
-		auto& global_cable16 = this->getT(0).getT(3).getT(1).getT(1).getT(1).getT(0).getT(0);  // osc1_impl::global_cable16_t<NV>
-		auto& add44 = this->getT(0).getT(3).getT(1).getT(1).getT(1).getT(0).getT(1);           // math::add<NV>
-		auto& gain29 = this->getT(0).getT(3).getT(1).getT(1).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain199 = this->getT(0).getT(3).getT(1).getT(2);                                // osc1_impl::chain199_t<NV>
-		auto& xfader37 = this->getT(0).getT(3).getT(1).getT(2).getT(0);                        // osc1_impl::xfader37_t<NV>
-		auto& soft_bypass31 = this->getT(0).getT(3).getT(1).getT(2).getT(1);                   // osc1_impl::soft_bypass31_t<NV>
-		auto& chain65 = this->getT(0).getT(3).getT(1).getT(2).getT(1).getT(0);                 // osc1_impl::chain65_t<NV>
-		auto& global_cable17 = this->getT(0).getT(3).getT(1).getT(2).getT(1).getT(0).getT(0);  // osc1_impl::global_cable17_t<NV>
-		auto& add11 = this->getT(0).getT(3).getT(1).getT(2).getT(1).getT(0).getT(1);           // math::add<NV>
-		auto& gain30 = this->getT(0).getT(3).getT(1).getT(2).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain198 = this->getT(0).getT(3).getT(1).getT(3);                                // osc1_impl::chain198_t<NV>
-		auto& xfader36 = this->getT(0).getT(3).getT(1).getT(3).getT(0);                        // osc1_impl::xfader36_t<NV>
-		auto& soft_bypass30 = this->getT(0).getT(3).getT(1).getT(3).getT(1);                   // osc1_impl::soft_bypass30_t<NV>
-		auto& chain66 = this->getT(0).getT(3).getT(1).getT(3).getT(1).getT(0);                 // osc1_impl::chain66_t<NV>
-		auto& global_cable26 = this->getT(0).getT(3).getT(1).getT(3).getT(1).getT(0).getT(0);  // osc1_impl::global_cable26_t<NV>
-		auto& add45 = this->getT(0).getT(3).getT(1).getT(3).getT(1).getT(0).getT(1);           // math::add<NV>
-		auto& gain31 = this->getT(0).getT(3).getT(1).getT(3).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain190 = this->getT(0).getT(3).getT(1).getT(4);                                // osc1_impl::chain190_t<NV>
-		auto& xfader35 = this->getT(0).getT(3).getT(1).getT(4).getT(0);                        // osc1_impl::xfader35_t
-		auto& soft_bypass29 = this->getT(0).getT(3).getT(1).getT(4).getT(1);                   // osc1_impl::soft_bypass29_t
-		auto& chain67 = this->getT(0).getT(3).getT(1).getT(4).getT(2);                         // osc1_impl::chain67_t<NV>
-		auto& add46 = this->getT(0).getT(3).getT(1).getT(4).getT(2).getT(0);                   // math::add<NV>
-		auto& gain41 = this->getT(0).getT(3).getT(1).getT(4).getT(2).getT(1);                  // core::gain<NV>
-		auto& chain189 = this->getT(0).getT(3).getT(1).getT(5);                                // osc1_impl::chain189_t<NV>
-		auto& xfader34 = this->getT(0).getT(3).getT(1).getT(5).getT(0);                        // osc1_impl::xfader34_t<NV>
-		auto& soft_bypass28 = this->getT(0).getT(3).getT(1).getT(5).getT(1);                   // osc1_impl::soft_bypass28_t<NV>
-		auto& chain68 = this->getT(0).getT(3).getT(1).getT(5).getT(1).getT(0);                 // osc1_impl::chain68_t<NV>
-		auto& add47 = this->getT(0).getT(3).getT(1).getT(5).getT(1).getT(0).getT(0);           // math::add<NV>
-		auto& gain42 = this->getT(0).getT(3).getT(1).getT(5).getT(1).getT(0).getT(1);          // core::gain<NV>
-		auto& chain182 = this->getT(0).getT(3).getT(1).getT(6);                                // osc1_impl::chain182_t<NV>
-		auto& xfader33 = this->getT(0).getT(3).getT(1).getT(6).getT(0);                        // osc1_impl::xfader33_t<NV>
-		auto& soft_bypass27 = this->getT(0).getT(3).getT(1).getT(6).getT(1);                   // osc1_impl::soft_bypass27_t<NV>
-		auto& chain69 = this->getT(0).getT(3).getT(1).getT(6).getT(1).getT(0);                 // osc1_impl::chain69_t<NV>
-		auto& branch20 = this->getT(0).getT(3).getT(1).getT(6).getT(1).getT(0).getT(0);        // osc1_impl::branch20_t<NV>
-		auto& add107 = this->getT(0).getT(3).getT(1).getT(6).                                  // math::add<NV>
+		auto& gain37 = this->getT(0).getT(2).getT(1).getT(7).getT(1).getT(0).getT(1);             // core::gain<NV>
+		auto& peak4 = this->getT(0).getT(2).getT(2);                                              // osc1_impl::peak4_t<NV>
+		auto& pma2 = this->getT(0).getT(2).getT(3);                                               // osc1_impl::pma2_t<NV>
+		auto& modchain4 = this->getT(0).getT(3);                                                  // osc1_impl::modchain4_t<NV>
+		auto& sliderbank6 = this->getT(0).getT(3).getT(0);                                        // osc1_impl::sliderbank6_t<NV>
+		auto& split6 = this->getT(0).getT(3).getT(1);                                             // osc1_impl::split6_t<NV>
+		auto& chain123 = this->getT(0).getT(3).getT(1).getT(0);                                   // osc1_impl::chain123_t<NV>
+		auto& xfader23 = this->getT(0).getT(3).getT(1).getT(0).getT(0);                           // osc1_impl::xfader23_t<NV>
+		auto& soft_bypass17 = this->getT(0).getT(3).getT(1).getT(0).getT(1);                      // osc1_impl::soft_bypass17_t<NV>
+		auto& chain63 = this->getT(0).getT(3).getT(1).getT(0).getT(1).getT(0);                    // osc1_impl::chain63_t<NV>
+		auto& global_cable6 = this->getT(0).getT(3).getT(1).getT(0).getT(1).getT(0).getT(0);      // osc1_impl::global_cable6_t<NV>
+		auto& add10 = this->getT(0).getT(3).getT(1).getT(0).getT(1).getT(0).getT(1);              // math::add<NV>
+		auto& gain25 = this->getT(0).getT(3).getT(1).getT(0).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain249 = this->getT(0).getT(3).getT(1).getT(1);                                   // osc1_impl::chain249_t<NV>
+		auto& xfader38 = this->getT(0).getT(3).getT(1).getT(1).getT(0);                           // osc1_impl::xfader38_t<NV>
+		auto& soft_bypass32 = this->getT(0).getT(3).getT(1).getT(1).getT(1);                      // osc1_impl::soft_bypass32_t<NV>
+		auto& chain64 = this->getT(0).getT(3).getT(1).getT(1).getT(1).getT(0);                    // osc1_impl::chain64_t<NV>
+		auto& global_cable16 = this->getT(0).getT(3).getT(1).getT(1).getT(1).getT(0).getT(0);     // osc1_impl::global_cable16_t<NV>
+		auto& add44 = this->getT(0).getT(3).getT(1).getT(1).getT(1).getT(0).getT(1);              // math::add<NV>
+		auto& gain29 = this->getT(0).getT(3).getT(1).getT(1).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain199 = this->getT(0).getT(3).getT(1).getT(2);                                   // osc1_impl::chain199_t<NV>
+		auto& xfader37 = this->getT(0).getT(3).getT(1).getT(2).getT(0);                           // osc1_impl::xfader37_t<NV>
+		auto& soft_bypass31 = this->getT(0).getT(3).getT(1).getT(2).getT(1);                      // osc1_impl::soft_bypass31_t<NV>
+		auto& chain65 = this->getT(0).getT(3).getT(1).getT(2).getT(1).getT(0);                    // osc1_impl::chain65_t<NV>
+		auto& global_cable17 = this->getT(0).getT(3).getT(1).getT(2).getT(1).getT(0).getT(0);     // osc1_impl::global_cable17_t<NV>
+		auto& add11 = this->getT(0).getT(3).getT(1).getT(2).getT(1).getT(0).getT(1);              // math::add<NV>
+		auto& gain30 = this->getT(0).getT(3).getT(1).getT(2).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain198 = this->getT(0).getT(3).getT(1).getT(3);                                   // osc1_impl::chain198_t<NV>
+		auto& xfader36 = this->getT(0).getT(3).getT(1).getT(3).getT(0);                           // osc1_impl::xfader36_t<NV>
+		auto& soft_bypass30 = this->getT(0).getT(3).getT(1).getT(3).getT(1);                      // osc1_impl::soft_bypass30_t<NV>
+		auto& chain66 = this->getT(0).getT(3).getT(1).getT(3).getT(1).getT(0);                    // osc1_impl::chain66_t<NV>
+		auto& global_cable26 = this->getT(0).getT(3).getT(1).getT(3).getT(1).getT(0).getT(0);     // osc1_impl::global_cable26_t<NV>
+		auto& add45 = this->getT(0).getT(3).getT(1).getT(3).getT(1).getT(0).getT(1);              // math::add<NV>
+		auto& gain31 = this->getT(0).getT(3).getT(1).getT(3).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain190 = this->getT(0).getT(3).getT(1).getT(4);                                   // osc1_impl::chain190_t<NV>
+		auto& xfader35 = this->getT(0).getT(3).getT(1).getT(4).getT(0);                           // osc1_impl::xfader35_t
+		auto& soft_bypass29 = this->getT(0).getT(3).getT(1).getT(4).getT(1);                      // osc1_impl::soft_bypass29_t
+		auto& chain67 = this->getT(0).getT(3).getT(1).getT(4).getT(2);                            // osc1_impl::chain67_t<NV>
+		auto& add46 = this->getT(0).getT(3).getT(1).getT(4).getT(2).getT(0);                      // math::add<NV>
+		auto& gain41 = this->getT(0).getT(3).getT(1).getT(4).getT(2).getT(1);                     // core::gain<NV>
+		auto& chain189 = this->getT(0).getT(3).getT(1).getT(5);                                   // osc1_impl::chain189_t<NV>
+		auto& xfader34 = this->getT(0).getT(3).getT(1).getT(5).getT(0);                           // osc1_impl::xfader34_t<NV>
+		auto& soft_bypass28 = this->getT(0).getT(3).getT(1).getT(5).getT(1);                      // osc1_impl::soft_bypass28_t<NV>
+		auto& chain68 = this->getT(0).getT(3).getT(1).getT(5).getT(1).getT(0);                    // osc1_impl::chain68_t<NV>
+		auto& add47 = this->getT(0).getT(3).getT(1).getT(5).getT(1).getT(0).getT(0);              // math::add<NV>
+		auto& gain42 = this->getT(0).getT(3).getT(1).getT(5).getT(1).getT(0).getT(1);             // core::gain<NV>
+		auto& chain182 = this->getT(0).getT(3).getT(1).getT(6);                                   // osc1_impl::chain182_t<NV>
+		auto& xfader33 = this->getT(0).getT(3).getT(1).getT(6).getT(0);                           // osc1_impl::xfader33_t<NV>
+		auto& soft_bypass27 = this->getT(0).getT(3).getT(1).getT(6).getT(1);                      // osc1_impl::soft_bypass27_t<NV>
+		auto& chain69 = this->getT(0).getT(3).getT(1).getT(6).getT(1).getT(0);                    // osc1_impl::chain69_t<NV>
+		auto& branch20 = this->getT(0).getT(3).getT(1).getT(6).getT(1).getT(0).getT(0);           // osc1_impl::branch20_t<NV>
+		auto& add107 = this->getT(0).getT(3).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0);
-		auto& add108 = this->getT(0).getT(3).getT(1).getT(6).                                  // math::add<NV>
+		auto& add108 = this->getT(0).getT(3).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1);
-		auto& add109 = this->getT(0).getT(3).getT(1).getT(6).                                  // math::add<NV>
+		auto& add109 = this->getT(0).getT(3).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2);
-		auto& add110 = this->getT(0).getT(3).getT(1).getT(6).                                  // math::add<NV>
+		auto& add110 = this->getT(0).getT(3).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3);
-		auto& add48 = this->getT(0).getT(3).getT(1).getT(6).getT(1).getT(0).getT(1);           // math::add<NV>
-		auto& gain43 = this->getT(0).getT(3).getT(1).getT(6).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain181 = this->getT(0).getT(3).getT(1).getT(7);                                // osc1_impl::chain181_t<NV>
-		auto& xfader32 = this->getT(0).getT(3).getT(1).getT(7).getT(0);                        // osc1_impl::xfader32_t<NV>
-		auto& soft_bypass26 = this->getT(0).getT(3).getT(1).getT(7).getT(1);                   // osc1_impl::soft_bypass26_t<NV>
-		auto& chain70 = this->getT(0).getT(3).getT(1).getT(7).getT(1).getT(0);                 // osc1_impl::chain70_t<NV>
-		auto& branch6 = this->getT(0).getT(3).getT(1).getT(7).getT(1).getT(0).getT(0);         // osc1_impl::branch6_t<NV>
-		auto& chain28 = this->getT(0).getT(3).getT(1).getT(7).                                 // osc1_impl::chain28_t<NV>
+		auto& add48 = this->getT(0).getT(3).getT(1).getT(6).getT(1).getT(0).getT(1);              // math::add<NV>
+		auto& gain43 = this->getT(0).getT(3).getT(1).getT(6).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain181 = this->getT(0).getT(3).getT(1).getT(7);                                   // osc1_impl::chain181_t<NV>
+		auto& xfader32 = this->getT(0).getT(3).getT(1).getT(7).getT(0);                           // osc1_impl::xfader32_t<NV>
+		auto& soft_bypass26 = this->getT(0).getT(3).getT(1).getT(7).getT(1);                      // osc1_impl::soft_bypass26_t<NV>
+		auto& chain70 = this->getT(0).getT(3).getT(1).getT(7).getT(1).getT(0);                    // osc1_impl::chain70_t<NV>
+		auto& branch6 = this->getT(0).getT(3).getT(1).getT(7).getT(1).getT(0).getT(0);            // osc1_impl::branch6_t<NV>
+		auto& chain28 = this->getT(0).getT(3).getT(1).getT(7).                                    // osc1_impl::chain28_t<NV>
                         getT(1).getT(0).getT(0).getT(0);
-		auto& midi_cc14 = this->getT(0).getT(3).getT(1).getT(7).                               // osc1_impl::midi_cc14_t<NV>
+		auto& midi_cc14 = this->getT(0).getT(3).getT(1).getT(7).                                  // osc1_impl::midi_cc14_t<NV>
                           getT(1).getT(0).getT(0).getT(0).
                           getT(0);
-		auto& add57 = this->getT(0).getT(3).getT(1).getT(7).                                   // math::add<NV>
+		auto& add57 = this->getT(0).getT(3).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(0).
                       getT(1);
-		auto& chain29 = this->getT(0).getT(3).getT(1).getT(7).                                 // osc1_impl::chain29_t<NV>
+		auto& chain29 = this->getT(0).getT(3).getT(1).getT(7).                                    // osc1_impl::chain29_t<NV>
                         getT(1).getT(0).getT(0).getT(1);
-		auto& midi_cc15 = this->getT(0).getT(3).getT(1).getT(7).                               // osc1_impl::midi_cc15_t<NV>
+		auto& midi_cc15 = this->getT(0).getT(3).getT(1).getT(7).                                  // osc1_impl::midi_cc15_t<NV>
                           getT(1).getT(0).getT(0).getT(1).
                           getT(0);
-		auto& add58 = this->getT(0).getT(3).getT(1).getT(7).                                   // math::add<NV>
+		auto& add58 = this->getT(0).getT(3).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(1).
                       getT(1);
-		auto& chain30 = this->getT(0).getT(3).getT(1).getT(7).                                 // osc1_impl::chain30_t<NV>
+		auto& chain30 = this->getT(0).getT(3).getT(1).getT(7).                                    // osc1_impl::chain30_t<NV>
                         getT(1).getT(0).getT(0).getT(2);
-		auto& midi_cc16 = this->getT(0).getT(3).getT(1).getT(7).                               // osc1_impl::midi_cc16_t<NV>
+		auto& midi_cc16 = this->getT(0).getT(3).getT(1).getT(7).                                  // osc1_impl::midi_cc16_t<NV>
                           getT(1).getT(0).getT(0).getT(2).
                           getT(0);
-		auto& add59 = this->getT(0).getT(3).getT(1).getT(7).                                   // math::add<NV>
+		auto& add59 = this->getT(0).getT(3).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(2).
                       getT(1);
-		auto& chain31 = this->getT(0).getT(3).getT(1).getT(7).                                 // osc1_impl::chain31_t<NV>
+		auto& chain31 = this->getT(0).getT(3).getT(1).getT(7).                                    // osc1_impl::chain31_t<NV>
                         getT(1).getT(0).getT(0).getT(3);
-		auto& midi_cc17 = this->getT(0).getT(3).getT(1).getT(7).                               // osc1_impl::midi_cc17_t<NV>
+		auto& midi_cc17 = this->getT(0).getT(3).getT(1).getT(7).                                  // osc1_impl::midi_cc17_t<NV>
                           getT(1).getT(0).getT(0).getT(3).
                           getT(0);
-		auto& add60 = this->getT(0).getT(3).getT(1).getT(7).                                   // math::add<NV>
+		auto& add60 = this->getT(0).getT(3).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(3).
                       getT(1);
-		auto& chain32 = this->getT(0).getT(3).getT(1).getT(7).                                 // osc1_impl::chain32_t<NV>
+		auto& chain32 = this->getT(0).getT(3).getT(1).getT(7).                                    // osc1_impl::chain32_t<NV>
                         getT(1).getT(0).getT(0).getT(4);
-		auto& midi9 = this->getT(0).getT(3).getT(1).getT(7).                                   // osc1_impl::midi9_t<NV>
+		auto& midi9 = this->getT(0).getT(3).getT(1).getT(7).                                      // osc1_impl::midi9_t<NV>
                       getT(1).getT(0).getT(0).getT(4).
                       getT(0);
-		auto& add61 = this->getT(0).getT(3).getT(1).getT(7).                                   // math::add<NV>
+		auto& add61 = this->getT(0).getT(3).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(4).
                       getT(1);
-		auto& chain33 = this->getT(0).getT(3).getT(1).getT(7).                                 // osc1_impl::chain33_t<NV>
+		auto& chain33 = this->getT(0).getT(3).getT(1).getT(7).                                    // osc1_impl::chain33_t<NV>
                         getT(1).getT(0).getT(0).getT(5);
-		auto& midi10 = this->getT(0).getT(3).getT(1).getT(7).                                  // osc1_impl::midi10_t<NV>
+		auto& midi10 = this->getT(0).getT(3).getT(1).getT(7).                                     // osc1_impl::midi10_t<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(0);
-		auto& add62 = this->getT(0).getT(3).getT(1).getT(7).                                   // math::add<NV>
+		auto& add62 = this->getT(0).getT(3).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(5).
                       getT(1);
-		auto& chain34 = this->getT(0).getT(3).getT(1).getT(7).                                 // osc1_impl::chain34_t<NV>
+		auto& chain34 = this->getT(0).getT(3).getT(1).getT(7).                                    // osc1_impl::chain34_t<NV>
                         getT(1).getT(0).getT(0).getT(6);
-		auto& midi11 = this->getT(0).getT(3).getT(1).getT(7).                                  // osc1_impl::midi11_t<NV>
+		auto& midi11 = this->getT(0).getT(3).getT(1).getT(7).                                     // osc1_impl::midi11_t<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(0);
-		auto& add63 = this->getT(0).getT(3).getT(1).getT(7).                                   // math::add<NV>
+		auto& add63 = this->getT(0).getT(3).getT(1).getT(7).                                      // math::add<NV>
                       getT(1).getT(0).getT(0).getT(6).
                       getT(1);
-		auto& gain44 = this->getT(0).getT(3).getT(1).getT(7).getT(1).getT(0).getT(1);          // core::gain<NV>
-		auto& peak6 = this->getT(0).getT(3).getT(2);                                           // osc1_impl::peak6_t<NV>
-		auto& pma4 = this->getT(0).getT(3).getT(3);                                            // osc1_impl::pma4_t<NV>
-		auto& modchain9 = this->getT(0).getT(4);                                               // osc1_impl::modchain9_t<NV>
-		auto& sliderbank7 = this->getT(0).getT(4).getT(0);                                     // osc1_impl::sliderbank7_t<NV>
-		auto& split15 = this->getT(0).getT(4).getT(1);                                         // osc1_impl::split15_t<NV>
-		auto& chain180 = this->getT(0).getT(4).getT(1).getT(0);                                // osc1_impl::chain180_t<NV>
-		auto& xfader31 = this->getT(0).getT(4).getT(1).getT(0).getT(0);                        // osc1_impl::xfader31_t<NV>
-		auto& soft_bypass25 = this->getT(0).getT(4).getT(1).getT(0).getT(1);                   // osc1_impl::soft_bypass25_t<NV>
-		auto& chain89 = this->getT(0).getT(4).getT(1).getT(0).getT(1).getT(0);                 // osc1_impl::chain89_t<NV>
-		auto& global_cable7 = this->getT(0).getT(4).getT(1).getT(0).getT(1).getT(0).getT(0);   // osc1_impl::global_cable7_t<NV>
-		auto& add111 = this->getT(0).getT(4).getT(1).getT(0).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain48 = this->getT(0).getT(4).getT(1).getT(0).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain367 = this->getT(0).getT(4).getT(1).getT(1);                                // osc1_impl::chain367_t<NV>
-		auto& xfader46 = this->getT(0).getT(4).getT(1).getT(1).getT(0);                        // osc1_impl::xfader46_t
-		auto& soft_bypass40 = this->getT(0).getT(4).getT(1).getT(1).getT(1);                   // osc1_impl::soft_bypass40_t
-		auto& chain90 = this->getT(0).getT(4).getT(1).getT(1).getT(2);                         // osc1_impl::chain90_t<NV>
-		auto& global_cable24 = this->getT(0).getT(4).getT(1).getT(1).getT(2).getT(0);          // osc1_impl::global_cable24_t<NV>
-		auto& add112 = this->getT(0).getT(4).getT(1).getT(1).getT(2).getT(1);                  // math::add<NV>
-		auto& gain61 = this->getT(0).getT(4).getT(1).getT(1).getT(2).getT(2);                  // core::gain<NV>
-		auto& chain366 = this->getT(0).getT(4).getT(1).getT(2);                                // osc1_impl::chain366_t<NV>
-		auto& xfader45 = this->getT(0).getT(4).getT(1).getT(2).getT(0);                        // osc1_impl::xfader45_t<NV>
-		auto& soft_bypass39 = this->getT(0).getT(4).getT(1).getT(2).getT(1);                   // osc1_impl::soft_bypass39_t<NV>
-		auto& chain153 = this->getT(0).getT(4).getT(1).getT(2).getT(1).getT(0);                // osc1_impl::chain153_t<NV>
-		auto& global_cable27 = this->getT(0).getT(4).getT(1).getT(2).getT(1).getT(0).getT(0);  // osc1_impl::global_cable27_t<NV>
-		auto& add113 = this->getT(0).getT(4).getT(1).getT(2).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain66 = this->getT(0).getT(4).getT(1).getT(2).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain365 = this->getT(0).getT(4).getT(1).getT(3);                                // osc1_impl::chain365_t<NV>
-		auto& xfader44 = this->getT(0).getT(4).getT(1).getT(3).getT(0);                        // osc1_impl::xfader44_t<NV>
-		auto& soft_bypass38 = this->getT(0).getT(4).getT(1).getT(3).getT(1);                   // osc1_impl::soft_bypass38_t<NV>
-		auto& chain156 = this->getT(0).getT(4).getT(1).getT(3).getT(1).getT(0);                // osc1_impl::chain156_t<NV>
-		auto& global_cable30 = this->getT(0).getT(4).getT(1).getT(3).getT(1).getT(0).getT(0);  // osc1_impl::global_cable30_t<NV>
-		auto& add114 = this->getT(0).getT(4).getT(1).getT(3).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain67 = this->getT(0).getT(4).getT(1).getT(3).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain364 = this->getT(0).getT(4).getT(1).getT(4);                                // osc1_impl::chain364_t<NV>
-		auto& xfader43 = this->getT(0).getT(4).getT(1).getT(4).getT(0);                        // osc1_impl::xfader43_t<NV>
-		auto& soft_bypass37 = this->getT(0).getT(4).getT(1).getT(4).getT(1);                   // osc1_impl::soft_bypass37_t<NV>
-		auto& chain157 = this->getT(0).getT(4).getT(1).getT(4).getT(1).getT(0);                // osc1_impl::chain157_t<NV>
-		auto& add115 = this->getT(0).getT(4).getT(1).getT(4).getT(1).getT(0).getT(0);          // math::add<NV>
-		auto& gain68 = this->getT(0).getT(4).getT(1).getT(4).getT(1).getT(0).getT(1);          // core::gain<NV>
-		auto& chain363 = this->getT(0).getT(4).getT(1).getT(5);                                // osc1_impl::chain363_t<NV>
-		auto& xfader42 = this->getT(0).getT(4).getT(1).getT(5).getT(0);                        // osc1_impl::xfader42_t<NV>
-		auto& soft_bypass36 = this->getT(0).getT(4).getT(1).getT(5).getT(1);                   // osc1_impl::soft_bypass36_t<NV>
-		auto& chain158 = this->getT(0).getT(4).getT(1).getT(5).getT(1).getT(0);                // osc1_impl::chain158_t<NV>
-		auto& add116 = this->getT(0).getT(4).getT(1).getT(5).getT(1).getT(0).getT(0);          // math::add<NV>
-		auto& gain69 = this->getT(0).getT(4).getT(1).getT(5).getT(1).getT(0).getT(1);          // core::gain<NV>
-		auto& chain362 = this->getT(0).getT(4).getT(1).getT(6);                                // osc1_impl::chain362_t<NV>
-		auto& xfader41 = this->getT(0).getT(4).getT(1).getT(6).getT(0);                        // osc1_impl::xfader41_t<NV>
-		auto& soft_bypass35 = this->getT(0).getT(4).getT(1).getT(6).getT(1);                   // osc1_impl::soft_bypass35_t<NV>
-		auto& chain159 = this->getT(0).getT(4).getT(1).getT(6).getT(1).getT(0);                // osc1_impl::chain159_t<NV>
-		auto& branch24 = this->getT(0).getT(4).getT(1).getT(6).getT(1).getT(0).getT(0);        // osc1_impl::branch24_t<NV>
-		auto& add117 = this->getT(0).getT(4).getT(1).getT(6).                                  // math::add<NV>
+		auto& gain44 = this->getT(0).getT(3).getT(1).getT(7).getT(1).getT(0).getT(1);             // core::gain<NV>
+		auto& peak6 = this->getT(0).getT(3).getT(2);                                              // osc1_impl::peak6_t<NV>
+		auto& pma4 = this->getT(0).getT(3).getT(3);                                               // osc1_impl::pma4_t<NV>
+		auto& modchain9 = this->getT(0).getT(4);                                                  // osc1_impl::modchain9_t<NV>
+		auto& sliderbank7 = this->getT(0).getT(4).getT(0);                                        // osc1_impl::sliderbank7_t<NV>
+		auto& split15 = this->getT(0).getT(4).getT(1);                                            // osc1_impl::split15_t<NV>
+		auto& chain180 = this->getT(0).getT(4).getT(1).getT(0);                                   // osc1_impl::chain180_t<NV>
+		auto& xfader31 = this->getT(0).getT(4).getT(1).getT(0).getT(0);                           // osc1_impl::xfader31_t<NV>
+		auto& soft_bypass25 = this->getT(0).getT(4).getT(1).getT(0).getT(1);                      // osc1_impl::soft_bypass25_t<NV>
+		auto& chain89 = this->getT(0).getT(4).getT(1).getT(0).getT(1).getT(0);                    // osc1_impl::chain89_t<NV>
+		auto& global_cable7 = this->getT(0).getT(4).getT(1).getT(0).getT(1).getT(0).getT(0);      // osc1_impl::global_cable7_t<NV>
+		auto& add111 = this->getT(0).getT(4).getT(1).getT(0).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain48 = this->getT(0).getT(4).getT(1).getT(0).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain367 = this->getT(0).getT(4).getT(1).getT(1);                                   // osc1_impl::chain367_t<NV>
+		auto& xfader46 = this->getT(0).getT(4).getT(1).getT(1).getT(0);                           // osc1_impl::xfader46_t
+		auto& soft_bypass40 = this->getT(0).getT(4).getT(1).getT(1).getT(1);                      // osc1_impl::soft_bypass40_t
+		auto& chain90 = this->getT(0).getT(4).getT(1).getT(1).getT(2);                            // osc1_impl::chain90_t<NV>
+		auto& global_cable24 = this->getT(0).getT(4).getT(1).getT(1).getT(2).getT(0);             // osc1_impl::global_cable24_t<NV>
+		auto& add112 = this->getT(0).getT(4).getT(1).getT(1).getT(2).getT(1);                     // math::add<NV>
+		auto& gain61 = this->getT(0).getT(4).getT(1).getT(1).getT(2).getT(2);                     // core::gain<NV>
+		auto& chain366 = this->getT(0).getT(4).getT(1).getT(2);                                   // osc1_impl::chain366_t<NV>
+		auto& xfader45 = this->getT(0).getT(4).getT(1).getT(2).getT(0);                           // osc1_impl::xfader45_t<NV>
+		auto& soft_bypass39 = this->getT(0).getT(4).getT(1).getT(2).getT(1);                      // osc1_impl::soft_bypass39_t<NV>
+		auto& chain153 = this->getT(0).getT(4).getT(1).getT(2).getT(1).getT(0);                   // osc1_impl::chain153_t<NV>
+		auto& global_cable27 = this->getT(0).getT(4).getT(1).getT(2).getT(1).getT(0).getT(0);     // osc1_impl::global_cable27_t<NV>
+		auto& add113 = this->getT(0).getT(4).getT(1).getT(2).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain66 = this->getT(0).getT(4).getT(1).getT(2).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain365 = this->getT(0).getT(4).getT(1).getT(3);                                   // osc1_impl::chain365_t<NV>
+		auto& xfader44 = this->getT(0).getT(4).getT(1).getT(3).getT(0);                           // osc1_impl::xfader44_t<NV>
+		auto& soft_bypass38 = this->getT(0).getT(4).getT(1).getT(3).getT(1);                      // osc1_impl::soft_bypass38_t<NV>
+		auto& chain156 = this->getT(0).getT(4).getT(1).getT(3).getT(1).getT(0);                   // osc1_impl::chain156_t<NV>
+		auto& global_cable30 = this->getT(0).getT(4).getT(1).getT(3).getT(1).getT(0).getT(0);     // osc1_impl::global_cable30_t<NV>
+		auto& add114 = this->getT(0).getT(4).getT(1).getT(3).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain67 = this->getT(0).getT(4).getT(1).getT(3).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain364 = this->getT(0).getT(4).getT(1).getT(4);                                   // osc1_impl::chain364_t<NV>
+		auto& xfader43 = this->getT(0).getT(4).getT(1).getT(4).getT(0);                           // osc1_impl::xfader43_t<NV>
+		auto& soft_bypass37 = this->getT(0).getT(4).getT(1).getT(4).getT(1);                      // osc1_impl::soft_bypass37_t<NV>
+		auto& chain157 = this->getT(0).getT(4).getT(1).getT(4).getT(1).getT(0);                   // osc1_impl::chain157_t<NV>
+		auto& add115 = this->getT(0).getT(4).getT(1).getT(4).getT(1).getT(0).getT(0);             // math::add<NV>
+		auto& gain68 = this->getT(0).getT(4).getT(1).getT(4).getT(1).getT(0).getT(1);             // core::gain<NV>
+		auto& chain363 = this->getT(0).getT(4).getT(1).getT(5);                                   // osc1_impl::chain363_t<NV>
+		auto& xfader42 = this->getT(0).getT(4).getT(1).getT(5).getT(0);                           // osc1_impl::xfader42_t<NV>
+		auto& soft_bypass36 = this->getT(0).getT(4).getT(1).getT(5).getT(1);                      // osc1_impl::soft_bypass36_t<NV>
+		auto& chain158 = this->getT(0).getT(4).getT(1).getT(5).getT(1).getT(0);                   // osc1_impl::chain158_t<NV>
+		auto& add116 = this->getT(0).getT(4).getT(1).getT(5).getT(1).getT(0).getT(0);             // math::add<NV>
+		auto& gain69 = this->getT(0).getT(4).getT(1).getT(5).getT(1).getT(0).getT(1);             // core::gain<NV>
+		auto& chain362 = this->getT(0).getT(4).getT(1).getT(6);                                   // osc1_impl::chain362_t<NV>
+		auto& xfader41 = this->getT(0).getT(4).getT(1).getT(6).getT(0);                           // osc1_impl::xfader41_t<NV>
+		auto& soft_bypass35 = this->getT(0).getT(4).getT(1).getT(6).getT(1);                      // osc1_impl::soft_bypass35_t<NV>
+		auto& chain159 = this->getT(0).getT(4).getT(1).getT(6).getT(1).getT(0);                   // osc1_impl::chain159_t<NV>
+		auto& branch24 = this->getT(0).getT(4).getT(1).getT(6).getT(1).getT(0).getT(0);           // osc1_impl::branch24_t<NV>
+		auto& add117 = this->getT(0).getT(4).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0);
-		auto& add118 = this->getT(0).getT(4).getT(1).getT(6).                                  // math::add<NV>
+		auto& add118 = this->getT(0).getT(4).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1);
-		auto& add119 = this->getT(0).getT(4).getT(1).getT(6).                                  // math::add<NV>
+		auto& add119 = this->getT(0).getT(4).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2);
-		auto& add120 = this->getT(0).getT(4).getT(1).getT(6).                                  // math::add<NV>
+		auto& add120 = this->getT(0).getT(4).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3);
-		auto& add121 = this->getT(0).getT(4).getT(1).getT(6).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain70 = this->getT(0).getT(4).getT(1).getT(6).getT(1).getT(0).getT(2);          // core::gain<NV>
-		auto& chain361 = this->getT(0).getT(4).getT(1).getT(7);                                // osc1_impl::chain361_t<NV>
-		auto& xfader40 = this->getT(0).getT(4).getT(1).getT(7).getT(0);                        // osc1_impl::xfader40_t<NV>
-		auto& soft_bypass34 = this->getT(0).getT(4).getT(1).getT(7).getT(1);                   // osc1_impl::soft_bypass34_t<NV>
-		auto& chain160 = this->getT(0).getT(4).getT(1).getT(7).getT(1).getT(0);                // osc1_impl::chain160_t<NV>
-		auto& branch25 = this->getT(0).getT(4).getT(1).getT(7).getT(1).getT(0).getT(0);        // osc1_impl::branch25_t<NV>
-		auto& chain38 = this->getT(0).getT(4).getT(1).getT(7).                                 // osc1_impl::chain38_t<NV>
+		auto& add121 = this->getT(0).getT(4).getT(1).getT(6).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain70 = this->getT(0).getT(4).getT(1).getT(6).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& chain361 = this->getT(0).getT(4).getT(1).getT(7);                                   // osc1_impl::chain361_t<NV>
+		auto& xfader40 = this->getT(0).getT(4).getT(1).getT(7).getT(0);                           // osc1_impl::xfader40_t<NV>
+		auto& soft_bypass34 = this->getT(0).getT(4).getT(1).getT(7).getT(1);                      // osc1_impl::soft_bypass34_t<NV>
+		auto& chain160 = this->getT(0).getT(4).getT(1).getT(7).getT(1).getT(0);                   // osc1_impl::chain160_t<NV>
+		auto& branch25 = this->getT(0).getT(4).getT(1).getT(7).getT(1).getT(0).getT(0);           // osc1_impl::branch25_t<NV>
+		auto& chain38 = this->getT(0).getT(4).getT(1).getT(7).                                    // osc1_impl::chain38_t<NV>
                         getT(1).getT(0).getT(0).getT(0);
-		auto& midi_cc4 = this->getT(0).getT(4).getT(1).getT(7).                                // osc1_impl::midi_cc4_t<NV>
+		auto& midi_cc4 = this->getT(0).getT(4).getT(1).getT(7).                                   // osc1_impl::midi_cc4_t<NV>
                          getT(1).getT(0).getT(0).getT(0).
                          getT(0);
-		auto& add122 = this->getT(0).getT(4).getT(1).getT(7).                                  // math::add<NV>
+		auto& add122 = this->getT(0).getT(4).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0).
                        getT(1);
-		auto& chain166 = this->getT(0).getT(4).getT(1).getT(7).                                // osc1_impl::chain166_t<NV>
+		auto& chain166 = this->getT(0).getT(4).getT(1).getT(7).                                   // osc1_impl::chain166_t<NV>
                          getT(1).getT(0).getT(0).getT(1);
-		auto& midi_cc6 = this->getT(0).getT(4).getT(1).getT(7).                                // osc1_impl::midi_cc6_t<NV>
+		auto& midi_cc6 = this->getT(0).getT(4).getT(1).getT(7).                                   // osc1_impl::midi_cc6_t<NV>
                          getT(1).getT(0).getT(0).getT(1).
                          getT(0);
-		auto& add123 = this->getT(0).getT(4).getT(1).getT(7).                                  // math::add<NV>
+		auto& add123 = this->getT(0).getT(4).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1).
                        getT(1);
-		auto& chain167 = this->getT(0).getT(4).getT(1).getT(7).                                // osc1_impl::chain167_t<NV>
+		auto& chain167 = this->getT(0).getT(4).getT(1).getT(7).                                   // osc1_impl::chain167_t<NV>
                          getT(1).getT(0).getT(0).getT(2);
-		auto& midi_cc9 = this->getT(0).getT(4).getT(1).getT(7).                                // osc1_impl::midi_cc9_t<NV>
+		auto& midi_cc9 = this->getT(0).getT(4).getT(1).getT(7).                                   // osc1_impl::midi_cc9_t<NV>
                          getT(1).getT(0).getT(0).getT(2).
                          getT(0);
-		auto& add124 = this->getT(0).getT(4).getT(1).getT(7).                                  // math::add<NV>
+		auto& add124 = this->getT(0).getT(4).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2).
                        getT(1);
-		auto& chain169 = this->getT(0).getT(4).getT(1).getT(7).                                // osc1_impl::chain169_t<NV>
+		auto& chain169 = this->getT(0).getT(4).getT(1).getT(7).                                   // osc1_impl::chain169_t<NV>
                          getT(1).getT(0).getT(0).getT(3);
-		auto& midi_cc30 = this->getT(0).getT(4).getT(1).getT(7).                               // osc1_impl::midi_cc30_t<NV>
+		auto& midi_cc30 = this->getT(0).getT(4).getT(1).getT(7).                                  // osc1_impl::midi_cc30_t<NV>
                           getT(1).getT(0).getT(0).getT(3).
                           getT(0);
-		auto& add125 = this->getT(0).getT(4).getT(1).getT(7).                                  // math::add<NV>
+		auto& add125 = this->getT(0).getT(4).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3).
                        getT(1);
-		auto& chain171 = this->getT(0).getT(4).getT(1).getT(7).                                // osc1_impl::chain171_t<NV>
+		auto& chain171 = this->getT(0).getT(4).getT(1).getT(7).                                   // osc1_impl::chain171_t<NV>
                          getT(1).getT(0).getT(0).getT(4);
-		auto& midi2 = this->getT(0).getT(4).getT(1).getT(7).                                   // osc1_impl::midi2_t<NV>
+		auto& midi2 = this->getT(0).getT(4).getT(1).getT(7).                                      // osc1_impl::midi2_t<NV>
                       getT(1).getT(0).getT(0).getT(4).
                       getT(0);
-		auto& add126 = this->getT(0).getT(4).getT(1).getT(7).                                  // math::add<NV>
+		auto& add126 = this->getT(0).getT(4).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(1);
-		auto& chain172 = this->getT(0).getT(4).getT(1).getT(7).                                // osc1_impl::chain172_t<NV>
+		auto& chain172 = this->getT(0).getT(4).getT(1).getT(7).                                   // osc1_impl::chain172_t<NV>
                          getT(1).getT(0).getT(0).getT(5);
-		auto& midi21 = this->getT(0).getT(4).getT(1).getT(7).                                  // osc1_impl::midi21_t<NV>
+		auto& midi21 = this->getT(0).getT(4).getT(1).getT(7).                                     // osc1_impl::midi21_t<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(0);
-		auto& add127 = this->getT(0).getT(4).getT(1).getT(7).                                  // math::add<NV>
+		auto& add127 = this->getT(0).getT(4).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(1);
-		auto& chain173 = this->getT(0).getT(4).getT(1).getT(7).                                // osc1_impl::chain173_t<NV>
+		auto& chain173 = this->getT(0).getT(4).getT(1).getT(7).                                   // osc1_impl::chain173_t<NV>
                          getT(1).getT(0).getT(0).getT(6);
-		auto& midi22 = this->getT(0).getT(4).getT(1).getT(7).                                  // osc1_impl::midi22_t<NV>
+		auto& midi22 = this->getT(0).getT(4).getT(1).getT(7).                                     // osc1_impl::midi22_t<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(0);
-		auto& add128 = this->getT(0).getT(4).getT(1).getT(7).                                  // math::add<NV>
+		auto& add128 = this->getT(0).getT(4).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(1);
-		auto& gain71 = this->getT(0).getT(4).getT(1).getT(7).getT(1).getT(0).getT(1);          // core::gain<NV>
-		auto& peak11 = this->getT(0).getT(4).getT(2);                                          // osc1_impl::peak11_t<NV>
-		auto& pma5 = this->getT(0).getT(4).getT(3);                                            // osc1_impl::pma5_t<NV>
-		auto& modchain12 = this->getT(0).getT(5);                                              // osc1_impl::modchain12_t<NV>
-		auto& sliderbank12 = this->getT(0).getT(5).getT(0);                                    // osc1_impl::sliderbank12_t<NV>
-		auto& split26 = this->getT(0).getT(5).getT(1);                                         // osc1_impl::split26_t<NV>
-		auto& chain360 = this->getT(0).getT(5).getT(1).getT(0);                                // osc1_impl::chain360_t<NV>
-		auto& xfader39 = this->getT(0).getT(5).getT(1).getT(0).getT(0);                        // osc1_impl::xfader39_t<NV>
-		auto& soft_bypass33 = this->getT(0).getT(5).getT(1).getT(0).getT(1);                   // osc1_impl::soft_bypass33_t<NV>
-		auto& chain215 = this->getT(0).getT(5).getT(1).getT(0).getT(1).getT(0);                // osc1_impl::chain215_t<NV>
-		auto& global_cable39 = this->getT(0).getT(5).getT(1).getT(0).getT(1).getT(0).getT(0);  // osc1_impl::global_cable39_t<NV>
-		auto& add161 = this->getT(0).getT(5).getT(1).getT(0).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain116 = this->getT(0).getT(5).getT(1).getT(0).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain375 = this->getT(0).getT(5).getT(1).getT(1);                                // osc1_impl::chain375_t<NV>
-		auto& xfader54 = this->getT(0).getT(5).getT(1).getT(1).getT(0);                        // osc1_impl::xfader54_t<NV>
-		auto& soft_bypass48 = this->getT(0).getT(5).getT(1).getT(1).getT(1);                   // osc1_impl::soft_bypass48_t<NV>
-		auto& chain216 = this->getT(0).getT(5).getT(1).getT(1).getT(1).getT(0);                // osc1_impl::chain216_t<NV>
-		auto& global_cable40 = this->getT(0).getT(5).getT(1).getT(1).getT(1).getT(0).getT(0);  // osc1_impl::global_cable40_t<NV>
-		auto& add162 = this->getT(0).getT(5).getT(1).getT(1).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain117 = this->getT(0).getT(5).getT(1).getT(1).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain374 = this->getT(0).getT(5).getT(1).getT(2);                                // osc1_impl::chain374_t<NV>
-		auto& xfader53 = this->getT(0).getT(5).getT(1).getT(2).getT(0);                        // osc1_impl::xfader53_t<NV>
-		auto& soft_bypass47 = this->getT(0).getT(5).getT(1).getT(2).getT(1);                   // osc1_impl::soft_bypass47_t<NV>
-		auto& chain217 = this->getT(0).getT(5).getT(1).getT(2).getT(1).getT(0);                // osc1_impl::chain217_t<NV>
-		auto& global_cable41 = this->getT(0).getT(5).getT(1).getT(2).getT(1).getT(0).getT(0);  // osc1_impl::global_cable41_t<NV>
-		auto& add163 = this->getT(0).getT(5).getT(1).getT(2).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain118 = this->getT(0).getT(5).getT(1).getT(2).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain373 = this->getT(0).getT(5).getT(1).getT(3);                                // osc1_impl::chain373_t<NV>
-		auto& xfader52 = this->getT(0).getT(5).getT(1).getT(3).getT(0);                        // osc1_impl::xfader52_t<NV>
-		auto& soft_bypass46 = this->getT(0).getT(5).getT(1).getT(3).getT(1);                   // osc1_impl::soft_bypass46_t<NV>
-		auto& chain218 = this->getT(0).getT(5).getT(1).getT(3).getT(1).getT(0);                // osc1_impl::chain218_t<NV>
-		auto& global_cable42 = this->getT(0).getT(5).getT(1).getT(3).getT(1).getT(0).getT(0);  // osc1_impl::global_cable42_t<NV>
-		auto& add164 = this->getT(0).getT(5).getT(1).getT(3).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain119 = this->getT(0).getT(5).getT(1).getT(3).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain372 = this->getT(0).getT(5).getT(1).getT(4);                                // osc1_impl::chain372_t<NV>
-		auto& xfader51 = this->getT(0).getT(5).getT(1).getT(4).getT(0);                        // osc1_impl::xfader51_t<NV>
-		auto& soft_bypass45 = this->getT(0).getT(5).getT(1).getT(4).getT(1);                   // osc1_impl::soft_bypass45_t<NV>
-		auto& chain219 = this->getT(0).getT(5).getT(1).getT(4).getT(1).getT(0);                // osc1_impl::chain219_t<NV>
-		auto& add165 = this->getT(0).getT(5).getT(1).getT(4).getT(1).getT(0).getT(0);          // math::add<NV>
-		auto& gain120 = this->getT(0).getT(5).getT(1).getT(4).getT(1).getT(0).getT(1);         // core::gain<NV>
-		auto& chain371 = this->getT(0).getT(5).getT(1).getT(5);                                // osc1_impl::chain371_t<NV>
-		auto& xfader50 = this->getT(0).getT(5).getT(1).getT(5).getT(0);                        // osc1_impl::xfader50_t<NV>
-		auto& soft_bypass44 = this->getT(0).getT(5).getT(1).getT(5).getT(1);                   // osc1_impl::soft_bypass44_t<NV>
-		auto& chain220 = this->getT(0).getT(5).getT(1).getT(5).getT(1).getT(0);                // osc1_impl::chain220_t<NV>
-		auto& add166 = this->getT(0).getT(5).getT(1).getT(5).getT(1).getT(0).getT(0);          // math::add<NV>
-		auto& gain121 = this->getT(0).getT(5).getT(1).getT(5).getT(1).getT(0).getT(1);         // core::gain<NV>
-		auto& chain370 = this->getT(0).getT(5).getT(1).getT(6);                                // osc1_impl::chain370_t<NV>
-		auto& xfader49 = this->getT(0).getT(5).getT(1).getT(6).getT(0);                        // osc1_impl::xfader49_t<NV>
-		auto& soft_bypass43 = this->getT(0).getT(5).getT(1).getT(6).getT(1);                   // osc1_impl::soft_bypass43_t<NV>
-		auto& chain221 = this->getT(0).getT(5).getT(1).getT(6).getT(1).getT(0);                // osc1_impl::chain221_t<NV>
-		auto& branch49 = this->getT(0).getT(5).getT(1).getT(6).getT(1).getT(0).getT(0);        // osc1_impl::branch49_t<NV>
-		auto& add167 = this->getT(0).getT(5).getT(1).getT(6).                                  // math::add<NV>
+		auto& gain71 = this->getT(0).getT(4).getT(1).getT(7).getT(1).getT(0).getT(1);             // core::gain<NV>
+		auto& peak11 = this->getT(0).getT(4).getT(2);                                             // osc1_impl::peak11_t<NV>
+		auto& pma5 = this->getT(0).getT(4).getT(3);                                               // osc1_impl::pma5_t<NV>
+		auto& modchain12 = this->getT(0).getT(5);                                                 // osc1_impl::modchain12_t<NV>
+		auto& sliderbank12 = this->getT(0).getT(5).getT(0);                                       // osc1_impl::sliderbank12_t<NV>
+		auto& split26 = this->getT(0).getT(5).getT(1);                                            // osc1_impl::split26_t<NV>
+		auto& chain360 = this->getT(0).getT(5).getT(1).getT(0);                                   // osc1_impl::chain360_t<NV>
+		auto& xfader39 = this->getT(0).getT(5).getT(1).getT(0).getT(0);                           // osc1_impl::xfader39_t<NV>
+		auto& soft_bypass33 = this->getT(0).getT(5).getT(1).getT(0).getT(1);                      // osc1_impl::soft_bypass33_t<NV>
+		auto& chain215 = this->getT(0).getT(5).getT(1).getT(0).getT(1).getT(0);                   // osc1_impl::chain215_t<NV>
+		auto& global_cable39 = this->getT(0).getT(5).getT(1).getT(0).getT(1).getT(0).getT(0);     // osc1_impl::global_cable39_t<NV>
+		auto& add161 = this->getT(0).getT(5).getT(1).getT(0).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain116 = this->getT(0).getT(5).getT(1).getT(0).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain375 = this->getT(0).getT(5).getT(1).getT(1);                                   // osc1_impl::chain375_t<NV>
+		auto& xfader54 = this->getT(0).getT(5).getT(1).getT(1).getT(0);                           // osc1_impl::xfader54_t<NV>
+		auto& soft_bypass48 = this->getT(0).getT(5).getT(1).getT(1).getT(1);                      // osc1_impl::soft_bypass48_t<NV>
+		auto& chain216 = this->getT(0).getT(5).getT(1).getT(1).getT(1).getT(0);                   // osc1_impl::chain216_t<NV>
+		auto& global_cable40 = this->getT(0).getT(5).getT(1).getT(1).getT(1).getT(0).getT(0);     // osc1_impl::global_cable40_t<NV>
+		auto& add162 = this->getT(0).getT(5).getT(1).getT(1).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain117 = this->getT(0).getT(5).getT(1).getT(1).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain374 = this->getT(0).getT(5).getT(1).getT(2);                                   // osc1_impl::chain374_t<NV>
+		auto& xfader53 = this->getT(0).getT(5).getT(1).getT(2).getT(0);                           // osc1_impl::xfader53_t<NV>
+		auto& soft_bypass47 = this->getT(0).getT(5).getT(1).getT(2).getT(1);                      // osc1_impl::soft_bypass47_t<NV>
+		auto& chain217 = this->getT(0).getT(5).getT(1).getT(2).getT(1).getT(0);                   // osc1_impl::chain217_t<NV>
+		auto& global_cable41 = this->getT(0).getT(5).getT(1).getT(2).getT(1).getT(0).getT(0);     // osc1_impl::global_cable41_t<NV>
+		auto& add163 = this->getT(0).getT(5).getT(1).getT(2).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain118 = this->getT(0).getT(5).getT(1).getT(2).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain373 = this->getT(0).getT(5).getT(1).getT(3);                                   // osc1_impl::chain373_t<NV>
+		auto& xfader52 = this->getT(0).getT(5).getT(1).getT(3).getT(0);                           // osc1_impl::xfader52_t<NV>
+		auto& soft_bypass46 = this->getT(0).getT(5).getT(1).getT(3).getT(1);                      // osc1_impl::soft_bypass46_t<NV>
+		auto& chain218 = this->getT(0).getT(5).getT(1).getT(3).getT(1).getT(0);                   // osc1_impl::chain218_t<NV>
+		auto& global_cable42 = this->getT(0).getT(5).getT(1).getT(3).getT(1).getT(0).getT(0);     // osc1_impl::global_cable42_t<NV>
+		auto& add164 = this->getT(0).getT(5).getT(1).getT(3).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain119 = this->getT(0).getT(5).getT(1).getT(3).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain372 = this->getT(0).getT(5).getT(1).getT(4);                                   // osc1_impl::chain372_t<NV>
+		auto& xfader51 = this->getT(0).getT(5).getT(1).getT(4).getT(0);                           // osc1_impl::xfader51_t<NV>
+		auto& soft_bypass45 = this->getT(0).getT(5).getT(1).getT(4).getT(1);                      // osc1_impl::soft_bypass45_t<NV>
+		auto& chain219 = this->getT(0).getT(5).getT(1).getT(4).getT(1).getT(0);                   // osc1_impl::chain219_t<NV>
+		auto& add165 = this->getT(0).getT(5).getT(1).getT(4).getT(1).getT(0).getT(0);             // math::add<NV>
+		auto& gain120 = this->getT(0).getT(5).getT(1).getT(4).getT(1).getT(0).getT(1);            // core::gain<NV>
+		auto& chain371 = this->getT(0).getT(5).getT(1).getT(5);                                   // osc1_impl::chain371_t<NV>
+		auto& xfader50 = this->getT(0).getT(5).getT(1).getT(5).getT(0);                           // osc1_impl::xfader50_t<NV>
+		auto& soft_bypass44 = this->getT(0).getT(5).getT(1).getT(5).getT(1);                      // osc1_impl::soft_bypass44_t<NV>
+		auto& chain220 = this->getT(0).getT(5).getT(1).getT(5).getT(1).getT(0);                   // osc1_impl::chain220_t<NV>
+		auto& add166 = this->getT(0).getT(5).getT(1).getT(5).getT(1).getT(0).getT(0);             // math::add<NV>
+		auto& gain121 = this->getT(0).getT(5).getT(1).getT(5).getT(1).getT(0).getT(1);            // core::gain<NV>
+		auto& chain370 = this->getT(0).getT(5).getT(1).getT(6);                                   // osc1_impl::chain370_t<NV>
+		auto& xfader49 = this->getT(0).getT(5).getT(1).getT(6).getT(0);                           // osc1_impl::xfader49_t<NV>
+		auto& soft_bypass43 = this->getT(0).getT(5).getT(1).getT(6).getT(1);                      // osc1_impl::soft_bypass43_t<NV>
+		auto& chain221 = this->getT(0).getT(5).getT(1).getT(6).getT(1).getT(0);                   // osc1_impl::chain221_t<NV>
+		auto& branch49 = this->getT(0).getT(5).getT(1).getT(6).getT(1).getT(0).getT(0);           // osc1_impl::branch49_t<NV>
+		auto& add167 = this->getT(0).getT(5).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0);
-		auto& add168 = this->getT(0).getT(5).getT(1).getT(6).                                  // math::add<NV>
+		auto& add168 = this->getT(0).getT(5).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1);
-		auto& add169 = this->getT(0).getT(5).getT(1).getT(6).                                  // math::add<NV>
+		auto& add169 = this->getT(0).getT(5).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2);
-		auto& add170 = this->getT(0).getT(5).getT(1).getT(6).                                  // math::add<NV>
+		auto& add170 = this->getT(0).getT(5).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3);
-		auto& add171 = this->getT(0).getT(5).getT(1).getT(6).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain122 = this->getT(0).getT(5).getT(1).getT(6).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain369 = this->getT(0).getT(5).getT(1).getT(7);                                // osc1_impl::chain369_t<NV>
-		auto& xfader48 = this->getT(0).getT(5).getT(1).getT(7).getT(0);                        // osc1_impl::xfader48_t<NV>
-		auto& soft_bypass42 = this->getT(0).getT(5).getT(1).getT(7).getT(1);                   // osc1_impl::soft_bypass42_t<NV>
-		auto& chain222 = this->getT(0).getT(5).getT(1).getT(7).getT(1).getT(0);                // osc1_impl::chain222_t<NV>
-		auto& branch50 = this->getT(0).getT(5).getT(1).getT(7).getT(1).getT(0).getT(0);        // osc1_impl::branch50_t<NV>
-		auto& chain223 = this->getT(0).getT(5).getT(1).getT(7).                                // osc1_impl::chain223_t<NV>
+		auto& add171 = this->getT(0).getT(5).getT(1).getT(6).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain122 = this->getT(0).getT(5).getT(1).getT(6).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain369 = this->getT(0).getT(5).getT(1).getT(7);                                   // osc1_impl::chain369_t<NV>
+		auto& xfader48 = this->getT(0).getT(5).getT(1).getT(7).getT(0);                           // osc1_impl::xfader48_t<NV>
+		auto& soft_bypass42 = this->getT(0).getT(5).getT(1).getT(7).getT(1);                      // osc1_impl::soft_bypass42_t<NV>
+		auto& chain222 = this->getT(0).getT(5).getT(1).getT(7).getT(1).getT(0);                   // osc1_impl::chain222_t<NV>
+		auto& branch50 = this->getT(0).getT(5).getT(1).getT(7).getT(1).getT(0).getT(0);           // osc1_impl::branch50_t<NV>
+		auto& chain223 = this->getT(0).getT(5).getT(1).getT(7).                                   // osc1_impl::chain223_t<NV>
                          getT(1).getT(0).getT(0).getT(0);
-		auto& midi_cc39 = this->getT(0).getT(5).getT(1).getT(7).                               // osc1_impl::midi_cc39_t<NV>
+		auto& midi_cc39 = this->getT(0).getT(5).getT(1).getT(7).                                  // osc1_impl::midi_cc39_t<NV>
                           getT(1).getT(0).getT(0).getT(0).
                           getT(0);
-		auto& add172 = this->getT(0).getT(5).getT(1).getT(7).                                  // math::add<NV>
+		auto& add172 = this->getT(0).getT(5).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0).
                        getT(1);
-		auto& chain224 = this->getT(0).getT(5).getT(1).getT(7).                                // osc1_impl::chain224_t<NV>
+		auto& chain224 = this->getT(0).getT(5).getT(1).getT(7).                                   // osc1_impl::chain224_t<NV>
                          getT(1).getT(0).getT(0).getT(1);
-		auto& midi_cc40 = this->getT(0).getT(5).getT(1).getT(7).                               // osc1_impl::midi_cc40_t<NV>
+		auto& midi_cc40 = this->getT(0).getT(5).getT(1).getT(7).                                  // osc1_impl::midi_cc40_t<NV>
                           getT(1).getT(0).getT(0).getT(1).
                           getT(0);
-		auto& add173 = this->getT(0).getT(5).getT(1).getT(7).                                  // math::add<NV>
+		auto& add173 = this->getT(0).getT(5).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1).
                        getT(1);
-		auto& chain225 = this->getT(0).getT(5).getT(1).getT(7).                                // osc1_impl::chain225_t<NV>
+		auto& chain225 = this->getT(0).getT(5).getT(1).getT(7).                                   // osc1_impl::chain225_t<NV>
                          getT(1).getT(0).getT(0).getT(2);
-		auto& midi_cc41 = this->getT(0).getT(5).getT(1).getT(7).                               // osc1_impl::midi_cc41_t<NV>
+		auto& midi_cc41 = this->getT(0).getT(5).getT(1).getT(7).                                  // osc1_impl::midi_cc41_t<NV>
                           getT(1).getT(0).getT(0).getT(2).
                           getT(0);
-		auto& add174 = this->getT(0).getT(5).getT(1).getT(7).                                  // math::add<NV>
+		auto& add174 = this->getT(0).getT(5).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2).
                        getT(1);
-		auto& chain226 = this->getT(0).getT(5).getT(1).getT(7).                                // osc1_impl::chain226_t<NV>
+		auto& chain226 = this->getT(0).getT(5).getT(1).getT(7).                                   // osc1_impl::chain226_t<NV>
                          getT(1).getT(0).getT(0).getT(3);
-		auto& midi_cc42 = this->getT(0).getT(5).getT(1).getT(7).                               // osc1_impl::midi_cc42_t<NV>
+		auto& midi_cc42 = this->getT(0).getT(5).getT(1).getT(7).                                  // osc1_impl::midi_cc42_t<NV>
                           getT(1).getT(0).getT(0).getT(3).
                           getT(0);
-		auto& add175 = this->getT(0).getT(5).getT(1).getT(7).                                  // math::add<NV>
+		auto& add175 = this->getT(0).getT(5).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3).
                        getT(1);
-		auto& chain227 = this->getT(0).getT(5).getT(1).getT(7).                                // osc1_impl::chain227_t<NV>
+		auto& chain227 = this->getT(0).getT(5).getT(1).getT(7).                                   // osc1_impl::chain227_t<NV>
                          getT(1).getT(0).getT(0).getT(4);
-		auto& midi29 = this->getT(0).getT(5).getT(1).getT(7).                                  // osc1_impl::midi29_t<NV>
+		auto& midi29 = this->getT(0).getT(5).getT(1).getT(7).                                     // osc1_impl::midi29_t<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(0);
-		auto& add176 = this->getT(0).getT(5).getT(1).getT(7).                                  // math::add<NV>
+		auto& add176 = this->getT(0).getT(5).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(1);
-		auto& chain228 = this->getT(0).getT(5).getT(1).getT(7).                                // osc1_impl::chain228_t<NV>
+		auto& chain228 = this->getT(0).getT(5).getT(1).getT(7).                                   // osc1_impl::chain228_t<NV>
                          getT(1).getT(0).getT(0).getT(5);
-		auto& midi30 = this->getT(0).getT(5).getT(1).getT(7).                                  // osc1_impl::midi30_t<NV>
+		auto& midi30 = this->getT(0).getT(5).getT(1).getT(7).                                     // osc1_impl::midi30_t<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(0);
-		auto& add177 = this->getT(0).getT(5).getT(1).getT(7).                                  // math::add<NV>
+		auto& add177 = this->getT(0).getT(5).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(1);
-		auto& chain229 = this->getT(0).getT(5).getT(1).getT(7).                                // osc1_impl::chain229_t<NV>
+		auto& chain229 = this->getT(0).getT(5).getT(1).getT(7).                                   // osc1_impl::chain229_t<NV>
                          getT(1).getT(0).getT(0).getT(6);
-		auto& midi31 = this->getT(0).getT(5).getT(1).getT(7).                                  // osc1_impl::midi31_t<NV>
+		auto& midi31 = this->getT(0).getT(5).getT(1).getT(7).                                     // osc1_impl::midi31_t<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(0);
-		auto& add178 = this->getT(0).getT(5).getT(1).getT(7).                                  // math::add<NV>
+		auto& add178 = this->getT(0).getT(5).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(1);
-		auto& gain123 = this->getT(0).getT(5).getT(1).getT(7).getT(1).getT(0).getT(1);         // core::gain<NV>
-		auto& peak19 = this->getT(0).getT(5).getT(2);                                          // osc1_impl::peak19_t<NV>
-		auto& pma16 = this->getT(0).getT(5).getT(3);                                           // osc1_impl::pma16_t<NV>
-		auto& modchain11 = this->getT(0).getT(6);                                              // osc1_impl::modchain11_t<NV>
-		auto& sliderbank11 = this->getT(0).getT(6).getT(0);                                    // osc1_impl::sliderbank11_t<NV>
-		auto& split24 = this->getT(0).getT(6).getT(1);                                         // osc1_impl::split24_t<NV>
-		auto& chain368 = this->getT(0).getT(6).getT(1).getT(0);                                // osc1_impl::chain368_t<NV>
-		auto& xfader47 = this->getT(0).getT(6).getT(1).getT(0).getT(0);                        // osc1_impl::xfader47_t<NV>
-		auto& soft_bypass41 = this->getT(0).getT(6).getT(1).getT(0).getT(1);                   // osc1_impl::soft_bypass41_t<NV>
-		auto& chain200 = this->getT(0).getT(6).getT(1).getT(0).getT(1).getT(0);                // osc1_impl::chain200_t<NV>
-		auto& global_cable35 = this->getT(0).getT(6).getT(1).getT(0).getT(1).getT(0).getT(0);  // osc1_impl::global_cable35_t<NV>
-		auto& add143 = this->getT(0).getT(6).getT(1).getT(0).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain108 = this->getT(0).getT(6).getT(1).getT(0).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain383 = this->getT(0).getT(6).getT(1).getT(1);                                // osc1_impl::chain383_t<NV>
-		auto& xfader62 = this->getT(0).getT(6).getT(1).getT(1).getT(0);                        // osc1_impl::xfader62_t<NV>
-		auto& soft_bypass56 = this->getT(0).getT(6).getT(1).getT(1).getT(1);                   // osc1_impl::soft_bypass56_t<NV>
-		auto& chain201 = this->getT(0).getT(6).getT(1).getT(1).getT(1).getT(0);                // osc1_impl::chain201_t<NV>
-		auto& global_cable36 = this->getT(0).getT(6).getT(1).getT(1).getT(1).getT(0).getT(0);  // osc1_impl::global_cable36_t<NV>
-		auto& add144 = this->getT(0).getT(6).getT(1).getT(1).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain109 = this->getT(0).getT(6).getT(1).getT(1).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain382 = this->getT(0).getT(6).getT(1).getT(2);                                // osc1_impl::chain382_t<NV>
-		auto& xfader61 = this->getT(0).getT(6).getT(1).getT(2).getT(0);                        // osc1_impl::xfader61_t<NV>
-		auto& soft_bypass55 = this->getT(0).getT(6).getT(1).getT(2).getT(1);                   // osc1_impl::soft_bypass55_t<NV>
-		auto& chain202 = this->getT(0).getT(6).getT(1).getT(2).getT(1).getT(0);                // osc1_impl::chain202_t<NV>
-		auto& global_cable37 = this->getT(0).getT(6).getT(1).getT(2).getT(1).getT(0).getT(0);  // osc1_impl::global_cable37_t<NV>
-		auto& add145 = this->getT(0).getT(6).getT(1).getT(2).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain110 = this->getT(0).getT(6).getT(1).getT(2).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain381 = this->getT(0).getT(6).getT(1).getT(3);                                // osc1_impl::chain381_t<NV>
-		auto& xfader60 = this->getT(0).getT(6).getT(1).getT(3).getT(0);                        // osc1_impl::xfader60_t<NV>
-		auto& soft_bypass54 = this->getT(0).getT(6).getT(1).getT(3).getT(1);                   // osc1_impl::soft_bypass54_t<NV>
-		auto& chain203 = this->getT(0).getT(6).getT(1).getT(3).getT(1).getT(0);                // osc1_impl::chain203_t<NV>
-		auto& global_cable38 = this->getT(0).getT(6).getT(1).getT(3).getT(1).getT(0).getT(0);  // osc1_impl::global_cable38_t<NV>
-		auto& add146 = this->getT(0).getT(6).getT(1).getT(3).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain111 = this->getT(0).getT(6).getT(1).getT(3).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain380 = this->getT(0).getT(6).getT(1).getT(4);                                // osc1_impl::chain380_t<NV>
-		auto& xfader59 = this->getT(0).getT(6).getT(1).getT(4).getT(0);                        // osc1_impl::xfader59_t<NV>
-		auto& soft_bypass53 = this->getT(0).getT(6).getT(1).getT(4).getT(1);                   // osc1_impl::soft_bypass53_t<NV>
-		auto& chain204 = this->getT(0).getT(6).getT(1).getT(4).getT(1).getT(0);                // osc1_impl::chain204_t<NV>
-		auto& add147 = this->getT(0).getT(6).getT(1).getT(4).getT(1).getT(0).getT(0);          // math::add<NV>
-		auto& gain112 = this->getT(0).getT(6).getT(1).getT(4).getT(1).getT(0).getT(1);         // core::gain<NV>
-		auto& chain379 = this->getT(0).getT(6).getT(1).getT(5);                                // osc1_impl::chain379_t<NV>
-		auto& xfader58 = this->getT(0).getT(6).getT(1).getT(5).getT(0);                        // osc1_impl::xfader58_t<NV>
-		auto& soft_bypass52 = this->getT(0).getT(6).getT(1).getT(5).getT(1);                   // osc1_impl::soft_bypass52_t<NV>
-		auto& chain205 = this->getT(0).getT(6).getT(1).getT(5).getT(1).getT(0);                // osc1_impl::chain205_t<NV>
-		auto& add148 = this->getT(0).getT(6).getT(1).getT(5).getT(1).getT(0).getT(0);          // math::add<NV>
-		auto& gain113 = this->getT(0).getT(6).getT(1).getT(5).getT(1).getT(0).getT(1);         // core::gain<NV>
-		auto& chain378 = this->getT(0).getT(6).getT(1).getT(6);                                // osc1_impl::chain378_t<NV>
-		auto& xfader57 = this->getT(0).getT(6).getT(1).getT(6).getT(0);                        // osc1_impl::xfader57_t<NV>
-		auto& soft_bypass51 = this->getT(0).getT(6).getT(1).getT(6).getT(1);                   // osc1_impl::soft_bypass51_t<NV>
-		auto& chain206 = this->getT(0).getT(6).getT(1).getT(6).getT(1).getT(0);                // osc1_impl::chain206_t<NV>
-		auto& branch47 = this->getT(0).getT(6).getT(1).getT(6).getT(1).getT(0).getT(0);        // osc1_impl::branch47_t<NV>
-		auto& add149 = this->getT(0).getT(6).getT(1).getT(6).                                  // math::add<NV>
+		auto& gain123 = this->getT(0).getT(5).getT(1).getT(7).getT(1).getT(0).getT(1);            // core::gain<NV>
+		auto& peak19 = this->getT(0).getT(5).getT(2);                                             // osc1_impl::peak19_t<NV>
+		auto& pma16 = this->getT(0).getT(5).getT(3);                                              // osc1_impl::pma16_t<NV>
+		auto& modchain11 = this->getT(0).getT(6);                                                 // osc1_impl::modchain11_t<NV>
+		auto& sliderbank11 = this->getT(0).getT(6).getT(0);                                       // osc1_impl::sliderbank11_t<NV>
+		auto& split24 = this->getT(0).getT(6).getT(1);                                            // osc1_impl::split24_t<NV>
+		auto& chain368 = this->getT(0).getT(6).getT(1).getT(0);                                   // osc1_impl::chain368_t<NV>
+		auto& xfader47 = this->getT(0).getT(6).getT(1).getT(0).getT(0);                           // osc1_impl::xfader47_t<NV>
+		auto& soft_bypass41 = this->getT(0).getT(6).getT(1).getT(0).getT(1);                      // osc1_impl::soft_bypass41_t<NV>
+		auto& chain200 = this->getT(0).getT(6).getT(1).getT(0).getT(1).getT(0);                   // osc1_impl::chain200_t<NV>
+		auto& global_cable35 = this->getT(0).getT(6).getT(1).getT(0).getT(1).getT(0).getT(0);     // osc1_impl::global_cable35_t<NV>
+		auto& add143 = this->getT(0).getT(6).getT(1).getT(0).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain108 = this->getT(0).getT(6).getT(1).getT(0).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain383 = this->getT(0).getT(6).getT(1).getT(1);                                   // osc1_impl::chain383_t<NV>
+		auto& xfader62 = this->getT(0).getT(6).getT(1).getT(1).getT(0);                           // osc1_impl::xfader62_t<NV>
+		auto& soft_bypass56 = this->getT(0).getT(6).getT(1).getT(1).getT(1);                      // osc1_impl::soft_bypass56_t<NV>
+		auto& chain201 = this->getT(0).getT(6).getT(1).getT(1).getT(1).getT(0);                   // osc1_impl::chain201_t<NV>
+		auto& global_cable36 = this->getT(0).getT(6).getT(1).getT(1).getT(1).getT(0).getT(0);     // osc1_impl::global_cable36_t<NV>
+		auto& add144 = this->getT(0).getT(6).getT(1).getT(1).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain109 = this->getT(0).getT(6).getT(1).getT(1).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain382 = this->getT(0).getT(6).getT(1).getT(2);                                   // osc1_impl::chain382_t<NV>
+		auto& xfader61 = this->getT(0).getT(6).getT(1).getT(2).getT(0);                           // osc1_impl::xfader61_t<NV>
+		auto& soft_bypass55 = this->getT(0).getT(6).getT(1).getT(2).getT(1);                      // osc1_impl::soft_bypass55_t<NV>
+		auto& chain202 = this->getT(0).getT(6).getT(1).getT(2).getT(1).getT(0);                   // osc1_impl::chain202_t<NV>
+		auto& global_cable37 = this->getT(0).getT(6).getT(1).getT(2).getT(1).getT(0).getT(0);     // osc1_impl::global_cable37_t<NV>
+		auto& add145 = this->getT(0).getT(6).getT(1).getT(2).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain110 = this->getT(0).getT(6).getT(1).getT(2).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain381 = this->getT(0).getT(6).getT(1).getT(3);                                   // osc1_impl::chain381_t<NV>
+		auto& xfader60 = this->getT(0).getT(6).getT(1).getT(3).getT(0);                           // osc1_impl::xfader60_t<NV>
+		auto& soft_bypass54 = this->getT(0).getT(6).getT(1).getT(3).getT(1);                      // osc1_impl::soft_bypass54_t<NV>
+		auto& chain203 = this->getT(0).getT(6).getT(1).getT(3).getT(1).getT(0);                   // osc1_impl::chain203_t<NV>
+		auto& global_cable38 = this->getT(0).getT(6).getT(1).getT(3).getT(1).getT(0).getT(0);     // osc1_impl::global_cable38_t<NV>
+		auto& add146 = this->getT(0).getT(6).getT(1).getT(3).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain111 = this->getT(0).getT(6).getT(1).getT(3).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain380 = this->getT(0).getT(6).getT(1).getT(4);                                   // osc1_impl::chain380_t<NV>
+		auto& xfader59 = this->getT(0).getT(6).getT(1).getT(4).getT(0);                           // osc1_impl::xfader59_t<NV>
+		auto& soft_bypass53 = this->getT(0).getT(6).getT(1).getT(4).getT(1);                      // osc1_impl::soft_bypass53_t<NV>
+		auto& chain204 = this->getT(0).getT(6).getT(1).getT(4).getT(1).getT(0);                   // osc1_impl::chain204_t<NV>
+		auto& add147 = this->getT(0).getT(6).getT(1).getT(4).getT(1).getT(0).getT(0);             // math::add<NV>
+		auto& gain112 = this->getT(0).getT(6).getT(1).getT(4).getT(1).getT(0).getT(1);            // core::gain<NV>
+		auto& chain379 = this->getT(0).getT(6).getT(1).getT(5);                                   // osc1_impl::chain379_t<NV>
+		auto& xfader58 = this->getT(0).getT(6).getT(1).getT(5).getT(0);                           // osc1_impl::xfader58_t<NV>
+		auto& soft_bypass52 = this->getT(0).getT(6).getT(1).getT(5).getT(1);                      // osc1_impl::soft_bypass52_t<NV>
+		auto& chain205 = this->getT(0).getT(6).getT(1).getT(5).getT(1).getT(0);                   // osc1_impl::chain205_t<NV>
+		auto& add148 = this->getT(0).getT(6).getT(1).getT(5).getT(1).getT(0).getT(0);             // math::add<NV>
+		auto& gain113 = this->getT(0).getT(6).getT(1).getT(5).getT(1).getT(0).getT(1);            // core::gain<NV>
+		auto& chain378 = this->getT(0).getT(6).getT(1).getT(6);                                   // osc1_impl::chain378_t<NV>
+		auto& xfader57 = this->getT(0).getT(6).getT(1).getT(6).getT(0);                           // osc1_impl::xfader57_t<NV>
+		auto& soft_bypass51 = this->getT(0).getT(6).getT(1).getT(6).getT(1);                      // osc1_impl::soft_bypass51_t<NV>
+		auto& chain206 = this->getT(0).getT(6).getT(1).getT(6).getT(1).getT(0);                   // osc1_impl::chain206_t<NV>
+		auto& branch47 = this->getT(0).getT(6).getT(1).getT(6).getT(1).getT(0).getT(0);           // osc1_impl::branch47_t<NV>
+		auto& add149 = this->getT(0).getT(6).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0);
-		auto& add150 = this->getT(0).getT(6).getT(1).getT(6).                                  // math::add<NV>
+		auto& add150 = this->getT(0).getT(6).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1);
-		auto& add151 = this->getT(0).getT(6).getT(1).getT(6).                                  // math::add<NV>
+		auto& add151 = this->getT(0).getT(6).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2);
-		auto& add152 = this->getT(0).getT(6).getT(1).getT(6).                                  // math::add<NV>
+		auto& add152 = this->getT(0).getT(6).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3);
-		auto& add153 = this->getT(0).getT(6).getT(1).getT(6).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain114 = this->getT(0).getT(6).getT(1).getT(6).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain377 = this->getT(0).getT(6).getT(1).getT(7);                                // osc1_impl::chain377_t<NV>
-		auto& xfader56 = this->getT(0).getT(6).getT(1).getT(7).getT(0);                        // osc1_impl::xfader56_t<NV>
-		auto& soft_bypass50 = this->getT(0).getT(6).getT(1).getT(7).getT(1);                   // osc1_impl::soft_bypass50_t<NV>
-		auto& chain207 = this->getT(0).getT(6).getT(1).getT(7).getT(1).getT(0);                // osc1_impl::chain207_t<NV>
-		auto& branch48 = this->getT(0).getT(6).getT(1).getT(7).getT(1).getT(0).getT(0);        // osc1_impl::branch48_t<NV>
-		auto& chain208 = this->getT(0).getT(6).getT(1).getT(7).                                // osc1_impl::chain208_t<NV>
+		auto& add153 = this->getT(0).getT(6).getT(1).getT(6).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain114 = this->getT(0).getT(6).getT(1).getT(6).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain377 = this->getT(0).getT(6).getT(1).getT(7);                                   // osc1_impl::chain377_t<NV>
+		auto& xfader56 = this->getT(0).getT(6).getT(1).getT(7).getT(0);                           // osc1_impl::xfader56_t<NV>
+		auto& soft_bypass50 = this->getT(0).getT(6).getT(1).getT(7).getT(1);                      // osc1_impl::soft_bypass50_t<NV>
+		auto& chain207 = this->getT(0).getT(6).getT(1).getT(7).getT(1).getT(0);                   // osc1_impl::chain207_t<NV>
+		auto& branch48 = this->getT(0).getT(6).getT(1).getT(7).getT(1).getT(0).getT(0);           // osc1_impl::branch48_t<NV>
+		auto& chain208 = this->getT(0).getT(6).getT(1).getT(7).                                   // osc1_impl::chain208_t<NV>
                          getT(1).getT(0).getT(0).getT(0);
-		auto& midi_cc35 = this->getT(0).getT(6).getT(1).getT(7).                               // osc1_impl::midi_cc35_t<NV>
+		auto& midi_cc35 = this->getT(0).getT(6).getT(1).getT(7).                                  // osc1_impl::midi_cc35_t<NV>
                           getT(1).getT(0).getT(0).getT(0).
                           getT(0);
-		auto& add154 = this->getT(0).getT(6).getT(1).getT(7).                                  // math::add<NV>
+		auto& add154 = this->getT(0).getT(6).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0).
                        getT(1);
-		auto& chain209 = this->getT(0).getT(6).getT(1).getT(7).                                // osc1_impl::chain209_t<NV>
+		auto& chain209 = this->getT(0).getT(6).getT(1).getT(7).                                   // osc1_impl::chain209_t<NV>
                          getT(1).getT(0).getT(0).getT(1);
-		auto& midi_cc36 = this->getT(0).getT(6).getT(1).getT(7).                               // osc1_impl::midi_cc36_t<NV>
+		auto& midi_cc36 = this->getT(0).getT(6).getT(1).getT(7).                                  // osc1_impl::midi_cc36_t<NV>
                           getT(1).getT(0).getT(0).getT(1).
                           getT(0);
-		auto& add155 = this->getT(0).getT(6).getT(1).getT(7).                                  // math::add<NV>
+		auto& add155 = this->getT(0).getT(6).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1).
                        getT(1);
-		auto& chain210 = this->getT(0).getT(6).getT(1).getT(7).                                // osc1_impl::chain210_t<NV>
+		auto& chain210 = this->getT(0).getT(6).getT(1).getT(7).                                   // osc1_impl::chain210_t<NV>
                          getT(1).getT(0).getT(0).getT(2);
-		auto& midi_cc37 = this->getT(0).getT(6).getT(1).getT(7).                               // osc1_impl::midi_cc37_t<NV>
+		auto& midi_cc37 = this->getT(0).getT(6).getT(1).getT(7).                                  // osc1_impl::midi_cc37_t<NV>
                           getT(1).getT(0).getT(0).getT(2).
                           getT(0);
-		auto& add156 = this->getT(0).getT(6).getT(1).getT(7).                                  // math::add<NV>
+		auto& add156 = this->getT(0).getT(6).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2).
                        getT(1);
-		auto& chain211 = this->getT(0).getT(6).getT(1).getT(7).                                // osc1_impl::chain211_t<NV>
+		auto& chain211 = this->getT(0).getT(6).getT(1).getT(7).                                   // osc1_impl::chain211_t<NV>
                          getT(1).getT(0).getT(0).getT(3);
-		auto& midi_cc38 = this->getT(0).getT(6).getT(1).getT(7).                               // osc1_impl::midi_cc38_t<NV>
+		auto& midi_cc38 = this->getT(0).getT(6).getT(1).getT(7).                                  // osc1_impl::midi_cc38_t<NV>
                           getT(1).getT(0).getT(0).getT(3).
                           getT(0);
-		auto& add157 = this->getT(0).getT(6).getT(1).getT(7).                                  // math::add<NV>
+		auto& add157 = this->getT(0).getT(6).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3).
                        getT(1);
-		auto& chain212 = this->getT(0).getT(6).getT(1).getT(7).                                // osc1_impl::chain212_t<NV>
+		auto& chain212 = this->getT(0).getT(6).getT(1).getT(7).                                   // osc1_impl::chain212_t<NV>
                          getT(1).getT(0).getT(0).getT(4);
-		auto& midi26 = this->getT(0).getT(6).getT(1).getT(7).                                  // osc1_impl::midi26_t<NV>
+		auto& midi26 = this->getT(0).getT(6).getT(1).getT(7).                                     // osc1_impl::midi26_t<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(0);
-		auto& add158 = this->getT(0).getT(6).getT(1).getT(7).                                  // math::add<NV>
+		auto& add158 = this->getT(0).getT(6).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(1);
-		auto& chain213 = this->getT(0).getT(6).getT(1).getT(7).                                // osc1_impl::chain213_t<NV>
+		auto& chain213 = this->getT(0).getT(6).getT(1).getT(7).                                   // osc1_impl::chain213_t<NV>
                          getT(1).getT(0).getT(0).getT(5);
-		auto& midi27 = this->getT(0).getT(6).getT(1).getT(7).                                  // osc1_impl::midi27_t<NV>
+		auto& midi27 = this->getT(0).getT(6).getT(1).getT(7).                                     // osc1_impl::midi27_t<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(0);
-		auto& add159 = this->getT(0).getT(6).getT(1).getT(7).                                  // math::add<NV>
+		auto& add159 = this->getT(0).getT(6).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(1);
-		auto& chain214 = this->getT(0).getT(6).getT(1).getT(7).                                // osc1_impl::chain214_t<NV>
+		auto& chain214 = this->getT(0).getT(6).getT(1).getT(7).                                   // osc1_impl::chain214_t<NV>
                          getT(1).getT(0).getT(0).getT(6);
-		auto& midi28 = this->getT(0).getT(6).getT(1).getT(7).                                  // osc1_impl::midi28_t<NV>
+		auto& midi28 = this->getT(0).getT(6).getT(1).getT(7).                                     // osc1_impl::midi28_t<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(0);
-		auto& add160 = this->getT(0).getT(6).getT(1).getT(7).                                  // math::add<NV>
+		auto& add160 = this->getT(0).getT(6).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(1);
-		auto& gain115 = this->getT(0).getT(6).getT(1).getT(7).getT(1).getT(0).getT(1);         // core::gain<NV>
-		auto& peak13 = this->getT(0).getT(6).getT(2);                                          // osc1_impl::peak13_t<NV>
-		auto& pma9 = this->getT(0).getT(6).getT(3);                                            // osc1_impl::pma9_t<NV>
-		auto& modchain14 = this->getT(0).getT(7);                                              // osc1_impl::modchain14_t<NV>
-		auto& sliderbank14 = this->getT(0).getT(7).getT(0);                                    // osc1_impl::sliderbank14_t<NV>
-		auto& split28 = this->getT(0).getT(7).getT(1);                                         // osc1_impl::split28_t<NV>
-		auto& chain376 = this->getT(0).getT(7).getT(1).getT(0);                                // osc1_impl::chain376_t<NV>
-		auto& xfader55 = this->getT(0).getT(7).getT(1).getT(0).getT(0);                        // osc1_impl::xfader55_t<NV>
-		auto& soft_bypass49 = this->getT(0).getT(7).getT(1).getT(0).getT(1);                   // osc1_impl::soft_bypass49_t<NV>
-		auto& chain245 = this->getT(0).getT(7).getT(1).getT(0).getT(1).getT(0);                // osc1_impl::chain245_t<NV>
-		auto& global_cable47 = this->getT(0).getT(7).getT(1).getT(0).getT(1).getT(0).getT(0);  // osc1_impl::global_cable47_t<NV>
-		auto& add197 = this->getT(0).getT(7).getT(1).getT(0).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain132 = this->getT(0).getT(7).getT(1).getT(0).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain391 = this->getT(0).getT(7).getT(1).getT(1);                                // osc1_impl::chain391_t<NV>
-		auto& xfader70 = this->getT(0).getT(7).getT(1).getT(1).getT(0);                        // osc1_impl::xfader70_t
-		auto& soft_bypass64 = this->getT(0).getT(7).getT(1).getT(1).getT(1);                   // osc1_impl::soft_bypass64_t
-		auto& chain246 = this->getT(0).getT(7).getT(1).getT(1).getT(2);                        // osc1_impl::chain246_t<NV>
-		auto& global_cable48 = this->getT(0).getT(7).getT(1).getT(1).getT(2).getT(0);          // osc1_impl::global_cable48_t<NV>
-		auto& add198 = this->getT(0).getT(7).getT(1).getT(1).getT(2).getT(1);                  // math::add<NV>
-		auto& gain133 = this->getT(0).getT(7).getT(1).getT(1).getT(2).getT(2);                 // core::gain<NV>
-		auto& chain390 = this->getT(0).getT(7).getT(1).getT(2);                                // osc1_impl::chain390_t<NV>
-		auto& xfader69 = this->getT(0).getT(7).getT(1).getT(2).getT(0);                        // osc1_impl::xfader69_t<NV>
-		auto& soft_bypass63 = this->getT(0).getT(7).getT(1).getT(2).getT(1);                   // osc1_impl::soft_bypass63_t<NV>
-		auto& chain259 = this->getT(0).getT(7).getT(1).getT(2).getT(1).getT(0);                // osc1_impl::chain259_t<NV>
-		auto& global_cable49 = this->getT(0).getT(7).getT(1).getT(2).getT(1).getT(0).getT(0);  // osc1_impl::global_cable49_t<NV>
-		auto& add199 = this->getT(0).getT(7).getT(1).getT(2).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain134 = this->getT(0).getT(7).getT(1).getT(2).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain389 = this->getT(0).getT(7).getT(1).getT(3);                                // osc1_impl::chain389_t<NV>
-		auto& xfader68 = this->getT(0).getT(7).getT(1).getT(3).getT(0);                        // osc1_impl::xfader68_t<NV>
-		auto& soft_bypass62 = this->getT(0).getT(7).getT(1).getT(3).getT(1);                   // osc1_impl::soft_bypass62_t<NV>
-		auto& chain260 = this->getT(0).getT(7).getT(1).getT(3).getT(1).getT(0);                // osc1_impl::chain260_t<NV>
-		auto& global_cable50 = this->getT(0).getT(7).getT(1).getT(3).getT(1).getT(0).getT(0);  // osc1_impl::global_cable50_t<NV>
-		auto& add200 = this->getT(0).getT(7).getT(1).getT(3).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain135 = this->getT(0).getT(7).getT(1).getT(3).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain388 = this->getT(0).getT(7).getT(1).getT(4);                                // osc1_impl::chain388_t<NV>
-		auto& xfader67 = this->getT(0).getT(7).getT(1).getT(4).getT(0);                        // osc1_impl::xfader67_t<NV>
-		auto& soft_bypass61 = this->getT(0).getT(7).getT(1).getT(4).getT(1);                   // osc1_impl::soft_bypass61_t<NV>
-		auto& chain264 = this->getT(0).getT(7).getT(1).getT(4).getT(1).getT(0);                // osc1_impl::chain264_t<NV>
-		auto& add201 = this->getT(0).getT(7).getT(1).getT(4).getT(1).getT(0).getT(0);          // math::add<NV>
-		auto& gain136 = this->getT(0).getT(7).getT(1).getT(4).getT(1).getT(0).getT(1);         // core::gain<NV>
-		auto& chain387 = this->getT(0).getT(7).getT(1).getT(5);                                // osc1_impl::chain387_t<NV>
-		auto& xfader66 = this->getT(0).getT(7).getT(1).getT(5).getT(0);                        // osc1_impl::xfader66_t<NV>
-		auto& soft_bypass60 = this->getT(0).getT(7).getT(1).getT(5).getT(1);                   // osc1_impl::soft_bypass60_t<NV>
-		auto& chain265 = this->getT(0).getT(7).getT(1).getT(5).getT(1).getT(0);                // osc1_impl::chain265_t<NV>
-		auto& add202 = this->getT(0).getT(7).getT(1).getT(5).getT(1).getT(0).getT(0);          // math::add<NV>
-		auto& gain137 = this->getT(0).getT(7).getT(1).getT(5).getT(1).getT(0).getT(1);         // core::gain<NV>
-		auto& chain386 = this->getT(0).getT(7).getT(1).getT(6);                                // osc1_impl::chain386_t<NV>
-		auto& xfader65 = this->getT(0).getT(7).getT(1).getT(6).getT(0);                        // osc1_impl::xfader65_t<NV>
-		auto& soft_bypass59 = this->getT(0).getT(7).getT(1).getT(6).getT(1);                   // osc1_impl::soft_bypass59_t<NV>
-		auto& chain266 = this->getT(0).getT(7).getT(1).getT(6).getT(1).getT(0);                // osc1_impl::chain266_t<NV>
-		auto& branch53 = this->getT(0).getT(7).getT(1).getT(6).getT(1).getT(0).getT(0);        // osc1_impl::branch53_t<NV>
-		auto& add203 = this->getT(0).getT(7).getT(1).getT(6).                                  // math::add<NV>
+		auto& gain115 = this->getT(0).getT(6).getT(1).getT(7).getT(1).getT(0).getT(1);            // core::gain<NV>
+		auto& peak13 = this->getT(0).getT(6).getT(2);                                             // osc1_impl::peak13_t<NV>
+		auto& pma9 = this->getT(0).getT(6).getT(3);                                               // osc1_impl::pma9_t<NV>
+		auto& modchain14 = this->getT(0).getT(7);                                                 // osc1_impl::modchain14_t<NV>
+		auto& sliderbank14 = this->getT(0).getT(7).getT(0);                                       // osc1_impl::sliderbank14_t<NV>
+		auto& split28 = this->getT(0).getT(7).getT(1);                                            // osc1_impl::split28_t<NV>
+		auto& chain376 = this->getT(0).getT(7).getT(1).getT(0);                                   // osc1_impl::chain376_t<NV>
+		auto& xfader55 = this->getT(0).getT(7).getT(1).getT(0).getT(0);                           // osc1_impl::xfader55_t<NV>
+		auto& soft_bypass49 = this->getT(0).getT(7).getT(1).getT(0).getT(1);                      // osc1_impl::soft_bypass49_t<NV>
+		auto& chain245 = this->getT(0).getT(7).getT(1).getT(0).getT(1).getT(0);                   // osc1_impl::chain245_t<NV>
+		auto& global_cable47 = this->getT(0).getT(7).getT(1).getT(0).getT(1).getT(0).getT(0);     // osc1_impl::global_cable47_t<NV>
+		auto& add197 = this->getT(0).getT(7).getT(1).getT(0).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain132 = this->getT(0).getT(7).getT(1).getT(0).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain391 = this->getT(0).getT(7).getT(1).getT(1);                                   // osc1_impl::chain391_t<NV>
+		auto& xfader70 = this->getT(0).getT(7).getT(1).getT(1).getT(0);                           // osc1_impl::xfader70_t
+		auto& soft_bypass64 = this->getT(0).getT(7).getT(1).getT(1).getT(1);                      // osc1_impl::soft_bypass64_t
+		auto& chain246 = this->getT(0).getT(7).getT(1).getT(1).getT(2);                           // osc1_impl::chain246_t<NV>
+		auto& global_cable48 = this->getT(0).getT(7).getT(1).getT(1).getT(2).getT(0);             // osc1_impl::global_cable48_t<NV>
+		auto& add198 = this->getT(0).getT(7).getT(1).getT(1).getT(2).getT(1);                     // math::add<NV>
+		auto& gain133 = this->getT(0).getT(7).getT(1).getT(1).getT(2).getT(2);                    // core::gain<NV>
+		auto& chain390 = this->getT(0).getT(7).getT(1).getT(2);                                   // osc1_impl::chain390_t<NV>
+		auto& xfader69 = this->getT(0).getT(7).getT(1).getT(2).getT(0);                           // osc1_impl::xfader69_t<NV>
+		auto& soft_bypass63 = this->getT(0).getT(7).getT(1).getT(2).getT(1);                      // osc1_impl::soft_bypass63_t<NV>
+		auto& chain259 = this->getT(0).getT(7).getT(1).getT(2).getT(1).getT(0);                   // osc1_impl::chain259_t<NV>
+		auto& global_cable49 = this->getT(0).getT(7).getT(1).getT(2).getT(1).getT(0).getT(0);     // osc1_impl::global_cable49_t<NV>
+		auto& add199 = this->getT(0).getT(7).getT(1).getT(2).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain134 = this->getT(0).getT(7).getT(1).getT(2).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain389 = this->getT(0).getT(7).getT(1).getT(3);                                   // osc1_impl::chain389_t<NV>
+		auto& xfader68 = this->getT(0).getT(7).getT(1).getT(3).getT(0);                           // osc1_impl::xfader68_t<NV>
+		auto& soft_bypass62 = this->getT(0).getT(7).getT(1).getT(3).getT(1);                      // osc1_impl::soft_bypass62_t<NV>
+		auto& chain260 = this->getT(0).getT(7).getT(1).getT(3).getT(1).getT(0);                   // osc1_impl::chain260_t<NV>
+		auto& global_cable50 = this->getT(0).getT(7).getT(1).getT(3).getT(1).getT(0).getT(0);     // osc1_impl::global_cable50_t<NV>
+		auto& add200 = this->getT(0).getT(7).getT(1).getT(3).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain135 = this->getT(0).getT(7).getT(1).getT(3).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain388 = this->getT(0).getT(7).getT(1).getT(4);                                   // osc1_impl::chain388_t<NV>
+		auto& xfader67 = this->getT(0).getT(7).getT(1).getT(4).getT(0);                           // osc1_impl::xfader67_t<NV>
+		auto& soft_bypass61 = this->getT(0).getT(7).getT(1).getT(4).getT(1);                      // osc1_impl::soft_bypass61_t<NV>
+		auto& chain264 = this->getT(0).getT(7).getT(1).getT(4).getT(1).getT(0);                   // osc1_impl::chain264_t<NV>
+		auto& add201 = this->getT(0).getT(7).getT(1).getT(4).getT(1).getT(0).getT(0);             // math::add<NV>
+		auto& gain136 = this->getT(0).getT(7).getT(1).getT(4).getT(1).getT(0).getT(1);            // core::gain<NV>
+		auto& chain387 = this->getT(0).getT(7).getT(1).getT(5);                                   // osc1_impl::chain387_t<NV>
+		auto& xfader66 = this->getT(0).getT(7).getT(1).getT(5).getT(0);                           // osc1_impl::xfader66_t<NV>
+		auto& soft_bypass60 = this->getT(0).getT(7).getT(1).getT(5).getT(1);                      // osc1_impl::soft_bypass60_t<NV>
+		auto& chain265 = this->getT(0).getT(7).getT(1).getT(5).getT(1).getT(0);                   // osc1_impl::chain265_t<NV>
+		auto& add202 = this->getT(0).getT(7).getT(1).getT(5).getT(1).getT(0).getT(0);             // math::add<NV>
+		auto& gain137 = this->getT(0).getT(7).getT(1).getT(5).getT(1).getT(0).getT(1);            // core::gain<NV>
+		auto& chain386 = this->getT(0).getT(7).getT(1).getT(6);                                   // osc1_impl::chain386_t<NV>
+		auto& xfader65 = this->getT(0).getT(7).getT(1).getT(6).getT(0);                           // osc1_impl::xfader65_t<NV>
+		auto& soft_bypass59 = this->getT(0).getT(7).getT(1).getT(6).getT(1);                      // osc1_impl::soft_bypass59_t<NV>
+		auto& chain266 = this->getT(0).getT(7).getT(1).getT(6).getT(1).getT(0);                   // osc1_impl::chain266_t<NV>
+		auto& branch53 = this->getT(0).getT(7).getT(1).getT(6).getT(1).getT(0).getT(0);           // osc1_impl::branch53_t<NV>
+		auto& add203 = this->getT(0).getT(7).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0);
-		auto& add204 = this->getT(0).getT(7).getT(1).getT(6).                                  // math::add<NV>
+		auto& add204 = this->getT(0).getT(7).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1);
-		auto& add205 = this->getT(0).getT(7).getT(1).getT(6).                                  // math::add<NV>
+		auto& add205 = this->getT(0).getT(7).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2);
-		auto& add206 = this->getT(0).getT(7).getT(1).getT(6).                                  // math::add<NV>
+		auto& add206 = this->getT(0).getT(7).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3);
-		auto& add207 = this->getT(0).getT(7).getT(1).getT(6).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain138 = this->getT(0).getT(7).getT(1).getT(6).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain385 = this->getT(0).getT(7).getT(1).getT(7);                                // osc1_impl::chain385_t<NV>
-		auto& xfader64 = this->getT(0).getT(7).getT(1).getT(7).getT(0);                        // osc1_impl::xfader64_t<NV>
-		auto& soft_bypass58 = this->getT(0).getT(7).getT(1).getT(7).getT(1);                   // osc1_impl::soft_bypass58_t<NV>
-		auto& chain267 = this->getT(0).getT(7).getT(1).getT(7).getT(1).getT(0);                // osc1_impl::chain267_t<NV>
-		auto& branch54 = this->getT(0).getT(7).getT(1).getT(7).getT(1).getT(0).getT(0);        // osc1_impl::branch54_t<NV>
-		auto& chain268 = this->getT(0).getT(7).getT(1).getT(7).                                // osc1_impl::chain268_t<NV>
+		auto& add207 = this->getT(0).getT(7).getT(1).getT(6).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain138 = this->getT(0).getT(7).getT(1).getT(6).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain385 = this->getT(0).getT(7).getT(1).getT(7);                                   // osc1_impl::chain385_t<NV>
+		auto& xfader64 = this->getT(0).getT(7).getT(1).getT(7).getT(0);                           // osc1_impl::xfader64_t<NV>
+		auto& soft_bypass58 = this->getT(0).getT(7).getT(1).getT(7).getT(1);                      // osc1_impl::soft_bypass58_t<NV>
+		auto& chain267 = this->getT(0).getT(7).getT(1).getT(7).getT(1).getT(0);                   // osc1_impl::chain267_t<NV>
+		auto& branch54 = this->getT(0).getT(7).getT(1).getT(7).getT(1).getT(0).getT(0);           // osc1_impl::branch54_t<NV>
+		auto& chain268 = this->getT(0).getT(7).getT(1).getT(7).                                   // osc1_impl::chain268_t<NV>
                          getT(1).getT(0).getT(0).getT(0);
-		auto& midi_cc47 = this->getT(0).getT(7).getT(1).getT(7).                               // osc1_impl::midi_cc47_t<NV>
+		auto& midi_cc47 = this->getT(0).getT(7).getT(1).getT(7).                                  // osc1_impl::midi_cc47_t<NV>
                           getT(1).getT(0).getT(0).getT(0).
                           getT(0);
-		auto& add208 = this->getT(0).getT(7).getT(1).getT(7).                                  // math::add<NV>
+		auto& add208 = this->getT(0).getT(7).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0).
                        getT(1);
-		auto& chain269 = this->getT(0).getT(7).getT(1).getT(7).                                // osc1_impl::chain269_t<NV>
+		auto& chain269 = this->getT(0).getT(7).getT(1).getT(7).                                   // osc1_impl::chain269_t<NV>
                          getT(1).getT(0).getT(0).getT(1);
-		auto& midi_cc48 = this->getT(0).getT(7).getT(1).getT(7).                               // osc1_impl::midi_cc48_t<NV>
+		auto& midi_cc48 = this->getT(0).getT(7).getT(1).getT(7).                                  // osc1_impl::midi_cc48_t<NV>
                           getT(1).getT(0).getT(0).getT(1).
                           getT(0);
-		auto& add209 = this->getT(0).getT(7).getT(1).getT(7).                                  // math::add<NV>
+		auto& add209 = this->getT(0).getT(7).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1).
                        getT(1);
-		auto& chain270 = this->getT(0).getT(7).getT(1).getT(7).                                // osc1_impl::chain270_t<NV>
+		auto& chain270 = this->getT(0).getT(7).getT(1).getT(7).                                   // osc1_impl::chain270_t<NV>
                          getT(1).getT(0).getT(0).getT(2);
-		auto& midi_cc49 = this->getT(0).getT(7).getT(1).getT(7).                               // osc1_impl::midi_cc49_t<NV>
+		auto& midi_cc49 = this->getT(0).getT(7).getT(1).getT(7).                                  // osc1_impl::midi_cc49_t<NV>
                           getT(1).getT(0).getT(0).getT(2).
                           getT(0);
-		auto& add210 = this->getT(0).getT(7).getT(1).getT(7).                                  // math::add<NV>
+		auto& add210 = this->getT(0).getT(7).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2).
                        getT(1);
-		auto& chain271 = this->getT(0).getT(7).getT(1).getT(7).                                // osc1_impl::chain271_t<NV>
+		auto& chain271 = this->getT(0).getT(7).getT(1).getT(7).                                   // osc1_impl::chain271_t<NV>
                          getT(1).getT(0).getT(0).getT(3);
-		auto& midi_cc50 = this->getT(0).getT(7).getT(1).getT(7).                               // osc1_impl::midi_cc50_t<NV>
+		auto& midi_cc50 = this->getT(0).getT(7).getT(1).getT(7).                                  // osc1_impl::midi_cc50_t<NV>
                           getT(1).getT(0).getT(0).getT(3).
                           getT(0);
-		auto& add211 = this->getT(0).getT(7).getT(1).getT(7).                                  // math::add<NV>
+		auto& add211 = this->getT(0).getT(7).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3).
                        getT(1);
-		auto& chain272 = this->getT(0).getT(7).getT(1).getT(7).                                // osc1_impl::chain272_t<NV>
+		auto& chain272 = this->getT(0).getT(7).getT(1).getT(7).                                   // osc1_impl::chain272_t<NV>
                          getT(1).getT(0).getT(0).getT(4);
-		auto& midi35 = this->getT(0).getT(7).getT(1).getT(7).                                  // osc1_impl::midi35_t<NV>
+		auto& midi35 = this->getT(0).getT(7).getT(1).getT(7).                                     // osc1_impl::midi35_t<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(0);
-		auto& add212 = this->getT(0).getT(7).getT(1).getT(7).                                  // math::add<NV>
+		auto& add212 = this->getT(0).getT(7).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(1);
-		auto& chain273 = this->getT(0).getT(7).getT(1).getT(7).                                // osc1_impl::chain273_t<NV>
+		auto& chain273 = this->getT(0).getT(7).getT(1).getT(7).                                   // osc1_impl::chain273_t<NV>
                          getT(1).getT(0).getT(0).getT(5);
-		auto& midi36 = this->getT(0).getT(7).getT(1).getT(7).                                  // osc1_impl::midi36_t<NV>
+		auto& midi36 = this->getT(0).getT(7).getT(1).getT(7).                                     // osc1_impl::midi36_t<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(0);
-		auto& add223 = this->getT(0).getT(7).getT(1).getT(7).                                  // math::add<NV>
+		auto& add223 = this->getT(0).getT(7).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(1);
-		auto& chain274 = this->getT(0).getT(7).getT(1).getT(7).                                // osc1_impl::chain274_t<NV>
+		auto& chain274 = this->getT(0).getT(7).getT(1).getT(7).                                   // osc1_impl::chain274_t<NV>
                          getT(1).getT(0).getT(0).getT(6);
-		auto& midi37 = this->getT(0).getT(7).getT(1).getT(7).                                  // osc1_impl::midi37_t<NV>
+		auto& midi37 = this->getT(0).getT(7).getT(1).getT(7).                                     // osc1_impl::midi37_t<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(0);
-		auto& add224 = this->getT(0).getT(7).getT(1).getT(7).                                  // math::add<NV>
+		auto& add224 = this->getT(0).getT(7).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(1);
-		auto& gain139 = this->getT(0).getT(7).getT(1).getT(7).getT(1).getT(0).getT(1);         // core::gain<NV>
-		auto& peak34 = this->getT(0).getT(7).getT(2);                                          // osc1_impl::peak34_t<NV>
-		auto& pma18 = this->getT(0).getT(7).getT(3);                                           // osc1_impl::pma18_t<NV>
-		auto& modchain15 = this->getT(0).getT(8);                                              // osc1_impl::modchain15_t<NV>
-		auto& sliderbank15 = this->getT(0).getT(8).getT(0);                                    // osc1_impl::sliderbank15_t<NV>
-		auto& split29 = this->getT(0).getT(8).getT(1);                                         // osc1_impl::split29_t<NV>
-		auto& chain392 = this->getT(0).getT(8).getT(1).getT(0);                                // osc1_impl::chain392_t<NV>
-		auto& xfader71 = this->getT(0).getT(8).getT(1).getT(0).getT(0);                        // osc1_impl::xfader71_t<NV>
-		auto& soft_bypass65 = this->getT(0).getT(8).getT(1).getT(0).getT(1);                   // osc1_impl::soft_bypass65_t<NV>
-		auto& chain275 = this->getT(0).getT(8).getT(1).getT(0).getT(1).getT(0);                // osc1_impl::chain275_t<NV>
-		auto& global_cable51 = this->getT(0).getT(8).getT(1).getT(0).getT(1).getT(0).getT(0);  // osc1_impl::global_cable51_t<NV>
-		auto& add225 = this->getT(0).getT(8).getT(1).getT(0).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain140 = this->getT(0).getT(8).getT(1).getT(0).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain407 = this->getT(0).getT(8).getT(1).getT(1);                                // osc1_impl::chain407_t<NV>
-		auto& xfader79 = this->getT(0).getT(8).getT(1).getT(1).getT(0);                        // osc1_impl::xfader79_t<NV>
-		auto& soft_bypass73 = this->getT(0).getT(8).getT(1).getT(1).getT(1);                   // osc1_impl::soft_bypass73_t<NV>
-		auto& chain276 = this->getT(0).getT(8).getT(1).getT(1).getT(1).getT(0);                // osc1_impl::chain276_t<NV>
-		auto& global_cable52 = this->getT(0).getT(8).getT(1).getT(1).getT(1).getT(0).getT(0);  // osc1_impl::global_cable52_t<NV>
-		auto& add226 = this->getT(0).getT(8).getT(1).getT(1).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain141 = this->getT(0).getT(8).getT(1).getT(1).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain406 = this->getT(0).getT(8).getT(1).getT(2);                                // osc1_impl::chain406_t<NV>
-		auto& xfader78 = this->getT(0).getT(8).getT(1).getT(2).getT(0);                        // osc1_impl::xfader78_t
-		auto& soft_bypass72 = this->getT(0).getT(8).getT(1).getT(2).getT(1);                   // osc1_impl::soft_bypass72_t
-		auto& chain277 = this->getT(0).getT(8).getT(1).getT(2).getT(2);                        // osc1_impl::chain277_t<NV>
-		auto& global_cable53 = this->getT(0).getT(8).getT(1).getT(2).getT(2).getT(0);          // osc1_impl::global_cable53_t<NV>
-		auto& add227 = this->getT(0).getT(8).getT(1).getT(2).getT(2).getT(1);                  // math::add<NV>
-		auto& gain142 = this->getT(0).getT(8).getT(1).getT(2).getT(2).getT(2);                 // core::gain<NV>
-		auto& chain405 = this->getT(0).getT(8).getT(1).getT(3);                                // osc1_impl::chain405_t<NV>
-		auto& xfader77 = this->getT(0).getT(8).getT(1).getT(3).getT(0);                        // osc1_impl::xfader77_t<NV>
-		auto& soft_bypass71 = this->getT(0).getT(8).getT(1).getT(3).getT(1);                   // osc1_impl::soft_bypass71_t<NV>
-		auto& chain278 = this->getT(0).getT(8).getT(1).getT(3).getT(1).getT(0);                // osc1_impl::chain278_t<NV>
-		auto& global_cable54 = this->getT(0).getT(8).getT(1).getT(3).getT(1).getT(0).getT(0);  // osc1_impl::global_cable54_t<NV>
-		auto& add228 = this->getT(0).getT(8).getT(1).getT(3).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain143 = this->getT(0).getT(8).getT(1).getT(3).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain404 = this->getT(0).getT(8).getT(1).getT(4);                                // osc1_impl::chain404_t<NV>
-		auto& xfader76 = this->getT(0).getT(8).getT(1).getT(4).getT(0);                        // osc1_impl::xfader76_t<NV>
-		auto& soft_bypass70 = this->getT(0).getT(8).getT(1).getT(4).getT(1);                   // osc1_impl::soft_bypass70_t<NV>
-		auto& chain279 = this->getT(0).getT(8).getT(1).getT(4).getT(1).getT(0);                // osc1_impl::chain279_t<NV>
-		auto& add229 = this->getT(0).getT(8).getT(1).getT(4).getT(1).getT(0).getT(0);          // math::add<NV>
-		auto& gain144 = this->getT(0).getT(8).getT(1).getT(4).getT(1).getT(0).getT(1);         // core::gain<NV>
-		auto& chain403 = this->getT(0).getT(8).getT(1).getT(5);                                // osc1_impl::chain403_t<NV>
-		auto& xfader75 = this->getT(0).getT(8).getT(1).getT(5).getT(0);                        // osc1_impl::xfader75_t<NV>
-		auto& soft_bypass69 = this->getT(0).getT(8).getT(1).getT(5).getT(1);                   // osc1_impl::soft_bypass69_t<NV>
-		auto& chain280 = this->getT(0).getT(8).getT(1).getT(5).getT(1).getT(0);                // osc1_impl::chain280_t<NV>
-		auto& add230 = this->getT(0).getT(8).getT(1).getT(5).getT(1).getT(0).getT(0);          // math::add<NV>
-		auto& gain145 = this->getT(0).getT(8).getT(1).getT(5).getT(1).getT(0).getT(1);         // core::gain<NV>
-		auto& chain402 = this->getT(0).getT(8).getT(1).getT(6);                                // osc1_impl::chain402_t<NV>
-		auto& xfader74 = this->getT(0).getT(8).getT(1).getT(6).getT(0);                        // osc1_impl::xfader74_t<NV>
-		auto& soft_bypass68 = this->getT(0).getT(8).getT(1).getT(6).getT(1);                   // osc1_impl::soft_bypass68_t<NV>
-		auto& chain281 = this->getT(0).getT(8).getT(1).getT(6).getT(1).getT(0);                // osc1_impl::chain281_t<NV>
-		auto& branch55 = this->getT(0).getT(8).getT(1).getT(6).getT(1).getT(0).getT(0);        // osc1_impl::branch55_t<NV>
-		auto& add231 = this->getT(0).getT(8).getT(1).getT(6).                                  // math::add<NV>
+		auto& gain139 = this->getT(0).getT(7).getT(1).getT(7).getT(1).getT(0).getT(1);            // core::gain<NV>
+		auto& peak34 = this->getT(0).getT(7).getT(2);                                             // osc1_impl::peak34_t<NV>
+		auto& pma18 = this->getT(0).getT(7).getT(3);                                              // osc1_impl::pma18_t<NV>
+		auto& modchain15 = this->getT(0).getT(8);                                                 // osc1_impl::modchain15_t<NV>
+		auto& sliderbank15 = this->getT(0).getT(8).getT(0);                                       // osc1_impl::sliderbank15_t<NV>
+		auto& split29 = this->getT(0).getT(8).getT(1);                                            // osc1_impl::split29_t<NV>
+		auto& chain392 = this->getT(0).getT(8).getT(1).getT(0);                                   // osc1_impl::chain392_t<NV>
+		auto& xfader71 = this->getT(0).getT(8).getT(1).getT(0).getT(0);                           // osc1_impl::xfader71_t<NV>
+		auto& soft_bypass65 = this->getT(0).getT(8).getT(1).getT(0).getT(1);                      // osc1_impl::soft_bypass65_t<NV>
+		auto& chain275 = this->getT(0).getT(8).getT(1).getT(0).getT(1).getT(0);                   // osc1_impl::chain275_t<NV>
+		auto& global_cable51 = this->getT(0).getT(8).getT(1).getT(0).getT(1).getT(0).getT(0);     // osc1_impl::global_cable51_t<NV>
+		auto& add225 = this->getT(0).getT(8).getT(1).getT(0).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain140 = this->getT(0).getT(8).getT(1).getT(0).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain407 = this->getT(0).getT(8).getT(1).getT(1);                                   // osc1_impl::chain407_t<NV>
+		auto& xfader79 = this->getT(0).getT(8).getT(1).getT(1).getT(0);                           // osc1_impl::xfader79_t<NV>
+		auto& soft_bypass73 = this->getT(0).getT(8).getT(1).getT(1).getT(1);                      // osc1_impl::soft_bypass73_t<NV>
+		auto& chain276 = this->getT(0).getT(8).getT(1).getT(1).getT(1).getT(0);                   // osc1_impl::chain276_t<NV>
+		auto& global_cable52 = this->getT(0).getT(8).getT(1).getT(1).getT(1).getT(0).getT(0);     // osc1_impl::global_cable52_t<NV>
+		auto& add226 = this->getT(0).getT(8).getT(1).getT(1).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain141 = this->getT(0).getT(8).getT(1).getT(1).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain406 = this->getT(0).getT(8).getT(1).getT(2);                                   // osc1_impl::chain406_t<NV>
+		auto& xfader78 = this->getT(0).getT(8).getT(1).getT(2).getT(0);                           // osc1_impl::xfader78_t
+		auto& soft_bypass72 = this->getT(0).getT(8).getT(1).getT(2).getT(1);                      // osc1_impl::soft_bypass72_t
+		auto& chain277 = this->getT(0).getT(8).getT(1).getT(2).getT(2);                           // osc1_impl::chain277_t<NV>
+		auto& global_cable53 = this->getT(0).getT(8).getT(1).getT(2).getT(2).getT(0);             // osc1_impl::global_cable53_t<NV>
+		auto& add227 = this->getT(0).getT(8).getT(1).getT(2).getT(2).getT(1);                     // math::add<NV>
+		auto& gain142 = this->getT(0).getT(8).getT(1).getT(2).getT(2).getT(2);                    // core::gain<NV>
+		auto& chain405 = this->getT(0).getT(8).getT(1).getT(3);                                   // osc1_impl::chain405_t<NV>
+		auto& xfader77 = this->getT(0).getT(8).getT(1).getT(3).getT(0);                           // osc1_impl::xfader77_t<NV>
+		auto& soft_bypass71 = this->getT(0).getT(8).getT(1).getT(3).getT(1);                      // osc1_impl::soft_bypass71_t<NV>
+		auto& chain278 = this->getT(0).getT(8).getT(1).getT(3).getT(1).getT(0);                   // osc1_impl::chain278_t<NV>
+		auto& global_cable54 = this->getT(0).getT(8).getT(1).getT(3).getT(1).getT(0).getT(0);     // osc1_impl::global_cable54_t<NV>
+		auto& add228 = this->getT(0).getT(8).getT(1).getT(3).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain143 = this->getT(0).getT(8).getT(1).getT(3).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain404 = this->getT(0).getT(8).getT(1).getT(4);                                   // osc1_impl::chain404_t<NV>
+		auto& xfader76 = this->getT(0).getT(8).getT(1).getT(4).getT(0);                           // osc1_impl::xfader76_t<NV>
+		auto& soft_bypass70 = this->getT(0).getT(8).getT(1).getT(4).getT(1);                      // osc1_impl::soft_bypass70_t<NV>
+		auto& chain279 = this->getT(0).getT(8).getT(1).getT(4).getT(1).getT(0);                   // osc1_impl::chain279_t<NV>
+		auto& add229 = this->getT(0).getT(8).getT(1).getT(4).getT(1).getT(0).getT(0);             // math::add<NV>
+		auto& gain144 = this->getT(0).getT(8).getT(1).getT(4).getT(1).getT(0).getT(1);            // core::gain<NV>
+		auto& chain403 = this->getT(0).getT(8).getT(1).getT(5);                                   // osc1_impl::chain403_t<NV>
+		auto& xfader75 = this->getT(0).getT(8).getT(1).getT(5).getT(0);                           // osc1_impl::xfader75_t<NV>
+		auto& soft_bypass69 = this->getT(0).getT(8).getT(1).getT(5).getT(1);                      // osc1_impl::soft_bypass69_t<NV>
+		auto& chain280 = this->getT(0).getT(8).getT(1).getT(5).getT(1).getT(0);                   // osc1_impl::chain280_t<NV>
+		auto& add230 = this->getT(0).getT(8).getT(1).getT(5).getT(1).getT(0).getT(0);             // math::add<NV>
+		auto& gain145 = this->getT(0).getT(8).getT(1).getT(5).getT(1).getT(0).getT(1);            // core::gain<NV>
+		auto& chain402 = this->getT(0).getT(8).getT(1).getT(6);                                   // osc1_impl::chain402_t<NV>
+		auto& xfader74 = this->getT(0).getT(8).getT(1).getT(6).getT(0);                           // osc1_impl::xfader74_t<NV>
+		auto& soft_bypass68 = this->getT(0).getT(8).getT(1).getT(6).getT(1);                      // osc1_impl::soft_bypass68_t<NV>
+		auto& chain281 = this->getT(0).getT(8).getT(1).getT(6).getT(1).getT(0);                   // osc1_impl::chain281_t<NV>
+		auto& branch55 = this->getT(0).getT(8).getT(1).getT(6).getT(1).getT(0).getT(0);           // osc1_impl::branch55_t<NV>
+		auto& add231 = this->getT(0).getT(8).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0);
-		auto& add232 = this->getT(0).getT(8).getT(1).getT(6).                                  // math::add<NV>
+		auto& add232 = this->getT(0).getT(8).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1);
-		auto& add233 = this->getT(0).getT(8).getT(1).getT(6).                                  // math::add<NV>
+		auto& add233 = this->getT(0).getT(8).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2);
-		auto& add234 = this->getT(0).getT(8).getT(1).getT(6).                                  // math::add<NV>
+		auto& add234 = this->getT(0).getT(8).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3);
-		auto& add235 = this->getT(0).getT(8).getT(1).getT(6).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain146 = this->getT(0).getT(8).getT(1).getT(6).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain401 = this->getT(0).getT(8).getT(1).getT(7);                                // osc1_impl::chain401_t<NV>
-		auto& xfader73 = this->getT(0).getT(8).getT(1).getT(7).getT(0);                        // osc1_impl::xfader73_t<NV>
-		auto& soft_bypass67 = this->getT(0).getT(8).getT(1).getT(7).getT(1);                   // osc1_impl::soft_bypass67_t<NV>
-		auto& chain282 = this->getT(0).getT(8).getT(1).getT(7).getT(1).getT(0);                // osc1_impl::chain282_t<NV>
-		auto& branch56 = this->getT(0).getT(8).getT(1).getT(7).getT(1).getT(0).getT(0);        // osc1_impl::branch56_t<NV>
-		auto& chain283 = this->getT(0).getT(8).getT(1).getT(7).                                // osc1_impl::chain283_t<NV>
+		auto& add235 = this->getT(0).getT(8).getT(1).getT(6).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain146 = this->getT(0).getT(8).getT(1).getT(6).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain401 = this->getT(0).getT(8).getT(1).getT(7);                                   // osc1_impl::chain401_t<NV>
+		auto& xfader73 = this->getT(0).getT(8).getT(1).getT(7).getT(0);                           // osc1_impl::xfader73_t<NV>
+		auto& soft_bypass67 = this->getT(0).getT(8).getT(1).getT(7).getT(1);                      // osc1_impl::soft_bypass67_t<NV>
+		auto& chain282 = this->getT(0).getT(8).getT(1).getT(7).getT(1).getT(0);                   // osc1_impl::chain282_t<NV>
+		auto& branch56 = this->getT(0).getT(8).getT(1).getT(7).getT(1).getT(0).getT(0);           // osc1_impl::branch56_t<NV>
+		auto& chain283 = this->getT(0).getT(8).getT(1).getT(7).                                   // osc1_impl::chain283_t<NV>
                          getT(1).getT(0).getT(0).getT(0);
-		auto& midi_cc51 = this->getT(0).getT(8).getT(1).getT(7).                               // osc1_impl::midi_cc51_t<NV>
+		auto& midi_cc51 = this->getT(0).getT(8).getT(1).getT(7).                                  // osc1_impl::midi_cc51_t<NV>
                           getT(1).getT(0).getT(0).getT(0).
                           getT(0);
-		auto& add236 = this->getT(0).getT(8).getT(1).getT(7).                                  // math::add<NV>
+		auto& add236 = this->getT(0).getT(8).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0).
                        getT(1);
-		auto& chain284 = this->getT(0).getT(8).getT(1).getT(7).                                // osc1_impl::chain284_t<NV>
+		auto& chain284 = this->getT(0).getT(8).getT(1).getT(7).                                   // osc1_impl::chain284_t<NV>
                          getT(1).getT(0).getT(0).getT(1);
-		auto& midi_cc52 = this->getT(0).getT(8).getT(1).getT(7).                               // osc1_impl::midi_cc52_t<NV>
+		auto& midi_cc52 = this->getT(0).getT(8).getT(1).getT(7).                                  // osc1_impl::midi_cc52_t<NV>
                           getT(1).getT(0).getT(0).getT(1).
                           getT(0);
-		auto& add237 = this->getT(0).getT(8).getT(1).getT(7).                                  // math::add<NV>
+		auto& add237 = this->getT(0).getT(8).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1).
                        getT(1);
-		auto& chain285 = this->getT(0).getT(8).getT(1).getT(7).                                // osc1_impl::chain285_t<NV>
+		auto& chain285 = this->getT(0).getT(8).getT(1).getT(7).                                   // osc1_impl::chain285_t<NV>
                          getT(1).getT(0).getT(0).getT(2);
-		auto& midi_cc53 = this->getT(0).getT(8).getT(1).getT(7).                               // osc1_impl::midi_cc53_t<NV>
+		auto& midi_cc53 = this->getT(0).getT(8).getT(1).getT(7).                                  // osc1_impl::midi_cc53_t<NV>
                           getT(1).getT(0).getT(0).getT(2).
                           getT(0);
-		auto& add238 = this->getT(0).getT(8).getT(1).getT(7).                                  // math::add<NV>
+		auto& add238 = this->getT(0).getT(8).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2).
                        getT(1);
-		auto& chain286 = this->getT(0).getT(8).getT(1).getT(7).                                // osc1_impl::chain286_t<NV>
+		auto& chain286 = this->getT(0).getT(8).getT(1).getT(7).                                   // osc1_impl::chain286_t<NV>
                          getT(1).getT(0).getT(0).getT(3);
-		auto& midi_cc54 = this->getT(0).getT(8).getT(1).getT(7).                               // osc1_impl::midi_cc54_t<NV>
+		auto& midi_cc54 = this->getT(0).getT(8).getT(1).getT(7).                                  // osc1_impl::midi_cc54_t<NV>
                           getT(1).getT(0).getT(0).getT(3).
                           getT(0);
-		auto& add239 = this->getT(0).getT(8).getT(1).getT(7).                                  // math::add<NV>
+		auto& add239 = this->getT(0).getT(8).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3).
                        getT(1);
-		auto& chain287 = this->getT(0).getT(8).getT(1).getT(7).                                // osc1_impl::chain287_t<NV>
+		auto& chain287 = this->getT(0).getT(8).getT(1).getT(7).                                   // osc1_impl::chain287_t<NV>
                          getT(1).getT(0).getT(0).getT(4);
-		auto& midi38 = this->getT(0).getT(8).getT(1).getT(7).                                  // osc1_impl::midi38_t<NV>
+		auto& midi38 = this->getT(0).getT(8).getT(1).getT(7).                                     // osc1_impl::midi38_t<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(0);
-		auto& add240 = this->getT(0).getT(8).getT(1).getT(7).                                  // math::add<NV>
+		auto& add240 = this->getT(0).getT(8).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(1);
-		auto& chain288 = this->getT(0).getT(8).getT(1).getT(7).                                // osc1_impl::chain288_t<NV>
+		auto& chain288 = this->getT(0).getT(8).getT(1).getT(7).                                   // osc1_impl::chain288_t<NV>
                          getT(1).getT(0).getT(0).getT(5);
-		auto& midi39 = this->getT(0).getT(8).getT(1).getT(7).                                  // osc1_impl::midi39_t<NV>
+		auto& midi39 = this->getT(0).getT(8).getT(1).getT(7).                                     // osc1_impl::midi39_t<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(0);
-		auto& add241 = this->getT(0).getT(8).getT(1).getT(7).                                  // math::add<NV>
+		auto& add241 = this->getT(0).getT(8).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(1);
-		auto& chain289 = this->getT(0).getT(8).getT(1).getT(7).                                // osc1_impl::chain289_t<NV>
+		auto& chain289 = this->getT(0).getT(8).getT(1).getT(7).                                   // osc1_impl::chain289_t<NV>
                          getT(1).getT(0).getT(0).getT(6);
-		auto& midi40 = this->getT(0).getT(8).getT(1).getT(7).                                  // osc1_impl::midi40_t<NV>
+		auto& midi40 = this->getT(0).getT(8).getT(1).getT(7).                                     // osc1_impl::midi40_t<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(0);
-		auto& add242 = this->getT(0).getT(8).getT(1).getT(7).                                  // math::add<NV>
+		auto& add242 = this->getT(0).getT(8).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(1);
-		auto& gain147 = this->getT(0).getT(8).getT(1).getT(7).getT(1).getT(0).getT(1);         // core::gain<NV>
-		auto& peak35 = this->getT(0).getT(8).getT(2);                                          // osc1_impl::peak35_t<NV>
-		auto& pma19 = this->getT(0).getT(8).getT(3);                                           // osc1_impl::pma19_t<NV>
-		auto& modchain17 = this->getT(0).getT(9);                                              // osc1_impl::modchain17_t<NV>
-		auto& sliderbank16 = this->getT(0).getT(9).getT(0);                                    // osc1_impl::sliderbank16_t<NV>
-		auto& split33 = this->getT(0).getT(9).getT(1);                                         // osc1_impl::split33_t<NV>
-		auto& chain400 = this->getT(0).getT(9).getT(1).getT(0);                                // osc1_impl::chain400_t<NV>
-		auto& xfader72 = this->getT(0).getT(9).getT(1).getT(0).getT(0);                        // osc1_impl::xfader72_t<NV>
-		auto& soft_bypass66 = this->getT(0).getT(9).getT(1).getT(0).getT(1);                   // osc1_impl::soft_bypass66_t<NV>
-		auto& chain290 = this->getT(0).getT(9).getT(1).getT(0).getT(1).getT(0);                // osc1_impl::chain290_t<NV>
-		auto& global_cable55 = this->getT(0).getT(9).getT(1).getT(0).getT(1).getT(0).getT(0);  // osc1_impl::global_cable55_t<NV>
-		auto& add243 = this->getT(0).getT(9).getT(1).getT(0).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain228 = this->getT(0).getT(9).getT(1).getT(0).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain414 = this->getT(0).getT(9).getT(1).getT(1);                                // osc1_impl::chain414_t<NV>
-		auto& xfader86 = this->getT(0).getT(9).getT(1).getT(1).getT(0);                        // osc1_impl::xfader86_t<NV>
-		auto& soft_bypass80 = this->getT(0).getT(9).getT(1).getT(1).getT(1);                   // osc1_impl::soft_bypass80_t<NV>
-		auto& chain291 = this->getT(0).getT(9).getT(1).getT(1).getT(1).getT(0);                // osc1_impl::chain291_t<NV>
-		auto& global_cable56 = this->getT(0).getT(9).getT(1).getT(1).getT(1).getT(0).getT(0);  // osc1_impl::global_cable56_t<NV>
-		auto& add244 = this->getT(0).getT(9).getT(1).getT(1).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain229 = this->getT(0).getT(9).getT(1).getT(1).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain413 = this->getT(0).getT(9).getT(1).getT(2);                                // osc1_impl::chain413_t<NV>
-		auto& xfader85 = this->getT(0).getT(9).getT(1).getT(2).getT(0);                        // osc1_impl::xfader85_t<NV>
-		auto& soft_bypass79 = this->getT(0).getT(9).getT(1).getT(2).getT(1);                   // osc1_impl::soft_bypass79_t<NV>
-		auto& chain292 = this->getT(0).getT(9).getT(1).getT(2).getT(1).getT(0);                // osc1_impl::chain292_t<NV>
-		auto& global_cable57 = this->getT(0).getT(9).getT(1).getT(2).getT(1).getT(0).getT(0);  // osc1_impl::global_cable57_t<NV>
-		auto& add245 = this->getT(0).getT(9).getT(1).getT(2).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain230 = this->getT(0).getT(9).getT(1).getT(2).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain412 = this->getT(0).getT(9).getT(1).getT(3);                                // osc1_impl::chain412_t<NV>
-		auto& xfader84 = this->getT(0).getT(9).getT(1).getT(3).getT(0);                        // osc1_impl::xfader84_t
-		auto& soft_bypass78 = this->getT(0).getT(9).getT(1).getT(3).getT(1);                   // osc1_impl::soft_bypass78_t
-		auto& chain293 = this->getT(0).getT(9).getT(1).getT(3).getT(2);                        // osc1_impl::chain293_t<NV>
-		auto& global_cable58 = this->getT(0).getT(9).getT(1).getT(3).getT(2).getT(0);          // osc1_impl::global_cable58_t<NV>
-		auto& add246 = this->getT(0).getT(9).getT(1).getT(3).getT(2).getT(1);                  // math::add<NV>
-		auto& gain231 = this->getT(0).getT(9).getT(1).getT(3).getT(2).getT(2);                 // core::gain<NV>
-		auto& chain411 = this->getT(0).getT(9).getT(1).getT(4);                                // osc1_impl::chain411_t<NV>
-		auto& xfader83 = this->getT(0).getT(9).getT(1).getT(4).getT(0);                        // osc1_impl::xfader83_t<NV>
-		auto& soft_bypass77 = this->getT(0).getT(9).getT(1).getT(4).getT(1);                   // osc1_impl::soft_bypass77_t<NV>
-		auto& chain294 = this->getT(0).getT(9).getT(1).getT(4).getT(1).getT(0);                // osc1_impl::chain294_t<NV>
-		auto& add247 = this->getT(0).getT(9).getT(1).getT(4).getT(1).getT(0).getT(0);          // math::add<NV>
-		auto& gain232 = this->getT(0).getT(9).getT(1).getT(4).getT(1).getT(0).getT(1);         // core::gain<NV>
-		auto& chain410 = this->getT(0).getT(9).getT(1).getT(5);                                // osc1_impl::chain410_t<NV>
-		auto& xfader82 = this->getT(0).getT(9).getT(1).getT(5).getT(0);                        // osc1_impl::xfader82_t<NV>
-		auto& soft_bypass76 = this->getT(0).getT(9).getT(1).getT(5).getT(1);                   // osc1_impl::soft_bypass76_t<NV>
-		auto& chain295 = this->getT(0).getT(9).getT(1).getT(5).getT(1).getT(0);                // osc1_impl::chain295_t<NV>
-		auto& add248 = this->getT(0).getT(9).getT(1).getT(5).getT(1).getT(0).getT(0);          // math::add<NV>
-		auto& gain233 = this->getT(0).getT(9).getT(1).getT(5).getT(1).getT(0).getT(1);         // core::gain<NV>
-		auto& chain409 = this->getT(0).getT(9).getT(1).getT(6);                                // osc1_impl::chain409_t<NV>
-		auto& xfader81 = this->getT(0).getT(9).getT(1).getT(6).getT(0);                        // osc1_impl::xfader81_t<NV>
-		auto& soft_bypass75 = this->getT(0).getT(9).getT(1).getT(6).getT(1);                   // osc1_impl::soft_bypass75_t<NV>
-		auto& chain296 = this->getT(0).getT(9).getT(1).getT(6).getT(1).getT(0);                // osc1_impl::chain296_t<NV>
-		auto& branch57 = this->getT(0).getT(9).getT(1).getT(6).getT(1).getT(0).getT(0);        // osc1_impl::branch57_t<NV>
-		auto& add249 = this->getT(0).getT(9).getT(1).getT(6).                                  // math::add<NV>
+		auto& gain147 = this->getT(0).getT(8).getT(1).getT(7).getT(1).getT(0).getT(1);            // core::gain<NV>
+		auto& peak35 = this->getT(0).getT(8).getT(2);                                             // osc1_impl::peak35_t<NV>
+		auto& pma19 = this->getT(0).getT(8).getT(3);                                              // osc1_impl::pma19_t<NV>
+		auto& modchain17 = this->getT(0).getT(9);                                                 // osc1_impl::modchain17_t<NV>
+		auto& sliderbank16 = this->getT(0).getT(9).getT(0);                                       // osc1_impl::sliderbank16_t<NV>
+		auto& split33 = this->getT(0).getT(9).getT(1);                                            // osc1_impl::split33_t<NV>
+		auto& chain400 = this->getT(0).getT(9).getT(1).getT(0);                                   // osc1_impl::chain400_t<NV>
+		auto& xfader72 = this->getT(0).getT(9).getT(1).getT(0).getT(0);                           // osc1_impl::xfader72_t<NV>
+		auto& soft_bypass66 = this->getT(0).getT(9).getT(1).getT(0).getT(1);                      // osc1_impl::soft_bypass66_t<NV>
+		auto& chain290 = this->getT(0).getT(9).getT(1).getT(0).getT(1).getT(0);                   // osc1_impl::chain290_t<NV>
+		auto& global_cable55 = this->getT(0).getT(9).getT(1).getT(0).getT(1).getT(0).getT(0);     // osc1_impl::global_cable55_t<NV>
+		auto& add243 = this->getT(0).getT(9).getT(1).getT(0).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain228 = this->getT(0).getT(9).getT(1).getT(0).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain414 = this->getT(0).getT(9).getT(1).getT(1);                                   // osc1_impl::chain414_t<NV>
+		auto& xfader86 = this->getT(0).getT(9).getT(1).getT(1).getT(0);                           // osc1_impl::xfader86_t<NV>
+		auto& soft_bypass80 = this->getT(0).getT(9).getT(1).getT(1).getT(1);                      // osc1_impl::soft_bypass80_t<NV>
+		auto& chain291 = this->getT(0).getT(9).getT(1).getT(1).getT(1).getT(0);                   // osc1_impl::chain291_t<NV>
+		auto& global_cable56 = this->getT(0).getT(9).getT(1).getT(1).getT(1).getT(0).getT(0);     // osc1_impl::global_cable56_t<NV>
+		auto& add244 = this->getT(0).getT(9).getT(1).getT(1).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain229 = this->getT(0).getT(9).getT(1).getT(1).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain413 = this->getT(0).getT(9).getT(1).getT(2);                                   // osc1_impl::chain413_t<NV>
+		auto& xfader85 = this->getT(0).getT(9).getT(1).getT(2).getT(0);                           // osc1_impl::xfader85_t<NV>
+		auto& soft_bypass79 = this->getT(0).getT(9).getT(1).getT(2).getT(1);                      // osc1_impl::soft_bypass79_t<NV>
+		auto& chain292 = this->getT(0).getT(9).getT(1).getT(2).getT(1).getT(0);                   // osc1_impl::chain292_t<NV>
+		auto& global_cable57 = this->getT(0).getT(9).getT(1).getT(2).getT(1).getT(0).getT(0);     // osc1_impl::global_cable57_t<NV>
+		auto& add245 = this->getT(0).getT(9).getT(1).getT(2).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain230 = this->getT(0).getT(9).getT(1).getT(2).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain412 = this->getT(0).getT(9).getT(1).getT(3);                                   // osc1_impl::chain412_t<NV>
+		auto& xfader84 = this->getT(0).getT(9).getT(1).getT(3).getT(0);                           // osc1_impl::xfader84_t
+		auto& soft_bypass78 = this->getT(0).getT(9).getT(1).getT(3).getT(1);                      // osc1_impl::soft_bypass78_t
+		auto& chain293 = this->getT(0).getT(9).getT(1).getT(3).getT(2);                           // osc1_impl::chain293_t<NV>
+		auto& global_cable58 = this->getT(0).getT(9).getT(1).getT(3).getT(2).getT(0);             // osc1_impl::global_cable58_t<NV>
+		auto& add246 = this->getT(0).getT(9).getT(1).getT(3).getT(2).getT(1);                     // math::add<NV>
+		auto& gain231 = this->getT(0).getT(9).getT(1).getT(3).getT(2).getT(2);                    // core::gain<NV>
+		auto& chain411 = this->getT(0).getT(9).getT(1).getT(4);                                   // osc1_impl::chain411_t<NV>
+		auto& xfader83 = this->getT(0).getT(9).getT(1).getT(4).getT(0);                           // osc1_impl::xfader83_t<NV>
+		auto& soft_bypass77 = this->getT(0).getT(9).getT(1).getT(4).getT(1);                      // osc1_impl::soft_bypass77_t<NV>
+		auto& chain294 = this->getT(0).getT(9).getT(1).getT(4).getT(1).getT(0);                   // osc1_impl::chain294_t<NV>
+		auto& add247 = this->getT(0).getT(9).getT(1).getT(4).getT(1).getT(0).getT(0);             // math::add<NV>
+		auto& gain232 = this->getT(0).getT(9).getT(1).getT(4).getT(1).getT(0).getT(1);            // core::gain<NV>
+		auto& chain410 = this->getT(0).getT(9).getT(1).getT(5);                                   // osc1_impl::chain410_t<NV>
+		auto& xfader82 = this->getT(0).getT(9).getT(1).getT(5).getT(0);                           // osc1_impl::xfader82_t<NV>
+		auto& soft_bypass76 = this->getT(0).getT(9).getT(1).getT(5).getT(1);                      // osc1_impl::soft_bypass76_t<NV>
+		auto& chain295 = this->getT(0).getT(9).getT(1).getT(5).getT(1).getT(0);                   // osc1_impl::chain295_t<NV>
+		auto& add248 = this->getT(0).getT(9).getT(1).getT(5).getT(1).getT(0).getT(0);             // math::add<NV>
+		auto& gain233 = this->getT(0).getT(9).getT(1).getT(5).getT(1).getT(0).getT(1);            // core::gain<NV>
+		auto& chain409 = this->getT(0).getT(9).getT(1).getT(6);                                   // osc1_impl::chain409_t<NV>
+		auto& xfader81 = this->getT(0).getT(9).getT(1).getT(6).getT(0);                           // osc1_impl::xfader81_t<NV>
+		auto& soft_bypass75 = this->getT(0).getT(9).getT(1).getT(6).getT(1);                      // osc1_impl::soft_bypass75_t<NV>
+		auto& chain296 = this->getT(0).getT(9).getT(1).getT(6).getT(1).getT(0);                   // osc1_impl::chain296_t<NV>
+		auto& branch57 = this->getT(0).getT(9).getT(1).getT(6).getT(1).getT(0).getT(0);           // osc1_impl::branch57_t<NV>
+		auto& add249 = this->getT(0).getT(9).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0);
-		auto& add250 = this->getT(0).getT(9).getT(1).getT(6).                                  // math::add<NV>
+		auto& add250 = this->getT(0).getT(9).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1);
-		auto& add251 = this->getT(0).getT(9).getT(1).getT(6).                                  // math::add<NV>
+		auto& add251 = this->getT(0).getT(9).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2);
-		auto& add252 = this->getT(0).getT(9).getT(1).getT(6).                                  // math::add<NV>
+		auto& add252 = this->getT(0).getT(9).getT(1).getT(6).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3);
-		auto& add253 = this->getT(0).getT(9).getT(1).getT(6).getT(1).getT(0).getT(1);          // math::add<NV>
-		auto& gain234 = this->getT(0).getT(9).getT(1).getT(6).getT(1).getT(0).getT(2);         // core::gain<NV>
-		auto& chain408 = this->getT(0).getT(9).getT(1).getT(7);                                // osc1_impl::chain408_t<NV>
-		auto& xfader80 = this->getT(0).getT(9).getT(1).getT(7).getT(0);                        // osc1_impl::xfader80_t<NV>
-		auto& soft_bypass74 = this->getT(0).getT(9).getT(1).getT(7).getT(1);                   // osc1_impl::soft_bypass74_t<NV>
-		auto& chain297 = this->getT(0).getT(9).getT(1).getT(7).getT(1).getT(0);                // osc1_impl::chain297_t<NV>
-		auto& branch58 = this->getT(0).getT(9).getT(1).getT(7).getT(1).getT(0).getT(0);        // osc1_impl::branch58_t<NV>
-		auto& chain298 = this->getT(0).getT(9).getT(1).getT(7).                                // osc1_impl::chain298_t<NV>
+		auto& add253 = this->getT(0).getT(9).getT(1).getT(6).getT(1).getT(0).getT(1);             // math::add<NV>
+		auto& gain234 = this->getT(0).getT(9).getT(1).getT(6).getT(1).getT(0).getT(2);            // core::gain<NV>
+		auto& chain408 = this->getT(0).getT(9).getT(1).getT(7);                                   // osc1_impl::chain408_t<NV>
+		auto& xfader80 = this->getT(0).getT(9).getT(1).getT(7).getT(0);                           // osc1_impl::xfader80_t<NV>
+		auto& soft_bypass74 = this->getT(0).getT(9).getT(1).getT(7).getT(1);                      // osc1_impl::soft_bypass74_t<NV>
+		auto& chain297 = this->getT(0).getT(9).getT(1).getT(7).getT(1).getT(0);                   // osc1_impl::chain297_t<NV>
+		auto& branch58 = this->getT(0).getT(9).getT(1).getT(7).getT(1).getT(0).getT(0);           // osc1_impl::branch58_t<NV>
+		auto& chain298 = this->getT(0).getT(9).getT(1).getT(7).                                   // osc1_impl::chain298_t<NV>
                          getT(1).getT(0).getT(0).getT(0);
-		auto& midi_cc55 = this->getT(0).getT(9).getT(1).getT(7).                               // osc1_impl::midi_cc55_t<NV>
+		auto& midi_cc55 = this->getT(0).getT(9).getT(1).getT(7).                                  // osc1_impl::midi_cc55_t<NV>
                           getT(1).getT(0).getT(0).getT(0).
                           getT(0);
-		auto& add394 = this->getT(0).getT(9).getT(1).getT(7).                                  // math::add<NV>
+		auto& add394 = this->getT(0).getT(9).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0).
                        getT(1);
-		auto& chain299 = this->getT(0).getT(9).getT(1).getT(7).                                // osc1_impl::chain299_t<NV>
+		auto& chain299 = this->getT(0).getT(9).getT(1).getT(7).                                   // osc1_impl::chain299_t<NV>
                          getT(1).getT(0).getT(0).getT(1);
-		auto& midi_cc56 = this->getT(0).getT(9).getT(1).getT(7).                               // osc1_impl::midi_cc56_t<NV>
+		auto& midi_cc56 = this->getT(0).getT(9).getT(1).getT(7).                                  // osc1_impl::midi_cc56_t<NV>
                           getT(1).getT(0).getT(0).getT(1).
                           getT(0);
-		auto& add395 = this->getT(0).getT(9).getT(1).getT(7).                                  // math::add<NV>
+		auto& add395 = this->getT(0).getT(9).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1).
                        getT(1);
-		auto& chain426 = this->getT(0).getT(9).getT(1).getT(7).                                // osc1_impl::chain426_t<NV>
+		auto& chain426 = this->getT(0).getT(9).getT(1).getT(7).                                   // osc1_impl::chain426_t<NV>
                          getT(1).getT(0).getT(0).getT(2);
-		auto& midi_cc57 = this->getT(0).getT(9).getT(1).getT(7).                               // osc1_impl::midi_cc57_t<NV>
+		auto& midi_cc57 = this->getT(0).getT(9).getT(1).getT(7).                                  // osc1_impl::midi_cc57_t<NV>
                           getT(1).getT(0).getT(0).getT(2).
                           getT(0);
-		auto& add396 = this->getT(0).getT(9).getT(1).getT(7).                                  // math::add<NV>
+		auto& add396 = this->getT(0).getT(9).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2).
                        getT(1);
-		auto& chain451 = this->getT(0).getT(9).getT(1).getT(7).                                // osc1_impl::chain451_t<NV>
+		auto& chain451 = this->getT(0).getT(9).getT(1).getT(7).                                   // osc1_impl::chain451_t<NV>
                          getT(1).getT(0).getT(0).getT(3);
-		auto& midi_cc58 = this->getT(0).getT(9).getT(1).getT(7).                               // osc1_impl::midi_cc58_t<NV>
+		auto& midi_cc58 = this->getT(0).getT(9).getT(1).getT(7).                                  // osc1_impl::midi_cc58_t<NV>
                           getT(1).getT(0).getT(0).getT(3).
                           getT(0);
-		auto& add397 = this->getT(0).getT(9).getT(1).getT(7).                                  // math::add<NV>
+		auto& add397 = this->getT(0).getT(9).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3).
                        getT(1);
-		auto& chain452 = this->getT(0).getT(9).getT(1).getT(7).                                // osc1_impl::chain452_t<NV>
+		auto& chain452 = this->getT(0).getT(9).getT(1).getT(7).                                   // osc1_impl::chain452_t<NV>
                          getT(1).getT(0).getT(0).getT(4);
-		auto& midi41 = this->getT(0).getT(9).getT(1).getT(7).                                  // osc1_impl::midi41_t<NV>
+		auto& midi41 = this->getT(0).getT(9).getT(1).getT(7).                                     // osc1_impl::midi41_t<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(0);
-		auto& add398 = this->getT(0).getT(9).getT(1).getT(7).                                  // math::add<NV>
+		auto& add398 = this->getT(0).getT(9).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(1);
-		auto& chain453 = this->getT(0).getT(9).getT(1).getT(7).                                // osc1_impl::chain453_t<NV>
+		auto& chain453 = this->getT(0).getT(9).getT(1).getT(7).                                   // osc1_impl::chain453_t<NV>
                          getT(1).getT(0).getT(0).getT(5);
-		auto& midi43 = this->getT(0).getT(9).getT(1).getT(7).                                  // osc1_impl::midi43_t<NV>
+		auto& midi43 = this->getT(0).getT(9).getT(1).getT(7).                                     // osc1_impl::midi43_t<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(0);
-		auto& add399 = this->getT(0).getT(9).getT(1).getT(7).                                  // math::add<NV>
+		auto& add399 = this->getT(0).getT(9).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(1);
-		auto& chain454 = this->getT(0).getT(9).getT(1).getT(7).                                // osc1_impl::chain454_t<NV>
+		auto& chain454 = this->getT(0).getT(9).getT(1).getT(7).                                   // osc1_impl::chain454_t<NV>
                          getT(1).getT(0).getT(0).getT(6);
-		auto& midi44 = this->getT(0).getT(9).getT(1).getT(7).                                  // osc1_impl::midi44_t<NV>
+		auto& midi44 = this->getT(0).getT(9).getT(1).getT(7).                                     // osc1_impl::midi44_t<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(0);
-		auto& add400 = this->getT(0).getT(9).getT(1).getT(7).                                  // math::add<NV>
+		auto& add400 = this->getT(0).getT(9).getT(1).getT(7).                                     // math::add<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(1);
-		auto& gain235 = this->getT(0).getT(9).getT(1).getT(7).getT(1).getT(0).getT(1);         // core::gain<NV>
-		auto& peak36 = this->getT(0).getT(9).getT(2);                                          // osc1_impl::peak36_t<NV>
-		auto& pma20 = this->getT(0).getT(9).getT(3);                                           // osc1_impl::pma20_t<NV>
-		auto& modchain18 = this->getT(0).getT(10);                                             // osc1_impl::modchain18_t<NV>
-		auto& sliderbank17 = this->getT(0).getT(10).getT(0);                                   // osc1_impl::sliderbank17_t<NV>
-		auto& split34 = this->getT(0).getT(10).getT(1);                                        // osc1_impl::split34_t<NV>
-		auto& chain415 = this->getT(0).getT(10).getT(1).getT(0);                               // osc1_impl::chain415_t<NV>
-		auto& xfader87 = this->getT(0).getT(10).getT(1).getT(0).getT(0);                       // osc1_impl::xfader87_t<NV>
-		auto& soft_bypass81 = this->getT(0).getT(10).getT(1).getT(0).getT(1);                  // osc1_impl::soft_bypass81_t<NV>
-		auto& chain300 = this->getT(0).getT(10).getT(1).getT(0).getT(1).getT(0);               // osc1_impl::chain300_t<NV>
-		auto& global_cable59 = this->getT(0).getT(10).getT(1).getT(0).getT(1).getT(0).getT(0); // osc1_impl::global_cable59_t<NV>
-		auto& add254 = this->getT(0).getT(10).getT(1).getT(0).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain236 = this->getT(0).getT(10).getT(1).getT(0).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain423 = this->getT(0).getT(10).getT(1).getT(1);                               // osc1_impl::chain423_t<NV>
-		auto& xfader95 = this->getT(0).getT(10).getT(1).getT(1).getT(0);                       // osc1_impl::xfader95_t<NV>
-		auto& soft_bypass89 = this->getT(0).getT(10).getT(1).getT(1).getT(1);                  // osc1_impl::soft_bypass89_t<NV>
-		auto& chain301 = this->getT(0).getT(10).getT(1).getT(1).getT(1).getT(0);               // osc1_impl::chain301_t<NV>
-		auto& global_cable60 = this->getT(0).getT(10).getT(1).getT(1).getT(1).getT(0).getT(0); // osc1_impl::global_cable60_t<NV>
-		auto& add255 = this->getT(0).getT(10).getT(1).getT(1).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain237 = this->getT(0).getT(10).getT(1).getT(1).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain422 = this->getT(0).getT(10).getT(1).getT(2);                               // osc1_impl::chain422_t<NV>
-		auto& xfader94 = this->getT(0).getT(10).getT(1).getT(2).getT(0);                       // osc1_impl::xfader94_t<NV>
-		auto& soft_bypass88 = this->getT(0).getT(10).getT(1).getT(2).getT(1);                  // osc1_impl::soft_bypass88_t<NV>
-		auto& chain302 = this->getT(0).getT(10).getT(1).getT(2).getT(1).getT(0);               // osc1_impl::chain302_t<NV>
-		auto& global_cable61 = this->getT(0).getT(10).getT(1).getT(2).getT(1).getT(0).getT(0); // osc1_impl::global_cable61_t<NV>
-		auto& add256 = this->getT(0).getT(10).getT(1).getT(2).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain238 = this->getT(0).getT(10).getT(1).getT(2).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain421 = this->getT(0).getT(10).getT(1).getT(3);                               // osc1_impl::chain421_t<NV>
-		auto& xfader93 = this->getT(0).getT(10).getT(1).getT(3).getT(0);                       // osc1_impl::xfader93_t<NV>
-		auto& soft_bypass87 = this->getT(0).getT(10).getT(1).getT(3).getT(1);                  // osc1_impl::soft_bypass87_t<NV>
-		auto& chain303 = this->getT(0).getT(10).getT(1).getT(3).getT(1).getT(0);               // osc1_impl::chain303_t<NV>
-		auto& global_cable62 = this->getT(0).getT(10).getT(1).getT(3).getT(1).getT(0).getT(0); // osc1_impl::global_cable62_t<NV>
-		auto& add257 = this->getT(0).getT(10).getT(1).getT(3).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain239 = this->getT(0).getT(10).getT(1).getT(3).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain420 = this->getT(0).getT(10).getT(1).getT(4);                               // osc1_impl::chain420_t<NV>
-		auto& xfader92 = this->getT(0).getT(10).getT(1).getT(4).getT(0);                       // osc1_impl::xfader92_t<NV>
-		auto& soft_bypass86 = this->getT(0).getT(10).getT(1).getT(4).getT(1);                  // osc1_impl::soft_bypass86_t<NV>
-		auto& chain304 = this->getT(0).getT(10).getT(1).getT(4).getT(1).getT(0);               // osc1_impl::chain304_t<NV>
-		auto& add258 = this->getT(0).getT(10).getT(1).getT(4).getT(1).getT(0).getT(0);         // math::add<NV>
-		auto& gain240 = this->getT(0).getT(10).getT(1).getT(4).getT(1).getT(0).getT(1);        // core::gain<NV>
-		auto& chain419 = this->getT(0).getT(10).getT(1).getT(5);                               // osc1_impl::chain419_t<NV>
-		auto& xfader91 = this->getT(0).getT(10).getT(1).getT(5).getT(0);                       // osc1_impl::xfader91_t<NV>
-		auto& soft_bypass85 = this->getT(0).getT(10).getT(1).getT(5).getT(1);                  // osc1_impl::soft_bypass85_t<NV>
-		auto& chain305 = this->getT(0).getT(10).getT(1).getT(5).getT(1).getT(0);               // osc1_impl::chain305_t<NV>
-		auto& add259 = this->getT(0).getT(10).getT(1).getT(5).getT(1).getT(0).getT(0);         // math::add<NV>
-		auto& gain241 = this->getT(0).getT(10).getT(1).getT(5).getT(1).getT(0).getT(1);        // core::gain<NV>
-		auto& chain418 = this->getT(0).getT(10).getT(1).getT(6);                               // osc1_impl::chain418_t<NV>
-		auto& xfader90 = this->getT(0).getT(10).getT(1).getT(6).getT(0);                       // osc1_impl::xfader90_t<NV>
-		auto& soft_bypass84 = this->getT(0).getT(10).getT(1).getT(6).getT(1);                  // osc1_impl::soft_bypass84_t<NV>
-		auto& chain306 = this->getT(0).getT(10).getT(1).getT(6).getT(1).getT(0);               // osc1_impl::chain306_t<NV>
-		auto& branch59 = this->getT(0).getT(10).getT(1).getT(6).getT(1).getT(0).getT(0);       // osc1_impl::branch59_t<NV>
-		auto& add260 = this->getT(0).getT(10).getT(1).getT(6).                                 // math::add<NV>
+		auto& gain235 = this->getT(0).getT(9).getT(1).getT(7).getT(1).getT(0).getT(1);            // core::gain<NV>
+		auto& peak36 = this->getT(0).getT(9).getT(2);                                             // osc1_impl::peak36_t<NV>
+		auto& pma20 = this->getT(0).getT(9).getT(3);                                              // osc1_impl::pma20_t<NV>
+		auto& modchain18 = this->getT(0).getT(10);                                                // osc1_impl::modchain18_t<NV>
+		auto& sliderbank17 = this->getT(0).getT(10).getT(0);                                      // osc1_impl::sliderbank17_t<NV>
+		auto& split34 = this->getT(0).getT(10).getT(1);                                           // osc1_impl::split34_t<NV>
+		auto& chain415 = this->getT(0).getT(10).getT(1).getT(0);                                  // osc1_impl::chain415_t<NV>
+		auto& xfader87 = this->getT(0).getT(10).getT(1).getT(0).getT(0);                          // osc1_impl::xfader87_t<NV>
+		auto& soft_bypass81 = this->getT(0).getT(10).getT(1).getT(0).getT(1);                     // osc1_impl::soft_bypass81_t<NV>
+		auto& chain300 = this->getT(0).getT(10).getT(1).getT(0).getT(1).getT(0);                  // osc1_impl::chain300_t<NV>
+		auto& global_cable59 = this->getT(0).getT(10).getT(1).getT(0).getT(1).getT(0).getT(0);    // osc1_impl::global_cable59_t<NV>
+		auto& add254 = this->getT(0).getT(10).getT(1).getT(0).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain236 = this->getT(0).getT(10).getT(1).getT(0).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain423 = this->getT(0).getT(10).getT(1).getT(1);                                  // osc1_impl::chain423_t<NV>
+		auto& xfader95 = this->getT(0).getT(10).getT(1).getT(1).getT(0);                          // osc1_impl::xfader95_t<NV>
+		auto& soft_bypass89 = this->getT(0).getT(10).getT(1).getT(1).getT(1);                     // osc1_impl::soft_bypass89_t<NV>
+		auto& chain301 = this->getT(0).getT(10).getT(1).getT(1).getT(1).getT(0);                  // osc1_impl::chain301_t<NV>
+		auto& global_cable60 = this->getT(0).getT(10).getT(1).getT(1).getT(1).getT(0).getT(0);    // osc1_impl::global_cable60_t<NV>
+		auto& add255 = this->getT(0).getT(10).getT(1).getT(1).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain237 = this->getT(0).getT(10).getT(1).getT(1).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain422 = this->getT(0).getT(10).getT(1).getT(2);                                  // osc1_impl::chain422_t<NV>
+		auto& xfader94 = this->getT(0).getT(10).getT(1).getT(2).getT(0);                          // osc1_impl::xfader94_t<NV>
+		auto& soft_bypass88 = this->getT(0).getT(10).getT(1).getT(2).getT(1);                     // osc1_impl::soft_bypass88_t<NV>
+		auto& chain302 = this->getT(0).getT(10).getT(1).getT(2).getT(1).getT(0);                  // osc1_impl::chain302_t<NV>
+		auto& global_cable61 = this->getT(0).getT(10).getT(1).getT(2).getT(1).getT(0).getT(0);    // osc1_impl::global_cable61_t<NV>
+		auto& add256 = this->getT(0).getT(10).getT(1).getT(2).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain238 = this->getT(0).getT(10).getT(1).getT(2).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain421 = this->getT(0).getT(10).getT(1).getT(3);                                  // osc1_impl::chain421_t<NV>
+		auto& xfader93 = this->getT(0).getT(10).getT(1).getT(3).getT(0);                          // osc1_impl::xfader93_t<NV>
+		auto& soft_bypass87 = this->getT(0).getT(10).getT(1).getT(3).getT(1);                     // osc1_impl::soft_bypass87_t<NV>
+		auto& chain303 = this->getT(0).getT(10).getT(1).getT(3).getT(1).getT(0);                  // osc1_impl::chain303_t<NV>
+		auto& global_cable62 = this->getT(0).getT(10).getT(1).getT(3).getT(1).getT(0).getT(0);    // osc1_impl::global_cable62_t<NV>
+		auto& add257 = this->getT(0).getT(10).getT(1).getT(3).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain239 = this->getT(0).getT(10).getT(1).getT(3).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain420 = this->getT(0).getT(10).getT(1).getT(4);                                  // osc1_impl::chain420_t<NV>
+		auto& xfader92 = this->getT(0).getT(10).getT(1).getT(4).getT(0);                          // osc1_impl::xfader92_t<NV>
+		auto& soft_bypass86 = this->getT(0).getT(10).getT(1).getT(4).getT(1);                     // osc1_impl::soft_bypass86_t<NV>
+		auto& chain304 = this->getT(0).getT(10).getT(1).getT(4).getT(1).getT(0);                  // osc1_impl::chain304_t<NV>
+		auto& add258 = this->getT(0).getT(10).getT(1).getT(4).getT(1).getT(0).getT(0);            // math::add<NV>
+		auto& gain240 = this->getT(0).getT(10).getT(1).getT(4).getT(1).getT(0).getT(1);           // core::gain<NV>
+		auto& chain419 = this->getT(0).getT(10).getT(1).getT(5);                                  // osc1_impl::chain419_t<NV>
+		auto& xfader91 = this->getT(0).getT(10).getT(1).getT(5).getT(0);                          // osc1_impl::xfader91_t<NV>
+		auto& soft_bypass85 = this->getT(0).getT(10).getT(1).getT(5).getT(1);                     // osc1_impl::soft_bypass85_t<NV>
+		auto& chain305 = this->getT(0).getT(10).getT(1).getT(5).getT(1).getT(0);                  // osc1_impl::chain305_t<NV>
+		auto& add259 = this->getT(0).getT(10).getT(1).getT(5).getT(1).getT(0).getT(0);            // math::add<NV>
+		auto& gain241 = this->getT(0).getT(10).getT(1).getT(5).getT(1).getT(0).getT(1);           // core::gain<NV>
+		auto& chain418 = this->getT(0).getT(10).getT(1).getT(6);                                  // osc1_impl::chain418_t<NV>
+		auto& xfader90 = this->getT(0).getT(10).getT(1).getT(6).getT(0);                          // osc1_impl::xfader90_t<NV>
+		auto& soft_bypass84 = this->getT(0).getT(10).getT(1).getT(6).getT(1);                     // osc1_impl::soft_bypass84_t<NV>
+		auto& chain306 = this->getT(0).getT(10).getT(1).getT(6).getT(1).getT(0);                  // osc1_impl::chain306_t<NV>
+		auto& branch59 = this->getT(0).getT(10).getT(1).getT(6).getT(1).getT(0).getT(0);          // osc1_impl::branch59_t<NV>
+		auto& add260 = this->getT(0).getT(10).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0);
-		auto& add261 = this->getT(0).getT(10).getT(1).getT(6).                                 // math::add<NV>
+		auto& add261 = this->getT(0).getT(10).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1);
-		auto& add262 = this->getT(0).getT(10).getT(1).getT(6).                                 // math::add<NV>
+		auto& add262 = this->getT(0).getT(10).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2);
-		auto& add263 = this->getT(0).getT(10).getT(1).getT(6).                                 // math::add<NV>
+		auto& add263 = this->getT(0).getT(10).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3);
-		auto& add264 = this->getT(0).getT(10).getT(1).getT(6).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain242 = this->getT(0).getT(10).getT(1).getT(6).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain417 = this->getT(0).getT(10).getT(1).getT(7);                               // osc1_impl::chain417_t<NV>
-		auto& xfader89 = this->getT(0).getT(10).getT(1).getT(7).getT(0);                       // osc1_impl::xfader89_t<NV>
-		auto& soft_bypass83 = this->getT(0).getT(10).getT(1).getT(7).getT(1);                  // osc1_impl::soft_bypass83_t<NV>
-		auto& chain307 = this->getT(0).getT(10).getT(1).getT(7).getT(1).getT(0);               // osc1_impl::chain307_t<NV>
-		auto& branch60 = this->getT(0).getT(10).getT(1).getT(7).getT(1).getT(0).getT(0);       // osc1_impl::branch60_t<NV>
-		auto& chain308 = this->getT(0).getT(10).getT(1).getT(7).                               // osc1_impl::chain308_t<NV>
+		auto& add264 = this->getT(0).getT(10).getT(1).getT(6).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain242 = this->getT(0).getT(10).getT(1).getT(6).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain417 = this->getT(0).getT(10).getT(1).getT(7);                                  // osc1_impl::chain417_t<NV>
+		auto& xfader89 = this->getT(0).getT(10).getT(1).getT(7).getT(0);                          // osc1_impl::xfader89_t<NV>
+		auto& soft_bypass83 = this->getT(0).getT(10).getT(1).getT(7).getT(1);                     // osc1_impl::soft_bypass83_t<NV>
+		auto& chain307 = this->getT(0).getT(10).getT(1).getT(7).getT(1).getT(0);                  // osc1_impl::chain307_t<NV>
+		auto& branch60 = this->getT(0).getT(10).getT(1).getT(7).getT(1).getT(0).getT(0);          // osc1_impl::branch60_t<NV>
+		auto& chain308 = this->getT(0).getT(10).getT(1).getT(7).                                  // osc1_impl::chain308_t<NV>
                          getT(1).getT(0).getT(0).getT(0);
-		auto& midi_cc59 = this->getT(0).getT(10).getT(1).getT(7).                              // osc1_impl::midi_cc59_t<NV>
+		auto& midi_cc59 = this->getT(0).getT(10).getT(1).getT(7).                                 // osc1_impl::midi_cc59_t<NV>
                           getT(1).getT(0).getT(0).getT(0).
                           getT(0);
-		auto& add401 = this->getT(0).getT(10).getT(1).getT(7).                                 // math::add<NV>
+		auto& add401 = this->getT(0).getT(10).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0).
                        getT(1);
-		auto& chain309 = this->getT(0).getT(10).getT(1).getT(7).                               // osc1_impl::chain309_t<NV>
+		auto& chain309 = this->getT(0).getT(10).getT(1).getT(7).                                  // osc1_impl::chain309_t<NV>
                          getT(1).getT(0).getT(0).getT(1);
-		auto& midi_cc60 = this->getT(0).getT(10).getT(1).getT(7).                              // osc1_impl::midi_cc60_t<NV>
+		auto& midi_cc60 = this->getT(0).getT(10).getT(1).getT(7).                                 // osc1_impl::midi_cc60_t<NV>
                           getT(1).getT(0).getT(0).getT(1).
                           getT(0);
-		auto& add402 = this->getT(0).getT(10).getT(1).getT(7).                                 // math::add<NV>
+		auto& add402 = this->getT(0).getT(10).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1).
                        getT(1);
-		auto& chain427 = this->getT(0).getT(10).getT(1).getT(7).                               // osc1_impl::chain427_t<NV>
+		auto& chain427 = this->getT(0).getT(10).getT(1).getT(7).                                  // osc1_impl::chain427_t<NV>
                          getT(1).getT(0).getT(0).getT(2);
-		auto& midi_cc61 = this->getT(0).getT(10).getT(1).getT(7).                              // osc1_impl::midi_cc61_t<NV>
+		auto& midi_cc61 = this->getT(0).getT(10).getT(1).getT(7).                                 // osc1_impl::midi_cc61_t<NV>
                           getT(1).getT(0).getT(0).getT(2).
                           getT(0);
-		auto& add403 = this->getT(0).getT(10).getT(1).getT(7).                                 // math::add<NV>
+		auto& add403 = this->getT(0).getT(10).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2).
                        getT(1);
-		auto& chain455 = this->getT(0).getT(10).getT(1).getT(7).                               // osc1_impl::chain455_t<NV>
+		auto& chain455 = this->getT(0).getT(10).getT(1).getT(7).                                  // osc1_impl::chain455_t<NV>
                          getT(1).getT(0).getT(0).getT(3);
-		auto& midi_cc62 = this->getT(0).getT(10).getT(1).getT(7).                              // osc1_impl::midi_cc62_t<NV>
+		auto& midi_cc62 = this->getT(0).getT(10).getT(1).getT(7).                                 // osc1_impl::midi_cc62_t<NV>
                           getT(1).getT(0).getT(0).getT(3).
                           getT(0);
-		auto& add404 = this->getT(0).getT(10).getT(1).getT(7).                                 // math::add<NV>
+		auto& add404 = this->getT(0).getT(10).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3).
                        getT(1);
-		auto& chain456 = this->getT(0).getT(10).getT(1).getT(7).                               // osc1_impl::chain456_t<NV>
+		auto& chain456 = this->getT(0).getT(10).getT(1).getT(7).                                  // osc1_impl::chain456_t<NV>
                          getT(1).getT(0).getT(0).getT(4);
-		auto& midi45 = this->getT(0).getT(10).getT(1).getT(7).                                 // osc1_impl::midi45_t<NV>
+		auto& midi45 = this->getT(0).getT(10).getT(1).getT(7).                                    // osc1_impl::midi45_t<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(0);
-		auto& add405 = this->getT(0).getT(10).getT(1).getT(7).                                 // math::add<NV>
+		auto& add405 = this->getT(0).getT(10).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(1);
-		auto& chain457 = this->getT(0).getT(10).getT(1).getT(7).                               // osc1_impl::chain457_t<NV>
+		auto& chain457 = this->getT(0).getT(10).getT(1).getT(7).                                  // osc1_impl::chain457_t<NV>
                          getT(1).getT(0).getT(0).getT(5);
-		auto& midi46 = this->getT(0).getT(10).getT(1).getT(7).                                 // osc1_impl::midi46_t<NV>
+		auto& midi46 = this->getT(0).getT(10).getT(1).getT(7).                                    // osc1_impl::midi46_t<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(0);
-		auto& add406 = this->getT(0).getT(10).getT(1).getT(7).                                 // math::add<NV>
+		auto& add406 = this->getT(0).getT(10).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(1);
-		auto& chain458 = this->getT(0).getT(10).getT(1).getT(7).                               // osc1_impl::chain458_t<NV>
+		auto& chain458 = this->getT(0).getT(10).getT(1).getT(7).                                  // osc1_impl::chain458_t<NV>
                          getT(1).getT(0).getT(0).getT(6);
-		auto& midi47 = this->getT(0).getT(10).getT(1).getT(7).                                 // osc1_impl::midi47_t<NV>
+		auto& midi47 = this->getT(0).getT(10).getT(1).getT(7).                                    // osc1_impl::midi47_t<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(0);
-		auto& add407 = this->getT(0).getT(10).getT(1).getT(7).                                 // math::add<NV>
+		auto& add407 = this->getT(0).getT(10).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(1);
-		auto& gain243 = this->getT(0).getT(10).getT(1).getT(7).getT(1).getT(0).getT(1);        // core::gain<NV>
-		auto& peak_unscaled = this->getT(0).getT(10).getT(2);                                  // osc1_impl::peak_unscaled_t<NV>
-		auto& peak37 = this->getT(0).getT(10).getT(3);                                         // osc1_impl::peak37_t
-		auto& pma_unscaled = this->getT(0).getT(10).getT(4);                                   // osc1_impl::pma_unscaled_t<NV>
-		auto& modchain19 = this->getT(0).getT(11);                                             // osc1_impl::modchain19_t<NV>
-		auto& sliderbank18 = this->getT(0).getT(11).getT(0);                                   // osc1_impl::sliderbank18_t<NV>
-		auto& split35 = this->getT(0).getT(11).getT(1);                                        // osc1_impl::split35_t<NV>
-		auto& chain416 = this->getT(0).getT(11).getT(1).getT(0);                               // osc1_impl::chain416_t<NV>
-		auto& xfader88 = this->getT(0).getT(11).getT(1).getT(0).getT(0);                       // osc1_impl::xfader88_t<NV>
-		auto& soft_bypass82 = this->getT(0).getT(11).getT(1).getT(0).getT(1);                  // osc1_impl::soft_bypass82_t<NV>
-		auto& chain310 = this->getT(0).getT(11).getT(1).getT(0).getT(1).getT(0);               // osc1_impl::chain310_t<NV>
-		auto& global_cable63 = this->getT(0).getT(11).getT(1).getT(0).getT(1).getT(0).getT(0); // osc1_impl::global_cable63_t<NV>
-		auto& add265 = this->getT(0).getT(11).getT(1).getT(0).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain244 = this->getT(0).getT(11).getT(1).getT(0).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain438 = this->getT(0).getT(11).getT(1).getT(1);                               // osc1_impl::chain438_t<NV>
-		auto& xfader103 = this->getT(0).getT(11).getT(1).getT(1).getT(0);                      // osc1_impl::xfader103_t<NV>
-		auto& soft_bypass97 = this->getT(0).getT(11).getT(1).getT(1).getT(1);                  // osc1_impl::soft_bypass97_t<NV>
-		auto& chain311 = this->getT(0).getT(11).getT(1).getT(1).getT(1).getT(0);               // osc1_impl::chain311_t<NV>
-		auto& global_cable64 = this->getT(0).getT(11).getT(1).getT(1).getT(1).getT(0).getT(0); // osc1_impl::global_cable64_t<NV>
-		auto& add266 = this->getT(0).getT(11).getT(1).getT(1).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain245 = this->getT(0).getT(11).getT(1).getT(1).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain437 = this->getT(0).getT(11).getT(1).getT(2);                               // osc1_impl::chain437_t<NV>
-		auto& xfader102 = this->getT(0).getT(11).getT(1).getT(2).getT(0);                      // osc1_impl::xfader102_t<NV>
-		auto& soft_bypass96 = this->getT(0).getT(11).getT(1).getT(2).getT(1);                  // osc1_impl::soft_bypass96_t<NV>
-		auto& chain312 = this->getT(0).getT(11).getT(1).getT(2).getT(1).getT(0);               // osc1_impl::chain312_t<NV>
-		auto& global_cable65 = this->getT(0).getT(11).getT(1).getT(2).getT(1).getT(0).getT(0); // osc1_impl::global_cable65_t<NV>
-		auto& add267 = this->getT(0).getT(11).getT(1).getT(2).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain246 = this->getT(0).getT(11).getT(1).getT(2).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain436 = this->getT(0).getT(11).getT(1).getT(3);                               // osc1_impl::chain436_t<NV>
-		auto& xfader101 = this->getT(0).getT(11).getT(1).getT(3).getT(0);                      // osc1_impl::xfader101_t<NV>
-		auto& soft_bypass95 = this->getT(0).getT(11).getT(1).getT(3).getT(1);                  // osc1_impl::soft_bypass95_t<NV>
-		auto& chain313 = this->getT(0).getT(11).getT(1).getT(3).getT(1).getT(0);               // osc1_impl::chain313_t<NV>
-		auto& global_cable66 = this->getT(0).getT(11).getT(1).getT(3).getT(1).getT(0).getT(0); // osc1_impl::global_cable66_t<NV>
-		auto& add268 = this->getT(0).getT(11).getT(1).getT(3).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain247 = this->getT(0).getT(11).getT(1).getT(3).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain435 = this->getT(0).getT(11).getT(1).getT(4);                               // osc1_impl::chain435_t<NV>
-		auto& xfader100 = this->getT(0).getT(11).getT(1).getT(4).getT(0);                      // osc1_impl::xfader100_t<NV>
-		auto& soft_bypass94 = this->getT(0).getT(11).getT(1).getT(4).getT(1);                  // osc1_impl::soft_bypass94_t<NV>
-		auto& chain314 = this->getT(0).getT(11).getT(1).getT(4).getT(1).getT(0);               // osc1_impl::chain314_t<NV>
-		auto& add269 = this->getT(0).getT(11).getT(1).getT(4).getT(1).getT(0).getT(0);         // math::add<NV>
-		auto& gain248 = this->getT(0).getT(11).getT(1).getT(4).getT(1).getT(0).getT(1);        // core::gain<NV>
-		auto& chain434 = this->getT(0).getT(11).getT(1).getT(5);                               // osc1_impl::chain434_t<NV>
-		auto& xfader99 = this->getT(0).getT(11).getT(1).getT(5).getT(0);                       // osc1_impl::xfader99_t<NV>
-		auto& soft_bypass93 = this->getT(0).getT(11).getT(1).getT(5).getT(1);                  // osc1_impl::soft_bypass93_t<NV>
-		auto& chain315 = this->getT(0).getT(11).getT(1).getT(5).getT(1).getT(0);               // osc1_impl::chain315_t<NV>
-		auto& add270 = this->getT(0).getT(11).getT(1).getT(5).getT(1).getT(0).getT(0);         // math::add<NV>
-		auto& gain249 = this->getT(0).getT(11).getT(1).getT(5).getT(1).getT(0).getT(1);        // core::gain<NV>
-		auto& chain433 = this->getT(0).getT(11).getT(1).getT(6);                               // osc1_impl::chain433_t<NV>
-		auto& xfader98 = this->getT(0).getT(11).getT(1).getT(6).getT(0);                       // osc1_impl::xfader98_t<NV>
-		auto& soft_bypass92 = this->getT(0).getT(11).getT(1).getT(6).getT(1);                  // osc1_impl::soft_bypass92_t<NV>
-		auto& chain316 = this->getT(0).getT(11).getT(1).getT(6).getT(1).getT(0);               // osc1_impl::chain316_t<NV>
-		auto& branch61 = this->getT(0).getT(11).getT(1).getT(6).getT(1).getT(0).getT(0);       // osc1_impl::branch61_t<NV>
-		auto& add271 = this->getT(0).getT(11).getT(1).getT(6).                                 // math::add<NV>
+		auto& gain243 = this->getT(0).getT(10).getT(1).getT(7).getT(1).getT(0).getT(1);           // core::gain<NV>
+		auto& peak_unscaled = this->getT(0).getT(10).getT(2);                                     // osc1_impl::peak_unscaled_t<NV>
+		auto& peak37 = this->getT(0).getT(10).getT(3);                                            // osc1_impl::peak37_t
+		auto& pma_unscaled = this->getT(0).getT(10).getT(4);                                      // osc1_impl::pma_unscaled_t<NV>
+		auto& modchain19 = this->getT(0).getT(11);                                                // osc1_impl::modchain19_t<NV>
+		auto& sliderbank18 = this->getT(0).getT(11).getT(0);                                      // osc1_impl::sliderbank18_t<NV>
+		auto& split35 = this->getT(0).getT(11).getT(1);                                           // osc1_impl::split35_t<NV>
+		auto& chain416 = this->getT(0).getT(11).getT(1).getT(0);                                  // osc1_impl::chain416_t<NV>
+		auto& xfader88 = this->getT(0).getT(11).getT(1).getT(0).getT(0);                          // osc1_impl::xfader88_t<NV>
+		auto& soft_bypass82 = this->getT(0).getT(11).getT(1).getT(0).getT(1);                     // osc1_impl::soft_bypass82_t<NV>
+		auto& chain310 = this->getT(0).getT(11).getT(1).getT(0).getT(1).getT(0);                  // osc1_impl::chain310_t<NV>
+		auto& global_cable63 = this->getT(0).getT(11).getT(1).getT(0).getT(1).getT(0).getT(0);    // osc1_impl::global_cable63_t<NV>
+		auto& add265 = this->getT(0).getT(11).getT(1).getT(0).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain244 = this->getT(0).getT(11).getT(1).getT(0).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain438 = this->getT(0).getT(11).getT(1).getT(1);                                  // osc1_impl::chain438_t<NV>
+		auto& xfader103 = this->getT(0).getT(11).getT(1).getT(1).getT(0);                         // osc1_impl::xfader103_t<NV>
+		auto& soft_bypass97 = this->getT(0).getT(11).getT(1).getT(1).getT(1);                     // osc1_impl::soft_bypass97_t<NV>
+		auto& chain311 = this->getT(0).getT(11).getT(1).getT(1).getT(1).getT(0);                  // osc1_impl::chain311_t<NV>
+		auto& global_cable64 = this->getT(0).getT(11).getT(1).getT(1).getT(1).getT(0).getT(0);    // osc1_impl::global_cable64_t<NV>
+		auto& add266 = this->getT(0).getT(11).getT(1).getT(1).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain245 = this->getT(0).getT(11).getT(1).getT(1).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain437 = this->getT(0).getT(11).getT(1).getT(2);                                  // osc1_impl::chain437_t<NV>
+		auto& xfader102 = this->getT(0).getT(11).getT(1).getT(2).getT(0);                         // osc1_impl::xfader102_t<NV>
+		auto& soft_bypass96 = this->getT(0).getT(11).getT(1).getT(2).getT(1);                     // osc1_impl::soft_bypass96_t<NV>
+		auto& chain312 = this->getT(0).getT(11).getT(1).getT(2).getT(1).getT(0);                  // osc1_impl::chain312_t<NV>
+		auto& global_cable65 = this->getT(0).getT(11).getT(1).getT(2).getT(1).getT(0).getT(0);    // osc1_impl::global_cable65_t<NV>
+		auto& add267 = this->getT(0).getT(11).getT(1).getT(2).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain246 = this->getT(0).getT(11).getT(1).getT(2).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain436 = this->getT(0).getT(11).getT(1).getT(3);                                  // osc1_impl::chain436_t<NV>
+		auto& xfader101 = this->getT(0).getT(11).getT(1).getT(3).getT(0);                         // osc1_impl::xfader101_t<NV>
+		auto& soft_bypass95 = this->getT(0).getT(11).getT(1).getT(3).getT(1);                     // osc1_impl::soft_bypass95_t<NV>
+		auto& chain313 = this->getT(0).getT(11).getT(1).getT(3).getT(1).getT(0);                  // osc1_impl::chain313_t<NV>
+		auto& global_cable66 = this->getT(0).getT(11).getT(1).getT(3).getT(1).getT(0).getT(0);    // osc1_impl::global_cable66_t<NV>
+		auto& add268 = this->getT(0).getT(11).getT(1).getT(3).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain247 = this->getT(0).getT(11).getT(1).getT(3).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain435 = this->getT(0).getT(11).getT(1).getT(4);                                  // osc1_impl::chain435_t<NV>
+		auto& xfader100 = this->getT(0).getT(11).getT(1).getT(4).getT(0);                         // osc1_impl::xfader100_t<NV>
+		auto& soft_bypass94 = this->getT(0).getT(11).getT(1).getT(4).getT(1);                     // osc1_impl::soft_bypass94_t<NV>
+		auto& chain314 = this->getT(0).getT(11).getT(1).getT(4).getT(1).getT(0);                  // osc1_impl::chain314_t<NV>
+		auto& add269 = this->getT(0).getT(11).getT(1).getT(4).getT(1).getT(0).getT(0);            // math::add<NV>
+		auto& gain248 = this->getT(0).getT(11).getT(1).getT(4).getT(1).getT(0).getT(1);           // core::gain<NV>
+		auto& chain434 = this->getT(0).getT(11).getT(1).getT(5);                                  // osc1_impl::chain434_t<NV>
+		auto& xfader99 = this->getT(0).getT(11).getT(1).getT(5).getT(0);                          // osc1_impl::xfader99_t<NV>
+		auto& soft_bypass93 = this->getT(0).getT(11).getT(1).getT(5).getT(1);                     // osc1_impl::soft_bypass93_t<NV>
+		auto& chain315 = this->getT(0).getT(11).getT(1).getT(5).getT(1).getT(0);                  // osc1_impl::chain315_t<NV>
+		auto& add270 = this->getT(0).getT(11).getT(1).getT(5).getT(1).getT(0).getT(0);            // math::add<NV>
+		auto& gain249 = this->getT(0).getT(11).getT(1).getT(5).getT(1).getT(0).getT(1);           // core::gain<NV>
+		auto& chain433 = this->getT(0).getT(11).getT(1).getT(6);                                  // osc1_impl::chain433_t<NV>
+		auto& xfader98 = this->getT(0).getT(11).getT(1).getT(6).getT(0);                          // osc1_impl::xfader98_t<NV>
+		auto& soft_bypass92 = this->getT(0).getT(11).getT(1).getT(6).getT(1);                     // osc1_impl::soft_bypass92_t<NV>
+		auto& chain316 = this->getT(0).getT(11).getT(1).getT(6).getT(1).getT(0);                  // osc1_impl::chain316_t<NV>
+		auto& branch61 = this->getT(0).getT(11).getT(1).getT(6).getT(1).getT(0).getT(0);          // osc1_impl::branch61_t<NV>
+		auto& add271 = this->getT(0).getT(11).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0);
-		auto& add272 = this->getT(0).getT(11).getT(1).getT(6).                                 // math::add<NV>
+		auto& add272 = this->getT(0).getT(11).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1);
-		auto& add273 = this->getT(0).getT(11).getT(1).getT(6).                                 // math::add<NV>
+		auto& add273 = this->getT(0).getT(11).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2);
-		auto& add274 = this->getT(0).getT(11).getT(1).getT(6).                                 // math::add<NV>
+		auto& add274 = this->getT(0).getT(11).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3);
-		auto& add275 = this->getT(0).getT(11).getT(1).getT(6).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain250 = this->getT(0).getT(11).getT(1).getT(6).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain425 = this->getT(0).getT(11).getT(1).getT(7);                               // osc1_impl::chain425_t<NV>
-		auto& xfader97 = this->getT(0).getT(11).getT(1).getT(7).getT(0);                       // osc1_impl::xfader97_t<NV>
-		auto& soft_bypass91 = this->getT(0).getT(11).getT(1).getT(7).getT(1);                  // osc1_impl::soft_bypass91_t<NV>
-		auto& chain317 = this->getT(0).getT(11).getT(1).getT(7).getT(1).getT(0);               // osc1_impl::chain317_t<NV>
-		auto& branch62 = this->getT(0).getT(11).getT(1).getT(7).getT(1).getT(0).getT(0);       // osc1_impl::branch62_t<NV>
-		auto& chain318 = this->getT(0).getT(11).getT(1).getT(7).                               // osc1_impl::chain318_t<NV>
+		auto& add275 = this->getT(0).getT(11).getT(1).getT(6).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain250 = this->getT(0).getT(11).getT(1).getT(6).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain425 = this->getT(0).getT(11).getT(1).getT(7);                                  // osc1_impl::chain425_t<NV>
+		auto& xfader97 = this->getT(0).getT(11).getT(1).getT(7).getT(0);                          // osc1_impl::xfader97_t<NV>
+		auto& soft_bypass91 = this->getT(0).getT(11).getT(1).getT(7).getT(1);                     // osc1_impl::soft_bypass91_t<NV>
+		auto& chain317 = this->getT(0).getT(11).getT(1).getT(7).getT(1).getT(0);                  // osc1_impl::chain317_t<NV>
+		auto& branch62 = this->getT(0).getT(11).getT(1).getT(7).getT(1).getT(0).getT(0);          // osc1_impl::branch62_t<NV>
+		auto& chain318 = this->getT(0).getT(11).getT(1).getT(7).                                  // osc1_impl::chain318_t<NV>
                          getT(1).getT(0).getT(0).getT(0);
-		auto& midi_cc63 = this->getT(0).getT(11).getT(1).getT(7).                              // osc1_impl::midi_cc63_t<NV>
+		auto& midi_cc63 = this->getT(0).getT(11).getT(1).getT(7).                                 // osc1_impl::midi_cc63_t<NV>
                           getT(1).getT(0).getT(0).getT(0).
                           getT(0);
-		auto& add408 = this->getT(0).getT(11).getT(1).getT(7).                                 // math::add<NV>
+		auto& add408 = this->getT(0).getT(11).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0).
                        getT(1);
-		auto& chain319 = this->getT(0).getT(11).getT(1).getT(7).                               // osc1_impl::chain319_t<NV>
+		auto& chain319 = this->getT(0).getT(11).getT(1).getT(7).                                  // osc1_impl::chain319_t<NV>
                          getT(1).getT(0).getT(0).getT(1);
-		auto& midi_cc64 = this->getT(0).getT(11).getT(1).getT(7).                              // osc1_impl::midi_cc64_t<NV>
+		auto& midi_cc64 = this->getT(0).getT(11).getT(1).getT(7).                                 // osc1_impl::midi_cc64_t<NV>
                           getT(1).getT(0).getT(0).getT(1).
                           getT(0);
-		auto& add409 = this->getT(0).getT(11).getT(1).getT(7).                                 // math::add<NV>
+		auto& add409 = this->getT(0).getT(11).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1).
                        getT(1);
-		auto& chain428 = this->getT(0).getT(11).getT(1).getT(7).                               // osc1_impl::chain428_t<NV>
+		auto& chain428 = this->getT(0).getT(11).getT(1).getT(7).                                  // osc1_impl::chain428_t<NV>
                          getT(1).getT(0).getT(0).getT(2);
-		auto& midi_cc65 = this->getT(0).getT(11).getT(1).getT(7).                              // osc1_impl::midi_cc65_t<NV>
+		auto& midi_cc65 = this->getT(0).getT(11).getT(1).getT(7).                                 // osc1_impl::midi_cc65_t<NV>
                           getT(1).getT(0).getT(0).getT(2).
                           getT(0);
-		auto& add410 = this->getT(0).getT(11).getT(1).getT(7).                                 // math::add<NV>
+		auto& add410 = this->getT(0).getT(11).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2).
                        getT(1);
-		auto& chain459 = this->getT(0).getT(11).getT(1).getT(7).                               // osc1_impl::chain459_t<NV>
+		auto& chain459 = this->getT(0).getT(11).getT(1).getT(7).                                  // osc1_impl::chain459_t<NV>
                          getT(1).getT(0).getT(0).getT(3);
-		auto& midi_cc66 = this->getT(0).getT(11).getT(1).getT(7).                              // osc1_impl::midi_cc66_t<NV>
+		auto& midi_cc66 = this->getT(0).getT(11).getT(1).getT(7).                                 // osc1_impl::midi_cc66_t<NV>
                           getT(1).getT(0).getT(0).getT(3).
                           getT(0);
-		auto& add411 = this->getT(0).getT(11).getT(1).getT(7).                                 // math::add<NV>
+		auto& add411 = this->getT(0).getT(11).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3).
                        getT(1);
-		auto& chain460 = this->getT(0).getT(11).getT(1).getT(7).                               // osc1_impl::chain460_t<NV>
+		auto& chain460 = this->getT(0).getT(11).getT(1).getT(7).                                  // osc1_impl::chain460_t<NV>
                          getT(1).getT(0).getT(0).getT(4);
-		auto& midi48 = this->getT(0).getT(11).getT(1).getT(7).                                 // osc1_impl::midi48_t<NV>
+		auto& midi48 = this->getT(0).getT(11).getT(1).getT(7).                                    // osc1_impl::midi48_t<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(0);
-		auto& add412 = this->getT(0).getT(11).getT(1).getT(7).                                 // math::add<NV>
+		auto& add412 = this->getT(0).getT(11).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(1);
-		auto& chain461 = this->getT(0).getT(11).getT(1).getT(7).                               // osc1_impl::chain461_t<NV>
+		auto& chain461 = this->getT(0).getT(11).getT(1).getT(7).                                  // osc1_impl::chain461_t<NV>
                          getT(1).getT(0).getT(0).getT(5);
-		auto& midi49 = this->getT(0).getT(11).getT(1).getT(7).                                 // osc1_impl::midi49_t<NV>
+		auto& midi49 = this->getT(0).getT(11).getT(1).getT(7).                                    // osc1_impl::midi49_t<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(0);
-		auto& add413 = this->getT(0).getT(11).getT(1).getT(7).                                 // math::add<NV>
+		auto& add413 = this->getT(0).getT(11).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(1);
-		auto& chain462 = this->getT(0).getT(11).getT(1).getT(7).                               // osc1_impl::chain462_t<NV>
+		auto& chain462 = this->getT(0).getT(11).getT(1).getT(7).                                  // osc1_impl::chain462_t<NV>
                          getT(1).getT(0).getT(0).getT(6);
-		auto& midi50 = this->getT(0).getT(11).getT(1).getT(7).                                 // osc1_impl::midi50_t<NV>
+		auto& midi50 = this->getT(0).getT(11).getT(1).getT(7).                                    // osc1_impl::midi50_t<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(0);
-		auto& add414 = this->getT(0).getT(11).getT(1).getT(7).                                 // math::add<NV>
+		auto& add414 = this->getT(0).getT(11).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(1);
-		auto& gain251 = this->getT(0).getT(11).getT(1).getT(7).getT(1).getT(0).getT(1);        // core::gain<NV>
-		auto& peak38 = this->getT(0).getT(11).getT(2);                                         // osc1_impl::peak38_t<NV>
-		auto& pma22 = this->getT(0).getT(11).getT(3);                                          // osc1_impl::pma22_t<NV>
-		auto& modchain20 = this->getT(0).getT(12);                                             // osc1_impl::modchain20_t<NV>
-		auto& sliderbank19 = this->getT(0).getT(12).getT(0);                                   // osc1_impl::sliderbank19_t<NV>
-		auto& split36 = this->getT(0).getT(12).getT(1);                                        // osc1_impl::split36_t<NV>
-		auto& chain424 = this->getT(0).getT(12).getT(1).getT(0);                               // osc1_impl::chain424_t<NV>
-		auto& xfader96 = this->getT(0).getT(12).getT(1).getT(0).getT(0);                       // osc1_impl::xfader96_t<NV>
-		auto& soft_bypass90 = this->getT(0).getT(12).getT(1).getT(0).getT(1);                  // osc1_impl::soft_bypass90_t<NV>
-		auto& chain320 = this->getT(0).getT(12).getT(1).getT(0).getT(1).getT(0);               // osc1_impl::chain320_t<NV>
-		auto& global_cable67 = this->getT(0).getT(12).getT(1).getT(0).getT(1).getT(0).getT(0); // osc1_impl::global_cable67_t<NV>
-		auto& add276 = this->getT(0).getT(12).getT(1).getT(0).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain252 = this->getT(0).getT(12).getT(1).getT(0).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain446 = this->getT(0).getT(12).getT(1).getT(1);                               // osc1_impl::chain446_t<NV>
-		auto& xfader111 = this->getT(0).getT(12).getT(1).getT(1).getT(0);                      // osc1_impl::xfader111_t<NV>
-		auto& soft_bypass105 = this->getT(0).getT(12).getT(1).getT(1).getT(1);                 // osc1_impl::soft_bypass105_t<NV>
-		auto& chain321 = this->getT(0).getT(12).getT(1).getT(1).getT(1).getT(0);               // osc1_impl::chain321_t<NV>
-		auto& global_cable68 = this->getT(0).getT(12).getT(1).getT(1).getT(1).getT(0).getT(0); // osc1_impl::global_cable68_t<NV>
-		auto& add277 = this->getT(0).getT(12).getT(1).getT(1).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain253 = this->getT(0).getT(12).getT(1).getT(1).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain445 = this->getT(0).getT(12).getT(1).getT(2);                               // osc1_impl::chain445_t<NV>
-		auto& xfader110 = this->getT(0).getT(12).getT(1).getT(2).getT(0);                      // osc1_impl::xfader110_t<NV>
-		auto& soft_bypass104 = this->getT(0).getT(12).getT(1).getT(2).getT(1);                 // osc1_impl::soft_bypass104_t<NV>
-		auto& chain322 = this->getT(0).getT(12).getT(1).getT(2).getT(1).getT(0);               // osc1_impl::chain322_t<NV>
-		auto& global_cable69 = this->getT(0).getT(12).getT(1).getT(2).getT(1).getT(0).getT(0); // osc1_impl::global_cable69_t<NV>
-		auto& add278 = this->getT(0).getT(12).getT(1).getT(2).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain254 = this->getT(0).getT(12).getT(1).getT(2).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain444 = this->getT(0).getT(12).getT(1).getT(3);                               // osc1_impl::chain444_t<NV>
-		auto& xfader109 = this->getT(0).getT(12).getT(1).getT(3).getT(0);                      // osc1_impl::xfader109_t<NV>
-		auto& soft_bypass103 = this->getT(0).getT(12).getT(1).getT(3).getT(1);                 // osc1_impl::soft_bypass103_t<NV>
-		auto& chain323 = this->getT(0).getT(12).getT(1).getT(3).getT(1).getT(0);               // osc1_impl::chain323_t<NV>
-		auto& global_cable70 = this->getT(0).getT(12).getT(1).getT(3).getT(1).getT(0).getT(0); // osc1_impl::global_cable70_t<NV>
-		auto& add279 = this->getT(0).getT(12).getT(1).getT(3).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain255 = this->getT(0).getT(12).getT(1).getT(3).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain443 = this->getT(0).getT(12).getT(1).getT(4);                               // osc1_impl::chain443_t<NV>
-		auto& xfader108 = this->getT(0).getT(12).getT(1).getT(4).getT(0);                      // osc1_impl::xfader108_t<NV>
-		auto& soft_bypass102 = this->getT(0).getT(12).getT(1).getT(4).getT(1);                 // osc1_impl::soft_bypass102_t<NV>
-		auto& chain324 = this->getT(0).getT(12).getT(1).getT(4).getT(1).getT(0);               // osc1_impl::chain324_t<NV>
-		auto& add280 = this->getT(0).getT(12).getT(1).getT(4).getT(1).getT(0).getT(0);         // math::add<NV>
-		auto& gain256 = this->getT(0).getT(12).getT(1).getT(4).getT(1).getT(0).getT(1);        // core::gain<NV>
-		auto& chain442 = this->getT(0).getT(12).getT(1).getT(5);                               // osc1_impl::chain442_t<NV>
-		auto& xfader107 = this->getT(0).getT(12).getT(1).getT(5).getT(0);                      // osc1_impl::xfader107_t<NV>
-		auto& soft_bypass101 = this->getT(0).getT(12).getT(1).getT(5).getT(1);                 // osc1_impl::soft_bypass101_t<NV>
-		auto& chain325 = this->getT(0).getT(12).getT(1).getT(5).getT(1).getT(0);               // osc1_impl::chain325_t<NV>
-		auto& add281 = this->getT(0).getT(12).getT(1).getT(5).getT(1).getT(0).getT(0);         // math::add<NV>
-		auto& gain257 = this->getT(0).getT(12).getT(1).getT(5).getT(1).getT(0).getT(1);        // core::gain<NV>
-		auto& chain441 = this->getT(0).getT(12).getT(1).getT(6);                               // osc1_impl::chain441_t<NV>
-		auto& xfader106 = this->getT(0).getT(12).getT(1).getT(6).getT(0);                      // osc1_impl::xfader106_t<NV>
-		auto& soft_bypass100 = this->getT(0).getT(12).getT(1).getT(6).getT(1);                 // osc1_impl::soft_bypass100_t<NV>
-		auto& chain326 = this->getT(0).getT(12).getT(1).getT(6).getT(1).getT(0);               // osc1_impl::chain326_t<NV>
-		auto& branch63 = this->getT(0).getT(12).getT(1).getT(6).getT(1).getT(0).getT(0);       // osc1_impl::branch63_t<NV>
-		auto& add282 = this->getT(0).getT(12).getT(1).getT(6).                                 // math::add<NV>
+		auto& gain251 = this->getT(0).getT(11).getT(1).getT(7).getT(1).getT(0).getT(1);           // core::gain<NV>
+		auto& peak38 = this->getT(0).getT(11).getT(2);                                            // osc1_impl::peak38_t<NV>
+		auto& pma22 = this->getT(0).getT(11).getT(3);                                             // osc1_impl::pma22_t<NV>
+		auto& modchain20 = this->getT(0).getT(12);                                                // osc1_impl::modchain20_t<NV>
+		auto& sliderbank19 = this->getT(0).getT(12).getT(0);                                      // osc1_impl::sliderbank19_t<NV>
+		auto& split36 = this->getT(0).getT(12).getT(1);                                           // osc1_impl::split36_t<NV>
+		auto& chain424 = this->getT(0).getT(12).getT(1).getT(0);                                  // osc1_impl::chain424_t<NV>
+		auto& xfader96 = this->getT(0).getT(12).getT(1).getT(0).getT(0);                          // osc1_impl::xfader96_t<NV>
+		auto& soft_bypass90 = this->getT(0).getT(12).getT(1).getT(0).getT(1);                     // osc1_impl::soft_bypass90_t<NV>
+		auto& chain320 = this->getT(0).getT(12).getT(1).getT(0).getT(1).getT(0);                  // osc1_impl::chain320_t<NV>
+		auto& global_cable67 = this->getT(0).getT(12).getT(1).getT(0).getT(1).getT(0).getT(0);    // osc1_impl::global_cable67_t<NV>
+		auto& add276 = this->getT(0).getT(12).getT(1).getT(0).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain252 = this->getT(0).getT(12).getT(1).getT(0).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain446 = this->getT(0).getT(12).getT(1).getT(1);                                  // osc1_impl::chain446_t<NV>
+		auto& xfader111 = this->getT(0).getT(12).getT(1).getT(1).getT(0);                         // osc1_impl::xfader111_t<NV>
+		auto& soft_bypass105 = this->getT(0).getT(12).getT(1).getT(1).getT(1);                    // osc1_impl::soft_bypass105_t<NV>
+		auto& chain321 = this->getT(0).getT(12).getT(1).getT(1).getT(1).getT(0);                  // osc1_impl::chain321_t<NV>
+		auto& global_cable68 = this->getT(0).getT(12).getT(1).getT(1).getT(1).getT(0).getT(0);    // osc1_impl::global_cable68_t<NV>
+		auto& add277 = this->getT(0).getT(12).getT(1).getT(1).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain253 = this->getT(0).getT(12).getT(1).getT(1).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain445 = this->getT(0).getT(12).getT(1).getT(2);                                  // osc1_impl::chain445_t<NV>
+		auto& xfader110 = this->getT(0).getT(12).getT(1).getT(2).getT(0);                         // osc1_impl::xfader110_t<NV>
+		auto& soft_bypass104 = this->getT(0).getT(12).getT(1).getT(2).getT(1);                    // osc1_impl::soft_bypass104_t<NV>
+		auto& chain322 = this->getT(0).getT(12).getT(1).getT(2).getT(1).getT(0);                  // osc1_impl::chain322_t<NV>
+		auto& global_cable69 = this->getT(0).getT(12).getT(1).getT(2).getT(1).getT(0).getT(0);    // osc1_impl::global_cable69_t<NV>
+		auto& add278 = this->getT(0).getT(12).getT(1).getT(2).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain254 = this->getT(0).getT(12).getT(1).getT(2).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain444 = this->getT(0).getT(12).getT(1).getT(3);                                  // osc1_impl::chain444_t<NV>
+		auto& xfader109 = this->getT(0).getT(12).getT(1).getT(3).getT(0);                         // osc1_impl::xfader109_t<NV>
+		auto& soft_bypass103 = this->getT(0).getT(12).getT(1).getT(3).getT(1);                    // osc1_impl::soft_bypass103_t<NV>
+		auto& chain323 = this->getT(0).getT(12).getT(1).getT(3).getT(1).getT(0);                  // osc1_impl::chain323_t<NV>
+		auto& global_cable70 = this->getT(0).getT(12).getT(1).getT(3).getT(1).getT(0).getT(0);    // osc1_impl::global_cable70_t<NV>
+		auto& add279 = this->getT(0).getT(12).getT(1).getT(3).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain255 = this->getT(0).getT(12).getT(1).getT(3).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain443 = this->getT(0).getT(12).getT(1).getT(4);                                  // osc1_impl::chain443_t<NV>
+		auto& xfader108 = this->getT(0).getT(12).getT(1).getT(4).getT(0);                         // osc1_impl::xfader108_t<NV>
+		auto& soft_bypass102 = this->getT(0).getT(12).getT(1).getT(4).getT(1);                    // osc1_impl::soft_bypass102_t<NV>
+		auto& chain324 = this->getT(0).getT(12).getT(1).getT(4).getT(1).getT(0);                  // osc1_impl::chain324_t<NV>
+		auto& add280 = this->getT(0).getT(12).getT(1).getT(4).getT(1).getT(0).getT(0);            // math::add<NV>
+		auto& gain256 = this->getT(0).getT(12).getT(1).getT(4).getT(1).getT(0).getT(1);           // core::gain<NV>
+		auto& chain442 = this->getT(0).getT(12).getT(1).getT(5);                                  // osc1_impl::chain442_t<NV>
+		auto& xfader107 = this->getT(0).getT(12).getT(1).getT(5).getT(0);                         // osc1_impl::xfader107_t<NV>
+		auto& soft_bypass101 = this->getT(0).getT(12).getT(1).getT(5).getT(1);                    // osc1_impl::soft_bypass101_t<NV>
+		auto& chain325 = this->getT(0).getT(12).getT(1).getT(5).getT(1).getT(0);                  // osc1_impl::chain325_t<NV>
+		auto& add281 = this->getT(0).getT(12).getT(1).getT(5).getT(1).getT(0).getT(0);            // math::add<NV>
+		auto& gain257 = this->getT(0).getT(12).getT(1).getT(5).getT(1).getT(0).getT(1);           // core::gain<NV>
+		auto& chain441 = this->getT(0).getT(12).getT(1).getT(6);                                  // osc1_impl::chain441_t<NV>
+		auto& xfader106 = this->getT(0).getT(12).getT(1).getT(6).getT(0);                         // osc1_impl::xfader106_t<NV>
+		auto& soft_bypass100 = this->getT(0).getT(12).getT(1).getT(6).getT(1);                    // osc1_impl::soft_bypass100_t<NV>
+		auto& chain326 = this->getT(0).getT(12).getT(1).getT(6).getT(1).getT(0);                  // osc1_impl::chain326_t<NV>
+		auto& branch63 = this->getT(0).getT(12).getT(1).getT(6).getT(1).getT(0).getT(0);          // osc1_impl::branch63_t<NV>
+		auto& add282 = this->getT(0).getT(12).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0);
-		auto& add283 = this->getT(0).getT(12).getT(1).getT(6).                                 // math::add<NV>
+		auto& add283 = this->getT(0).getT(12).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1);
-		auto& add284 = this->getT(0).getT(12).getT(1).getT(6).                                 // math::add<NV>
+		auto& add284 = this->getT(0).getT(12).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2);
-		auto& add285 = this->getT(0).getT(12).getT(1).getT(6).                                 // math::add<NV>
+		auto& add285 = this->getT(0).getT(12).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3);
-		auto& add286 = this->getT(0).getT(12).getT(1).getT(6).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain258 = this->getT(0).getT(12).getT(1).getT(6).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain440 = this->getT(0).getT(12).getT(1).getT(7);                               // osc1_impl::chain440_t<NV>
-		auto& xfader105 = this->getT(0).getT(12).getT(1).getT(7).getT(0);                      // osc1_impl::xfader105_t<NV>
-		auto& soft_bypass99 = this->getT(0).getT(12).getT(1).getT(7).getT(1);                  // osc1_impl::soft_bypass99_t<NV>
-		auto& chain327 = this->getT(0).getT(12).getT(1).getT(7).getT(1).getT(0);               // osc1_impl::chain327_t<NV>
-		auto& branch64 = this->getT(0).getT(12).getT(1).getT(7).getT(1).getT(0).getT(0);       // osc1_impl::branch64_t<NV>
-		auto& chain328 = this->getT(0).getT(12).getT(1).getT(7).                               // osc1_impl::chain328_t<NV>
+		auto& add286 = this->getT(0).getT(12).getT(1).getT(6).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain258 = this->getT(0).getT(12).getT(1).getT(6).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain440 = this->getT(0).getT(12).getT(1).getT(7);                                  // osc1_impl::chain440_t<NV>
+		auto& xfader105 = this->getT(0).getT(12).getT(1).getT(7).getT(0);                         // osc1_impl::xfader105_t<NV>
+		auto& soft_bypass99 = this->getT(0).getT(12).getT(1).getT(7).getT(1);                     // osc1_impl::soft_bypass99_t<NV>
+		auto& chain327 = this->getT(0).getT(12).getT(1).getT(7).getT(1).getT(0);                  // osc1_impl::chain327_t<NV>
+		auto& branch64 = this->getT(0).getT(12).getT(1).getT(7).getT(1).getT(0).getT(0);          // osc1_impl::branch64_t<NV>
+		auto& chain328 = this->getT(0).getT(12).getT(1).getT(7).                                  // osc1_impl::chain328_t<NV>
                          getT(1).getT(0).getT(0).getT(0);
-		auto& midi_cc67 = this->getT(0).getT(12).getT(1).getT(7).                              // osc1_impl::midi_cc67_t<NV>
+		auto& midi_cc67 = this->getT(0).getT(12).getT(1).getT(7).                                 // osc1_impl::midi_cc67_t<NV>
                           getT(1).getT(0).getT(0).getT(0).
                           getT(0);
-		auto& add415 = this->getT(0).getT(12).getT(1).getT(7).                                 // math::add<NV>
+		auto& add415 = this->getT(0).getT(12).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0).
                        getT(1);
-		auto& chain329 = this->getT(0).getT(12).getT(1).getT(7).                               // osc1_impl::chain329_t<NV>
+		auto& chain329 = this->getT(0).getT(12).getT(1).getT(7).                                  // osc1_impl::chain329_t<NV>
                          getT(1).getT(0).getT(0).getT(1);
-		auto& midi_cc68 = this->getT(0).getT(12).getT(1).getT(7).                              // osc1_impl::midi_cc68_t<NV>
+		auto& midi_cc68 = this->getT(0).getT(12).getT(1).getT(7).                                 // osc1_impl::midi_cc68_t<NV>
                           getT(1).getT(0).getT(0).getT(1).
                           getT(0);
-		auto& add416 = this->getT(0).getT(12).getT(1).getT(7).                                 // math::add<NV>
+		auto& add416 = this->getT(0).getT(12).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1).
                        getT(1);
-		auto& chain429 = this->getT(0).getT(12).getT(1).getT(7).                               // osc1_impl::chain429_t<NV>
+		auto& chain429 = this->getT(0).getT(12).getT(1).getT(7).                                  // osc1_impl::chain429_t<NV>
                          getT(1).getT(0).getT(0).getT(2);
-		auto& midi_cc69 = this->getT(0).getT(12).getT(1).getT(7).                              // osc1_impl::midi_cc69_t<NV>
+		auto& midi_cc69 = this->getT(0).getT(12).getT(1).getT(7).                                 // osc1_impl::midi_cc69_t<NV>
                           getT(1).getT(0).getT(0).getT(2).
                           getT(0);
-		auto& add417 = this->getT(0).getT(12).getT(1).getT(7).                                 // math::add<NV>
+		auto& add417 = this->getT(0).getT(12).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2).
                        getT(1);
-		auto& chain463 = this->getT(0).getT(12).getT(1).getT(7).                               // osc1_impl::chain463_t<NV>
+		auto& chain463 = this->getT(0).getT(12).getT(1).getT(7).                                  // osc1_impl::chain463_t<NV>
                          getT(1).getT(0).getT(0).getT(3);
-		auto& midi_cc70 = this->getT(0).getT(12).getT(1).getT(7).                              // osc1_impl::midi_cc70_t<NV>
+		auto& midi_cc70 = this->getT(0).getT(12).getT(1).getT(7).                                 // osc1_impl::midi_cc70_t<NV>
                           getT(1).getT(0).getT(0).getT(3).
                           getT(0);
-		auto& add418 = this->getT(0).getT(12).getT(1).getT(7).                                 // math::add<NV>
+		auto& add418 = this->getT(0).getT(12).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3).
                        getT(1);
-		auto& chain464 = this->getT(0).getT(12).getT(1).getT(7).                               // osc1_impl::chain464_t<NV>
+		auto& chain464 = this->getT(0).getT(12).getT(1).getT(7).                                  // osc1_impl::chain464_t<NV>
                          getT(1).getT(0).getT(0).getT(4);
-		auto& midi51 = this->getT(0).getT(12).getT(1).getT(7).                                 // osc1_impl::midi51_t<NV>
+		auto& midi51 = this->getT(0).getT(12).getT(1).getT(7).                                    // osc1_impl::midi51_t<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(0);
-		auto& add419 = this->getT(0).getT(12).getT(1).getT(7).                                 // math::add<NV>
+		auto& add419 = this->getT(0).getT(12).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(1);
-		auto& chain465 = this->getT(0).getT(12).getT(1).getT(7).                               // osc1_impl::chain465_t<NV>
+		auto& chain465 = this->getT(0).getT(12).getT(1).getT(7).                                  // osc1_impl::chain465_t<NV>
                          getT(1).getT(0).getT(0).getT(5);
-		auto& midi52 = this->getT(0).getT(12).getT(1).getT(7).                                 // osc1_impl::midi52_t<NV>
+		auto& midi52 = this->getT(0).getT(12).getT(1).getT(7).                                    // osc1_impl::midi52_t<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(0);
-		auto& add420 = this->getT(0).getT(12).getT(1).getT(7).                                 // math::add<NV>
+		auto& add420 = this->getT(0).getT(12).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(1);
-		auto& chain466 = this->getT(0).getT(12).getT(1).getT(7).                               // osc1_impl::chain466_t<NV>
+		auto& chain466 = this->getT(0).getT(12).getT(1).getT(7).                                  // osc1_impl::chain466_t<NV>
                          getT(1).getT(0).getT(0).getT(6);
-		auto& midi53 = this->getT(0).getT(12).getT(1).getT(7).                                 // osc1_impl::midi53_t<NV>
+		auto& midi53 = this->getT(0).getT(12).getT(1).getT(7).                                    // osc1_impl::midi53_t<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(0);
-		auto& add421 = this->getT(0).getT(12).getT(1).getT(7).                                 // math::add<NV>
+		auto& add421 = this->getT(0).getT(12).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(1);
-		auto& gain259 = this->getT(0).getT(12).getT(1).getT(7).getT(1).getT(0).getT(1);        // core::gain<NV>
-		auto& peak39 = this->getT(0).getT(12).getT(2);                                         // osc1_impl::peak39_t<NV>
-		auto& pma23 = this->getT(0).getT(12).getT(3);                                          // osc1_impl::pma23_t<NV>
-		auto& modchain21 = this->getT(0).getT(13);                                             // osc1_impl::modchain21_t<NV>
-		auto& sliderbank20 = this->getT(0).getT(13).getT(0);                                   // osc1_impl::sliderbank20_t<NV>
-		auto& split37 = this->getT(0).getT(13).getT(1);                                        // osc1_impl::split37_t<NV>
-		auto& chain439 = this->getT(0).getT(13).getT(1).getT(0);                               // osc1_impl::chain439_t<NV>
-		auto& xfader104 = this->getT(0).getT(13).getT(1).getT(0).getT(0);                      // osc1_impl::xfader104_t<NV>
-		auto& soft_bypass98 = this->getT(0).getT(13).getT(1).getT(0).getT(1);                  // osc1_impl::soft_bypass98_t<NV>
-		auto& chain330 = this->getT(0).getT(13).getT(1).getT(0).getT(1).getT(0);               // osc1_impl::chain330_t<NV>
-		auto& global_cable71 = this->getT(0).getT(13).getT(1).getT(0).getT(1).getT(0).getT(0); // osc1_impl::global_cable71_t<NV>
-		auto& add287 = this->getT(0).getT(13).getT(1).getT(0).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain260 = this->getT(0).getT(13).getT(1).getT(0).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain482 = this->getT(0).getT(13).getT(1).getT(1);                               // osc1_impl::chain482_t<NV>
-		auto& xfader119 = this->getT(0).getT(13).getT(1).getT(1).getT(0);                      // osc1_impl::xfader119_t<NV>
-		auto& soft_bypass113 = this->getT(0).getT(13).getT(1).getT(1).getT(1);                 // osc1_impl::soft_bypass113_t<NV>
-		auto& chain331 = this->getT(0).getT(13).getT(1).getT(1).getT(1).getT(0);               // osc1_impl::chain331_t<NV>
-		auto& global_cable72 = this->getT(0).getT(13).getT(1).getT(1).getT(1).getT(0).getT(0); // osc1_impl::global_cable72_t<NV>
-		auto& add288 = this->getT(0).getT(13).getT(1).getT(1).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain261 = this->getT(0).getT(13).getT(1).getT(1).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain481 = this->getT(0).getT(13).getT(1).getT(2);                               // osc1_impl::chain481_t<NV>
-		auto& xfader118 = this->getT(0).getT(13).getT(1).getT(2).getT(0);                      // osc1_impl::xfader118_t<NV>
-		auto& soft_bypass112 = this->getT(0).getT(13).getT(1).getT(2).getT(1);                 // osc1_impl::soft_bypass112_t<NV>
-		auto& chain332 = this->getT(0).getT(13).getT(1).getT(2).getT(1).getT(0);               // osc1_impl::chain332_t<NV>
-		auto& global_cable73 = this->getT(0).getT(13).getT(1).getT(2).getT(1).getT(0).getT(0); // osc1_impl::global_cable73_t<NV>
-		auto& add289 = this->getT(0).getT(13).getT(1).getT(2).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain262 = this->getT(0).getT(13).getT(1).getT(2).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain480 = this->getT(0).getT(13).getT(1).getT(3);                               // osc1_impl::chain480_t<NV>
-		auto& xfader117 = this->getT(0).getT(13).getT(1).getT(3).getT(0);                      // osc1_impl::xfader117_t<NV>
-		auto& soft_bypass111 = this->getT(0).getT(13).getT(1).getT(3).getT(1);                 // osc1_impl::soft_bypass111_t<NV>
-		auto& chain333 = this->getT(0).getT(13).getT(1).getT(3).getT(1).getT(0);               // osc1_impl::chain333_t<NV>
-		auto& global_cable74 = this->getT(0).getT(13).getT(1).getT(3).getT(1).getT(0).getT(0); // osc1_impl::global_cable74_t<NV>
-		auto& add290 = this->getT(0).getT(13).getT(1).getT(3).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain263 = this->getT(0).getT(13).getT(1).getT(3).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain479 = this->getT(0).getT(13).getT(1).getT(4);                               // osc1_impl::chain479_t<NV>
-		auto& xfader116 = this->getT(0).getT(13).getT(1).getT(4).getT(0);                      // osc1_impl::xfader116_t<NV>
-		auto& soft_bypass110 = this->getT(0).getT(13).getT(1).getT(4).getT(1);                 // osc1_impl::soft_bypass110_t<NV>
-		auto& chain334 = this->getT(0).getT(13).getT(1).getT(4).getT(1).getT(0);               // osc1_impl::chain334_t<NV>
-		auto& add291 = this->getT(0).getT(13).getT(1).getT(4).getT(1).getT(0).getT(0);         // math::add<NV>
-		auto& gain264 = this->getT(0).getT(13).getT(1).getT(4).getT(1).getT(0).getT(1);        // core::gain<NV>
-		auto& chain450 = this->getT(0).getT(13).getT(1).getT(5);                               // osc1_impl::chain450_t<NV>
-		auto& xfader115 = this->getT(0).getT(13).getT(1).getT(5).getT(0);                      // osc1_impl::xfader115_t<NV>
-		auto& soft_bypass109 = this->getT(0).getT(13).getT(1).getT(5).getT(1);                 // osc1_impl::soft_bypass109_t<NV>
-		auto& chain335 = this->getT(0).getT(13).getT(1).getT(5).getT(1).getT(0);               // osc1_impl::chain335_t<NV>
-		auto& add292 = this->getT(0).getT(13).getT(1).getT(5).getT(1).getT(0).getT(0);         // math::add<NV>
-		auto& gain265 = this->getT(0).getT(13).getT(1).getT(5).getT(1).getT(0).getT(1);        // core::gain<NV>
-		auto& chain449 = this->getT(0).getT(13).getT(1).getT(6);                               // osc1_impl::chain449_t<NV>
-		auto& xfader114 = this->getT(0).getT(13).getT(1).getT(6).getT(0);                      // osc1_impl::xfader114_t<NV>
-		auto& soft_bypass108 = this->getT(0).getT(13).getT(1).getT(6).getT(1);                 // osc1_impl::soft_bypass108_t<NV>
-		auto& chain336 = this->getT(0).getT(13).getT(1).getT(6).getT(1).getT(0);               // osc1_impl::chain336_t<NV>
-		auto& branch65 = this->getT(0).getT(13).getT(1).getT(6).getT(1).getT(0).getT(0);       // osc1_impl::branch65_t<NV>
-		auto& add293 = this->getT(0).getT(13).getT(1).getT(6).                                 // math::add<NV>
+		auto& gain259 = this->getT(0).getT(12).getT(1).getT(7).getT(1).getT(0).getT(1);           // core::gain<NV>
+		auto& peak39 = this->getT(0).getT(12).getT(2);                                            // osc1_impl::peak39_t<NV>
+		auto& smoothed_parameter = this->getT(0).getT(12).getT(3);                                // osc1_impl::smoothed_parameter_t<NV>
+		auto& pma23 = this->getT(0).getT(12).getT(4);                                             // osc1_impl::pma23_t<NV>
+		auto& modchain21 = this->getT(0).getT(13);                                                // osc1_impl::modchain21_t<NV>
+		auto& sliderbank20 = this->getT(0).getT(13).getT(0);                                      // osc1_impl::sliderbank20_t<NV>
+		auto& split37 = this->getT(0).getT(13).getT(1);                                           // osc1_impl::split37_t<NV>
+		auto& chain439 = this->getT(0).getT(13).getT(1).getT(0);                                  // osc1_impl::chain439_t<NV>
+		auto& xfader104 = this->getT(0).getT(13).getT(1).getT(0).getT(0);                         // osc1_impl::xfader104_t<NV>
+		auto& soft_bypass98 = this->getT(0).getT(13).getT(1).getT(0).getT(1);                     // osc1_impl::soft_bypass98_t<NV>
+		auto& chain330 = this->getT(0).getT(13).getT(1).getT(0).getT(1).getT(0);                  // osc1_impl::chain330_t<NV>
+		auto& global_cable71 = this->getT(0).getT(13).getT(1).getT(0).getT(1).getT(0).getT(0);    // osc1_impl::global_cable71_t<NV>
+		auto& add287 = this->getT(0).getT(13).getT(1).getT(0).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain260 = this->getT(0).getT(13).getT(1).getT(0).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain482 = this->getT(0).getT(13).getT(1).getT(1);                                  // osc1_impl::chain482_t<NV>
+		auto& xfader119 = this->getT(0).getT(13).getT(1).getT(1).getT(0);                         // osc1_impl::xfader119_t<NV>
+		auto& soft_bypass113 = this->getT(0).getT(13).getT(1).getT(1).getT(1);                    // osc1_impl::soft_bypass113_t<NV>
+		auto& chain331 = this->getT(0).getT(13).getT(1).getT(1).getT(1).getT(0);                  // osc1_impl::chain331_t<NV>
+		auto& global_cable72 = this->getT(0).getT(13).getT(1).getT(1).getT(1).getT(0).getT(0);    // osc1_impl::global_cable72_t<NV>
+		auto& add288 = this->getT(0).getT(13).getT(1).getT(1).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain261 = this->getT(0).getT(13).getT(1).getT(1).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain481 = this->getT(0).getT(13).getT(1).getT(2);                                  // osc1_impl::chain481_t<NV>
+		auto& xfader118 = this->getT(0).getT(13).getT(1).getT(2).getT(0);                         // osc1_impl::xfader118_t<NV>
+		auto& soft_bypass112 = this->getT(0).getT(13).getT(1).getT(2).getT(1);                    // osc1_impl::soft_bypass112_t<NV>
+		auto& chain332 = this->getT(0).getT(13).getT(1).getT(2).getT(1).getT(0);                  // osc1_impl::chain332_t<NV>
+		auto& global_cable73 = this->getT(0).getT(13).getT(1).getT(2).getT(1).getT(0).getT(0);    // osc1_impl::global_cable73_t<NV>
+		auto& add289 = this->getT(0).getT(13).getT(1).getT(2).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain262 = this->getT(0).getT(13).getT(1).getT(2).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain480 = this->getT(0).getT(13).getT(1).getT(3);                                  // osc1_impl::chain480_t<NV>
+		auto& xfader117 = this->getT(0).getT(13).getT(1).getT(3).getT(0);                         // osc1_impl::xfader117_t<NV>
+		auto& soft_bypass111 = this->getT(0).getT(13).getT(1).getT(3).getT(1);                    // osc1_impl::soft_bypass111_t<NV>
+		auto& chain333 = this->getT(0).getT(13).getT(1).getT(3).getT(1).getT(0);                  // osc1_impl::chain333_t<NV>
+		auto& global_cable74 = this->getT(0).getT(13).getT(1).getT(3).getT(1).getT(0).getT(0);    // osc1_impl::global_cable74_t<NV>
+		auto& add290 = this->getT(0).getT(13).getT(1).getT(3).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain263 = this->getT(0).getT(13).getT(1).getT(3).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain479 = this->getT(0).getT(13).getT(1).getT(4);                                  // osc1_impl::chain479_t<NV>
+		auto& xfader116 = this->getT(0).getT(13).getT(1).getT(4).getT(0);                         // osc1_impl::xfader116_t<NV>
+		auto& soft_bypass110 = this->getT(0).getT(13).getT(1).getT(4).getT(1);                    // osc1_impl::soft_bypass110_t<NV>
+		auto& chain334 = this->getT(0).getT(13).getT(1).getT(4).getT(1).getT(0);                  // osc1_impl::chain334_t<NV>
+		auto& add291 = this->getT(0).getT(13).getT(1).getT(4).getT(1).getT(0).getT(0);            // math::add<NV>
+		auto& gain264 = this->getT(0).getT(13).getT(1).getT(4).getT(1).getT(0).getT(1);           // core::gain<NV>
+		auto& chain450 = this->getT(0).getT(13).getT(1).getT(5);                                  // osc1_impl::chain450_t<NV>
+		auto& xfader115 = this->getT(0).getT(13).getT(1).getT(5).getT(0);                         // osc1_impl::xfader115_t<NV>
+		auto& soft_bypass109 = this->getT(0).getT(13).getT(1).getT(5).getT(1);                    // osc1_impl::soft_bypass109_t<NV>
+		auto& chain335 = this->getT(0).getT(13).getT(1).getT(5).getT(1).getT(0);                  // osc1_impl::chain335_t<NV>
+		auto& add292 = this->getT(0).getT(13).getT(1).getT(5).getT(1).getT(0).getT(0);            // math::add<NV>
+		auto& gain265 = this->getT(0).getT(13).getT(1).getT(5).getT(1).getT(0).getT(1);           // core::gain<NV>
+		auto& chain449 = this->getT(0).getT(13).getT(1).getT(6);                                  // osc1_impl::chain449_t<NV>
+		auto& xfader114 = this->getT(0).getT(13).getT(1).getT(6).getT(0);                         // osc1_impl::xfader114_t<NV>
+		auto& soft_bypass108 = this->getT(0).getT(13).getT(1).getT(6).getT(1);                    // osc1_impl::soft_bypass108_t<NV>
+		auto& chain336 = this->getT(0).getT(13).getT(1).getT(6).getT(1).getT(0);                  // osc1_impl::chain336_t<NV>
+		auto& branch65 = this->getT(0).getT(13).getT(1).getT(6).getT(1).getT(0).getT(0);          // osc1_impl::branch65_t<NV>
+		auto& add293 = this->getT(0).getT(13).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0);
-		auto& add294 = this->getT(0).getT(13).getT(1).getT(6).                                 // math::add<NV>
+		auto& add294 = this->getT(0).getT(13).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1);
-		auto& add295 = this->getT(0).getT(13).getT(1).getT(6).                                 // math::add<NV>
+		auto& add295 = this->getT(0).getT(13).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2);
-		auto& add296 = this->getT(0).getT(13).getT(1).getT(6).                                 // math::add<NV>
+		auto& add296 = this->getT(0).getT(13).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3);
-		auto& add297 = this->getT(0).getT(13).getT(1).getT(6).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain266 = this->getT(0).getT(13).getT(1).getT(6).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain448 = this->getT(0).getT(13).getT(1).getT(7);                               // osc1_impl::chain448_t<NV>
-		auto& xfader113 = this->getT(0).getT(13).getT(1).getT(7).getT(0);                      // osc1_impl::xfader113_t<NV>
-		auto& soft_bypass107 = this->getT(0).getT(13).getT(1).getT(7).getT(1);                 // osc1_impl::soft_bypass107_t<NV>
-		auto& chain337 = this->getT(0).getT(13).getT(1).getT(7).getT(1).getT(0);               // osc1_impl::chain337_t<NV>
-		auto& branch66 = this->getT(0).getT(13).getT(1).getT(7).getT(1).getT(0).getT(0);       // osc1_impl::branch66_t<NV>
-		auto& chain338 = this->getT(0).getT(13).getT(1).getT(7).                               // osc1_impl::chain338_t<NV>
+		auto& add297 = this->getT(0).getT(13).getT(1).getT(6).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain266 = this->getT(0).getT(13).getT(1).getT(6).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain448 = this->getT(0).getT(13).getT(1).getT(7);                                  // osc1_impl::chain448_t<NV>
+		auto& xfader113 = this->getT(0).getT(13).getT(1).getT(7).getT(0);                         // osc1_impl::xfader113_t<NV>
+		auto& soft_bypass107 = this->getT(0).getT(13).getT(1).getT(7).getT(1);                    // osc1_impl::soft_bypass107_t<NV>
+		auto& chain337 = this->getT(0).getT(13).getT(1).getT(7).getT(1).getT(0);                  // osc1_impl::chain337_t<NV>
+		auto& branch66 = this->getT(0).getT(13).getT(1).getT(7).getT(1).getT(0).getT(0);          // osc1_impl::branch66_t<NV>
+		auto& chain338 = this->getT(0).getT(13).getT(1).getT(7).                                  // osc1_impl::chain338_t<NV>
                          getT(1).getT(0).getT(0).getT(0);
-		auto& midi_cc71 = this->getT(0).getT(13).getT(1).getT(7).                              // osc1_impl::midi_cc71_t<NV>
+		auto& midi_cc71 = this->getT(0).getT(13).getT(1).getT(7).                                 // osc1_impl::midi_cc71_t<NV>
                           getT(1).getT(0).getT(0).getT(0).
                           getT(0);
-		auto& add422 = this->getT(0).getT(13).getT(1).getT(7).                                 // math::add<NV>
+		auto& add422 = this->getT(0).getT(13).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0).
                        getT(1);
-		auto& chain339 = this->getT(0).getT(13).getT(1).getT(7).                               // osc1_impl::chain339_t<NV>
+		auto& chain339 = this->getT(0).getT(13).getT(1).getT(7).                                  // osc1_impl::chain339_t<NV>
                          getT(1).getT(0).getT(0).getT(1);
-		auto& midi_cc72 = this->getT(0).getT(13).getT(1).getT(7).                              // osc1_impl::midi_cc72_t<NV>
+		auto& midi_cc72 = this->getT(0).getT(13).getT(1).getT(7).                                 // osc1_impl::midi_cc72_t<NV>
                           getT(1).getT(0).getT(0).getT(1).
                           getT(0);
-		auto& add423 = this->getT(0).getT(13).getT(1).getT(7).                                 // math::add<NV>
+		auto& add423 = this->getT(0).getT(13).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1).
                        getT(1);
-		auto& chain430 = this->getT(0).getT(13).getT(1).getT(7).                               // osc1_impl::chain430_t<NV>
+		auto& chain430 = this->getT(0).getT(13).getT(1).getT(7).                                  // osc1_impl::chain430_t<NV>
                          getT(1).getT(0).getT(0).getT(2);
-		auto& midi_cc73 = this->getT(0).getT(13).getT(1).getT(7).                              // osc1_impl::midi_cc73_t<NV>
+		auto& midi_cc73 = this->getT(0).getT(13).getT(1).getT(7).                                 // osc1_impl::midi_cc73_t<NV>
                           getT(1).getT(0).getT(0).getT(2).
                           getT(0);
-		auto& add424 = this->getT(0).getT(13).getT(1).getT(7).                                 // math::add<NV>
+		auto& add424 = this->getT(0).getT(13).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2).
                        getT(1);
-		auto& chain467 = this->getT(0).getT(13).getT(1).getT(7).                               // osc1_impl::chain467_t<NV>
+		auto& chain467 = this->getT(0).getT(13).getT(1).getT(7).                                  // osc1_impl::chain467_t<NV>
                          getT(1).getT(0).getT(0).getT(3);
-		auto& midi_cc74 = this->getT(0).getT(13).getT(1).getT(7).                              // osc1_impl::midi_cc74_t<NV>
+		auto& midi_cc74 = this->getT(0).getT(13).getT(1).getT(7).                                 // osc1_impl::midi_cc74_t<NV>
                           getT(1).getT(0).getT(0).getT(3).
                           getT(0);
-		auto& add425 = this->getT(0).getT(13).getT(1).getT(7).                                 // math::add<NV>
+		auto& add425 = this->getT(0).getT(13).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3).
                        getT(1);
-		auto& chain468 = this->getT(0).getT(13).getT(1).getT(7).                               // osc1_impl::chain468_t<NV>
+		auto& chain468 = this->getT(0).getT(13).getT(1).getT(7).                                  // osc1_impl::chain468_t<NV>
                          getT(1).getT(0).getT(0).getT(4);
-		auto& midi54 = this->getT(0).getT(13).getT(1).getT(7).                                 // osc1_impl::midi54_t<NV>
+		auto& midi54 = this->getT(0).getT(13).getT(1).getT(7).                                    // osc1_impl::midi54_t<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(0);
-		auto& add426 = this->getT(0).getT(13).getT(1).getT(7).                                 // math::add<NV>
+		auto& add426 = this->getT(0).getT(13).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(1);
-		auto& chain469 = this->getT(0).getT(13).getT(1).getT(7).                               // osc1_impl::chain469_t<NV>
+		auto& chain469 = this->getT(0).getT(13).getT(1).getT(7).                                  // osc1_impl::chain469_t<NV>
                          getT(1).getT(0).getT(0).getT(5);
-		auto& midi55 = this->getT(0).getT(13).getT(1).getT(7).                                 // osc1_impl::midi55_t<NV>
+		auto& midi55 = this->getT(0).getT(13).getT(1).getT(7).                                    // osc1_impl::midi55_t<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(0);
-		auto& add427 = this->getT(0).getT(13).getT(1).getT(7).                                 // math::add<NV>
+		auto& add427 = this->getT(0).getT(13).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(1);
-		auto& chain470 = this->getT(0).getT(13).getT(1).getT(7).                               // osc1_impl::chain470_t<NV>
+		auto& chain470 = this->getT(0).getT(13).getT(1).getT(7).                                  // osc1_impl::chain470_t<NV>
                          getT(1).getT(0).getT(0).getT(6);
-		auto& midi56 = this->getT(0).getT(13).getT(1).getT(7).                                 // osc1_impl::midi56_t<NV>
+		auto& midi56 = this->getT(0).getT(13).getT(1).getT(7).                                    // osc1_impl::midi56_t<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(0);
-		auto& add428 = this->getT(0).getT(13).getT(1).getT(7).                                 // math::add<NV>
+		auto& add428 = this->getT(0).getT(13).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(1);
-		auto& gain267 = this->getT(0).getT(13).getT(1).getT(7).getT(1).getT(0).getT(1);        // core::gain<NV>
-		auto& peak40 = this->getT(0).getT(13).getT(2);                                         // osc1_impl::peak40_t<NV>
-		auto& pma24 = this->getT(0).getT(13).getT(3);                                          // osc1_impl::pma24_t<NV>
-		auto& modchain22 = this->getT(0).getT(14);                                             // osc1_impl::modchain22_t<NV>
-		auto& sliderbank21 = this->getT(0).getT(14).getT(0);                                   // osc1_impl::sliderbank21_t<NV>
-		auto& split38 = this->getT(0).getT(14).getT(1);                                        // osc1_impl::split38_t<NV>
-		auto& chain447 = this->getT(0).getT(14).getT(1).getT(0);                               // osc1_impl::chain447_t<NV>
-		auto& xfader112 = this->getT(0).getT(14).getT(1).getT(0).getT(0);                      // osc1_impl::xfader112_t<NV>
-		auto& soft_bypass106 = this->getT(0).getT(14).getT(1).getT(0).getT(1);                 // osc1_impl::soft_bypass106_t<NV>
-		auto& chain340 = this->getT(0).getT(14).getT(1).getT(0).getT(1).getT(0);               // osc1_impl::chain340_t<NV>
-		auto& global_cable75 = this->getT(0).getT(14).getT(1).getT(0).getT(1).getT(0).getT(0); // osc1_impl::global_cable75_t<NV>
-		auto& add298 = this->getT(0).getT(14).getT(1).getT(0).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain268 = this->getT(0).getT(14).getT(1).getT(0).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain500 = this->getT(0).getT(14).getT(1).getT(1);                               // osc1_impl::chain500_t<NV>
-		auto& xfader127 = this->getT(0).getT(14).getT(1).getT(1).getT(0);                      // osc1_impl::xfader127_t<NV>
-		auto& soft_bypass121 = this->getT(0).getT(14).getT(1).getT(1).getT(1);                 // osc1_impl::soft_bypass121_t<NV>
-		auto& chain341 = this->getT(0).getT(14).getT(1).getT(1).getT(1).getT(0);               // osc1_impl::chain341_t<NV>
-		auto& global_cable76 = this->getT(0).getT(14).getT(1).getT(1).getT(1).getT(0).getT(0); // osc1_impl::global_cable76_t<NV>
-		auto& add299 = this->getT(0).getT(14).getT(1).getT(1).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain269 = this->getT(0).getT(14).getT(1).getT(1).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain499 = this->getT(0).getT(14).getT(1).getT(2);                               // osc1_impl::chain499_t<NV>
-		auto& xfader126 = this->getT(0).getT(14).getT(1).getT(2).getT(0);                      // osc1_impl::xfader126_t<NV>
-		auto& soft_bypass120 = this->getT(0).getT(14).getT(1).getT(2).getT(1);                 // osc1_impl::soft_bypass120_t<NV>
-		auto& chain342 = this->getT(0).getT(14).getT(1).getT(2).getT(1).getT(0);               // osc1_impl::chain342_t<NV>
-		auto& global_cable77 = this->getT(0).getT(14).getT(1).getT(2).getT(1).getT(0).getT(0); // osc1_impl::global_cable77_t<NV>
-		auto& add300 = this->getT(0).getT(14).getT(1).getT(2).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain270 = this->getT(0).getT(14).getT(1).getT(2).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain498 = this->getT(0).getT(14).getT(1).getT(3);                               // osc1_impl::chain498_t<NV>
-		auto& xfader125 = this->getT(0).getT(14).getT(1).getT(3).getT(0);                      // osc1_impl::xfader125_t
-		auto& chain343 = this->getT(0).getT(14).getT(1).getT(3).getT(1);                       // osc1_impl::chain343_t<NV>
-		auto& global_cable78 = this->getT(0).getT(14).getT(1).getT(3).getT(1).getT(0);         // osc1_impl::global_cable78_t<NV>
-		auto& add301 = this->getT(0).getT(14).getT(1).getT(3).getT(1).getT(1);                 // math::add<NV>
-		auto& gain271 = this->getT(0).getT(14).getT(1).getT(3).getT(1).getT(2);                // core::gain<NV>
-		auto& soft_bypass119 = this->getT(0).getT(14).getT(1).getT(3).getT(2);                 // osc1_impl::soft_bypass119_t
-		auto& chain497 = this->getT(0).getT(14).getT(1).getT(4);                               // osc1_impl::chain497_t<NV>
-		auto& xfader124 = this->getT(0).getT(14).getT(1).getT(4).getT(0);                      // osc1_impl::xfader124_t<NV>
-		auto& soft_bypass118 = this->getT(0).getT(14).getT(1).getT(4).getT(1);                 // osc1_impl::soft_bypass118_t<NV>
-		auto& chain344 = this->getT(0).getT(14).getT(1).getT(4).getT(1).getT(0);               // osc1_impl::chain344_t<NV>
-		auto& add302 = this->getT(0).getT(14).getT(1).getT(4).getT(1).getT(0).getT(0);         // math::add<NV>
-		auto& gain272 = this->getT(0).getT(14).getT(1).getT(4).getT(1).getT(0).getT(1);        // core::gain<NV>
-		auto& chain496 = this->getT(0).getT(14).getT(1).getT(5);                               // osc1_impl::chain496_t<NV>
-		auto& xfader123 = this->getT(0).getT(14).getT(1).getT(5).getT(0);                      // osc1_impl::xfader123_t<NV>
-		auto& soft_bypass117 = this->getT(0).getT(14).getT(1).getT(5).getT(1);                 // osc1_impl::soft_bypass117_t<NV>
-		auto& chain345 = this->getT(0).getT(14).getT(1).getT(5).getT(1).getT(0);               // osc1_impl::chain345_t<NV>
-		auto& add303 = this->getT(0).getT(14).getT(1).getT(5).getT(1).getT(0).getT(0);         // math::add<NV>
-		auto& gain273 = this->getT(0).getT(14).getT(1).getT(5).getT(1).getT(0).getT(1);        // core::gain<NV>
-		auto& chain495 = this->getT(0).getT(14).getT(1).getT(6);                               // osc1_impl::chain495_t<NV>
-		auto& xfader122 = this->getT(0).getT(14).getT(1).getT(6).getT(0);                      // osc1_impl::xfader122_t<NV>
-		auto& soft_bypass116 = this->getT(0).getT(14).getT(1).getT(6).getT(1);                 // osc1_impl::soft_bypass116_t<NV>
-		auto& chain346 = this->getT(0).getT(14).getT(1).getT(6).getT(1).getT(0);               // osc1_impl::chain346_t<NV>
-		auto& branch67 = this->getT(0).getT(14).getT(1).getT(6).getT(1).getT(0).getT(0);       // osc1_impl::branch67_t<NV>
-		auto& add304 = this->getT(0).getT(14).getT(1).getT(6).                                 // math::add<NV>
+		auto& gain267 = this->getT(0).getT(13).getT(1).getT(7).getT(1).getT(0).getT(1);           // core::gain<NV>
+		auto& peak40 = this->getT(0).getT(13).getT(2);                                            // osc1_impl::peak40_t<NV>
+		auto& smoothed_parameter1 = this->getT(0).getT(13).getT(3);                               // osc1_impl::smoothed_parameter1_t<NV>
+		auto& pma24 = this->getT(0).getT(13).getT(4);                                             // osc1_impl::pma24_t<NV>
+		auto& modchain22 = this->getT(0).getT(14);                                                // osc1_impl::modchain22_t<NV>
+		auto& sliderbank21 = this->getT(0).getT(14).getT(0);                                      // osc1_impl::sliderbank21_t<NV>
+		auto& split38 = this->getT(0).getT(14).getT(1);                                           // osc1_impl::split38_t<NV>
+		auto& chain447 = this->getT(0).getT(14).getT(1).getT(0);                                  // osc1_impl::chain447_t<NV>
+		auto& xfader112 = this->getT(0).getT(14).getT(1).getT(0).getT(0);                         // osc1_impl::xfader112_t<NV>
+		auto& soft_bypass106 = this->getT(0).getT(14).getT(1).getT(0).getT(1);                    // osc1_impl::soft_bypass106_t<NV>
+		auto& chain340 = this->getT(0).getT(14).getT(1).getT(0).getT(1).getT(0);                  // osc1_impl::chain340_t<NV>
+		auto& global_cable75 = this->getT(0).getT(14).getT(1).getT(0).getT(1).getT(0).getT(0);    // osc1_impl::global_cable75_t<NV>
+		auto& add298 = this->getT(0).getT(14).getT(1).getT(0).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain268 = this->getT(0).getT(14).getT(1).getT(0).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain500 = this->getT(0).getT(14).getT(1).getT(1);                                  // osc1_impl::chain500_t<NV>
+		auto& xfader127 = this->getT(0).getT(14).getT(1).getT(1).getT(0);                         // osc1_impl::xfader127_t<NV>
+		auto& soft_bypass121 = this->getT(0).getT(14).getT(1).getT(1).getT(1);                    // osc1_impl::soft_bypass121_t<NV>
+		auto& chain341 = this->getT(0).getT(14).getT(1).getT(1).getT(1).getT(0);                  // osc1_impl::chain341_t<NV>
+		auto& global_cable76 = this->getT(0).getT(14).getT(1).getT(1).getT(1).getT(0).getT(0);    // osc1_impl::global_cable76_t<NV>
+		auto& add299 = this->getT(0).getT(14).getT(1).getT(1).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain269 = this->getT(0).getT(14).getT(1).getT(1).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain499 = this->getT(0).getT(14).getT(1).getT(2);                                  // osc1_impl::chain499_t<NV>
+		auto& xfader126 = this->getT(0).getT(14).getT(1).getT(2).getT(0);                         // osc1_impl::xfader126_t<NV>
+		auto& soft_bypass120 = this->getT(0).getT(14).getT(1).getT(2).getT(1);                    // osc1_impl::soft_bypass120_t<NV>
+		auto& chain342 = this->getT(0).getT(14).getT(1).getT(2).getT(1).getT(0);                  // osc1_impl::chain342_t<NV>
+		auto& global_cable77 = this->getT(0).getT(14).getT(1).getT(2).getT(1).getT(0).getT(0);    // osc1_impl::global_cable77_t<NV>
+		auto& add300 = this->getT(0).getT(14).getT(1).getT(2).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain270 = this->getT(0).getT(14).getT(1).getT(2).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain498 = this->getT(0).getT(14).getT(1).getT(3);                                  // osc1_impl::chain498_t<NV>
+		auto& xfader125 = this->getT(0).getT(14).getT(1).getT(3).getT(0);                         // osc1_impl::xfader125_t
+		auto& chain343 = this->getT(0).getT(14).getT(1).getT(3).getT(1);                          // osc1_impl::chain343_t<NV>
+		auto& global_cable78 = this->getT(0).getT(14).getT(1).getT(3).getT(1).getT(0);            // osc1_impl::global_cable78_t<NV>
+		auto& add301 = this->getT(0).getT(14).getT(1).getT(3).getT(1).getT(1);                    // math::add<NV>
+		auto& gain271 = this->getT(0).getT(14).getT(1).getT(3).getT(1).getT(2);                   // core::gain<NV>
+		auto& soft_bypass119 = this->getT(0).getT(14).getT(1).getT(3).getT(2);                    // osc1_impl::soft_bypass119_t
+		auto& chain497 = this->getT(0).getT(14).getT(1).getT(4);                                  // osc1_impl::chain497_t<NV>
+		auto& xfader124 = this->getT(0).getT(14).getT(1).getT(4).getT(0);                         // osc1_impl::xfader124_t<NV>
+		auto& soft_bypass118 = this->getT(0).getT(14).getT(1).getT(4).getT(1);                    // osc1_impl::soft_bypass118_t<NV>
+		auto& chain344 = this->getT(0).getT(14).getT(1).getT(4).getT(1).getT(0);                  // osc1_impl::chain344_t<NV>
+		auto& add302 = this->getT(0).getT(14).getT(1).getT(4).getT(1).getT(0).getT(0);            // math::add<NV>
+		auto& gain272 = this->getT(0).getT(14).getT(1).getT(4).getT(1).getT(0).getT(1);           // core::gain<NV>
+		auto& chain496 = this->getT(0).getT(14).getT(1).getT(5);                                  // osc1_impl::chain496_t<NV>
+		auto& xfader123 = this->getT(0).getT(14).getT(1).getT(5).getT(0);                         // osc1_impl::xfader123_t<NV>
+		auto& soft_bypass117 = this->getT(0).getT(14).getT(1).getT(5).getT(1);                    // osc1_impl::soft_bypass117_t<NV>
+		auto& chain345 = this->getT(0).getT(14).getT(1).getT(5).getT(1).getT(0);                  // osc1_impl::chain345_t<NV>
+		auto& add303 = this->getT(0).getT(14).getT(1).getT(5).getT(1).getT(0).getT(0);            // math::add<NV>
+		auto& gain273 = this->getT(0).getT(14).getT(1).getT(5).getT(1).getT(0).getT(1);           // core::gain<NV>
+		auto& chain495 = this->getT(0).getT(14).getT(1).getT(6);                                  // osc1_impl::chain495_t<NV>
+		auto& xfader122 = this->getT(0).getT(14).getT(1).getT(6).getT(0);                         // osc1_impl::xfader122_t<NV>
+		auto& soft_bypass116 = this->getT(0).getT(14).getT(1).getT(6).getT(1);                    // osc1_impl::soft_bypass116_t<NV>
+		auto& chain346 = this->getT(0).getT(14).getT(1).getT(6).getT(1).getT(0);                  // osc1_impl::chain346_t<NV>
+		auto& branch67 = this->getT(0).getT(14).getT(1).getT(6).getT(1).getT(0).getT(0);          // osc1_impl::branch67_t<NV>
+		auto& add304 = this->getT(0).getT(14).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0);
-		auto& add305 = this->getT(0).getT(14).getT(1).getT(6).                                 // math::add<NV>
+		auto& add305 = this->getT(0).getT(14).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1);
-		auto& add306 = this->getT(0).getT(14).getT(1).getT(6).                                 // math::add<NV>
+		auto& add306 = this->getT(0).getT(14).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2);
-		auto& add307 = this->getT(0).getT(14).getT(1).getT(6).                                 // math::add<NV>
+		auto& add307 = this->getT(0).getT(14).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3);
-		auto& add308 = this->getT(0).getT(14).getT(1).getT(6).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain274 = this->getT(0).getT(14).getT(1).getT(6).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain484 = this->getT(0).getT(14).getT(1).getT(7);                               // osc1_impl::chain484_t<NV>
-		auto& xfader121 = this->getT(0).getT(14).getT(1).getT(7).getT(0);                      // osc1_impl::xfader121_t<NV>
-		auto& soft_bypass115 = this->getT(0).getT(14).getT(1).getT(7).getT(1);                 // osc1_impl::soft_bypass115_t<NV>
-		auto& chain347 = this->getT(0).getT(14).getT(1).getT(7).getT(1).getT(0);               // osc1_impl::chain347_t<NV>
-		auto& branch68 = this->getT(0).getT(14).getT(1).getT(7).getT(1).getT(0).getT(0);       // osc1_impl::branch68_t<NV>
-		auto& chain348 = this->getT(0).getT(14).getT(1).getT(7).                               // osc1_impl::chain348_t<NV>
+		auto& add308 = this->getT(0).getT(14).getT(1).getT(6).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain274 = this->getT(0).getT(14).getT(1).getT(6).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain484 = this->getT(0).getT(14).getT(1).getT(7);                                  // osc1_impl::chain484_t<NV>
+		auto& xfader121 = this->getT(0).getT(14).getT(1).getT(7).getT(0);                         // osc1_impl::xfader121_t<NV>
+		auto& soft_bypass115 = this->getT(0).getT(14).getT(1).getT(7).getT(1);                    // osc1_impl::soft_bypass115_t<NV>
+		auto& chain347 = this->getT(0).getT(14).getT(1).getT(7).getT(1).getT(0);                  // osc1_impl::chain347_t<NV>
+		auto& branch68 = this->getT(0).getT(14).getT(1).getT(7).getT(1).getT(0).getT(0);          // osc1_impl::branch68_t<NV>
+		auto& chain348 = this->getT(0).getT(14).getT(1).getT(7).                                  // osc1_impl::chain348_t<NV>
                          getT(1).getT(0).getT(0).getT(0);
-		auto& midi_cc75 = this->getT(0).getT(14).getT(1).getT(7).                              // osc1_impl::midi_cc75_t<NV>
+		auto& midi_cc75 = this->getT(0).getT(14).getT(1).getT(7).                                 // osc1_impl::midi_cc75_t<NV>
                           getT(1).getT(0).getT(0).getT(0).
                           getT(0);
-		auto& add429 = this->getT(0).getT(14).getT(1).getT(7).                                 // math::add<NV>
+		auto& add429 = this->getT(0).getT(14).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0).
                        getT(1);
-		auto& chain349 = this->getT(0).getT(14).getT(1).getT(7).                               // osc1_impl::chain349_t<NV>
+		auto& chain349 = this->getT(0).getT(14).getT(1).getT(7).                                  // osc1_impl::chain349_t<NV>
                          getT(1).getT(0).getT(0).getT(1);
-		auto& midi_cc76 = this->getT(0).getT(14).getT(1).getT(7).                              // osc1_impl::midi_cc76_t<NV>
+		auto& midi_cc76 = this->getT(0).getT(14).getT(1).getT(7).                                 // osc1_impl::midi_cc76_t<NV>
                           getT(1).getT(0).getT(0).getT(1).
                           getT(0);
-		auto& add430 = this->getT(0).getT(14).getT(1).getT(7).                                 // math::add<NV>
+		auto& add430 = this->getT(0).getT(14).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1).
                        getT(1);
-		auto& chain431 = this->getT(0).getT(14).getT(1).getT(7).                               // osc1_impl::chain431_t<NV>
+		auto& chain431 = this->getT(0).getT(14).getT(1).getT(7).                                  // osc1_impl::chain431_t<NV>
                          getT(1).getT(0).getT(0).getT(2);
-		auto& midi_cc77 = this->getT(0).getT(14).getT(1).getT(7).                              // osc1_impl::midi_cc77_t<NV>
+		auto& midi_cc77 = this->getT(0).getT(14).getT(1).getT(7).                                 // osc1_impl::midi_cc77_t<NV>
                           getT(1).getT(0).getT(0).getT(2).
                           getT(0);
-		auto& add431 = this->getT(0).getT(14).getT(1).getT(7).                                 // math::add<NV>
+		auto& add431 = this->getT(0).getT(14).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2).
                        getT(1);
-		auto& chain471 = this->getT(0).getT(14).getT(1).getT(7).                               // osc1_impl::chain471_t<NV>
+		auto& chain471 = this->getT(0).getT(14).getT(1).getT(7).                                  // osc1_impl::chain471_t<NV>
                          getT(1).getT(0).getT(0).getT(3);
-		auto& midi_cc78 = this->getT(0).getT(14).getT(1).getT(7).                              // osc1_impl::midi_cc78_t<NV>
+		auto& midi_cc78 = this->getT(0).getT(14).getT(1).getT(7).                                 // osc1_impl::midi_cc78_t<NV>
                           getT(1).getT(0).getT(0).getT(3).
                           getT(0);
-		auto& add432 = this->getT(0).getT(14).getT(1).getT(7).                                 // math::add<NV>
+		auto& add432 = this->getT(0).getT(14).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3).
                        getT(1);
-		auto& chain472 = this->getT(0).getT(14).getT(1).getT(7).                               // osc1_impl::chain472_t<NV>
+		auto& chain472 = this->getT(0).getT(14).getT(1).getT(7).                                  // osc1_impl::chain472_t<NV>
                          getT(1).getT(0).getT(0).getT(4);
-		auto& midi57 = this->getT(0).getT(14).getT(1).getT(7).                                 // osc1_impl::midi57_t<NV>
+		auto& midi57 = this->getT(0).getT(14).getT(1).getT(7).                                    // osc1_impl::midi57_t<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(0);
-		auto& add433 = this->getT(0).getT(14).getT(1).getT(7).                                 // math::add<NV>
+		auto& add433 = this->getT(0).getT(14).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(1);
-		auto& chain473 = this->getT(0).getT(14).getT(1).getT(7).                               // osc1_impl::chain473_t<NV>
+		auto& chain473 = this->getT(0).getT(14).getT(1).getT(7).                                  // osc1_impl::chain473_t<NV>
                          getT(1).getT(0).getT(0).getT(5);
-		auto& midi58 = this->getT(0).getT(14).getT(1).getT(7).                                 // osc1_impl::midi58_t<NV>
+		auto& midi58 = this->getT(0).getT(14).getT(1).getT(7).                                    // osc1_impl::midi58_t<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(0);
-		auto& add434 = this->getT(0).getT(14).getT(1).getT(7).                                 // math::add<NV>
+		auto& add434 = this->getT(0).getT(14).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(1);
-		auto& chain474 = this->getT(0).getT(14).getT(1).getT(7).                               // osc1_impl::chain474_t<NV>
+		auto& chain474 = this->getT(0).getT(14).getT(1).getT(7).                                  // osc1_impl::chain474_t<NV>
                          getT(1).getT(0).getT(0).getT(6);
-		auto& midi59 = this->getT(0).getT(14).getT(1).getT(7).                                 // osc1_impl::midi59_t<NV>
+		auto& midi59 = this->getT(0).getT(14).getT(1).getT(7).                                    // osc1_impl::midi59_t<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(0);
-		auto& add435 = this->getT(0).getT(14).getT(1).getT(7).                                 // math::add<NV>
+		auto& add435 = this->getT(0).getT(14).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(1);
-		auto& gain275 = this->getT(0).getT(14).getT(1).getT(7).getT(1).getT(0).getT(1);        // core::gain<NV>
-		auto& peak41 = this->getT(0).getT(14).getT(2);                                         // osc1_impl::peak41_t<NV>
-		auto& pma25 = this->getT(0).getT(14).getT(3);                                          // osc1_impl::pma25_t<NV>
-		auto& modchain23 = this->getT(0).getT(15);                                             // osc1_impl::modchain23_t<NV>
-		auto& sliderbank22 = this->getT(0).getT(15).getT(0);                                   // osc1_impl::sliderbank22_t<NV>
-		auto& split39 = this->getT(0).getT(15).getT(1);                                        // osc1_impl::split39_t<NV>
-		auto& chain483 = this->getT(0).getT(15).getT(1).getT(0);                               // osc1_impl::chain483_t<NV>
-		auto& xfader120 = this->getT(0).getT(15).getT(1).getT(0).getT(0);                      // osc1_impl::xfader120_t<NV>
-		auto& soft_bypass114 = this->getT(0).getT(15).getT(1).getT(0).getT(1);                 // osc1_impl::soft_bypass114_t<NV>
-		auto& chain350 = this->getT(0).getT(15).getT(1).getT(0).getT(1).getT(0);               // osc1_impl::chain350_t<NV>
-		auto& global_cable79 = this->getT(0).getT(15).getT(1).getT(0).getT(1).getT(0).getT(0); // osc1_impl::global_cable79_t<NV>
-		auto& add309 = this->getT(0).getT(15).getT(1).getT(0).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain276 = this->getT(0).getT(15).getT(1).getT(0).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain507 = this->getT(0).getT(15).getT(1).getT(1);                               // osc1_impl::chain507_t<NV>
-		auto& xfader134 = this->getT(0).getT(15).getT(1).getT(1).getT(0);                      // osc1_impl::xfader134_t<NV>
-		auto& soft_bypass128 = this->getT(0).getT(15).getT(1).getT(1).getT(1);                 // osc1_impl::soft_bypass128_t<NV>
-		auto& chain351 = this->getT(0).getT(15).getT(1).getT(1).getT(1).getT(0);               // osc1_impl::chain351_t<NV>
-		auto& global_cable80 = this->getT(0).getT(15).getT(1).getT(1).getT(1).getT(0).getT(0); // osc1_impl::global_cable80_t<NV>
-		auto& add310 = this->getT(0).getT(15).getT(1).getT(1).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain277 = this->getT(0).getT(15).getT(1).getT(1).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain506 = this->getT(0).getT(15).getT(1).getT(2);                               // osc1_impl::chain506_t<NV>
-		auto& xfader133 = this->getT(0).getT(15).getT(1).getT(2).getT(0);                      // osc1_impl::xfader133_t<NV>
-		auto& soft_bypass127 = this->getT(0).getT(15).getT(1).getT(2).getT(1);                 // osc1_impl::soft_bypass127_t<NV>
-		auto& chain352 = this->getT(0).getT(15).getT(1).getT(2).getT(1).getT(0);               // osc1_impl::chain352_t<NV>
-		auto& global_cable81 = this->getT(0).getT(15).getT(1).getT(2).getT(1).getT(0).getT(0); // osc1_impl::global_cable81_t<NV>
-		auto& add311 = this->getT(0).getT(15).getT(1).getT(2).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain278 = this->getT(0).getT(15).getT(1).getT(2).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain505 = this->getT(0).getT(15).getT(1).getT(3);                               // osc1_impl::chain505_t<NV>
-		auto& xfader132 = this->getT(0).getT(15).getT(1).getT(3).getT(0);                      // osc1_impl::xfader132_t<NV>
-		auto& soft_bypass126 = this->getT(0).getT(15).getT(1).getT(3).getT(1);                 // osc1_impl::soft_bypass126_t<NV>
-		auto& chain353 = this->getT(0).getT(15).getT(1).getT(3).getT(1).getT(0);               // osc1_impl::chain353_t<NV>
-		auto& global_cable82 = this->getT(0).getT(15).getT(1).getT(3).getT(1).getT(0).getT(0); // osc1_impl::global_cable82_t<NV>
-		auto& add312 = this->getT(0).getT(15).getT(1).getT(3).getT(1).getT(0).getT(1);         // math::add<NV>
-		auto& gain279 = this->getT(0).getT(15).getT(1).getT(3).getT(1).getT(0).getT(2);        // core::gain<NV>
-		auto& chain504 = this->getT(0).getT(15).getT(1).getT(4);                               // osc1_impl::chain504_t<NV>
-		auto& xfader131 = this->getT(0).getT(15).getT(1).getT(4).getT(0);                      // osc1_impl::xfader131_t<NV>
-		auto& soft_bypass125 = this->getT(0).getT(15).getT(1).getT(4).getT(1);                 // osc1_impl::soft_bypass125_t<NV>
-		auto& chain354 = this->getT(0).getT(15).getT(1).getT(4).getT(1).getT(0);               // osc1_impl::chain354_t<NV>
-		auto& add313 = this->getT(0).getT(15).getT(1).getT(4).getT(1).getT(0).getT(0);         // math::add<NV>
-		auto& gain280 = this->getT(0).getT(15).getT(1).getT(4).getT(1).getT(0).getT(1);        // core::gain<NV>
-		auto& chain503 = this->getT(0).getT(15).getT(1).getT(5);                               // osc1_impl::chain503_t<NV>
-		auto& xfader130 = this->getT(0).getT(15).getT(1).getT(5).getT(0);                      // osc1_impl::xfader130_t<NV>
-		auto& soft_bypass124 = this->getT(0).getT(15).getT(1).getT(5).getT(1);                 // osc1_impl::soft_bypass124_t<NV>
-		auto& chain355 = this->getT(0).getT(15).getT(1).getT(5).getT(1).getT(0);               // osc1_impl::chain355_t<NV>
-		auto& add314 = this->getT(0).getT(15).getT(1).getT(5).getT(1).getT(0).getT(0);         // math::add<NV>
-		auto& gain281 = this->getT(0).getT(15).getT(1).getT(5).getT(1).getT(0).getT(1);        // core::gain<NV>
-		auto& chain502 = this->getT(0).getT(15).getT(1).getT(6);                               // osc1_impl::chain502_t<NV>
-		auto& xfader129 = this->getT(0).getT(15).getT(1).getT(6).getT(0);                      // osc1_impl::xfader129_t<NV>
-		auto& soft_bypass123 = this->getT(0).getT(15).getT(1).getT(6).getT(1);                 // osc1_impl::soft_bypass123_t<NV>
-		auto& chain356 = this->getT(0).getT(15).getT(1).getT(6).getT(1).getT(0);               // osc1_impl::chain356_t<NV>
-		auto& branch69 = this->getT(0).getT(15).getT(1).getT(6).getT(1).getT(0).getT(0);       // osc1_impl::branch69_t<NV>
-		auto& add315 = this->getT(0).getT(15).getT(1).getT(6).                                 // math::add<NV>
+		auto& gain275 = this->getT(0).getT(14).getT(1).getT(7).getT(1).getT(0).getT(1);           // core::gain<NV>
+		auto& peak41 = this->getT(0).getT(14).getT(2);                                            // osc1_impl::peak41_t<NV>
+		auto& pma25 = this->getT(0).getT(14).getT(3);                                             // osc1_impl::pma25_t<NV>
+		auto& modchain23 = this->getT(0).getT(15);                                                // osc1_impl::modchain23_t<NV>
+		auto& sliderbank22 = this->getT(0).getT(15).getT(0);                                      // osc1_impl::sliderbank22_t<NV>
+		auto& split39 = this->getT(0).getT(15).getT(1);                                           // osc1_impl::split39_t<NV>
+		auto& chain483 = this->getT(0).getT(15).getT(1).getT(0);                                  // osc1_impl::chain483_t<NV>
+		auto& xfader120 = this->getT(0).getT(15).getT(1).getT(0).getT(0);                         // osc1_impl::xfader120_t<NV>
+		auto& soft_bypass114 = this->getT(0).getT(15).getT(1).getT(0).getT(1);                    // osc1_impl::soft_bypass114_t<NV>
+		auto& chain350 = this->getT(0).getT(15).getT(1).getT(0).getT(1).getT(0);                  // osc1_impl::chain350_t<NV>
+		auto& global_cable79 = this->getT(0).getT(15).getT(1).getT(0).getT(1).getT(0).getT(0);    // osc1_impl::global_cable79_t<NV>
+		auto& add309 = this->getT(0).getT(15).getT(1).getT(0).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain276 = this->getT(0).getT(15).getT(1).getT(0).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain507 = this->getT(0).getT(15).getT(1).getT(1);                                  // osc1_impl::chain507_t<NV>
+		auto& xfader134 = this->getT(0).getT(15).getT(1).getT(1).getT(0);                         // osc1_impl::xfader134_t<NV>
+		auto& soft_bypass128 = this->getT(0).getT(15).getT(1).getT(1).getT(1);                    // osc1_impl::soft_bypass128_t<NV>
+		auto& chain351 = this->getT(0).getT(15).getT(1).getT(1).getT(1).getT(0);                  // osc1_impl::chain351_t<NV>
+		auto& global_cable80 = this->getT(0).getT(15).getT(1).getT(1).getT(1).getT(0).getT(0);    // osc1_impl::global_cable80_t<NV>
+		auto& add310 = this->getT(0).getT(15).getT(1).getT(1).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain277 = this->getT(0).getT(15).getT(1).getT(1).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain506 = this->getT(0).getT(15).getT(1).getT(2);                                  // osc1_impl::chain506_t<NV>
+		auto& xfader133 = this->getT(0).getT(15).getT(1).getT(2).getT(0);                         // osc1_impl::xfader133_t<NV>
+		auto& soft_bypass127 = this->getT(0).getT(15).getT(1).getT(2).getT(1);                    // osc1_impl::soft_bypass127_t<NV>
+		auto& chain352 = this->getT(0).getT(15).getT(1).getT(2).getT(1).getT(0);                  // osc1_impl::chain352_t<NV>
+		auto& global_cable81 = this->getT(0).getT(15).getT(1).getT(2).getT(1).getT(0).getT(0);    // osc1_impl::global_cable81_t<NV>
+		auto& add311 = this->getT(0).getT(15).getT(1).getT(2).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain278 = this->getT(0).getT(15).getT(1).getT(2).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain505 = this->getT(0).getT(15).getT(1).getT(3);                                  // osc1_impl::chain505_t<NV>
+		auto& xfader132 = this->getT(0).getT(15).getT(1).getT(3).getT(0);                         // osc1_impl::xfader132_t<NV>
+		auto& soft_bypass126 = this->getT(0).getT(15).getT(1).getT(3).getT(1);                    // osc1_impl::soft_bypass126_t<NV>
+		auto& chain353 = this->getT(0).getT(15).getT(1).getT(3).getT(1).getT(0);                  // osc1_impl::chain353_t<NV>
+		auto& global_cable82 = this->getT(0).getT(15).getT(1).getT(3).getT(1).getT(0).getT(0);    // osc1_impl::global_cable82_t<NV>
+		auto& add312 = this->getT(0).getT(15).getT(1).getT(3).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain279 = this->getT(0).getT(15).getT(1).getT(3).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain504 = this->getT(0).getT(15).getT(1).getT(4);                                  // osc1_impl::chain504_t<NV>
+		auto& xfader131 = this->getT(0).getT(15).getT(1).getT(4).getT(0);                         // osc1_impl::xfader131_t<NV>
+		auto& soft_bypass125 = this->getT(0).getT(15).getT(1).getT(4).getT(1);                    // osc1_impl::soft_bypass125_t<NV>
+		auto& chain354 = this->getT(0).getT(15).getT(1).getT(4).getT(1).getT(0);                  // osc1_impl::chain354_t<NV>
+		auto& add313 = this->getT(0).getT(15).getT(1).getT(4).getT(1).getT(0).getT(0);            // math::add<NV>
+		auto& gain280 = this->getT(0).getT(15).getT(1).getT(4).getT(1).getT(0).getT(1);           // core::gain<NV>
+		auto& chain503 = this->getT(0).getT(15).getT(1).getT(5);                                  // osc1_impl::chain503_t<NV>
+		auto& xfader130 = this->getT(0).getT(15).getT(1).getT(5).getT(0);                         // osc1_impl::xfader130_t<NV>
+		auto& soft_bypass124 = this->getT(0).getT(15).getT(1).getT(5).getT(1);                    // osc1_impl::soft_bypass124_t<NV>
+		auto& chain355 = this->getT(0).getT(15).getT(1).getT(5).getT(1).getT(0);                  // osc1_impl::chain355_t<NV>
+		auto& add314 = this->getT(0).getT(15).getT(1).getT(5).getT(1).getT(0).getT(0);            // math::add<NV>
+		auto& gain281 = this->getT(0).getT(15).getT(1).getT(5).getT(1).getT(0).getT(1);           // core::gain<NV>
+		auto& chain502 = this->getT(0).getT(15).getT(1).getT(6);                                  // osc1_impl::chain502_t<NV>
+		auto& xfader129 = this->getT(0).getT(15).getT(1).getT(6).getT(0);                         // osc1_impl::xfader129_t<NV>
+		auto& soft_bypass123 = this->getT(0).getT(15).getT(1).getT(6).getT(1);                    // osc1_impl::soft_bypass123_t<NV>
+		auto& chain356 = this->getT(0).getT(15).getT(1).getT(6).getT(1).getT(0);                  // osc1_impl::chain356_t<NV>
+		auto& branch69 = this->getT(0).getT(15).getT(1).getT(6).getT(1).getT(0).getT(0);          // osc1_impl::branch69_t<NV>
+		auto& add315 = this->getT(0).getT(15).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0);
-		auto& add316 = this->getT(0).getT(15).getT(1).getT(6).                               // math::add<NV>
+		auto& add316 = this->getT(0).getT(15).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1);
-		auto& add317 = this->getT(0).getT(15).getT(1).getT(6).                               // math::add<NV>
+		auto& add317 = this->getT(0).getT(15).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2);
-		auto& add318 = this->getT(0).getT(15).getT(1).getT(6).                               // math::add<NV>
+		auto& add318 = this->getT(0).getT(15).getT(1).getT(6).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3);
-		auto& add319 = this->getT(0).getT(15).getT(1).getT(6).getT(1).getT(0).getT(1);       // math::add<NV>
-		auto& gain282 = this->getT(0).getT(15).getT(1).getT(6).getT(1).getT(0).getT(2);      // core::gain<NV>
-		auto& chain501 = this->getT(0).getT(15).getT(1).getT(7);                             // osc1_impl::chain501_t<NV>
-		auto& xfader128 = this->getT(0).getT(15).getT(1).getT(7).getT(0);                    // osc1_impl::xfader128_t<NV>
-		auto& soft_bypass122 = this->getT(0).getT(15).getT(1).getT(7).getT(1);               // osc1_impl::soft_bypass122_t<NV>
-		auto& chain357 = this->getT(0).getT(15).getT(1).getT(7).getT(1).getT(0);             // osc1_impl::chain357_t<NV>
-		auto& branch70 = this->getT(0).getT(15).getT(1).getT(7).getT(1).getT(0).getT(0);     // osc1_impl::branch70_t<NV>
-		auto& chain358 = this->getT(0).getT(15).getT(1).getT(7).                             // osc1_impl::chain358_t<NV>
+		auto& add319 = this->getT(0).getT(15).getT(1).getT(6).getT(1).getT(0).getT(1);            // math::add<NV>
+		auto& gain282 = this->getT(0).getT(15).getT(1).getT(6).getT(1).getT(0).getT(2);           // core::gain<NV>
+		auto& chain501 = this->getT(0).getT(15).getT(1).getT(7);                                  // osc1_impl::chain501_t<NV>
+		auto& xfader128 = this->getT(0).getT(15).getT(1).getT(7).getT(0);                         // osc1_impl::xfader128_t<NV>
+		auto& soft_bypass122 = this->getT(0).getT(15).getT(1).getT(7).getT(1);                    // osc1_impl::soft_bypass122_t<NV>
+		auto& chain357 = this->getT(0).getT(15).getT(1).getT(7).getT(1).getT(0);                  // osc1_impl::chain357_t<NV>
+		auto& branch70 = this->getT(0).getT(15).getT(1).getT(7).getT(1).getT(0).getT(0);          // osc1_impl::branch70_t<NV>
+		auto& chain358 = this->getT(0).getT(15).getT(1).getT(7).                                  // osc1_impl::chain358_t<NV>
                          getT(1).getT(0).getT(0).getT(0);
-		auto& midi_cc79 = this->getT(0).getT(15).getT(1).getT(7).                            // osc1_impl::midi_cc79_t<NV>
+		auto& midi_cc79 = this->getT(0).getT(15).getT(1).getT(7).                                 // osc1_impl::midi_cc79_t<NV>
                           getT(1).getT(0).getT(0).getT(0).
                           getT(0);
-		auto& add436 = this->getT(0).getT(15).getT(1).getT(7).                               // math::add<NV>
+		auto& add436 = this->getT(0).getT(15).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(0).
                        getT(1);
-		auto& chain359 = this->getT(0).getT(15).getT(1).getT(7).                             // osc1_impl::chain359_t<NV>
+		auto& chain359 = this->getT(0).getT(15).getT(1).getT(7).                                  // osc1_impl::chain359_t<NV>
                          getT(1).getT(0).getT(0).getT(1);
-		auto& midi_cc80 = this->getT(0).getT(15).getT(1).getT(7).                            // osc1_impl::midi_cc80_t<NV>
+		auto& midi_cc80 = this->getT(0).getT(15).getT(1).getT(7).                                 // osc1_impl::midi_cc80_t<NV>
                           getT(1).getT(0).getT(0).getT(1).
                           getT(0);
-		auto& add437 = this->getT(0).getT(15).getT(1).getT(7).                               // math::add<NV>
+		auto& add437 = this->getT(0).getT(15).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(1).
                        getT(1);
-		auto& chain432 = this->getT(0).getT(15).getT(1).getT(7).                             // osc1_impl::chain432_t<NV>
+		auto& chain432 = this->getT(0).getT(15).getT(1).getT(7).                                  // osc1_impl::chain432_t<NV>
                          getT(1).getT(0).getT(0).getT(2);
-		auto& midi_cc81 = this->getT(0).getT(15).getT(1).getT(7).                            // osc1_impl::midi_cc81_t<NV>
+		auto& midi_cc81 = this->getT(0).getT(15).getT(1).getT(7).                                 // osc1_impl::midi_cc81_t<NV>
                           getT(1).getT(0).getT(0).getT(2).
                           getT(0);
-		auto& add438 = this->getT(0).getT(15).getT(1).getT(7).                               // math::add<NV>
+		auto& add438 = this->getT(0).getT(15).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(2).
                        getT(1);
-		auto& chain475 = this->getT(0).getT(15).getT(1).getT(7).                             // osc1_impl::chain475_t<NV>
+		auto& chain475 = this->getT(0).getT(15).getT(1).getT(7).                                  // osc1_impl::chain475_t<NV>
                          getT(1).getT(0).getT(0).getT(3);
-		auto& midi_cc82 = this->getT(0).getT(15).getT(1).getT(7).                            // osc1_impl::midi_cc82_t<NV>
+		auto& midi_cc82 = this->getT(0).getT(15).getT(1).getT(7).                                 // osc1_impl::midi_cc82_t<NV>
                           getT(1).getT(0).getT(0).getT(3).
                           getT(0);
-		auto& add439 = this->getT(0).getT(15).getT(1).getT(7).                               // math::add<NV>
+		auto& add439 = this->getT(0).getT(15).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(3).
                        getT(1);
-		auto& chain476 = this->getT(0).getT(15).getT(1).getT(7).                             // osc1_impl::chain476_t<NV>
+		auto& chain476 = this->getT(0).getT(15).getT(1).getT(7).                                  // osc1_impl::chain476_t<NV>
                          getT(1).getT(0).getT(0).getT(4);
-		auto& midi60 = this->getT(0).getT(15).getT(1).getT(7).                               // osc1_impl::midi60_t<NV>
+		auto& midi60 = this->getT(0).getT(15).getT(1).getT(7).                                    // osc1_impl::midi60_t<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(0);
-		auto& add440 = this->getT(0).getT(15).getT(1).getT(7).                               // math::add<NV>
+		auto& add440 = this->getT(0).getT(15).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(4).
                        getT(1);
-		auto& chain477 = this->getT(0).getT(15).getT(1).getT(7).                             // osc1_impl::chain477_t<NV>
+		auto& chain477 = this->getT(0).getT(15).getT(1).getT(7).                                  // osc1_impl::chain477_t<NV>
                          getT(1).getT(0).getT(0).getT(5);
-		auto& midi61 = this->getT(0).getT(15).getT(1).getT(7).                               // osc1_impl::midi61_t<NV>
+		auto& midi61 = this->getT(0).getT(15).getT(1).getT(7).                                    // osc1_impl::midi61_t<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(0);
-		auto& add441 = this->getT(0).getT(15).getT(1).getT(7).                               // math::add<NV>
+		auto& add441 = this->getT(0).getT(15).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(5).
                        getT(1);
-		auto& chain478 = this->getT(0).getT(15).getT(1).getT(7).                             // osc1_impl::chain478_t<NV>
+		auto& chain478 = this->getT(0).getT(15).getT(1).getT(7).                                  // osc1_impl::chain478_t<NV>
                          getT(1).getT(0).getT(0).getT(6);
-		auto& midi62 = this->getT(0).getT(15).getT(1).getT(7).                               // osc1_impl::midi62_t<NV>
+		auto& midi62 = this->getT(0).getT(15).getT(1).getT(7).                                    // osc1_impl::midi62_t<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(0);
-		auto& add442 = this->getT(0).getT(15).getT(1).getT(7).                               // math::add<NV>
+		auto& add442 = this->getT(0).getT(15).getT(1).getT(7).                                    // math::add<NV>
                        getT(1).getT(0).getT(0).getT(6).
                        getT(1);
-		auto& gain283 = this->getT(0).getT(15).getT(1).getT(7).getT(1).getT(0).getT(1);      // core::gain<NV>
-		auto& peak42 = this->getT(0).getT(15).getT(2);                                       // osc1_impl::peak42_t<NV>
-		auto& pma26 = this->getT(0).getT(15).getT(3);                                        // osc1_impl::pma26_t<NV>
-		auto& chain59 = this->getT(1);                                                       // osc1_impl::chain59_t<NV>
-		auto& modchain6 = this->getT(1).getT(0);                                             // osc1_impl::modchain6_t<NV>
-		auto& split41 = this->getT(1).getT(0).getT(0);                                       // osc1_impl::split41_t<NV>
-		auto& chain94 = this->getT(1).getT(0).getT(0).getT(0);                               // osc1_impl::chain94_t<NV>
-		auto& branch13 = this->getT(1).getT(0).getT(0).getT(0).getT(0);                      // osc1_impl::branch13_t<NV>
-		auto& chain10 = this->getT(1).getT(0).getT(0).getT(0).getT(0).getT(0);               // osc1_impl::chain10_t<NV>
-		auto& tempo_sync2 = this->getT(1).getT(0).getT(0).getT(0).getT(0).getT(0).getT(0);   // osc1_impl::tempo_sync2_t<NV>
-		auto& ramp = this->getT(1).getT(0).getT(0).getT(0).getT(0).getT(0).getT(1);          // osc1_impl::ramp_t<NV>
-		auto& chain84 = this->getT(1).getT(0).getT(0).getT(0).getT(0).getT(1);               // osc1_impl::chain84_t<NV>
-		auto& clock_ramp = this->getT(1).getT(0).getT(0).getT(0).getT(0).getT(1).getT(0);    // osc1_impl::clock_ramp_t<NV>
-		auto& peak2 = this->getT(1).getT(0).getT(0).getT(0).getT(1);                         // osc1_impl::peak2_t<NV>
-		auto& clear10 = this->getT(1).getT(0).getT(0).getT(0).getT(2);                       // math::clear<NV>
-		auto& branch14 = this->getT(1).getT(0).getT(0).getT(0).getT(3);                      // osc1_impl::branch14_t<NV>
-		auto& chain91 = this->getT(1).getT(0).getT(0).getT(0).getT(3).getT(0);               // osc1_impl::chain91_t<NV>
-		auto& input_toggle = this->getT(1).getT(0).getT(0).getT(0).getT(3).getT(0).getT(0);  // osc1_impl::input_toggle_t<NV>
-		auto& ahdsr = this->getT(1).getT(0).getT(0).getT(0).getT(3).getT(0).getT(1);         // osc1_impl::ahdsr_t<NV>
-		auto& clear9 = this->getT(1).getT(0).getT(0).getT(0).getT(3).getT(0).getT(2);        // math::clear<NV>
-		auto& add2 = this->getT(1).getT(0).getT(0).getT(0).getT(3).getT(0).getT(3);          // math::add<NV>
-		auto& chain3 = this->getT(1).getT(0).getT(0).getT(0).getT(3).getT(1);                // osc1_impl::chain3_t<NV>
-		auto& clear8 = this->getT(1).getT(0).getT(0).getT(0).getT(3).getT(1).getT(0);        // math::clear<NV>
-		auto& cable_table1 = this->getT(1).getT(0).getT(0).getT(0).getT(3).getT(1).getT(1);  // osc1_impl::cable_table1_t<NV>
-		auto& clear1 = this->getT(1).getT(0).getT(0).getT(0).getT(3).getT(1).getT(2);        // math::clear<NV>
-		auto& split22 = this->getT(1).getT(0).getT(0).getT(0).getT(3).getT(1).getT(3);       // osc1_impl::split22_t<NV>
-		auto& add22 = this->getT(1).getT(0).getT(0).getT(0).                                 // math::add<NV>
-                      getT(3).getT(1).getT(3).getT(0);
-		auto& peak7 = this->getT(1).getT(0).getT(0).getT(0).getT(4);                         // osc1_impl::peak7_t<NV>
-		auto& chain161 = this->getT(1).getT(0).getT(0).getT(1);                              // osc1_impl::chain161_t<NV>
-		auto& branch17 = this->getT(1).getT(0).getT(0).getT(1).getT(0);                      // osc1_impl::branch17_t<NV>
-		auto& chain162 = this->getT(1).getT(0).getT(0).getT(1).getT(0).getT(0);              // osc1_impl::chain162_t<NV>
-		auto& tempo_sync5 = this->getT(1).getT(0).getT(0).getT(1).getT(0).getT(0).getT(0);   // osc1_impl::tempo_sync5_t<NV>
-		auto& ramp4 = this->getT(1).getT(0).getT(0).getT(1).getT(0).getT(0).getT(1);         // osc1_impl::ramp4_t<NV>
-		auto& chain163 = this->getT(1).getT(0).getT(0).getT(1).getT(0).getT(1);              // osc1_impl::chain163_t<NV>
-		auto& clock_ramp3 = this->getT(1).getT(0).getT(0).getT(1).getT(0).getT(1).getT(0);   // osc1_impl::clock_ramp3_t<NV>
-		auto& peak14 = this->getT(1).getT(0).getT(0).getT(1).getT(1);                        // osc1_impl::peak14_t<NV>
-		auto& clear15 = this->getT(1).getT(0).getT(0).getT(1).getT(2);                       // math::clear<NV>
-		auto& branch18 = this->getT(1).getT(0).getT(0).getT(1).getT(3);                      // osc1_impl::branch18_t<NV>
-		auto& chain164 = this->getT(1).getT(0).getT(0).getT(1).getT(3).getT(0);              // osc1_impl::chain164_t<NV>
-		auto& input_toggle2 = this->getT(1).getT(0).getT(0).getT(1).getT(3).getT(0).getT(0); // osc1_impl::input_toggle2_t<NV>
-		auto& ahdsr6 = this->getT(1).getT(0).getT(0).getT(1).getT(3).getT(0).getT(1);        // osc1_impl::ahdsr6_t<NV>
-		auto& clear16 = this->getT(1).getT(0).getT(0).getT(1).getT(3).getT(0).getT(2);       // math::clear<NV>
-		auto& add100 = this->getT(1).getT(0).getT(0).getT(1).getT(3).getT(0).getT(3);        // math::add<NV>
-		auto& chain165 = this->getT(1).getT(0).getT(0).getT(1).getT(3).getT(1);              // osc1_impl::chain165_t<NV>
-		auto& clear17 = this->getT(1).getT(0).getT(0).getT(1).getT(3).getT(1).getT(0);       // math::clear<NV>
-		auto& cable_table8 = this->getT(1).getT(0).getT(0).getT(1).getT(3).getT(1).getT(1);  // osc1_impl::cable_table8_t<NV>
-		auto& clear18 = this->getT(1).getT(0).getT(0).getT(1).getT(3).getT(1).getT(2);       // math::clear<NV>
-		auto& split25 = this->getT(1).getT(0).getT(0).getT(1).getT(3).getT(1).getT(3);       // osc1_impl::split25_t<NV>
-		auto& add102 = this->getT(1).getT(0).getT(0).getT(1).                                // math::add<NV>
-                       getT(3).getT(1).getT(3).getT(0);
-		auto& peak16 = this->getT(1).getT(0).getT(0).getT(1).getT(4);                        // osc1_impl::peak16_t<NV>
-		auto& xfade_2x_lin = this->getT(1).getT(1);                                          // osc1_impl::xfade_2x_lin_t<NV>
-		auto& split20 = this->getT(1).getT(1).getT(0);                                       // osc1_impl::split20_t<NV>
-		auto& chain19 = this->getT(1).getT(1).getT(0).getT(0);                               // osc1_impl::chain19_t<NV>
-		auto& chain77 = this->getT(1).getT(1).getT(0).getT(0).getT(0);                       // osc1_impl::chain77_t<NV>
-		auto& clear23 = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(0);               // math::clear<NV>
-		auto& branch38 = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(1);              // osc1_impl::branch38_t
-		auto& receive7 = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(1).getT(0);      // routing::receive<stereo_cable>
-		auto& receive8 = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(1).getT(1);      // routing::receive<stereo_cable>
-		auto& receive9 = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(1).getT(2);      // routing::receive<stereo_cable>
-		auto& peak8 = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(2);                 // osc1_impl::peak8_t
-		auto& gain = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(3);                  // core::gain<NV>
-		auto& modchain = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(4);              // osc1_impl::modchain_t<NV>
-		auto& split = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(4).getT(0);         // osc1_impl::split_t<NV>
-		auto& chain8 = this->getT(1).getT(1).getT(0).getT(0).                                // osc1_impl::chain8_t<NV>
-                       getT(0).getT(4).getT(0).getT(0);
-		auto& minmax2 = this->getT(1).getT(1).getT(0).getT(0).                               // osc1_impl::minmax2_t<NV>
-                        getT(0).getT(4).getT(0).getT(0).
+		auto& gain283 = this->getT(0).getT(15).getT(1).getT(7).getT(1).getT(0).getT(1);           // core::gain<NV>
+		auto& peak42 = this->getT(0).getT(15).getT(2);                                            // osc1_impl::peak42_t<NV>
+		auto& pma26 = this->getT(0).getT(15).getT(3);                                             // osc1_impl::pma26_t<NV>
+		auto& modchain6 = this->getT(1);                                                          // osc1_impl::modchain6_t<NV>
+		auto& split41 = this->getT(1).getT(0);                                                    // osc1_impl::split41_t<NV>
+		auto& chain94 = this->getT(1).getT(0).getT(0);                                            // osc1_impl::chain94_t<NV>
+		auto& branch13 = this->getT(1).getT(0).getT(0).getT(0);                                   // osc1_impl::branch13_t<NV>
+		auto& chain10 = this->getT(1).getT(0).getT(0).getT(0).getT(0);                            // osc1_impl::chain10_t<NV>
+		auto& tempo_sync2 = this->getT(1).getT(0).getT(0).getT(0).getT(0).getT(0);                // osc1_impl::tempo_sync2_t<NV>
+		auto& ramp = this->getT(1).getT(0).getT(0).getT(0).getT(0).getT(1);                       // osc1_impl::ramp_t<NV>
+		auto& chain84 = this->getT(1).getT(0).getT(0).getT(0).getT(1);                            // osc1_impl::chain84_t<NV>
+		auto& clock_ramp = this->getT(1).getT(0).getT(0).getT(0).getT(1).getT(0);                 // osc1_impl::clock_ramp_t<NV>
+		auto& peak2 = this->getT(1).getT(0).getT(0).getT(1);                                      // osc1_impl::peak2_t<NV>
+		auto& clear10 = this->getT(1).getT(0).getT(0).getT(2);                                    // math::clear<NV>
+		auto& branch14 = this->getT(1).getT(0).getT(0).getT(3);                                   // osc1_impl::branch14_t<NV>
+		auto& chain91 = this->getT(1).getT(0).getT(0).getT(3).getT(0);                            // osc1_impl::chain91_t<NV>
+		auto& input_toggle = this->getT(1).getT(0).getT(0).getT(3).getT(0).getT(0);               // osc1_impl::input_toggle_t<NV>
+		auto& ahdsr = this->getT(1).getT(0).getT(0).getT(3).getT(0).getT(1);                      // osc1_impl::ahdsr_t<NV>
+		auto& clear9 = this->getT(1).getT(0).getT(0).getT(3).getT(0).getT(2);                     // math::clear<NV>
+		auto& add2 = this->getT(1).getT(0).getT(0).getT(3).getT(0).getT(3);                       // math::add<NV>
+		auto& chain3 = this->getT(1).getT(0).getT(0).getT(3).getT(1);                             // osc1_impl::chain3_t<NV>
+		auto& clear8 = this->getT(1).getT(0).getT(0).getT(3).getT(1).getT(0);                     // math::clear<NV>
+		auto& cable_table1 = this->getT(1).getT(0).getT(0).getT(3).getT(1).getT(1);               // osc1_impl::cable_table1_t<NV>
+		auto& clear1 = this->getT(1).getT(0).getT(0).getT(3).getT(1).getT(2);                     // math::clear<NV>
+		auto& split22 = this->getT(1).getT(0).getT(0).getT(3).getT(1).getT(3);                    // osc1_impl::split22_t<NV>
+		auto& add22 = this->getT(1).getT(0).getT(0).getT(3).getT(1).getT(3).getT(0);              // math::add<NV>
+		auto& peak7 = this->getT(1).getT(0).getT(0).getT(4);                                      // osc1_impl::peak7_t<NV>
+		auto& chain161 = this->getT(1).getT(0).getT(1);                                           // osc1_impl::chain161_t<NV>
+		auto& branch17 = this->getT(1).getT(0).getT(1).getT(0);                                   // osc1_impl::branch17_t<NV>
+		auto& chain162 = this->getT(1).getT(0).getT(1).getT(0).getT(0);                           // osc1_impl::chain162_t<NV>
+		auto& tempo_sync5 = this->getT(1).getT(0).getT(1).getT(0).getT(0).getT(0);                // osc1_impl::tempo_sync5_t<NV>
+		auto& ramp4 = this->getT(1).getT(0).getT(1).getT(0).getT(0).getT(1);                      // osc1_impl::ramp4_t<NV>
+		auto& chain163 = this->getT(1).getT(0).getT(1).getT(0).getT(1);                           // osc1_impl::chain163_t<NV>
+		auto& clock_ramp3 = this->getT(1).getT(0).getT(1).getT(0).getT(1).getT(0);                // osc1_impl::clock_ramp3_t<NV>
+		auto& peak14 = this->getT(1).getT(0).getT(1).getT(1);                                     // osc1_impl::peak14_t<NV>
+		auto& clear15 = this->getT(1).getT(0).getT(1).getT(2);                                    // math::clear<NV>
+		auto& branch18 = this->getT(1).getT(0).getT(1).getT(3);                                   // osc1_impl::branch18_t<NV>
+		auto& chain164 = this->getT(1).getT(0).getT(1).getT(3).getT(0);                           // osc1_impl::chain164_t<NV>
+		auto& input_toggle2 = this->getT(1).getT(0).getT(1).getT(3).getT(0).getT(0);              // osc1_impl::input_toggle2_t<NV>
+		auto& ahdsr6 = this->getT(1).getT(0).getT(1).getT(3).getT(0).getT(1);                     // osc1_impl::ahdsr6_t<NV>
+		auto& clear16 = this->getT(1).getT(0).getT(1).getT(3).getT(0).getT(2);                    // math::clear<NV>
+		auto& add100 = this->getT(1).getT(0).getT(1).getT(3).getT(0).getT(3);                     // math::add<NV>
+		auto& chain165 = this->getT(1).getT(0).getT(1).getT(3).getT(1);                           // osc1_impl::chain165_t<NV>
+		auto& clear17 = this->getT(1).getT(0).getT(1).getT(3).getT(1).getT(0);                    // math::clear<NV>
+		auto& cable_table8 = this->getT(1).getT(0).getT(1).getT(3).getT(1).getT(1);               // osc1_impl::cable_table8_t<NV>
+		auto& clear18 = this->getT(1).getT(0).getT(1).getT(3).getT(1).getT(2);                    // math::clear<NV>
+		auto& split25 = this->getT(1).getT(0).getT(1).getT(3).getT(1).getT(3);                    // osc1_impl::split25_t<NV>
+		auto& add102 = this->getT(1).getT(0).getT(1).getT(3).getT(1).getT(3).getT(0);             // math::add<NV>
+		auto& peak16 = this->getT(1).getT(0).getT(1).getT(4);                                     // osc1_impl::peak16_t<NV>
+		auto& fix16_block = this->getT(2);                                                        // osc1_impl::fix16_block_t<NV>
+		auto& fix8_block1 = this->getT(2).getT(0);                                                // osc1_impl::fix8_block1_t<NV>
+		auto& xfade_2x_lin = this->getT(2).getT(0).getT(0);                                       // osc1_impl::xfade_2x_lin_t<NV>
+		auto& split20 = this->getT(2).getT(0).getT(0).getT(0);                                    // osc1_impl::split20_t<NV>
+		auto& chain19 = this->getT(2).getT(0).getT(0).getT(0).getT(0);                            // osc1_impl::chain19_t<NV>
+		auto& chain77 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0);                    // osc1_impl::chain77_t<NV>
+		auto& branch8 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).getT(0);            // osc1_impl::branch8_t<NV>
+		auto& chain59 = this->getT(2).getT(0).getT(0).getT(0).                                    // osc1_impl::chain59_t<NV>
+                        getT(0).getT(0).getT(0).getT(0);
+		auto& clear23 = this->getT(2).getT(0).getT(0).getT(0).                                    // math::clear<NV>
+                        getT(0).getT(0).getT(0).getT(0).
                         getT(0);
-		auto& converter = this->getT(1).getT(1).getT(0).getT(0).                             // osc1_impl::converter_t<NV>
-                          getT(0).getT(4).getT(0).getT(0).
-                          getT(1);
-		auto& chain12 = this->getT(1).getT(1).getT(0).getT(0).                               // osc1_impl::chain12_t<NV>
-                        getT(0).getT(4).getT(0).getT(1);
-		auto& tempo_sync = this->getT(1).getT(1).getT(0).getT(0).                            // osc1_impl::tempo_sync_t<NV>
-                           getT(0).getT(4).getT(0).getT(1).
-                           getT(0);
-		auto& converter5 = this->getT(1).getT(1).getT(0).getT(0).                            // osc1_impl::converter5_t<NV>
-                           getT(0).getT(4).getT(0).getT(1).
-                           getT(1);
-		auto& branch1 = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(5);               // osc1_impl::branch1_t<NV>
-		auto& chain1 = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(5).getT(0);        // osc1_impl::chain1_t<NV>
-		auto& phasor_fm = this->getT(1).getT(1).getT(0).getT(0).                             // core::phasor_fm<NV>
-                          getT(0).getT(5).getT(0).getT(0);
-		auto& chain2 = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(5).getT(1);        // osc1_impl::chain2_t<NV>
-		auto& phasor_fm3 = this->getT(1).getT(1).getT(0).getT(0).                            // core::phasor_fm<NV>
-                           getT(0).getT(5).getT(1).getT(0);
-		auto& no_midi = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(5).getT(2);       // osc1_impl::no_midi_t<NV>
-		auto& phasor_fm1 = this->getT(1).getT(1).getT(0).getT(0).                            // core::phasor_fm<NV>
-                           getT(0).getT(5).getT(2).getT(0);
-		auto& mono2stereo = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(6);           // core::mono2stereo
-		auto& pma6 = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(7);                  // osc1_impl::pma6_t<NV>
-		auto& branch2 = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(8);               // osc1_impl::branch2_t<NV>
-		auto& chain88 = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(8).getT(0);       // osc1_impl::chain88_t<NV>
-		auto& xfader3 = this->getT(1).getT(1).getT(0).getT(0).                               // osc1_impl::xfader3_t<NV>
-                        getT(0).getT(8).getT(0).getT(0);
-		auto& split16 = this->getT(1).getT(1).getT(0).getT(0).                               // osc1_impl::split16_t<NV>
-                        getT(0).getT(8).getT(0).getT(1);
-		auto& chain62 = this->getT(1).getT(1).getT(0).getT(0).                               // osc1_impl::chain62_t<NV>
-                        getT(0).getT(8).getT(0).getT(1).
-                        getT(0);
-		auto& chain74 = this->getT(1).getT(1).getT(0).getT(0).getT(0).                       // osc1_impl::chain74_t<NV>
-                        getT(8).getT(0).getT(1).getT(0).getT(0);
-		auto& sub1 = this->getT(1).getT(1).getT(0).getT(0).getT(0).                          // math::sub<NV>
-                     getT(8).getT(0).getT(1).getT(0).getT(0).
-                     getT(0);
-		auto& abs1 = this->getT(1).getT(1).getT(0).getT(0).getT(0).                          // math::abs<NV>
-                     getT(8).getT(0).getT(1).getT(0).getT(0).
-                     getT(1);
-		auto& mul2 = this->getT(1).getT(1).getT(0).getT(0).getT(0).                          // math::mul<NV>
-                     getT(8).getT(0).getT(1).getT(0).getT(0).
-                     getT(2);
-		auto& gain49 = this->getT(1).getT(1).getT(0).getT(0).getT(0).                        // core::gain<NV>
-                       getT(8).getT(0).getT(1).getT(0).getT(1);
-		auto& chain75 = this->getT(1).getT(1).getT(0).getT(0).                               // osc1_impl::chain75_t<NV>
-                        getT(0).getT(8).getT(0).getT(1).
-                        getT(1);
-		auto& expr3 = this->getT(1).getT(1).getT(0).getT(0).getT(0).                         // math::expr<NV, custom::expr3>
-                      getT(8).getT(0).getT(1).getT(1).getT(0);
-		auto& gain50 = this->getT(1).getT(1).getT(0).getT(0).getT(0).                        // core::gain<NV>
-                       getT(8).getT(0).getT(1).getT(1).getT(1);
-		auto& chain76 = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(8).getT(1);       // osc1_impl::chain76_t<NV>
-		auto& gain51 = this->getT(1).getT(1).getT(0).getT(0).                                // core::gain<NV>
-                       getT(0).getT(8).getT(1).getT(0);
-		auto& rect2 = this->getT(1).getT(1).getT(0).getT(0).                                 // math::rect<NV>
-                      getT(0).getT(8).getT(1).getT(1);
-		auto& chain78 = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(8).getT(2);       // osc1_impl::chain78_t<NV>
-		auto& gain53 = this->getT(1).getT(1).getT(0).getT(0).                                // core::gain<NV>
-                       getT(0).getT(8).getT(2).getT(0);
-		auto& fmod2 = this->getT(1).getT(1).getT(0).getT(0).                                 // math::fmod<NV>
-                      getT(0).getT(8).getT(2).getT(1);
-		auto& mul3 = this->getT(1).getT(1).getT(0).getT(0).                                  // wrap::no_process<math::mul<NV>>
-                     getT(0).getT(8).getT(2).getT(2);
-		auto& pi8 = this->getT(1).getT(1).getT(0).getT(0).                                   // math::pi<NV>
-                    getT(0).getT(8).getT(2).getT(3);
-		auto& chain79 = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(8).getT(3);       // osc1_impl::chain79_t<NV>
-		auto& gain56 = this->getT(1).getT(1).getT(0).getT(0).                                // core::gain<NV>
-                       getT(0).getT(8).getT(3).getT(0);
-		auto& expr6 = this->getT(1).getT(1).getT(0).getT(0).                                 // math::expr<NV, custom::expr6>
-                      getT(0).getT(8).getT(3).getT(1);
-		auto& sin7 = this->getT(1).getT(1).getT(0).getT(0).                                  // math::sin<NV>
-                     getT(0).getT(8).getT(3).getT(2);
-		auto& chain80 = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(8).getT(4);       // osc1_impl::chain80_t<NV>
-		auto& pi9 = this->getT(1).getT(1).getT(0).getT(0).                                   // math::pi<NV>
-                    getT(0).getT(8).getT(4).getT(0);
-		auto& sin1 = this->getT(1).getT(1).getT(0).getT(0).                                  // wrap::no_process<math::sin<NV>>
-                     getT(0).getT(8).getT(4).getT(1);
-		auto& gain58 = this->getT(1).getT(1).getT(0).getT(0).                                // core::gain<NV>
-                       getT(0).getT(8).getT(4).getT(2);
-		auto& sin9 = this->getT(1).getT(1).getT(0).getT(0).                                  // math::sin<NV>
-                     getT(0).getT(8).getT(4).getT(3);
-		auto& expr7 = this->getT(1).getT(1).getT(0).getT(0).                                 // math::expr<NV, custom::expr7>
-                      getT(0).getT(8).getT(4).getT(4);
-		auto& chain81 = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(8).getT(5);       // osc1_impl::chain81_t<NV>
-		auto& pi3 = this->getT(1).getT(1).getT(0).getT(0).                                   // wrap::no_process<math::pi<NV>>
-                    getT(0).getT(8).getT(5).getT(0);
-		auto& phase_delay1 = this->getT(1).getT(1).getT(0).getT(0).                          // wrap::no_process<fx::phase_delay<NV>>
-                             getT(0).getT(8).getT(5).getT(1);
-		auto& gain59 = this->getT(1).getT(1).getT(0).getT(0).                                // core::gain<NV>
-                       getT(0).getT(8).getT(5).getT(2);
-		auto& expr8 = this->getT(1).getT(1).getT(0).getT(0).                                 // math::expr<NV, custom::expr8>
-                      getT(0).getT(8).getT(5).getT(3);
-		auto& sin10 = this->getT(1).getT(1).getT(0).getT(0).                                 // math::sin<NV>
-                      getT(0).getT(8).getT(5).getT(4);
-		auto& chain85 = this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(8).getT(6);       // osc1_impl::chain85_t<NV>
-		auto& gain63 = this->getT(1).getT(1).getT(0).getT(0).                                // core::gain<NV>
-                       getT(0).getT(8).getT(6).getT(0);
-		auto& pi12 = this->getT(1).getT(1).getT(0).getT(0).                                  // math::pi<NV>
-                     getT(0).getT(8).getT(6).getT(1);
-		auto& table5 = this->getT(1).getT(1).getT(0).getT(0).                                // osc1_impl::table5_t
-                       getT(0).getT(8).getT(6).getT(2);
-		auto& gain12 = this->getT(1).getT(1).getT(0).getT(0).getT(1);                        // core::gain<NV>
-		auto& one_pole1 = this->getT(1).getT(1).getT(0).getT(0).getT(2);                     // filters::one_pole<NV>
-		auto& gain3 = this->getT(1).getT(1).getT(0).getT(0).getT(3);                         // core::gain<NV>
-		auto& chain168 = this->getT(1).getT(1).getT(0).getT(0).getT(4);                      // osc1_impl::chain168_t<NV>
-		auto& split32 = this->getT(1).getT(1).getT(0).getT(0).getT(4).getT(0);               // osc1_impl::split32_t<NV>
-		auto& chain197 = this->getT(1).getT(1).getT(0).getT(0).getT(4).getT(0).getT(0);      // osc1_impl::chain197_t
-		auto& send = this->getT(1).getT(1).getT(0).getT(0).                                  // routing::send<stereo_cable>
-                     getT(4).getT(0).getT(0).getT(0);
-		auto& chain196 = this->getT(1).getT(1).getT(0).getT(0).getT(4).getT(0).getT(1);      // osc1_impl::chain196_t<NV>
-		auto& peak17 = this->getT(1).getT(1).getT(0).getT(0).                                // osc1_impl::peak17_t<NV>
-                       getT(4).getT(0).getT(1).getT(0);
-		auto& clear19 = this->getT(1).getT(1).getT(0).getT(0).getT(5);                       // math::clear<NV>
-		auto& chain86 = this->getT(1).getT(1).getT(0).getT(1);                               // osc1_impl::chain86_t<NV>
-		auto& chain82 = this->getT(1).getT(1).getT(0).getT(1).getT(0);                       // osc1_impl::chain82_t<NV>
-		auto& clear22 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(0);               // math::clear<NV>
-		auto& branch27 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(1);              // osc1_impl::branch27_t
-		auto& receive6 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(1).getT(0);      // routing::receive<stereo_cable>
-		auto& receive5 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(1).getT(1);      // routing::receive<stereo_cable>
-		auto& receive4 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(1).getT(2);      // routing::receive<stereo_cable>
-		auto& gain11 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(2);                // core::gain<NV>
-		auto& modchain3 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(3);             // osc1_impl::modchain3_t<NV>
-		auto& split5 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(3).getT(0);        // osc1_impl::split5_t<NV>
-		auto& chain83 = this->getT(1).getT(1).getT(0).getT(1).                               // osc1_impl::chain83_t<NV>
-                        getT(0).getT(3).getT(0).getT(0);
-		auto& minmax3 = this->getT(1).getT(1).getT(0).getT(1).                               // osc1_impl::minmax3_t<NV>
-                        getT(0).getT(3).getT(0).getT(0).
-                        getT(0);
-		auto& converter1 = this->getT(1).getT(1).getT(0).getT(1).                            // osc1_impl::converter1_t<NV>
-                           getT(0).getT(3).getT(0).getT(0).
-                           getT(1);
-		auto& chain92 = this->getT(1).getT(1).getT(0).getT(1).                               // osc1_impl::chain92_t<NV>
-                        getT(0).getT(3).getT(0).getT(1);
-		auto& tempo_sync1 = this->getT(1).getT(1).getT(0).getT(1).                           // osc1_impl::tempo_sync1_t<NV>
-                            getT(0).getT(3).getT(0).getT(1).
-                            getT(0);
-		auto& converter6 = this->getT(1).getT(1).getT(0).getT(1).                            // osc1_impl::converter6_t<NV>
-                           getT(0).getT(3).getT(0).getT(1).
-                           getT(1);
-		auto& branch7 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(4);               // osc1_impl::branch7_t<NV>
-		auto& chain93 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(4).getT(0);       // osc1_impl::chain93_t<NV>
-		auto& phasor_fm2 = this->getT(1).getT(1).getT(0).getT(1).                            // core::phasor_fm<NV>
-                           getT(0).getT(4).getT(0).getT(0);
-		auto& chain95 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(4).getT(1);       // osc1_impl::chain95_t<NV>
-		auto& phasor_fm4 = this->getT(1).getT(1).getT(0).getT(1).                            // core::phasor_fm<NV>
-                           getT(0).getT(4).getT(1).getT(0);
-		auto& no_midi1 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(4).getT(2);      // osc1_impl::no_midi1_t<NV>
-		auto& phasor_fm7 = this->getT(1).getT(1).getT(0).getT(1).                            // core::phasor_fm<NV>
-                           getT(0).getT(4).getT(2).getT(0);
-		auto& mono2stereo1 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(5);          // core::mono2stereo
-		auto& pma7 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(6);                  // osc1_impl::pma7_t<NV>
-		auto& branch10 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(7);              // osc1_impl::branch10_t<NV>
-		auto& chain96 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(7).getT(0);       // osc1_impl::chain96_t<NV>
-		auto& xfader4 = this->getT(1).getT(1).getT(0).getT(1).                               // osc1_impl::xfader4_t<NV>
-                        getT(0).getT(7).getT(0).getT(0);
-		auto& split18 = this->getT(1).getT(1).getT(0).getT(1).                               // osc1_impl::split18_t<NV>
-                        getT(0).getT(7).getT(0).getT(1);
-		auto& chain97 = this->getT(1).getT(1).getT(0).getT(1).                               // osc1_impl::chain97_t<NV>
-                        getT(0).getT(7).getT(0).getT(1).
-                        getT(0);
-		auto& chain98 = this->getT(1).getT(1).getT(0).getT(1).getT(0).                       // osc1_impl::chain98_t<NV>
-                        getT(7).getT(0).getT(1).getT(0).getT(0);
-		auto& sub2 = this->getT(1).getT(1).getT(0).getT(1).getT(0).                          // math::sub<NV>
-                     getT(7).getT(0).getT(1).getT(0).getT(0).
-                     getT(0);
-		auto& abs2 = this->getT(1).getT(1).getT(0).getT(1).getT(0).                          // math::abs<NV>
-                     getT(7).getT(0).getT(1).getT(0).getT(0).
-                     getT(1);
-		auto& mul4 = this->getT(1).getT(1).getT(0).getT(1).getT(0).                          // math::mul<NV>
-                     getT(7).getT(0).getT(1).getT(0).getT(0).
-                     getT(2);
-		auto& gain52 = this->getT(1).getT(1).getT(0).getT(1).getT(0).                        // core::gain<NV>
-                       getT(7).getT(0).getT(1).getT(0).getT(1);
-		auto& chain99 = this->getT(1).getT(1).getT(0).getT(1).                               // osc1_impl::chain99_t<NV>
-                        getT(0).getT(7).getT(0).getT(1).
-                        getT(1);
-		auto& expr4 = this->getT(1).getT(1).getT(0).getT(1).getT(0).                         // math::expr<NV, custom::expr4>
-                      getT(7).getT(0).getT(1).getT(1).getT(0);
-		auto& gain54 = this->getT(1).getT(1).getT(0).getT(1).getT(0).                        // core::gain<NV>
-                       getT(7).getT(0).getT(1).getT(1).getT(1);
-		auto& chain100 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(7).getT(1);      // osc1_impl::chain100_t<NV>
-		auto& gain55 = this->getT(1).getT(1).getT(0).getT(1).                                // core::gain<NV>
-                       getT(0).getT(7).getT(1).getT(0);
-		auto& rect4 = this->getT(1).getT(1).getT(0).getT(1).                                 // math::rect<NV>
-                      getT(0).getT(7).getT(1).getT(1);
-		auto& chain131 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(7).getT(2);      // osc1_impl::chain131_t<NV>
-		auto& gain57 = this->getT(1).getT(1).getT(0).getT(1).                                // core::gain<NV>
-                       getT(0).getT(7).getT(2).getT(0);
-		auto& fmod3 = this->getT(1).getT(1).getT(0).getT(1).                                 // math::fmod<NV>
-                      getT(0).getT(7).getT(2).getT(1);
-		auto& mul5 = this->getT(1).getT(1).getT(0).getT(1).                                  // wrap::no_process<math::mul<NV>>
-                     getT(0).getT(7).getT(2).getT(2);
-		auto& pi10 = this->getT(1).getT(1).getT(0).getT(1).                                  // math::pi<NV>
-                     getT(0).getT(7).getT(2).getT(3);
-		auto& oscilloscope2 = this->getT(1).getT(1).getT(0).getT(1).                         // osc1_impl::oscilloscope2_t
-                              getT(0).getT(7).getT(2).getT(4);
-		auto& chain132 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(7).getT(3);      // osc1_impl::chain132_t<NV>
-		auto& gain60 = this->getT(1).getT(1).getT(0).getT(1).                                // core::gain<NV>
-                       getT(0).getT(7).getT(3).getT(0);
-		auto& expr11 = this->getT(1).getT(1).getT(0).getT(1).                                // math::expr<NV, custom::expr11>
-                       getT(0).getT(7).getT(3).getT(1);
-		auto& sin8 = this->getT(1).getT(1).getT(0).getT(1).                                  // math::sin<NV>
-                     getT(0).getT(7).getT(3).getT(2);
-		auto& chain133 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(7).getT(4);      // osc1_impl::chain133_t<NV>
-		auto& pi13 = this->getT(1).getT(1).getT(0).getT(1).                                  // math::pi<NV>
-                     getT(0).getT(7).getT(4).getT(0);
-		auto& sin2 = this->getT(1).getT(1).getT(0).getT(1).                                  // wrap::no_process<math::sin<NV>>
-                     getT(0).getT(7).getT(4).getT(1);
-		auto& gain62 = this->getT(1).getT(1).getT(0).getT(1).                                // core::gain<NV>
-                       getT(0).getT(7).getT(4).getT(2);
-		auto& sin11 = this->getT(1).getT(1).getT(0).getT(1).                                 // math::sin<NV>
-                      getT(0).getT(7).getT(4).getT(3);
-		auto& expr12 = this->getT(1).getT(1).getT(0).getT(1).                                // math::expr<NV, custom::expr12>
-                       getT(0).getT(7).getT(4).getT(4);
-		auto& chain134 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(7).getT(5);      // osc1_impl::chain134_t<NV>
-		auto& pi4 = this->getT(1).getT(1).getT(0).getT(1).                                   // wrap::no_process<math::pi<NV>>
-                    getT(0).getT(7).getT(5).getT(0);
-		auto& phase_delay2 = this->getT(1).getT(1).getT(0).getT(1).                          // wrap::no_process<fx::phase_delay<NV>>
-                             getT(0).getT(7).getT(5).getT(1);
-		auto& gain64 = this->getT(1).getT(1).getT(0).getT(1).                                // core::gain<NV>
-                       getT(0).getT(7).getT(5).getT(2);
-		auto& expr13 = this->getT(1).getT(1).getT(0).getT(1).                                // math::expr<NV, custom::expr13>
-                       getT(0).getT(7).getT(5).getT(3);
-		auto& sin12 = this->getT(1).getT(1).getT(0).getT(1).                                 // math::sin<NV>
-                      getT(0).getT(7).getT(5).getT(4);
-		auto& chain135 = this->getT(1).getT(1).getT(0).getT(1).getT(0).getT(7).getT(6);      // osc1_impl::chain135_t<NV>
-		auto& gain65 = this->getT(1).getT(1).getT(0).getT(1).                                // core::gain<NV>
-                       getT(0).getT(7).getT(6).getT(0);
-		auto& pi14 = this->getT(1).getT(1).getT(0).getT(1).                                  // math::pi<NV>
-                     getT(0).getT(7).getT(6).getT(1);
-		auto& table6 = this->getT(1).getT(1).getT(0).getT(1).                                // osc1_impl::table6_t
-                       getT(0).getT(7).getT(6).getT(2);
-		auto& one_pole2 = this->getT(1).getT(1).getT(0).getT(1).getT(1);                     // filters::one_pole<NV>
-		auto& send6 = this->getT(1).getT(1).getT(0).getT(1).getT(2);                         // routing::send<stereo_cable>
-		auto& chain170 = this->getT(1).getT(1).getT(0).getT(1).getT(3);                      // osc1_impl::chain170_t<NV>
-		auto& peak20 = this->getT(1).getT(1).getT(0).getT(1).getT(3).getT(0);                // osc1_impl::peak20_t<NV>
-		auto& gain73 = this->getT(1).getT(1).getT(0).getT(1).getT(4);                        // core::gain<NV>
-		auto& gain5 = this->getT(1).getT(1).getT(0).getT(1).getT(5);                         // core::gain<NV>
-		auto& clear21 = this->getT(1).getT(1).getT(0).getT(1).getT(6);                       // math::clear<NV>
-		auto& chain73 = this->getT(1).getT(1).getT(0).getT(2);                               // osc1_impl::chain73_t<NV>
-		auto& clear25 = this->getT(1).getT(1).getT(0).getT(2).getT(0);                       // math::clear<NV>
-		auto& chain87 = this->getT(1).getT(1).getT(0).getT(2).getT(1);                       // osc1_impl::chain87_t<NV>
-		auto& split30 = this->getT(1).getT(1).getT(0).getT(2).getT(1).getT(0);               // osc1_impl::split30_t<NV>
-		auto& chain191 = this->getT(1).getT(1).getT(0).getT(2).getT(1).getT(0).getT(0);      // osc1_impl::chain191_t<NV>
-		auto& receive10 = this->getT(1).getT(1).getT(0).getT(2).                             // routing::receive<stereo_cable>
-                          getT(1).getT(0).getT(0).getT(0);
-		auto& gain8 = this->getT(1).getT(1).getT(0).getT(2).                                 // core::gain<NV>
-                      getT(1).getT(0).getT(0).getT(1);
-		auto& chain192 = this->getT(1).getT(1).getT(0).getT(2).getT(1).getT(0).getT(1);      // osc1_impl::chain192_t<NV>
-		auto& receive11 = this->getT(1).getT(1).getT(0).getT(2).                             // routing::receive<stereo_cable>
-                          getT(1).getT(0).getT(1).getT(0);
-		auto& gain6 = this->getT(1).getT(1).getT(0).getT(2).                                 // core::gain<NV>
-                      getT(1).getT(0).getT(1).getT(1);
-		auto& branch39 = this->getT(1).getT(1).getT(0).getT(2).getT(2);                      // osc1_impl::branch39_t<NV>
-		auto& xfader1 = this->getT(1).getT(1).getT(0).getT(2).getT(2).getT(0);               // osc1_impl::xfader1_t<NV>
-		auto& xfader5 = this->getT(1).getT(1).getT(0).getT(2).getT(2).getT(1);               // osc1_impl::xfader5_t<NV>
-		auto& xfader6 = this->getT(1).getT(1).getT(0).getT(2).getT(2).getT(2);               // osc1_impl::xfader6_t<NV>
-		auto& sliderbank = this->getT(1).getT(1).getT(0).getT(2).getT(2).getT(3);            // osc1_impl::sliderbank_t<NV>
-		auto& one_pole = this->getT(1).getT(1).getT(0).getT(2).getT(3);                      // filters::one_pole<NV>
-		auto& fix8_block = this->getT(1).getT(1).getT(0).getT(2).getT(4);                    // osc1_impl::fix8_block_t<NV>
-		auto& modchain8 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(0);             // osc1_impl::modchain8_t<NV>
-		auto& split23 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(0).getT(0);       // osc1_impl::split23_t<NV>
-		auto& chain178 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::chain178_t<NV>
-                         getT(4).getT(0).getT(0).getT(0);
-		auto& chain179 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::chain179_t<NV>
-                         getT(4).getT(0).getT(0).getT(0).
-                         getT(0);
-		auto& tempo_sync6 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                   // osc1_impl::tempo_sync6_t<NV>
-                            getT(0).getT(0).getT(0).getT(0).getT(0);
-		auto& ramp5 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                         // osc1_impl::ramp5_t<NV>
-                      getT(0).getT(0).getT(0).getT(0).getT(1);
-		auto& branch36 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::branch36_t<NV>
-                         getT(4).getT(0).getT(0).getT(0).
+		auto& chain580 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain580_t<NV>
+                         getT(0).getT(0).getT(0).getT(0).
                          getT(1);
-		auto& chain102 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain102_t
-                         getT(0).getT(0).getT(0).getT(1).getT(0);
-		auto& mod_inv = this->getT(1).getT(1).getT(0).getT(2).getT(4).                       // math::mod_inv<NV>
+		auto& sliderbank9 = this->getT(2).getT(0).getT(0).getT(0).getT(0).                        // osc1_impl::sliderbank9_t<NV>
+                            getT(0).getT(0).getT(0).getT(1).getT(0);
+		auto& split52 = this->getT(2).getT(0).getT(0).getT(0).getT(0).                            // osc1_impl::split52_t<NV>
                         getT(0).getT(0).getT(0).getT(1).getT(1);
-		auto& peak15 = this->getT(1).getT(1).getT(0).getT(2).                                // osc1_impl::peak15_t<NV>
-                       getT(4).getT(0).getT(0).getT(0).
-                       getT(2);
-		auto& clear26 = this->getT(1).getT(1).getT(0).getT(2).                               // math::clear<NV>
-                        getT(4).getT(0).getT(0).getT(0).
-                        getT(3);
-		auto& chain187 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::chain187_t<NV>
-                         getT(4).getT(0).getT(0).getT(1);
-		auto& chain188 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::chain188_t<NV>
-                         getT(4).getT(0).getT(0).getT(1).
+		auto& chain581 = this->getT(2).getT(0).getT(0).getT(0).getT(0).                           // osc1_impl::chain581_t<NV>
+                         getT(0).getT(0).getT(0).getT(1).getT(1).
                          getT(0);
-		auto& tempo_sync9 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                   // osc1_impl::tempo_sync9_t<NV>
-                            getT(0).getT(0).getT(1).getT(0).getT(0);
-		auto& ramp8 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                         // osc1_impl::ramp8_t<NV>
-                      getT(0).getT(0).getT(1).getT(0).getT(1);
-		auto& branch89 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::branch89_t<NV>
-                         getT(4).getT(0).getT(0).getT(1).
+		auto& receive33 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).                  // routing::receive<NV, stereo_cable<NV>>
+                          getT(0).getT(0).getT(1).getT(1).getT(0).getT(0);
+		auto& gain106 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).                    // core::gain<NV>
+                        getT(0).getT(0).getT(1).getT(1).getT(0).getT(1);
+		auto& chain582 = this->getT(2).getT(0).getT(0).getT(0).getT(0).                           // osc1_impl::chain582_t<NV>
+                         getT(0).getT(0).getT(0).getT(1).getT(1).
                          getT(1);
-		auto& chain105 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain105_t
-                         getT(0).getT(0).getT(1).getT(1).getT(0);
-		auto& mod_inv3 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // math::mod_inv<NV>
-                         getT(0).getT(0).getT(1).getT(1).getT(1);
-		auto& peak49 = this->getT(1).getT(1).getT(0).getT(2).                                // osc1_impl::peak49_t<NV>
-                       getT(4).getT(0).getT(0).getT(1).
-                       getT(2);
-		auto& clear32 = this->getT(1).getT(1).getT(0).getT(2).                               // math::clear<NV>
-                        getT(4).getT(0).getT(0).getT(1).
-                        getT(3);
-		auto& chain185 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::chain185_t<NV>
-                         getT(4).getT(0).getT(0).getT(2);
-		auto& chain186 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::chain186_t<NV>
-                         getT(4).getT(0).getT(0).getT(2).
-                         getT(0);
-		auto& tempo_sync8 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                   // osc1_impl::tempo_sync8_t<NV>
-                            getT(0).getT(0).getT(2).getT(0).getT(0);
-		auto& ramp7 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                         // osc1_impl::ramp7_t<NV>
-                      getT(0).getT(0).getT(2).getT(0).getT(1);
-		auto& branch46 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::branch46_t<NV>
-                         getT(4).getT(0).getT(0).getT(2).
-                         getT(1);
-		auto& chain104 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain104_t
-                         getT(0).getT(0).getT(2).getT(1).getT(0);
-		auto& mod_inv2 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // math::mod_inv<NV>
-                         getT(0).getT(0).getT(2).getT(1).getT(1);
-		auto& peak48 = this->getT(1).getT(1).getT(0).getT(2).                                // osc1_impl::peak48_t<NV>
-                       getT(4).getT(0).getT(0).getT(2).
-                       getT(2);
-		auto& clear31 = this->getT(1).getT(1).getT(0).getT(2).                               // math::clear<NV>
-                        getT(4).getT(0).getT(0).getT(2).
-                        getT(3);
-		auto& chain183 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::chain183_t<NV>
-                         getT(4).getT(0).getT(0).getT(3);
-		auto& chain184 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::chain184_t<NV>
-                         getT(4).getT(0).getT(0).getT(3).
-                         getT(0);
-		auto& tempo_sync7 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                   // osc1_impl::tempo_sync7_t<NV>
-                            getT(0).getT(0).getT(3).getT(0).getT(0);
-		auto& ramp6 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                         // osc1_impl::ramp6_t<NV>
-                      getT(0).getT(0).getT(3).getT(0).getT(1);
-		auto& branch37 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::branch37_t<NV>
-                         getT(4).getT(0).getT(0).getT(3).
-                         getT(1);
-		auto& chain103 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain103_t
-                         getT(0).getT(0).getT(3).getT(1).getT(0);
-		auto& mod_inv1 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // math::mod_inv<NV>
-                         getT(0).getT(0).getT(3).getT(1).getT(1);
-		auto& peak47 = this->getT(1).getT(1).getT(0).getT(2).                                // osc1_impl::peak47_t<NV>
-                       getT(4).getT(0).getT(0).getT(3).
-                       getT(2);
-		auto& clear30 = this->getT(1).getT(1).getT(0).getT(2).                               // math::clear<NV>
-                        getT(4).getT(0).getT(0).getT(3).
-                        getT(3);
-		auto& chain247 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1);              // osc1_impl::chain247_t<NV>
-		auto& split10 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0);       // osc1_impl::split10_t<NV>
-		auto& modchain13 = this->getT(1).getT(1).getT(0).getT(2).                            // osc1_impl::modchain13_t<NV>
-                           getT(4).getT(1).getT(0).getT(0);
-		auto& sliderbank13 = this->getT(1).getT(1).getT(0).getT(2).                          // osc1_impl::sliderbank13_t<NV>
-                             getT(4).getT(1).getT(0).getT(0).
-                             getT(0);
-		auto& split27 = this->getT(1).getT(1).getT(0).getT(2).                               // osc1_impl::split27_t<NV>
-                        getT(4).getT(1).getT(0).getT(0).
+		auto& receive34 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).                  // routing::receive<NV, stereo_cable<NV>>
+                          getT(0).getT(0).getT(1).getT(1).getT(1).getT(0);
+		auto& gain107 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).                    // core::gain<NV>
+                        getT(0).getT(0).getT(1).getT(1).getT(1).getT(1);
+		auto& chain583 = this->getT(2).getT(0).getT(0).getT(0).getT(0).                           // osc1_impl::chain583_t<NV>
+                         getT(0).getT(0).getT(0).getT(1).getT(1).
+                         getT(2);
+		auto& receive35 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).                  // routing::receive<NV, stereo_cable<NV>>
+                          getT(0).getT(0).getT(1).getT(1).getT(2).getT(0);
+		auto& gain148 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).                    // core::gain<NV>
+                        getT(0).getT(0).getT(1).getT(1).getT(2).getT(1);
+		auto& chain584 = this->getT(2).getT(0).getT(0).getT(0).getT(0).                           // osc1_impl::chain584_t<NV>
+                         getT(0).getT(0).getT(0).getT(1).getT(1).
+                         getT(3);
+		auto& receive36 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).                  // routing::receive<NV, stereo_cable<NV>>
+                          getT(0).getT(0).getT(1).getT(1).getT(3).getT(0);
+		auto& gain149 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).                    // core::gain<NV>
+                        getT(0).getT(0).getT(1).getT(1).getT(3).getT(1);
+		auto& gain = this->getT(2).getT(0).getT(0).getT(0).getT(0).                               // core::gain<NV>
+                     getT(0).getT(0).getT(0).getT(1).getT(2);
+		auto& peak8 = this->getT(2).getT(0).getT(0).getT(0).getT(0).                              // osc1_impl::peak8_t
+                      getT(0).getT(0).getT(0).getT(1).getT(3);
+		auto& modchain = this->getT(2).getT(0).getT(0).getT(0).getT(0).                           // osc1_impl::modchain_t<NV>
+                         getT(0).getT(0).getT(0).getT(1).getT(4);
+		auto& split = this->getT(2).getT(0).getT(0).getT(0).getT(0).                              // osc1_impl::split_t<NV>
+                      getT(0).getT(0).getT(0).getT(1).getT(4).
+                      getT(0);
+		auto& chain8 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).                     // osc1_impl::chain8_t<NV>
+                       getT(0).getT(0).getT(1).getT(4).getT(0).getT(0);
+		auto& minmax2 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).                    // osc1_impl::minmax2_t<NV>
+                        getT(0).getT(0).getT(1).getT(4).getT(0).getT(0).
+                        getT(0);
+		auto& converter = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).                  // osc1_impl::converter_t<NV>
+                          getT(0).getT(0).getT(1).getT(4).getT(0).getT(0).
+                          getT(1);
+		auto& chain12 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).                    // osc1_impl::chain12_t<NV>
+                        getT(0).getT(0).getT(1).getT(4).getT(0).getT(1);
+		auto& tempo_sync = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).                 // osc1_impl::tempo_sync_t<NV>
+                           getT(0).getT(0).getT(1).getT(4).getT(0).getT(1).
+                           getT(0);
+		auto& converter5 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).                 // osc1_impl::converter5_t<NV>
+                           getT(0).getT(0).getT(1).getT(4).getT(0).getT(1).
+                           getT(1);
+		auto& branch1 = this->getT(2).getT(0).getT(0).getT(0).getT(0).                            // osc1_impl::branch1_t<NV>
+                        getT(0).getT(0).getT(0).getT(1).getT(5);
+		auto& chain1 = this->getT(2).getT(0).getT(0).getT(0).getT(0).                             // osc1_impl::chain1_t<NV>
+                       getT(0).getT(0).getT(0).getT(1).getT(5).
+                       getT(0);
+		auto& phasor_fm = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).                  // core::phasor_fm<NV>
+                          getT(0).getT(0).getT(1).getT(5).getT(0).getT(0);
+		auto& chain2 = this->getT(2).getT(0).getT(0).getT(0).getT(0).                             // osc1_impl::chain2_t<NV>
+                       getT(0).getT(0).getT(0).getT(1).getT(5).
+                       getT(1);
+		auto& phasor_fm3 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).                 // core::phasor_fm<NV>
+                           getT(0).getT(0).getT(1).getT(5).getT(1).getT(0);
+		auto& no_midi = this->getT(2).getT(0).getT(0).getT(0).getT(0).                            // osc1_impl::no_midi_t<NV>
+                        getT(0).getT(0).getT(0).getT(1).getT(5).
+                        getT(2);
+		auto& phasor_fm1 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).                 // core::phasor_fm<NV>
+                           getT(0).getT(0).getT(1).getT(5).getT(2).getT(0);
+		auto& chain399 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain399_t
+                         getT(0).getT(0).getT(0).getT(1);
+		auto& mono2stereo = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).getT(1);        // core::mono2stereo
+		auto& pma6 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).getT(2);               // osc1_impl::pma6_t<NV>
+		auto& branch2 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).getT(3);            // osc1_impl::branch2_t<NV>
+		auto& chain88 = this->getT(2).getT(0).getT(0).getT(0).                                    // osc1_impl::chain88_t<NV>
+                        getT(0).getT(0).getT(3).getT(0);
+		auto& xfader3 = this->getT(2).getT(0).getT(0).getT(0).                                    // osc1_impl::xfader3_t<NV>
+                        getT(0).getT(0).getT(3).getT(0).
+                        getT(0);
+		auto& split16 = this->getT(2).getT(0).getT(0).getT(0).                                    // osc1_impl::split16_t<NV>
+                        getT(0).getT(0).getT(3).getT(0).
                         getT(1);
-		auto& chain508 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain508_t<NV>
+		auto& chain62 = this->getT(2).getT(0).getT(0).getT(0).getT(0).                            // osc1_impl::chain62_t<NV>
+                        getT(0).getT(3).getT(0).getT(1).getT(0);
+		auto& chain74 = this->getT(2).getT(0).getT(0).getT(0).getT(0).                            // osc1_impl::chain74_t<NV>
+                        getT(0).getT(3).getT(0).getT(1).getT(0).
+                        getT(0);
+		auto& sub1 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).                       // math::sub<NV>
+                     getT(3).getT(0).getT(1).getT(0).getT(0).getT(0);
+		auto& abs1 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).                       // math::abs<NV>
+                     getT(3).getT(0).getT(1).getT(0).getT(0).getT(1);
+		auto& mul2 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(0).                       // math::mul<NV>
+                     getT(3).getT(0).getT(1).getT(0).getT(0).getT(2);
+		auto& gain49 = this->getT(2).getT(0).getT(0).getT(0).getT(0).                             // core::gain<NV>
+                       getT(0).getT(3).getT(0).getT(1).getT(0).
+                       getT(1);
+		auto& chain75 = this->getT(2).getT(0).getT(0).getT(0).getT(0).                            // osc1_impl::chain75_t<NV>
+                        getT(0).getT(3).getT(0).getT(1).getT(1);
+		auto& expr3 = this->getT(2).getT(0).getT(0).getT(0).getT(0).                              // math::expr<NV, custom::expr3>
+                      getT(0).getT(3).getT(0).getT(1).getT(1).
+                      getT(0);
+		auto& gain50 = this->getT(2).getT(0).getT(0).getT(0).getT(0).                             // core::gain<NV>
+                       getT(0).getT(3).getT(0).getT(1).getT(1).
+                       getT(1);
+		auto& chain76 = this->getT(2).getT(0).getT(0).getT(0).                                    // osc1_impl::chain76_t<NV>
+                        getT(0).getT(0).getT(3).getT(1);
+		auto& gain51 = this->getT(2).getT(0).getT(0).getT(0).                                     // core::gain<NV>
+                       getT(0).getT(0).getT(3).getT(1).
+                       getT(0);
+		auto& rect2 = this->getT(2).getT(0).getT(0).getT(0).                                      // math::rect<NV>
+                      getT(0).getT(0).getT(3).getT(1).
+                      getT(1);
+		auto& chain78 = this->getT(2).getT(0).getT(0).getT(0).                                    // osc1_impl::chain78_t<NV>
+                        getT(0).getT(0).getT(3).getT(2);
+		auto& gain53 = this->getT(2).getT(0).getT(0).getT(0).                                     // core::gain<NV>
+                       getT(0).getT(0).getT(3).getT(2).
+                       getT(0);
+		auto& fmod2 = this->getT(2).getT(0).getT(0).getT(0).                                      // math::fmod<NV>
+                      getT(0).getT(0).getT(3).getT(2).
+                      getT(1);
+		auto& mul3 = this->getT(2).getT(0).getT(0).getT(0).                                       // wrap::no_process<math::mul<NV>>
+                     getT(0).getT(0).getT(3).getT(2).
+                     getT(2);
+		auto& pi8 = this->getT(2).getT(0).getT(0).getT(0).                                        // math::pi<NV>
+                    getT(0).getT(0).getT(3).getT(2).
+                    getT(3);
+		auto& chain79 = this->getT(2).getT(0).getT(0).getT(0).                                    // osc1_impl::chain79_t<NV>
+                        getT(0).getT(0).getT(3).getT(3);
+		auto& gain56 = this->getT(2).getT(0).getT(0).getT(0).                                     // core::gain<NV>
+                       getT(0).getT(0).getT(3).getT(3).
+                       getT(0);
+		auto& expr6 = this->getT(2).getT(0).getT(0).getT(0).                                      // math::expr<NV, custom::expr6>
+                      getT(0).getT(0).getT(3).getT(3).
+                      getT(1);
+		auto& sin7 = this->getT(2).getT(0).getT(0).getT(0).                                       // math::sin<NV>
+                     getT(0).getT(0).getT(3).getT(3).
+                     getT(2);
+		auto& chain80 = this->getT(2).getT(0).getT(0).getT(0).                                    // osc1_impl::chain80_t<NV>
+                        getT(0).getT(0).getT(3).getT(4);
+		auto& expr5 = this->getT(2).getT(0).getT(0).getT(0).                                      // math::expr<NV, custom::expr5>
+                      getT(0).getT(0).getT(3).getT(4).
+                      getT(0);
+		auto& pi9 = this->getT(2).getT(0).getT(0).getT(0).                                        // math::pi<NV>
+                    getT(0).getT(0).getT(3).getT(4).
+                    getT(1);
+		auto& sin1 = this->getT(2).getT(0).getT(0).getT(0).                                       // wrap::no_process<math::sin<NV>>
+                     getT(0).getT(0).getT(3).getT(4).
+                     getT(2);
+		auto& gain58 = this->getT(2).getT(0).getT(0).getT(0).                                     // core::gain<NV>
+                       getT(0).getT(0).getT(3).getT(4).
+                       getT(3);
+		auto& sin9 = this->getT(2).getT(0).getT(0).getT(0).                                       // math::sin<NV>
+                     getT(0).getT(0).getT(3).getT(4).
+                     getT(4);
+		auto& expr7 = this->getT(2).getT(0).getT(0).getT(0).                                      // math::expr<NV, custom::expr7>
+                      getT(0).getT(0).getT(3).getT(4).
+                      getT(5);
+		auto& chain81 = this->getT(2).getT(0).getT(0).getT(0).                                    // osc1_impl::chain81_t<NV>
+                        getT(0).getT(0).getT(3).getT(5);
+		auto& pi3 = this->getT(2).getT(0).getT(0).getT(0).                                        // math::pi<NV>
+                    getT(0).getT(0).getT(3).getT(5).
+                    getT(0);
+		auto& sin10 = this->getT(2).getT(0).getT(0).getT(0).                                      // math::sin<NV>
+                      getT(0).getT(0).getT(3).getT(5).
+                      getT(1);
+		auto& gain59 = this->getT(2).getT(0).getT(0).getT(0).                                     // core::gain<NV>
+                       getT(0).getT(0).getT(3).getT(5).
+                       getT(2);
+		auto& expr9 = this->getT(2).getT(0).getT(0).getT(0).                                      // math::expr<NV, custom::expr9>
+                      getT(0).getT(0).getT(3).getT(5).
+                      getT(3);
+		auto& expr8 = this->getT(2).getT(0).getT(0).getT(0).                                      // math::expr<NV, custom::expr8>
+                      getT(0).getT(0).getT(3).getT(5).
+                      getT(4);
+		auto& phase_delay1 = this->getT(2).getT(0).getT(0).getT(0).                               // fx::phase_delay<NV>
+                             getT(0).getT(0).getT(3).getT(5).
+                             getT(5);
+		auto& chain85 = this->getT(2).getT(0).getT(0).getT(0).                                    // osc1_impl::chain85_t<NV>
+                        getT(0).getT(0).getT(3).getT(6);
+		auto& gain63 = this->getT(2).getT(0).getT(0).getT(0).                                     // core::gain<NV>
+                       getT(0).getT(0).getT(3).getT(6).
+                       getT(0);
+		auto& pi12 = this->getT(2).getT(0).getT(0).getT(0).                                       // math::pi<NV>
+                     getT(0).getT(0).getT(3).getT(6).
+                     getT(1);
+		auto& table5 = this->getT(2).getT(0).getT(0).getT(0).                                     // osc1_impl::table5_t
+                       getT(0).getT(0).getT(3).getT(6).
+                       getT(2);
+		auto& gain12 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(1);                     // core::gain<NV>
+		auto& one_pole1 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(2);                  // filters::one_pole<NV>
+		auto& gain3 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(3);                      // core::gain<NV>
+		auto& send = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(4);                       // routing::send<NV, stereo_cable<NV>>
+		auto& chain168 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(5);                   // osc1_impl::chain168_t<NV>
+		auto& split32 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(5).getT(0);            // osc1_impl::split32_t<NV>
+		auto& chain197 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain197_t
+                         getT(0).getT(5).getT(0).getT(0);
+		auto& chain196 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain196_t<NV>
+                         getT(0).getT(5).getT(0).getT(1);
+		auto& smoother2 = this->getT(2).getT(0).getT(0).getT(0).                                  // core::smoother<NV>
+                          getT(0).getT(5).getT(0).getT(1).
+                          getT(0);
+		auto& tempo_sync3 = this->getT(2).getT(0).getT(0).getT(0).                                // osc1_impl::tempo_sync3_t<NV>
+                            getT(0).getT(5).getT(0).getT(1).
+                            getT(1);
+		auto& converter2 = this->getT(2).getT(0).getT(0).getT(0).                                 // osc1_impl::converter2_t<NV>
+                           getT(0).getT(5).getT(0).getT(1).
+                           getT(2);
+		auto& xfade_2x_lin1 = this->getT(2).getT(0).getT(0).getT(0).                              // osc1_impl::xfade_2x_lin1_t<NV>
+                              getT(0).getT(5).getT(0).getT(1).
+                              getT(3);
+		auto& xfader63 = this->getT(2).getT(0).getT(0).getT(0).getT(0).                           // osc1_impl::xfader63_t<NV>
+                         getT(5).getT(0).getT(1).getT(3).getT(0);
+		auto& split13 = this->getT(2).getT(0).getT(0).getT(0).getT(0).                            // osc1_impl::split13_t<NV>
+                        getT(5).getT(0).getT(1).getT(3).getT(1);
+		auto& chain61 = this->getT(2).getT(0).getT(0).getT(0).getT(0).                            // osc1_impl::chain61_t<NV>
+                        getT(5).getT(0).getT(1).getT(3).getT(1).
+                        getT(0);
+		auto& gain45 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(5).                     // core::gain<NV>
+                       getT(0).getT(1).getT(3).getT(1).getT(0).getT(0);
+		auto& chain71 = this->getT(2).getT(0).getT(0).getT(0).getT(0).                            // osc1_impl::chain71_t<NV>
+                        getT(5).getT(0).getT(1).getT(3).getT(1).
+                        getT(1);
+		auto& sampleandhold1 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(5).             // fx::sampleandhold<NV>
+                               getT(0).getT(1).getT(3).getT(1).getT(1).getT(0);
+		auto& gain46 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(5).                     // core::gain<NV>
+                       getT(0).getT(1).getT(3).getT(1).getT(1).getT(1);
+		auto& peak17 = this->getT(2).getT(0).getT(0).getT(0).                                     // osc1_impl::peak17_t<NV>
+                       getT(0).getT(5).getT(0).getT(1).
+                       getT(4);
+		auto& clear6 = this->getT(2).getT(0).getT(0).getT(0).                                     // math::clear<NV>
+                       getT(0).getT(5).getT(0).getT(1).
+                       getT(5);
+		auto& clear19 = this->getT(2).getT(0).getT(0).getT(0).getT(0).getT(6);                    // math::clear<NV>
+		auto& chain86 = this->getT(2).getT(0).getT(0).getT(0).getT(1);                            // osc1_impl::chain86_t<NV>
+		auto& chain82 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(0);                    // osc1_impl::chain82_t<NV>
+		auto& clear22 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(0).getT(0);            // math::clear<NV>
+		auto& chain585 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(0).getT(1);           // osc1_impl::chain585_t<NV>
+		auto& sliderbank10 = this->getT(2).getT(0).getT(0).getT(0).                               // osc1_impl::sliderbank10_t<NV>
+                             getT(1).getT(0).getT(1).getT(0);
+		auto& split53 = this->getT(2).getT(0).getT(0).getT(0).                                    // osc1_impl::split53_t<NV>
+                        getT(1).getT(0).getT(1).getT(1);
+		auto& chain586 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain586_t<NV>
+                         getT(1).getT(0).getT(1).getT(1).
+                         getT(0);
+		auto& receive37 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                          // routing::receive<NV, stereo_cable<NV>>
+                          getT(0).getT(1).getT(1).getT(0).getT(0);
+		auto& gain150 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                            // core::gain<NV>
+                        getT(0).getT(1).getT(1).getT(0).getT(1);
+		auto& chain587 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain587_t<NV>
+                         getT(1).getT(0).getT(1).getT(1).
+                         getT(1);
+		auto& receive38 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                          // routing::receive<NV, stereo_cable<NV>>
+                          getT(0).getT(1).getT(1).getT(1).getT(0);
+		auto& gain151 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                            // core::gain<NV>
+                        getT(0).getT(1).getT(1).getT(1).getT(1);
+		auto& chain588 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain588_t<NV>
+                         getT(1).getT(0).getT(1).getT(1).
+                         getT(2);
+		auto& receive39 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                          // routing::receive<NV, stereo_cable<NV>>
+                          getT(0).getT(1).getT(1).getT(2).getT(0);
+		auto& gain152 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                            // core::gain<NV>
+                        getT(0).getT(1).getT(1).getT(2).getT(1);
+		auto& chain589 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain589_t<NV>
+                         getT(1).getT(0).getT(1).getT(1).
+                         getT(3);
+		auto& receive40 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                          // routing::receive<NV, stereo_cable<NV>>
+                          getT(0).getT(1).getT(1).getT(3).getT(0);
+		auto& gain153 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                            // core::gain<NV>
+                        getT(0).getT(1).getT(1).getT(3).getT(1);
+		auto& gain11 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(0).getT(2);             // core::gain<NV>
+		auto& modchain3 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(0).getT(3);          // osc1_impl::modchain3_t<NV>
+		auto& split5 = this->getT(2).getT(0).getT(0).getT(0).                                     // osc1_impl::split5_t<NV>
+                       getT(1).getT(0).getT(3).getT(0);
+		auto& chain83 = this->getT(2).getT(0).getT(0).getT(0).                                    // osc1_impl::chain83_t<NV>
+                        getT(1).getT(0).getT(3).getT(0).
+                        getT(0);
+		auto& minmax3 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                            // osc1_impl::minmax3_t<NV>
+                        getT(0).getT(3).getT(0).getT(0).getT(0);
+		auto& converter1 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                         // osc1_impl::converter1_t<NV>
+                           getT(0).getT(3).getT(0).getT(0).getT(1);
+		auto& chain92 = this->getT(2).getT(0).getT(0).getT(0).                                    // osc1_impl::chain92_t<NV>
+                        getT(1).getT(0).getT(3).getT(0).
+                        getT(1);
+		auto& tempo_sync1 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                        // osc1_impl::tempo_sync1_t<NV>
+                            getT(0).getT(3).getT(0).getT(1).getT(0);
+		auto& converter6 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                         // osc1_impl::converter6_t<NV>
+                           getT(0).getT(3).getT(0).getT(1).getT(1);
+		auto& branch7 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(0).getT(4);            // osc1_impl::branch7_t<NV>
+		auto& chain93 = this->getT(2).getT(0).getT(0).getT(0).                                    // osc1_impl::chain93_t<NV>
+                        getT(1).getT(0).getT(4).getT(0);
+		auto& phasor_fm2 = this->getT(2).getT(0).getT(0).getT(0).                                 // core::phasor_fm<NV>
+                           getT(1).getT(0).getT(4).getT(0).
+                           getT(0);
+		auto& chain95 = this->getT(2).getT(0).getT(0).getT(0).                                    // osc1_impl::chain95_t<NV>
+                        getT(1).getT(0).getT(4).getT(1);
+		auto& phasor_fm4 = this->getT(2).getT(0).getT(0).getT(0).                                 // core::phasor_fm<NV>
+                           getT(1).getT(0).getT(4).getT(1).
+                           getT(0);
+		auto& no_midi1 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::no_midi1_t<NV>
+                         getT(1).getT(0).getT(4).getT(2);
+		auto& phasor_fm7 = this->getT(2).getT(0).getT(0).getT(0).                                 // core::phasor_fm<NV>
+                           getT(1).getT(0).getT(4).getT(2).
+                           getT(0);
+		auto& mono2stereo1 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(0).getT(5);       // core::mono2stereo
+		auto& pma7 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(0).getT(6);               // osc1_impl::pma7_t<NV>
+		auto& branch10 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(0).getT(7);           // osc1_impl::branch10_t<NV>
+		auto& chain96 = this->getT(2).getT(0).getT(0).getT(0).                                    // osc1_impl::chain96_t<NV>
+                        getT(1).getT(0).getT(7).getT(0);
+		auto& xfader4 = this->getT(2).getT(0).getT(0).getT(0).                                    // osc1_impl::xfader4_t<NV>
+                        getT(1).getT(0).getT(7).getT(0).
+                        getT(0);
+		auto& split18 = this->getT(2).getT(0).getT(0).getT(0).                                    // osc1_impl::split18_t<NV>
+                        getT(1).getT(0).getT(7).getT(0).
+                        getT(1);
+		auto& chain97 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                            // osc1_impl::chain97_t<NV>
+                        getT(0).getT(7).getT(0).getT(1).getT(0);
+		auto& chain98 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                            // osc1_impl::chain98_t<NV>
+                        getT(0).getT(7).getT(0).getT(1).getT(0).
+                        getT(0);
+		auto& sub2 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(0).                       // math::sub<NV>
+                     getT(7).getT(0).getT(1).getT(0).getT(0).getT(0);
+		auto& abs2 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(0).                       // math::abs<NV>
+                     getT(7).getT(0).getT(1).getT(0).getT(0).getT(1);
+		auto& mul4 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(0).                       // math::mul<NV>
+                     getT(7).getT(0).getT(1).getT(0).getT(0).getT(2);
+		auto& gain52 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                             // core::gain<NV>
+                       getT(0).getT(7).getT(0).getT(1).getT(0).
+                       getT(1);
+		auto& chain99 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                            // osc1_impl::chain99_t<NV>
+                        getT(0).getT(7).getT(0).getT(1).getT(1);
+		auto& expr4 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                              // math::expr<NV, custom::expr4>
+                      getT(0).getT(7).getT(0).getT(1).getT(1).
+                      getT(0);
+		auto& gain54 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                             // core::gain<NV>
+                       getT(0).getT(7).getT(0).getT(1).getT(1).
+                       getT(1);
+		auto& chain100 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain100_t<NV>
+                         getT(1).getT(0).getT(7).getT(1);
+		auto& gain55 = this->getT(2).getT(0).getT(0).getT(0).                                     // core::gain<NV>
+                       getT(1).getT(0).getT(7).getT(1).
+                       getT(0);
+		auto& rect4 = this->getT(2).getT(0).getT(0).getT(0).                                      // math::rect<NV>
+                      getT(1).getT(0).getT(7).getT(1).
+                      getT(1);
+		auto& chain131 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain131_t<NV>
+                         getT(1).getT(0).getT(7).getT(2);
+		auto& gain57 = this->getT(2).getT(0).getT(0).getT(0).                                     // core::gain<NV>
+                       getT(1).getT(0).getT(7).getT(2).
+                       getT(0);
+		auto& fmod3 = this->getT(2).getT(0).getT(0).getT(0).                                      // math::fmod<NV>
+                      getT(1).getT(0).getT(7).getT(2).
+                      getT(1);
+		auto& mul5 = this->getT(2).getT(0).getT(0).getT(0).                                       // wrap::no_process<math::mul<NV>>
+                     getT(1).getT(0).getT(7).getT(2).
+                     getT(2);
+		auto& pi10 = this->getT(2).getT(0).getT(0).getT(0).                                       // math::pi<NV>
+                     getT(1).getT(0).getT(7).getT(2).
+                     getT(3);
+		auto& oscilloscope2 = this->getT(2).getT(0).getT(0).getT(0).                              // osc1_impl::oscilloscope2_t
+                              getT(1).getT(0).getT(7).getT(2).
+                              getT(4);
+		auto& chain132 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain132_t<NV>
+                         getT(1).getT(0).getT(7).getT(3);
+		auto& gain60 = this->getT(2).getT(0).getT(0).getT(0).                                     // core::gain<NV>
+                       getT(1).getT(0).getT(7).getT(3).
+                       getT(0);
+		auto& expr11 = this->getT(2).getT(0).getT(0).getT(0).                                     // math::expr<NV, custom::expr11>
+                       getT(1).getT(0).getT(7).getT(3).
+                       getT(1);
+		auto& sin8 = this->getT(2).getT(0).getT(0).getT(0).                                       // math::sin<NV>
+                     getT(1).getT(0).getT(7).getT(3).
+                     getT(2);
+		auto& chain133 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain133_t<NV>
+                         getT(1).getT(0).getT(7).getT(4);
+		auto& pi13 = this->getT(2).getT(0).getT(0).getT(0).                                       // math::pi<NV>
+                     getT(1).getT(0).getT(7).getT(4).
+                     getT(0);
+		auto& sin2 = this->getT(2).getT(0).getT(0).getT(0).                                       // wrap::no_process<math::sin<NV>>
+                     getT(1).getT(0).getT(7).getT(4).
+                     getT(1);
+		auto& gain62 = this->getT(2).getT(0).getT(0).getT(0).                                     // core::gain<NV>
+                       getT(1).getT(0).getT(7).getT(4).
+                       getT(2);
+		auto& sin11 = this->getT(2).getT(0).getT(0).getT(0).                                      // math::sin<NV>
+                      getT(1).getT(0).getT(7).getT(4).
+                      getT(3);
+		auto& expr12 = this->getT(2).getT(0).getT(0).getT(0).                                     // math::expr<NV, custom::expr12>
+                       getT(1).getT(0).getT(7).getT(4).
+                       getT(4);
+		auto& chain134 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain134_t<NV>
+                         getT(1).getT(0).getT(7).getT(5);
+		auto& pi4 = this->getT(2).getT(0).getT(0).getT(0).                                        // wrap::no_process<math::pi<NV>>
+                    getT(1).getT(0).getT(7).getT(5).
+                    getT(0);
+		auto& phase_delay2 = this->getT(2).getT(0).getT(0).getT(0).                               // wrap::no_process<fx::phase_delay<NV>>
+                             getT(1).getT(0).getT(7).getT(5).
+                             getT(1);
+		auto& gain64 = this->getT(2).getT(0).getT(0).getT(0).                                     // core::gain<NV>
+                       getT(1).getT(0).getT(7).getT(5).
+                       getT(2);
+		auto& expr13 = this->getT(2).getT(0).getT(0).getT(0).                                     // math::expr<NV, custom::expr13>
+                       getT(1).getT(0).getT(7).getT(5).
+                       getT(3);
+		auto& sin12 = this->getT(2).getT(0).getT(0).getT(0).                                      // math::sin<NV>
+                      getT(1).getT(0).getT(7).getT(5).
+                      getT(4);
+		auto& chain135 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain135_t<NV>
+                         getT(1).getT(0).getT(7).getT(6);
+		auto& gain65 = this->getT(2).getT(0).getT(0).getT(0).                                     // core::gain<NV>
+                       getT(1).getT(0).getT(7).getT(6).
+                       getT(0);
+		auto& pi14 = this->getT(2).getT(0).getT(0).getT(0).                                       // math::pi<NV>
+                     getT(1).getT(0).getT(7).getT(6).
+                     getT(1);
+		auto& table6 = this->getT(2).getT(0).getT(0).getT(0).                                     // osc1_impl::table6_t
+                       getT(1).getT(0).getT(7).getT(6).
+                       getT(2);
+		auto& one_pole2 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(1);                  // filters::one_pole<NV>
+		auto& chain170 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(2);                   // osc1_impl::chain170_t<NV>
+		auto& send6 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(2).getT(0);              // routing::send<NV, stereo_cable<NV>>
+		auto& chain191 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(3);                   // osc1_impl::chain191_t<NV>
+		auto& split42 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(3).getT(0);            // osc1_impl::split42_t<NV>
+		auto& chain384 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain384_t
+                         getT(1).getT(3).getT(0).getT(0);
+		auto& chain393 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain393_t<NV>
+                         getT(1).getT(3).getT(0).getT(1);
+		auto& smoother3 = this->getT(2).getT(0).getT(0).getT(0).                                  // core::smoother<NV>
+                          getT(1).getT(3).getT(0).getT(1).
+                          getT(0);
+		auto& tempo_sync4 = this->getT(2).getT(0).getT(0).getT(0).                                // osc1_impl::tempo_sync4_t<NV>
+                            getT(1).getT(3).getT(0).getT(1).
+                            getT(1);
+		auto& xfade_2x_lin5 = this->getT(2).getT(0).getT(0).getT(0).                              // osc1_impl::xfade_2x_lin5_t<NV>
+                              getT(1).getT(3).getT(0).getT(1).
+                              getT(2);
+		auto& xfader147 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                          // osc1_impl::xfader147_t<NV>
+                          getT(3).getT(0).getT(1).getT(2).getT(0);
+		auto& split45 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                            // osc1_impl::split45_t<NV>
+                        getT(3).getT(0).getT(1).getT(2).getT(1);
+		auto& chain526 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                           // osc1_impl::chain526_t<NV>
+                         getT(3).getT(0).getT(1).getT(2).getT(1).
+                         getT(0);
+		auto& gain155 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(3).                    // core::gain<NV>
+                        getT(0).getT(1).getT(2).getT(1).getT(0).getT(0);
+		auto& chain527 = this->getT(2).getT(0).getT(0).getT(0).getT(1).                           // osc1_impl::chain527_t<NV>
+                         getT(3).getT(0).getT(1).getT(2).getT(1).
+                         getT(1);
+		auto& converter3 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(3).                 // osc1_impl::converter3_t<NV>
+                           getT(0).getT(1).getT(2).getT(1).getT(1).getT(0);
+		auto& sampleandhold = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(3).              // fx::sampleandhold<NV>
+                              getT(0).getT(1).getT(2).getT(1).getT(1).getT(1);
+		auto& gain156 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(3).                    // core::gain<NV>
+                        getT(0).getT(1).getT(2).getT(1).getT(1).getT(2);
+		auto& peak20 = this->getT(2).getT(0).getT(0).getT(0).                                     // osc1_impl::peak20_t<NV>
+                       getT(1).getT(3).getT(0).getT(1).
+                       getT(3);
+		auto& clear7 = this->getT(2).getT(0).getT(0).getT(0).                                     // math::clear<NV>
+                       getT(1).getT(3).getT(0).getT(1).
+                       getT(4);
+		auto& gain5 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(4);                      // core::gain<NV>
+		auto& clear21 = this->getT(2).getT(0).getT(0).getT(0).getT(1).getT(5);                    // math::clear<NV>
+		auto& chain73 = this->getT(2).getT(0).getT(0).getT(0).getT(2);                            // osc1_impl::chain73_t<NV>
+		auto& clear25 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(0);                    // math::clear<NV>
+		auto& chain575 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(1);                   // osc1_impl::chain575_t<NV>
+		auto& gain6 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(1).getT(0);              // wrap::no_process<core::gain<NV>>
+		auto& sliderbank8 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(1).getT(1);        // osc1_impl::sliderbank8_t<NV>
+		auto& split51 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(1).getT(2);            // osc1_impl::split51_t<NV>
+		auto& chain576 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain576_t<NV>
+                         getT(2).getT(1).getT(2).getT(0);
+		auto& receive29 = this->getT(2).getT(0).getT(0).getT(0).                                  // routing::receive<NV, stereo_cable<NV>>
+                          getT(2).getT(1).getT(2).getT(0).
+                          getT(0);
+		auto& gain102 = this->getT(2).getT(0).getT(0).getT(0).                                    // core::gain<NV>
+                        getT(2).getT(1).getT(2).getT(0).
+                        getT(1);
+		auto& chain577 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain577_t<NV>
+                         getT(2).getT(1).getT(2).getT(1);
+		auto& receive30 = this->getT(2).getT(0).getT(0).getT(0).                                  // routing::receive<NV, stereo_cable<NV>>
+                          getT(2).getT(1).getT(2).getT(1).
+                          getT(0);
+		auto& gain103 = this->getT(2).getT(0).getT(0).getT(0).                                    // core::gain<NV>
+                        getT(2).getT(1).getT(2).getT(1).
+                        getT(1);
+		auto& chain578 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain578_t<NV>
+                         getT(2).getT(1).getT(2).getT(2);
+		auto& receive31 = this->getT(2).getT(0).getT(0).getT(0).                                  // routing::receive<NV, stereo_cable<NV>>
+                          getT(2).getT(1).getT(2).getT(2).
+                          getT(0);
+		auto& gain104 = this->getT(2).getT(0).getT(0).getT(0).                                    // core::gain<NV>
+                        getT(2).getT(1).getT(2).getT(2).
+                        getT(1);
+		auto& chain579 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain579_t<NV>
+                         getT(2).getT(1).getT(2).getT(3);
+		auto& receive32 = this->getT(2).getT(0).getT(0).getT(0).                                  // routing::receive<NV, stereo_cable<NV>>
+                          getT(2).getT(1).getT(2).getT(3).
+                          getT(0);
+		auto& gain105 = this->getT(2).getT(0).getT(0).getT(0).                                    // core::gain<NV>
+                        getT(2).getT(1).getT(2).getT(3).
+                        getT(1);
+		auto& gain8 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(2);                      // core::gain<NV>
+		auto& branch39 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(3);                   // osc1_impl::branch39_t<NV>
+		auto& xfader1 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(3).getT(0);            // osc1_impl::xfader1_t<NV>
+		auto& xfader5 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(3).getT(1);            // osc1_impl::xfader5_t<NV>
+		auto& xfader6 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(3).getT(2);            // osc1_impl::xfader6_t<NV>
+		auto& sliderbank = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(3).getT(3);         // osc1_impl::sliderbank_t<NV>
+		auto& one_pole = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(4);                   // filters::one_pole<NV>
+		auto& fix8_block = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5);                 // osc1_impl::fix8_block_t<NV>
+		auto& modchain8 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(0);          // osc1_impl::modchain8_t<NV>
+		auto& split23 = this->getT(2).getT(0).getT(0).getT(0).                                    // osc1_impl::split23_t<NV>
+                        getT(2).getT(5).getT(0).getT(0);
+		auto& chain178 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain178_t<NV>
+                         getT(2).getT(5).getT(0).getT(0).
+                         getT(0);
+		auto& chain179 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // osc1_impl::chain179_t<NV>
+                         getT(5).getT(0).getT(0).getT(0).getT(0);
+		auto& tempo_sync6 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                        // osc1_impl::tempo_sync6_t<NV>
+                            getT(5).getT(0).getT(0).getT(0).getT(0).
+                            getT(0);
+		auto& ramp5 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                              // osc1_impl::ramp5_t<NV>
+                      getT(5).getT(0).getT(0).getT(0).getT(0).
+                      getT(1);
+		auto& branch36 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // osc1_impl::branch36_t<NV>
+                         getT(5).getT(0).getT(0).getT(0).getT(1);
+		auto& chain102 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // osc1_impl::chain102_t
+                         getT(5).getT(0).getT(0).getT(0).getT(1).
+                         getT(0);
+		auto& mod_inv = this->getT(2).getT(0).getT(0).getT(0).getT(2).                            // math::mod_inv<NV>
+                        getT(5).getT(0).getT(0).getT(0).getT(1).
+                        getT(1);
+		auto& peak15 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                             // osc1_impl::peak15_t<NV>
+                       getT(5).getT(0).getT(0).getT(0).getT(2);
+		auto& clear26 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                            // math::clear<NV>
+                        getT(5).getT(0).getT(0).getT(0).getT(3);
+		auto& chain187 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain187_t<NV>
+                         getT(2).getT(5).getT(0).getT(0).
+                         getT(1);
+		auto& chain188 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // osc1_impl::chain188_t<NV>
+                         getT(5).getT(0).getT(0).getT(1).getT(0);
+		auto& tempo_sync9 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                        // osc1_impl::tempo_sync9_t<NV>
+                            getT(5).getT(0).getT(0).getT(1).getT(0).
+                            getT(0);
+		auto& ramp8 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                              // osc1_impl::ramp8_t<NV>
+                      getT(5).getT(0).getT(0).getT(1).getT(0).
+                      getT(1);
+		auto& branch89 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // osc1_impl::branch89_t<NV>
+                         getT(5).getT(0).getT(0).getT(1).getT(1);
+		auto& chain105 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // osc1_impl::chain105_t
+                         getT(5).getT(0).getT(0).getT(1).getT(1).
+                         getT(0);
+		auto& mod_inv3 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // math::mod_inv<NV>
+                         getT(5).getT(0).getT(0).getT(1).getT(1).
+                         getT(1);
+		auto& peak49 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                             // osc1_impl::peak49_t<NV>
+                       getT(5).getT(0).getT(0).getT(1).getT(2);
+		auto& clear32 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                            // math::clear<NV>
+                        getT(5).getT(0).getT(0).getT(1).getT(3);
+		auto& chain185 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain185_t<NV>
+                         getT(2).getT(5).getT(0).getT(0).
+                         getT(2);
+		auto& chain186 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // osc1_impl::chain186_t<NV>
+                         getT(5).getT(0).getT(0).getT(2).getT(0);
+		auto& tempo_sync8 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                        // osc1_impl::tempo_sync8_t<NV>
+                            getT(5).getT(0).getT(0).getT(2).getT(0).
+                            getT(0);
+		auto& ramp7 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                              // osc1_impl::ramp7_t<NV>
+                      getT(5).getT(0).getT(0).getT(2).getT(0).
+                      getT(1);
+		auto& branch46 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // osc1_impl::branch46_t<NV>
+                         getT(5).getT(0).getT(0).getT(2).getT(1);
+		auto& chain104 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // osc1_impl::chain104_t
+                         getT(5).getT(0).getT(0).getT(2).getT(1).
+                         getT(0);
+		auto& mod_inv2 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // math::mod_inv<NV>
+                         getT(5).getT(0).getT(0).getT(2).getT(1).
+                         getT(1);
+		auto& peak48 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                             // osc1_impl::peak48_t<NV>
+                       getT(5).getT(0).getT(0).getT(2).getT(2);
+		auto& clear31 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                            // math::clear<NV>
+                        getT(5).getT(0).getT(0).getT(2).getT(3);
+		auto& chain183 = this->getT(2).getT(0).getT(0).getT(0).                                   // osc1_impl::chain183_t<NV>
+                         getT(2).getT(5).getT(0).getT(0).
+                         getT(3);
+		auto& chain184 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // osc1_impl::chain184_t<NV>
+                         getT(5).getT(0).getT(0).getT(3).getT(0);
+		auto& tempo_sync7 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                        // osc1_impl::tempo_sync7_t<NV>
+                            getT(5).getT(0).getT(0).getT(3).getT(0).
+                            getT(0);
+		auto& ramp6 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                              // osc1_impl::ramp6_t<NV>
+                      getT(5).getT(0).getT(0).getT(3).getT(0).
+                      getT(1);
+		auto& branch37 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // osc1_impl::branch37_t<NV>
+                         getT(5).getT(0).getT(0).getT(3).getT(1);
+		auto& chain103 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // osc1_impl::chain103_t
+                         getT(5).getT(0).getT(0).getT(3).getT(1).
+                         getT(0);
+		auto& mod_inv1 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // math::mod_inv<NV>
+                         getT(5).getT(0).getT(0).getT(3).getT(1).
+                         getT(1);
+		auto& peak47 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                             // osc1_impl::peak47_t<NV>
+                       getT(5).getT(0).getT(0).getT(3).getT(2);
+		auto& clear30 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                            // math::clear<NV>
+                        getT(5).getT(0).getT(0).getT(3).getT(3);
+		auto& chain247 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1);           // osc1_impl::chain247_t<NV>
+		auto& split10 = this->getT(2).getT(0).getT(0).getT(0).                                    // osc1_impl::split10_t<NV>
+                        getT(2).getT(5).getT(1).getT(0);
+		auto& modchain13 = this->getT(2).getT(0).getT(0).getT(0).                                 // osc1_impl::modchain13_t<NV>
+                           getT(2).getT(5).getT(1).getT(0).
+                           getT(0);
+		auto& sliderbank13 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                       // osc1_impl::sliderbank13_t<NV>
+                             getT(5).getT(1).getT(0).getT(0).getT(0);
+		auto& split27 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                            // osc1_impl::split27_t<NV>
+                        getT(5).getT(1).getT(0).getT(0).getT(1);
+		auto& chain508 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // osc1_impl::chain508_t<NV>
+                         getT(5).getT(1).getT(0).getT(0).getT(1).
+                         getT(0);
+		auto& xfader135 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).                  // osc1_impl::xfader135_t<NV>
+                          getT(1).getT(0).getT(0).getT(1).getT(0).getT(0);
+		auto& soft_bypass129 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).             // osc1_impl::soft_bypass129_t<NV>
+                               getT(1).getT(0).getT(0).getT(1).getT(0).getT(1);
+		auto& chain230 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).                   // osc1_impl::chain230_t<NV>
+                         getT(1).getT(0).getT(0).getT(1).getT(0).getT(1).
+                         getT(0);
+		auto& global_cable43 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).     // osc1_impl::global_cable43_t<NV>
+                               getT(0).getT(0).getT(1).getT(0).getT(1).getT(0).getT(0);
+		auto& add179 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).             // math::add<NV>
+                       getT(0).getT(0).getT(1).getT(0).getT(1).getT(0).getT(1);
+		auto& gain124 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).            // core::gain<NV>
+                        getT(0).getT(0).getT(1).getT(0).getT(1).getT(0).getT(2);
+		auto& chain525 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // osc1_impl::chain525_t<NV>
+                         getT(5).getT(1).getT(0).getT(0).getT(1).
+                         getT(1);
+		auto& xfader142 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).                  // osc1_impl::xfader142_t<NV>
+                          getT(1).getT(0).getT(0).getT(1).getT(1).getT(0);
+		auto& soft_bypass136 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).             // osc1_impl::soft_bypass136_t<NV>
+                               getT(1).getT(0).getT(0).getT(1).getT(1).getT(1);
+		auto& chain231 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).                   // osc1_impl::chain231_t<NV>
+                         getT(1).getT(0).getT(0).getT(1).getT(1).getT(1).
+                         getT(0);
+		auto& global_cable44 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).     // osc1_impl::global_cable44_t<NV>
+                               getT(0).getT(0).getT(1).getT(1).getT(1).getT(0).getT(0);
+		auto& add180 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).             // math::add<NV>
+                       getT(0).getT(0).getT(1).getT(1).getT(1).getT(0).getT(1);
+		auto& gain125 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).            // core::gain<NV>
+                        getT(0).getT(0).getT(1).getT(1).getT(1).getT(0).getT(2);
+		auto& chain524 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // osc1_impl::chain524_t<NV>
+                         getT(5).getT(1).getT(0).getT(0).getT(1).
+                         getT(2);
+		auto& xfader141 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).                  // osc1_impl::xfader141_t<NV>
+                          getT(1).getT(0).getT(0).getT(1).getT(2).getT(0);
+		auto& soft_bypass135 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).             // osc1_impl::soft_bypass135_t<NV>
+                               getT(1).getT(0).getT(0).getT(1).getT(2).getT(1);
+		auto& chain232 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).                   // osc1_impl::chain232_t<NV>
+                         getT(1).getT(0).getT(0).getT(1).getT(2).getT(1).
+                         getT(0);
+		auto& global_cable45 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).     // osc1_impl::global_cable45_t<NV>
+                               getT(0).getT(0).getT(1).getT(2).getT(1).getT(0).getT(0);
+		auto& add181 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).             // math::add<NV>
+                       getT(0).getT(0).getT(1).getT(2).getT(1).getT(0).getT(1);
+		auto& gain126 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).            // core::gain<NV>
+                        getT(0).getT(0).getT(1).getT(2).getT(1).getT(0).getT(2);
+		auto& chain523 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // osc1_impl::chain523_t<NV>
+                         getT(5).getT(1).getT(0).getT(0).getT(1).
+                         getT(3);
+		auto& xfader140 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).                  // osc1_impl::xfader140_t<NV>
+                          getT(1).getT(0).getT(0).getT(1).getT(3).getT(0);
+		auto& soft_bypass134 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).             // osc1_impl::soft_bypass134_t<NV>
+                               getT(1).getT(0).getT(0).getT(1).getT(3).getT(1);
+		auto& chain233 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).                   // osc1_impl::chain233_t<NV>
+                         getT(1).getT(0).getT(0).getT(1).getT(3).getT(1).
+                         getT(0);
+		auto& global_cable46 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).     // osc1_impl::global_cable46_t<NV>
+                               getT(0).getT(0).getT(1).getT(3).getT(1).getT(0).getT(0);
+		auto& add182 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).             // math::add<NV>
+                       getT(0).getT(0).getT(1).getT(3).getT(1).getT(0).getT(1);
+		auto& gain127 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).            // core::gain<NV>
+                        getT(0).getT(0).getT(1).getT(3).getT(1).getT(0).getT(2);
+		auto& chain522 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // osc1_impl::chain522_t<NV>
+                         getT(5).getT(1).getT(0).getT(0).getT(1).
+                         getT(4);
+		auto& xfader139 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).                  // osc1_impl::xfader139_t<NV>
+                          getT(1).getT(0).getT(0).getT(1).getT(4).getT(0);
+		auto& soft_bypass133 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).             // osc1_impl::soft_bypass133_t<NV>
+                               getT(1).getT(0).getT(0).getT(1).getT(4).getT(1);
+		auto& chain234 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).                   // osc1_impl::chain234_t<NV>
+                         getT(1).getT(0).getT(0).getT(1).getT(4).getT(1).
+                         getT(0);
+		auto& add183 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).             // math::add<NV>
+                       getT(0).getT(0).getT(1).getT(4).getT(1).getT(0).getT(0);
+		auto& gain128 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).            // core::gain<NV>
+                        getT(0).getT(0).getT(1).getT(4).getT(1).getT(0).getT(1);
+		auto& chain521 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // osc1_impl::chain521_t<NV>
+                         getT(5).getT(1).getT(0).getT(0).getT(1).
+                         getT(5);
+		auto& xfader138 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).                  // osc1_impl::xfader138_t<NV>
+                          getT(1).getT(0).getT(0).getT(1).getT(5).getT(0);
+		auto& soft_bypass132 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).             // osc1_impl::soft_bypass132_t<NV>
+                               getT(1).getT(0).getT(0).getT(1).getT(5).getT(1);
+		auto& chain235 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).                   // osc1_impl::chain235_t<NV>
+                         getT(1).getT(0).getT(0).getT(1).getT(5).getT(1).
+                         getT(0);
+		auto& add184 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).             // math::add<NV>
+                       getT(0).getT(0).getT(1).getT(5).getT(1).getT(0).getT(0);
+		auto& gain129 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).            // core::gain<NV>
+                        getT(0).getT(0).getT(1).getT(5).getT(1).getT(0).getT(1);
+		auto& chain520 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // osc1_impl::chain520_t<NV>
+                         getT(5).getT(1).getT(0).getT(0).getT(1).
+                         getT(6);
+		auto& xfader137 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).                  // osc1_impl::xfader137_t<NV>
+                          getT(1).getT(0).getT(0).getT(1).getT(6).getT(0);
+		auto& soft_bypass131 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).             // osc1_impl::soft_bypass131_t<NV>
+                               getT(1).getT(0).getT(0).getT(1).getT(6).getT(1);
+		auto& chain236 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).                   // osc1_impl::chain236_t<NV>
+                         getT(1).getT(0).getT(0).getT(1).getT(6).getT(1).
+                         getT(0);
+		auto& branch51 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).           // osc1_impl::branch51_t<NV>
+                         getT(0).getT(0).getT(1).getT(6).getT(1).getT(0).getT(0);
+		auto& add185 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).             // math::add<NV>
+                       getT(0).getT(0).getT(1).getT(6).getT(1).getT(0).getT(0).
+                       getT(0);
+		auto& add186 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).             // math::add<NV>
+                       getT(0).getT(0).getT(1).getT(6).getT(1).getT(0).getT(0).
+                       getT(1);
+		auto& add187 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).             // math::add<NV>
+                       getT(0).getT(0).getT(1).getT(6).getT(1).getT(0).getT(0).
+                       getT(2);
+		auto& add188 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).             // math::add<NV>
+                       getT(0).getT(0).getT(1).getT(6).getT(1).getT(0).getT(0).
+                       getT(3);
+		auto& add189 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).             // math::add<NV>
+                       getT(0).getT(0).getT(1).getT(6).getT(1).getT(0).getT(1);
+		auto& gain130 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).            // core::gain<NV>
+                        getT(0).getT(0).getT(1).getT(6).getT(1).getT(0).getT(2);
+		auto& chain509 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                           // osc1_impl::chain509_t<NV>
+                         getT(5).getT(1).getT(0).getT(0).getT(1).
+                         getT(7);
+		auto& xfader136 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).                  // osc1_impl::xfader136_t<NV>
+                          getT(1).getT(0).getT(0).getT(1).getT(7).getT(0);
+		auto& soft_bypass130 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).             // osc1_impl::soft_bypass130_t<NV>
+                               getT(1).getT(0).getT(0).getT(1).getT(7).getT(1);
+		auto& chain237 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).                   // osc1_impl::chain237_t<NV>
+                         getT(1).getT(0).getT(0).getT(1).getT(7).getT(1).
+                         getT(0);
+		auto& branch52 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).           // osc1_impl::branch52_t<NV>
+                         getT(0).getT(0).getT(1).getT(7).getT(1).getT(0).getT(0);
+		auto& chain238 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).           // osc1_impl::chain238_t<NV>
+                         getT(0).getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).
+                         getT(0);
+		auto& midi_cc43 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).getT(0).  // osc1_impl::midi_cc43_t<NV>
+                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(0).getT(0);
+		auto& add190 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).getT(0).     // math::add<NV>
+                       getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(0).getT(1);
+		auto& chain239 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).           // osc1_impl::chain239_t<NV>
+                         getT(0).getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).
+                         getT(1);
+		auto& midi_cc44 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).getT(0).  // osc1_impl::midi_cc44_t<NV>
+                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(1).getT(0);
+		auto& add191 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).getT(0).     // math::add<NV>
+                       getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(1).getT(1);
+		auto& chain240 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).           // osc1_impl::chain240_t<NV>
+                         getT(0).getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).
+                         getT(2);
+		auto& midi_cc45 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).getT(0).  // osc1_impl::midi_cc45_t<NV>
+                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(2).getT(0);
+		auto& add192 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).getT(0).     // math::add<NV>
+                       getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(2).getT(1);
+		auto& chain241 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).           // osc1_impl::chain241_t<NV>
+                         getT(0).getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).
+                         getT(3);
+		auto& midi_cc46 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).getT(0).  // osc1_impl::midi_cc46_t<NV>
+                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(3).getT(0);
+		auto& add193 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).getT(0).  // math::add<NV>
+                       getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(3).getT(1);
+		auto& chain242 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).        // osc1_impl::chain242_t<NV>
+                         getT(0).getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).
+                         getT(4);
+		auto& midi32 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).getT(0).  // osc1_impl::midi32_t<NV>
+                       getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(4).getT(0);
+		auto& add194 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).getT(0).  // math::add<NV>
+                       getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(4).getT(1);
+		auto& chain243 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).        // osc1_impl::chain243_t<NV>
+                         getT(0).getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).
+                         getT(5);
+		auto& midi33 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).getT(0).  // osc1_impl::midi33_t<NV>
+                       getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(5).getT(0);
+		auto& add195 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).getT(0).  // math::add<NV>
+                       getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(5).getT(1);
+		auto& chain244 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).        // osc1_impl::chain244_t<NV>
+                         getT(0).getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).
+                         getT(6);
+		auto& midi34 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).getT(0).  // osc1_impl::midi34_t<NV>
+                       getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(6).getT(0);
+		auto& add196 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).getT(0).  // math::add<NV>
+                       getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(6).getT(1);
+		auto& gain131 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).  // core::gain<NV>
+                        getT(0).getT(0).getT(1).getT(7).getT(1).getT(0).getT(1);
+		auto& peak21 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // osc1_impl::peak21_t<NV>
+                       getT(5).getT(1).getT(0).getT(0).getT(2);
+		auto& clear2 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // math::clear<NV>
+                       getT(5).getT(1).getT(0).getT(0).getT(3);
+		auto& pma17 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                    // osc1_impl::pma17_t<NV>
+                      getT(5).getT(1).getT(0).getT(0).getT(4);
+		auto& chain248 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                 // osc1_impl::chain248_t<NV>
+                         getT(5).getT(1).getT(0).getT(0).getT(5);
+		auto& branch21 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                 // osc1_impl::branch21_t<NV>
+                         getT(5).getT(1).getT(0).getT(0).getT(5).
+                         getT(0);
+		auto& chain250 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain250_t<NV>
+                         getT(1).getT(0).getT(0).getT(5).getT(0).getT(0);
+		auto& add213 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(0).getT(5).getT(0).getT(0).
+                       getT(0);
+		auto& chain251 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain251_t<NV>
+                         getT(1).getT(0).getT(0).getT(5).getT(0).getT(1);
+		auto& minmax6 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).          // osc1_impl::minmax6_t<NV>
+                        getT(1).getT(0).getT(0).getT(5).getT(0).getT(1).
+                        getT(0);
+		auto& add214 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(0).getT(5).getT(0).getT(1).
+                       getT(1);
+		auto& chain252 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain252_t<NV>
+                         getT(1).getT(0).getT(0).getT(5).getT(0).getT(2);
+		auto& minmax7 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).          // osc1_impl::minmax7_t<NV>
+                        getT(1).getT(0).getT(0).getT(5).getT(0).getT(2).
+                        getT(0);
+		auto& add215 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(0).getT(5).getT(0).getT(2).
+                       getT(1);
+		auto& chain253 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain253_t<NV>
+                         getT(1).getT(0).getT(0).getT(5).getT(0).getT(3);
+		auto& minmax14 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax14_t<NV>
+                         getT(1).getT(0).getT(0).getT(5).getT(0).getT(3).
+                         getT(0);
+		auto& add216 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(0).getT(5).getT(0).getT(3).
+                       getT(1);
+		auto& chain254 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain254_t<NV>
+                         getT(1).getT(0).getT(0).getT(5).getT(0).getT(4);
+		auto& minmax11 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax11_t<NV>
+                         getT(1).getT(0).getT(0).getT(5).getT(0).getT(4).
+                         getT(0);
+		auto& add217 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(0).getT(5).getT(0).getT(4).
+                       getT(1);
+		auto& chain255 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain255_t<NV>
+                         getT(1).getT(0).getT(0).getT(5).getT(0).getT(5);
+		auto& minmax15 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax15_t<NV>
+                         getT(1).getT(0).getT(0).getT(5).getT(0).getT(5).
+                         getT(0);
+		auto& add218 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(0).getT(5).getT(0).getT(5).
+                       getT(1);
+		auto& chain256 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain256_t<NV>
+                         getT(1).getT(0).getT(0).getT(5).getT(0).getT(6);
+		auto& minmax16 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax16_t<NV>
+                         getT(1).getT(0).getT(0).getT(5).getT(0).getT(6).
+                         getT(0);
+		auto& add219 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(0).getT(5).getT(0).getT(6).
+                       getT(1);
+		auto& chain257 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain257_t<NV>
+                         getT(1).getT(0).getT(0).getT(5).getT(0).getT(7);
+		auto& minmax17 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax17_t<NV>
+                         getT(1).getT(0).getT(0).getT(5).getT(0).getT(7).
+                         getT(0);
+		auto& add220 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(0).getT(5).getT(0).getT(7).
+                       getT(1);
+		auto& chain258 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain258_t<NV>
+                         getT(1).getT(0).getT(0).getT(5).getT(0).getT(8);
+		auto& minmax18 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax18_t<NV>
+                         getT(1).getT(0).getT(0).getT(5).getT(0).getT(8).
+                         getT(0);
+		auto& add221 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(0).getT(5).getT(0).getT(8).
+                       getT(1);
+		auto& peak18 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // osc1_impl::peak18_t<NV>
+                       getT(5).getT(1).getT(0).getT(0).getT(5).
+                       getT(1);
+		auto& cable_table5 = this->getT(2).getT(0).getT(0).getT(0).getT(2).             // osc1_impl::cable_table5_t
+                             getT(5).getT(1).getT(0).getT(0).getT(5).
+                             getT(2);
+		auto& modchain31 = this->getT(2).getT(0).getT(0).getT(0).                       // osc1_impl::modchain31_t<NV>
+                           getT(2).getT(5).getT(1).getT(0).
+                           getT(1);
+		auto& pma33 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                    // osc1_impl::pma33_t<NV>
+                      getT(5).getT(1).getT(0).getT(1).getT(0);
+		auto& chain535 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                 // osc1_impl::chain535_t<NV>
+                         getT(5).getT(1).getT(0).getT(1).getT(1);
+		auto& branch32 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                 // osc1_impl::branch32_t<NV>
+                         getT(5).getT(1).getT(0).getT(1).getT(1).
+                         getT(0);
+		auto& chain536 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain536_t<NV>
+                         getT(1).getT(0).getT(1).getT(1).getT(0).getT(0);
+		auto& add551 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(1).getT(1).getT(0).getT(0).
+                       getT(0);
+		auto& chain537 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain537_t<NV>
+                         getT(1).getT(0).getT(1).getT(1).getT(0).getT(1);
+		auto& minmax30 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax30_t<NV>
+                         getT(1).getT(0).getT(1).getT(1).getT(0).getT(1).
+                         getT(0);
+		auto& add552 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(1).getT(1).getT(0).getT(1).
+                       getT(1);
+		auto& chain538 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain538_t<NV>
+                         getT(1).getT(0).getT(1).getT(1).getT(0).getT(2);
+		auto& minmax31 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax31_t<NV>
+                         getT(1).getT(0).getT(1).getT(1).getT(0).getT(2).
+                         getT(0);
+		auto& add553 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(1).getT(1).getT(0).getT(2).
+                       getT(1);
+		auto& chain539 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain539_t<NV>
+                         getT(1).getT(0).getT(1).getT(1).getT(0).getT(3);
+		auto& minmax32 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax32_t<NV>
+                         getT(1).getT(0).getT(1).getT(1).getT(0).getT(3).
+                         getT(0);
+		auto& add554 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(1).getT(1).getT(0).getT(3).
+                       getT(1);
+		auto& chain540 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain540_t<NV>
+                         getT(1).getT(0).getT(1).getT(1).getT(0).getT(4);
+		auto& minmax33 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax33_t<NV>
+                         getT(1).getT(0).getT(1).getT(1).getT(0).getT(4).
+                         getT(0);
+		auto& add555 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(1).getT(1).getT(0).getT(4).
+                       getT(1);
+		auto& chain541 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain541_t<NV>
+                         getT(1).getT(0).getT(1).getT(1).getT(0).getT(5);
+		auto& minmax34 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax34_t<NV>
+                         getT(1).getT(0).getT(1).getT(1).getT(0).getT(5).
+                         getT(0);
+		auto& add556 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(1).getT(1).getT(0).getT(5).
+                       getT(1);
+		auto& chain542 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain542_t<NV>
+                         getT(1).getT(0).getT(1).getT(1).getT(0).getT(6);
+		auto& minmax35 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax35_t<NV>
+                         getT(1).getT(0).getT(1).getT(1).getT(0).getT(6).
+                         getT(0);
+		auto& add557 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(1).getT(1).getT(0).getT(6).
+                       getT(1);
+		auto& chain543 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain543_t<NV>
+                         getT(1).getT(0).getT(1).getT(1).getT(0).getT(7);
+		auto& minmax36 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax36_t<NV>
+                         getT(1).getT(0).getT(1).getT(1).getT(0).getT(7).
+                         getT(0);
+		auto& add558 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(1).getT(1).getT(0).getT(7).
+                       getT(1);
+		auto& chain544 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain544_t<NV>
+                         getT(1).getT(0).getT(1).getT(1).getT(0).getT(8);
+		auto& minmax37 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax37_t<NV>
+                         getT(1).getT(0).getT(1).getT(1).getT(0).getT(8).
+                         getT(0);
+		auto& add559 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(1).getT(1).getT(0).getT(8).
+                       getT(1);
+		auto& peak43 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // osc1_impl::peak43_t<NV>
+                       getT(5).getT(1).getT(0).getT(1).getT(1).
+                       getT(1);
+		auto& clear4 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // math::clear<NV>
+                       getT(5).getT(1).getT(0).getT(1).getT(1).
+                       getT(2);
+		auto& clear5 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // math::clear<NV>
+                       getT(5).getT(1).getT(0).getT(1).getT(1).
+                       getT(3);
+		auto& cable_table9 = this->getT(2).getT(0).getT(0).getT(0).getT(2).             // osc1_impl::cable_table9_t
+                             getT(5).getT(1).getT(0).getT(1).getT(1).
+                             getT(4);
+		auto& modchain30 = this->getT(2).getT(0).getT(0).getT(0).                       // osc1_impl::modchain30_t<NV>
+                           getT(2).getT(5).getT(1).getT(0).
+                           getT(2);
+		auto& pma32 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                    // osc1_impl::pma32_t<NV>
+                      getT(5).getT(1).getT(0).getT(2).getT(0);
+		auto& chain510 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                 // osc1_impl::chain510_t<NV>
+                         getT(5).getT(1).getT(0).getT(2).getT(1);
+		auto& branch31 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                 // osc1_impl::branch31_t<NV>
+                         getT(5).getT(1).getT(0).getT(2).getT(1).
+                         getT(0);
+		auto& chain511 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain511_t<NV>
+                         getT(1).getT(0).getT(2).getT(1).getT(0).getT(0);
+		auto& add524 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(2).getT(1).getT(0).getT(0).
+                       getT(0);
+		auto& chain512 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain512_t<NV>
+                         getT(1).getT(0).getT(2).getT(1).getT(0).getT(1);
+		auto& minmax10 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax10_t<NV>
+                         getT(1).getT(0).getT(2).getT(1).getT(0).getT(1).
+                         getT(0);
+		auto& add525 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(2).getT(1).getT(0).getT(1).
+                       getT(1);
+		auto& chain513 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain513_t<NV>
+                         getT(1).getT(0).getT(2).getT(1).getT(0).getT(2);
+		auto& minmax13 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax13_t<NV>
+                         getT(1).getT(0).getT(2).getT(1).getT(0).getT(2).
+                         getT(0);
+		auto& add526 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(2).getT(1).getT(0).getT(2).
+                       getT(1);
+		auto& chain514 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain514_t<NV>
+                         getT(1).getT(0).getT(2).getT(1).getT(0).getT(3);
+		auto& minmax24 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax24_t<NV>
+                         getT(1).getT(0).getT(2).getT(1).getT(0).getT(3).
+                         getT(0);
+		auto& add527 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(2).getT(1).getT(0).getT(3).
+                       getT(1);
+		auto& chain515 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain515_t<NV>
+                         getT(1).getT(0).getT(2).getT(1).getT(0).getT(4);
+		auto& minmax25 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax25_t<NV>
+                         getT(1).getT(0).getT(2).getT(1).getT(0).getT(4).
+                         getT(0);
+		auto& add528 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(2).getT(1).getT(0).getT(4).
+                       getT(1);
+		auto& chain516 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain516_t<NV>
+                         getT(1).getT(0).getT(2).getT(1).getT(0).getT(5);
+		auto& minmax26 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax26_t<NV>
+                         getT(1).getT(0).getT(2).getT(1).getT(0).getT(5).
+                         getT(0);
+		auto& add529 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(2).getT(1).getT(0).getT(5).
+                       getT(1);
+		auto& chain517 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain517_t<NV>
+                         getT(1).getT(0).getT(2).getT(1).getT(0).getT(6);
+		auto& minmax27 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax27_t<NV>
+                         getT(1).getT(0).getT(2).getT(1).getT(0).getT(6).
+                         getT(0);
+		auto& add530 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(2).getT(1).getT(0).getT(6).
+                       getT(1);
+		auto& chain518 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain518_t<NV>
+                         getT(1).getT(0).getT(2).getT(1).getT(0).getT(7);
+		auto& minmax28 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax28_t<NV>
+                         getT(1).getT(0).getT(2).getT(1).getT(0).getT(7).
+                         getT(0);
+		auto& add531 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(2).getT(1).getT(0).getT(7).
+                       getT(1);
+		auto& chain519 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain519_t<NV>
+                         getT(1).getT(0).getT(2).getT(1).getT(0).getT(8);
+		auto& minmax29 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax29_t<NV>
+                         getT(1).getT(0).getT(2).getT(1).getT(0).getT(8).
+                         getT(0);
+		auto& add532 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(2).getT(1).getT(0).getT(8).
+                       getT(1);
+		auto& peak31 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // osc1_impl::peak31_t<NV>
+                       getT(5).getT(1).getT(0).getT(2).getT(1).
+                       getT(1);
+		auto& cable_table7 = this->getT(2).getT(0).getT(0).getT(0).getT(2).             // osc1_impl::cable_table7_t
+                             getT(5).getT(1).getT(0).getT(2).getT(1).
+                             getT(2);
+		auto& modchain29 = this->getT(2).getT(0).getT(0).getT(0).                       // osc1_impl::modchain29_t<NV>
+                           getT(2).getT(5).getT(1).getT(0).
+                           getT(3);
+		auto& pma31 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                    // osc1_impl::pma31_t<NV>
+                      getT(5).getT(1).getT(0).getT(3).getT(0);
+		auto& chain485 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                 // osc1_impl::chain485_t<NV>
+                         getT(5).getT(1).getT(0).getT(3).getT(1);
+		auto& branch30 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                 // osc1_impl::branch30_t<NV>
+                         getT(5).getT(1).getT(0).getT(3).getT(1).
+                         getT(0);
+		auto& chain486 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain486_t<NV>
+                         getT(1).getT(0).getT(3).getT(1).getT(0).getT(0);
+		auto& add497 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(3).getT(1).getT(0).getT(0).
+                       getT(0);
+		auto& chain487 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain487_t<NV>
+                         getT(1).getT(0).getT(3).getT(1).getT(0).getT(1);
+		auto& minmax8 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).          // osc1_impl::minmax8_t<NV>
+                        getT(1).getT(0).getT(3).getT(1).getT(0).getT(1).
+                        getT(0);
+		auto& add498 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(3).getT(1).getT(0).getT(1).
+                       getT(1);
+		auto& chain488 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain488_t<NV>
+                         getT(1).getT(0).getT(3).getT(1).getT(0).getT(2);
+		auto& minmax9 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).          // osc1_impl::minmax9_t<NV>
+                        getT(1).getT(0).getT(3).getT(1).getT(0).getT(2).
+                        getT(0);
+		auto& add499 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(3).getT(1).getT(0).getT(2).
+                       getT(1);
+		auto& chain489 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain489_t<NV>
+                         getT(1).getT(0).getT(3).getT(1).getT(0).getT(3);
+		auto& minmax19 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax19_t<NV>
+                         getT(1).getT(0).getT(3).getT(1).getT(0).getT(3).
+                         getT(0);
+		auto& add500 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(3).getT(1).getT(0).getT(3).
+                       getT(1);
+		auto& chain490 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain490_t<NV>
+                         getT(1).getT(0).getT(3).getT(1).getT(0).getT(4);
+		auto& minmax12 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax12_t<NV>
+                         getT(1).getT(0).getT(3).getT(1).getT(0).getT(4).
+                         getT(0);
+		auto& add501 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(3).getT(1).getT(0).getT(4).
+                       getT(1);
+		auto& chain491 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain491_t<NV>
+                         getT(1).getT(0).getT(3).getT(1).getT(0).getT(5);
+		auto& minmax20 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax20_t<NV>
+                         getT(1).getT(0).getT(3).getT(1).getT(0).getT(5).
+                         getT(0);
+		auto& add502 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(3).getT(1).getT(0).getT(5).
+                       getT(1);
+		auto& chain492 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain492_t<NV>
+                         getT(1).getT(0).getT(3).getT(1).getT(0).getT(6);
+		auto& minmax21 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax21_t<NV>
+                         getT(1).getT(0).getT(3).getT(1).getT(0).getT(6).
+                         getT(0);
+		auto& add503 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(3).getT(1).getT(0).getT(6).
+                       getT(1);
+		auto& chain493 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain493_t<NV>
+                         getT(1).getT(0).getT(3).getT(1).getT(0).getT(7);
+		auto& minmax22 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax22_t<NV>
+                         getT(1).getT(0).getT(3).getT(1).getT(0).getT(7).
+                         getT(0);
+		auto& add504 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(3).getT(1).getT(0).getT(7).
+                       getT(1);
+		auto& chain494 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain494_t<NV>
+                         getT(1).getT(0).getT(3).getT(1).getT(0).getT(8);
+		auto& minmax23 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax23_t<NV>
+                         getT(1).getT(0).getT(3).getT(1).getT(0).getT(8).
+                         getT(0);
+		auto& add505 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(3).getT(1).getT(0).getT(8).
+                       getT(1);
+		auto& peak29 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // osc1_impl::peak29_t<NV>
+                       getT(5).getT(1).getT(0).getT(3).getT(1).
+                       getT(1);
+		auto& cable_table6 = this->getT(2).getT(0).getT(0).getT(0).getT(2).             // osc1_impl::cable_table6_t
+                             getT(5).getT(1).getT(0).getT(3).getT(1).
+                             getT(2);
+		auto& modchain32 = this->getT(2).getT(0).getT(0).getT(0).                       // osc1_impl::modchain32_t<NV>
+                           getT(2).getT(5).getT(1).getT(0).
+                           getT(4);
+		auto& pma34 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                    // osc1_impl::pma34_t<NV>
+                      getT(5).getT(1).getT(0).getT(4).getT(0);
+		auto& chain560 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                 // osc1_impl::chain560_t<NV>
+                         getT(5).getT(1).getT(0).getT(4).getT(1);
+		auto& branch33 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                 // osc1_impl::branch33_t<NV>
+                         getT(5).getT(1).getT(0).getT(4).getT(1).
+                         getT(0);
+		auto& chain561 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain561_t<NV>
+                         getT(1).getT(0).getT(4).getT(1).getT(0).getT(0);
+		auto& add578 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(4).getT(1).getT(0).getT(0).
+                       getT(0);
+		auto& chain562 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain562_t<NV>
+                         getT(1).getT(0).getT(4).getT(1).getT(0).getT(1);
+		auto& minmax38 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax38_t<NV>
+                         getT(1).getT(0).getT(4).getT(1).getT(0).getT(1).
+                         getT(0);
+		auto& add579 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(4).getT(1).getT(0).getT(1).
+                       getT(1);
+		auto& chain563 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain563_t<NV>
+                         getT(1).getT(0).getT(4).getT(1).getT(0).getT(2);
+		auto& minmax39 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax39_t<NV>
+                         getT(1).getT(0).getT(4).getT(1).getT(0).getT(2).
+                         getT(0);
+		auto& add580 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(4).getT(1).getT(0).getT(2).
+                       getT(1);
+		auto& chain564 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain564_t<NV>
+                         getT(1).getT(0).getT(4).getT(1).getT(0).getT(3);
+		auto& minmax40 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax40_t<NV>
+                         getT(1).getT(0).getT(4).getT(1).getT(0).getT(3).
+                         getT(0);
+		auto& add581 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(4).getT(1).getT(0).getT(3).
+                       getT(1);
+		auto& chain565 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain565_t<NV>
+                         getT(1).getT(0).getT(4).getT(1).getT(0).getT(4);
+		auto& minmax41 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax41_t<NV>
+                         getT(1).getT(0).getT(4).getT(1).getT(0).getT(4).
+                         getT(0);
+		auto& add582 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(4).getT(1).getT(0).getT(4).
+                       getT(1);
+		auto& chain566 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain566_t<NV>
+                         getT(1).getT(0).getT(4).getT(1).getT(0).getT(5);
+		auto& minmax42 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax42_t<NV>
+                         getT(1).getT(0).getT(4).getT(1).getT(0).getT(5).
+                         getT(0);
+		auto& add583 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(4).getT(1).getT(0).getT(5).
+                       getT(1);
+		auto& chain567 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain567_t<NV>
+                         getT(1).getT(0).getT(4).getT(1).getT(0).getT(6);
+		auto& minmax43 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax43_t<NV>
+                         getT(1).getT(0).getT(4).getT(1).getT(0).getT(6).
+                         getT(0);
+		auto& add584 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(4).getT(1).getT(0).getT(6).
+                       getT(1);
+		auto& chain568 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain568_t<NV>
+                         getT(1).getT(0).getT(4).getT(1).getT(0).getT(7);
+		auto& minmax44 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax44_t<NV>
+                         getT(1).getT(0).getT(4).getT(1).getT(0).getT(7).
+                         getT(0);
+		auto& add585 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(4).getT(1).getT(0).getT(7).
+                       getT(1);
+		auto& chain569 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::chain569_t<NV>
+                         getT(1).getT(0).getT(4).getT(1).getT(0).getT(8);
+		auto& minmax45 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).         // osc1_impl::minmax45_t<NV>
+                         getT(1).getT(0).getT(4).getT(1).getT(0).getT(8).
+                         getT(0);
+		auto& add586 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).           // math::add<NV>
+                       getT(1).getT(0).getT(4).getT(1).getT(0).getT(8).
+                       getT(1);
+		auto& peak45 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // osc1_impl::peak45_t<NV>
+                       getT(5).getT(1).getT(0).getT(4).getT(1).
+                       getT(1);
+		auto& cable_table10 = this->getT(2).getT(0).getT(0).getT(0).getT(2).            // osc1_impl::cable_table10_t
+                              getT(5).getT(1).getT(0).getT(4).getT(1).
+                              getT(2);
+		auto& split17 = this->getT(2).getT(0).getT(0).getT(0).                          // osc1_impl::split17_t<NV>
+                        getT(2).getT(5).getT(1).getT(1);
+		auto& chain174 = this->getT(2).getT(0).getT(0).getT(0).                         // osc1_impl::chain174_t<NV>
+                         getT(2).getT(5).getT(1).getT(1).
+                         getT(0);
+		auto& split11 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                  // osc1_impl::split11_t<NV>
+                        getT(5).getT(1).getT(1).getT(0).getT(0);
+		auto& add222 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // math::add<NV>
+                       getT(5).getT(1).getT(1).getT(0).getT(0).
+                       getT(0);
+		auto& add463 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // math::add<NV>
+                       getT(5).getT(1).getT(1).getT(0).getT(0).
+                       getT(1);
+		auto& branch22 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                 // osc1_impl::branch22_t<NV>
+                         getT(5).getT(1).getT(1).getT(0).getT(1);
+		auto& file_player6 = this->getT(2).getT(0).getT(0).getT(0).getT(2).             // osc1_impl::file_player6_t<NV>
+                             getT(5).getT(1).getT(1).getT(0).getT(1).
+                             getT(0);
+		auto& file_player7 = this->getT(2).getT(0).getT(0).getT(0).getT(2).             // osc1_impl::file_player7_t<NV>
+                             getT(5).getT(1).getT(1).getT(0).getT(1).
+                             getT(1);
+		auto& branch26 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                 // osc1_impl::branch26_t<NV>
+                         getT(5).getT(1).getT(1).getT(0).getT(2);
+		auto& gain4 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                    // core::gain<NV>
+                      getT(5).getT(1).getT(1).getT(0).getT(2).
+                      getT(0);
+		auto& gain10 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // core::gain<NV>
+                       getT(5).getT(1).getT(1).getT(0).getT(2).
+                       getT(1);
+		auto& gain9 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                    // core::gain<NV>
+                      getT(5).getT(1).getT(1).getT(0).getT(2).
+                      getT(2);
+		auto& gain7 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                    // core::gain<NV>
+                      getT(5).getT(1).getT(1).getT(0).getT(2).
+                      getT(3);
+		auto& chain175 = this->getT(2).getT(0).getT(0).getT(0).                         // osc1_impl::chain175_t<NV>
+                         getT(2).getT(5).getT(1).getT(1).
+                         getT(1);
+		auto& split40 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                  // osc1_impl::split40_t<NV>
+                        getT(5).getT(1).getT(1).getT(1).getT(0);
+		auto& add474 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // math::add<NV>
+                       getT(5).getT(1).getT(1).getT(1).getT(0).
+                       getT(0);
+		auto& add475 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // math::add<NV>
+                       getT(5).getT(1).getT(1).getT(1).getT(0).
+                       getT(1);
+		auto& branch40 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                 // osc1_impl::branch40_t<NV>
+                         getT(5).getT(1).getT(1).getT(1).getT(1);
+		auto& file_player8 = this->getT(2).getT(0).getT(0).getT(0).getT(2).             // osc1_impl::file_player8_t<NV>
+                             getT(5).getT(1).getT(1).getT(1).getT(1).
+                             getT(0);
+		auto& file_player9 = this->getT(2).getT(0).getT(0).getT(0).getT(2).             // osc1_impl::file_player9_t<NV>
+                             getT(5).getT(1).getT(1).getT(1).getT(1).
+                             getT(1);
+		auto& branch41 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                 // osc1_impl::branch41_t<NV>
+                         getT(5).getT(1).getT(1).getT(1).getT(2);
+		auto& gain72 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // core::gain<NV>
+                       getT(5).getT(1).getT(1).getT(1).getT(2).
+                       getT(0);
+		auto& gain89 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // core::gain<NV>
+                       getT(5).getT(1).getT(1).getT(1).getT(2).
+                       getT(1);
+		auto& gain90 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // core::gain<NV>
+                       getT(5).getT(1).getT(1).getT(1).getT(2).
+                       getT(2);
+		auto& gain91 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // core::gain<NV>
+                       getT(5).getT(1).getT(1).getT(1).getT(2).
+                       getT(3);
+		auto& chain176 = this->getT(2).getT(0).getT(0).getT(0).                         // osc1_impl::chain176_t<NV>
+                         getT(2).getT(5).getT(1).getT(1).
+                         getT(2);
+		auto& split21 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                  // osc1_impl::split21_t<NV>
+                        getT(5).getT(1).getT(1).getT(2).getT(0);
+		auto& add469 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // math::add<NV>
+                       getT(5).getT(1).getT(1).getT(2).getT(0).
+                       getT(0);
+		auto& add470 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // math::add<NV>
+                       getT(5).getT(1).getT(1).getT(2).getT(0).
+                       getT(1);
+		auto& branch42 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                 // osc1_impl::branch42_t<NV>
+                         getT(5).getT(1).getT(1).getT(2).getT(1);
+		auto& file_player10 = this->getT(2).getT(0).getT(0).getT(0).getT(2).            // osc1_impl::file_player10_t<NV>
+                              getT(5).getT(1).getT(1).getT(2).getT(1).
+                              getT(0);
+		auto& file_player11 = this->getT(2).getT(0).getT(0).getT(0).getT(2).            // osc1_impl::file_player11_t<NV>
+                              getT(5).getT(1).getT(1).getT(2).getT(1).
+                              getT(1);
+		auto& branch43 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                 // osc1_impl::branch43_t<NV>
+                         getT(5).getT(1).getT(1).getT(2).getT(2);
+		auto& gain92 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // core::gain<NV>
+                       getT(5).getT(1).getT(1).getT(2).getT(2).
+                       getT(0);
+		auto& gain93 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // core::gain<NV>
+                       getT(5).getT(1).getT(1).getT(2).getT(2).
+                       getT(1);
+		auto& gain94 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // core::gain<NV>
+                       getT(5).getT(1).getT(1).getT(2).getT(2).
+                       getT(2);
+		auto& gain95 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // core::gain<NV>
+                       getT(5).getT(1).getT(1).getT(2).getT(2).
+                       getT(3);
+		auto& chain177 = this->getT(2).getT(0).getT(0).getT(0).                         // osc1_impl::chain177_t<NV>
+                         getT(2).getT(5).getT(1).getT(1).
+                         getT(3);
+		auto& split19 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                  // osc1_impl::split19_t<NV>
+                        getT(5).getT(1).getT(1).getT(3).getT(0);
+		auto& add464 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // math::add<NV>
+                       getT(5).getT(1).getT(1).getT(3).getT(0).
+                       getT(0);
+		auto& add465 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // math::add<NV>
+                       getT(5).getT(1).getT(1).getT(3).getT(0).
+                       getT(1);
+		auto& branch44 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                 // osc1_impl::branch44_t<NV>
+                         getT(5).getT(1).getT(1).getT(3).getT(1);
+		auto& file_player12 = this->getT(2).getT(0).getT(0).getT(0).getT(2).            // osc1_impl::file_player12_t<NV>
+                              getT(5).getT(1).getT(1).getT(3).getT(1).
+                              getT(0);
+		auto& file_player13 = this->getT(2).getT(0).getT(0).getT(0).getT(2).            // osc1_impl::file_player13_t<NV>
+                              getT(5).getT(1).getT(1).getT(3).getT(1).
+                              getT(1);
+		auto& branch45 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                 // osc1_impl::branch45_t<NV>
+                         getT(5).getT(1).getT(1).getT(3).getT(2);
+		auto& gain96 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // core::gain<NV>
+                       getT(5).getT(1).getT(1).getT(3).getT(2).
+                       getT(0);
+		auto& gain97 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // core::gain<NV>
+                       getT(5).getT(1).getT(1).getT(3).getT(2).
+                       getT(1);
+		auto& gain98 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // core::gain<NV>
+                       getT(5).getT(1).getT(1).getT(3).getT(2).
+                       getT(2);
+		auto& gain99 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                   // core::gain<NV>
+                       getT(5).getT(1).getT(1).getT(3).getT(2).
+                       getT(3);
+		auto& branch23 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(6);         // osc1_impl::branch23_t<NV>
+		auto& chain261 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(6).getT(0); // osc1_impl::chain261_t<NV>
+		auto& tanh2 = this->getT(2).getT(0).getT(0).getT(0).                            // wrap::no_process<math::tanh<NV>>
+                      getT(2).getT(6).getT(0).getT(0);
+		auto& chain262 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(6).getT(1); // osc1_impl::chain262_t<NV>
+		auto& receive2 = this->getT(2).getT(0).getT(0).getT(0).                         // routing::receive<NV, stereo_cable<NV>>
+                         getT(2).getT(6).getT(1).getT(0);
+		auto& faust3 = this->getT(2).getT(0).getT(0).getT(0).                           // project::shfiter<NV>
+                       getT(2).getT(6).getT(1).getT(1);
+		auto& send2 = this->getT(2).getT(0).getT(0).getT(0).                            // routing::send<NV, stereo_cable<NV>>
+                      getT(2).getT(6).getT(1).getT(2);
+		auto& chain263 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(6).getT(2); // osc1_impl::chain263_t<NV>
+		auto& midi42 = this->getT(2).getT(0).getT(0).getT(0).                           // osc1_impl::midi42_t<NV>
+                       getT(2).getT(6).getT(2).getT(0);
+		auto& cable_table15 = this->getT(2).getT(0).getT(0).getT(0).                    // osc1_impl::cable_table15_t<NV>
+                              getT(2).getT(6).getT(2).getT(1);
+		auto& receive3 = this->getT(2).getT(0).getT(0).getT(0).                         // routing::receive<NV, stereo_cable<NV>>
+                         getT(2).getT(6).getT(2).getT(2);
+		auto& faust4 = this->getT(2).getT(0).getT(0).getT(0).                           // project::ps2<NV>
+                       getT(2).getT(6).getT(2).getT(3);
+		auto& faust5 = this->getT(2).getT(0).getT(0).getT(0).                           // project::shfiter<NV>
+                       getT(2).getT(6).getT(2).getT(4);
+		auto& send3 = this->getT(2).getT(0).getT(0).getT(0).                            // routing::send<NV, stereo_cable<NV>>
+                      getT(2).getT(6).getT(2).getT(5);
+		auto& chain101 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(6).getT(3); // osc1_impl::chain101_t
+		auto& send1 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(7);            // routing::send<NV, stereo_cable<NV>>
+		auto& chain192 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(8);         // osc1_impl::chain192_t<NV>
+		auto& split43 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(8).getT(0);  // osc1_impl::split43_t<NV>
+		auto& chain394 = this->getT(2).getT(0).getT(0).getT(0).                         // osc1_impl::chain394_t
+                         getT(2).getT(8).getT(0).getT(0);
+		auto& chain395 = this->getT(2).getT(0).getT(0).getT(0).                         // osc1_impl::chain395_t<NV>
+                         getT(2).getT(8).getT(0).getT(1);
+		auto& smoother4 = this->getT(2).getT(0).getT(0).getT(0).                        // core::smoother<NV>
+                          getT(2).getT(8).getT(0).getT(1).
+                          getT(0);
+		auto& tempo_sync10 = this->getT(2).getT(0).getT(0).getT(0).                     // osc1_impl::tempo_sync10_t<NV>
+                             getT(2).getT(8).getT(0).getT(1).
+                             getT(1);
+		auto& converter4 = this->getT(2).getT(0).getT(0).getT(0).                       // osc1_impl::converter4_t<NV>
+                           getT(2).getT(8).getT(0).getT(1).
+                           getT(2);
+		auto& xfade_2x_lin2 = this->getT(2).getT(0).getT(0).getT(0).                    // osc1_impl::xfade_2x_lin2_t<NV>
+                              getT(2).getT(8).getT(0).getT(1).
+                              getT(3);
+		auto& xfader144 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                // osc1_impl::xfader144_t<NV>
+                          getT(8).getT(0).getT(1).getT(3).getT(0);
+		auto& split14 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                  // osc1_impl::split14_t<NV>
+                        getT(8).getT(0).getT(1).getT(3).getT(1);
+		auto& chain72 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                  // osc1_impl::chain72_t<NV>
+                        getT(8).getT(0).getT(1).getT(3).getT(1).
+                        getT(0);
+		auto& gain47 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(8).           // core::gain<NV>
+                       getT(0).getT(1).getT(3).getT(1).getT(0).getT(0);
+		auto& chain87 = this->getT(2).getT(0).getT(0).getT(0).getT(2).                  // osc1_impl::chain87_t<NV>
+                        getT(8).getT(0).getT(1).getT(3).getT(1).
+                        getT(1);
+		auto& sampleandhold3 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(8).   // fx::sampleandhold<NV>
+                               getT(0).getT(1).getT(3).getT(1).getT(1).getT(0);
+		auto& gain75 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(8).           // core::gain<NV>
+                       getT(0).getT(1).getT(3).getT(1).getT(1).getT(1);
+		auto& peak22 = this->getT(2).getT(0).getT(0).getT(0).                           // osc1_impl::peak22_t<NV>
+                       getT(2).getT(8).getT(0).getT(1).
+                       getT(4);
+		auto& clear11 = this->getT(2).getT(0).getT(0).getT(0).                          // math::clear<NV>
+                        getT(2).getT(8).getT(0).getT(1).
+                        getT(5);
+		auto& clear20 = this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(9);          // math::clear<NV>
+		auto& chain58 = this->getT(2).getT(0).getT(0).getT(0).getT(3);                  // osc1_impl::chain58_t<NV>
+		auto& clear24 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(0);          // math::clear<NV>
+		auto& split47 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1);          // osc1_impl::split47_t<NV>
+		auto& chain546 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).getT(0); // osc1_impl::chain546_t<NV>
+		auto& chain570 = this->getT(2).getT(0).getT(0).getT(0).                         // osc1_impl::chain570_t<NV>
+                         getT(3).getT(1).getT(0).getT(0);
+		auto& sliderbank2 = this->getT(2).getT(0).getT(0).getT(0).                      // osc1_impl::sliderbank2_t<NV>
+                            getT(3).getT(1).getT(0).getT(0).
+                            getT(0);
+		auto& split50 = this->getT(2).getT(0).getT(0).getT(0).                          // osc1_impl::split50_t<NV>
+                        getT(3).getT(1).getT(0).getT(0).
+                        getT(1);
+		auto& chain571 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                 // osc1_impl::chain571_t<NV>
                          getT(1).getT(0).getT(0).getT(1).getT(0);
-		auto& xfader135 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                     // osc1_impl::xfader135_t<NV>
+		auto& receive25 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                // routing::receive<NV, stereo_cable<NV>>
                           getT(1).getT(0).getT(0).getT(1).getT(0).
                           getT(0);
-		auto& soft_bypass129 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                // osc1_impl::soft_bypass129_t<NV>
-                               getT(1).getT(0).getT(0).getT(1).getT(0).
-                               getT(1);
-		auto& chain230 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::chain230_t<NV>
-                         getT(0).getT(0).getT(1).getT(0).getT(1).getT(0);
-		auto& global_cable43 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).        // osc1_impl::global_cable43_t<NV>
-                               getT(0).getT(0).getT(1).getT(0).getT(1).getT(0).
-                               getT(0);
-		auto& add179 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(0).getT(1).getT(0).getT(1).getT(0).
+		auto& gain87 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                   // core::gain<NV>
+                       getT(1).getT(0).getT(0).getT(1).getT(0).
                        getT(1);
-		auto& gain124 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).               // core::gain<NV>
-                        getT(0).getT(0).getT(1).getT(0).getT(1).getT(0).
-                        getT(2);
-		auto& chain525 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain525_t<NV>
+		auto& chain572 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                 // osc1_impl::chain572_t<NV>
                          getT(1).getT(0).getT(0).getT(1).getT(1);
-		auto& xfader142 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                     // osc1_impl::xfader142_t<NV>
+		auto& receive26 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                // routing::receive<NV, stereo_cable<NV>>
                           getT(1).getT(0).getT(0).getT(1).getT(1).
                           getT(0);
-		auto& soft_bypass136 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                // osc1_impl::soft_bypass136_t<NV>
-                               getT(1).getT(0).getT(0).getT(1).getT(1).
-                               getT(1);
-		auto& chain231 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::chain231_t<NV>
-                         getT(0).getT(0).getT(1).getT(1).getT(1).getT(0);
-		auto& global_cable44 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).        // osc1_impl::global_cable44_t<NV>
-                               getT(0).getT(0).getT(1).getT(1).getT(1).getT(0).
-                               getT(0);
-		auto& add180 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(0).getT(1).getT(1).getT(1).getT(0).
+		auto& gain88 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                   // core::gain<NV>
+                       getT(1).getT(0).getT(0).getT(1).getT(1).
                        getT(1);
-		auto& gain125 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).               // core::gain<NV>
-                        getT(0).getT(0).getT(1).getT(1).getT(1).getT(0).
-                        getT(2);
-		auto& chain524 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain524_t<NV>
+		auto& chain573 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                 // osc1_impl::chain573_t<NV>
                          getT(1).getT(0).getT(0).getT(1).getT(2);
-		auto& xfader141 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                     // osc1_impl::xfader141_t<NV>
+		auto& receive27 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                // routing::receive<NV, stereo_cable<NV>>
                           getT(1).getT(0).getT(0).getT(1).getT(2).
                           getT(0);
-		auto& soft_bypass135 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                // osc1_impl::soft_bypass135_t<NV>
-                               getT(1).getT(0).getT(0).getT(1).getT(2).
-                               getT(1);
-		auto& chain232 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::chain232_t<NV>
-                         getT(0).getT(0).getT(1).getT(2).getT(1).getT(0);
-		auto& global_cable45 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).        // osc1_impl::global_cable45_t<NV>
-                               getT(0).getT(0).getT(1).getT(2).getT(1).getT(0).
-                               getT(0);
-		auto& add181 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(0).getT(1).getT(2).getT(1).getT(0).
-                       getT(1);
-		auto& gain126 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).               // core::gain<NV>
-                        getT(0).getT(0).getT(1).getT(2).getT(1).getT(0).
-                        getT(2);
-		auto& chain523 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain523_t<NV>
+		auto& gain100 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                  // core::gain<NV>
+                        getT(1).getT(0).getT(0).getT(1).getT(2).
+                        getT(1);
+		auto& chain574 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                 // osc1_impl::chain574_t<NV>
                          getT(1).getT(0).getT(0).getT(1).getT(3);
-		auto& xfader140 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                     // osc1_impl::xfader140_t<NV>
+		auto& receive28 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                // routing::receive<NV, stereo_cable<NV>>
                           getT(1).getT(0).getT(0).getT(1).getT(3).
                           getT(0);
-		auto& soft_bypass134 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                // osc1_impl::soft_bypass134_t<NV>
-                               getT(1).getT(0).getT(0).getT(1).getT(3).
-                               getT(1);
-		auto& chain233 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::chain233_t<NV>
-                         getT(0).getT(0).getT(1).getT(3).getT(1).getT(0);
-		auto& global_cable46 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).        // osc1_impl::global_cable46_t<NV>
-                               getT(0).getT(0).getT(1).getT(3).getT(1).getT(0).
-                               getT(0);
-		auto& add182 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(0).getT(1).getT(3).getT(1).getT(0).
-                       getT(1);
-		auto& gain127 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).               // core::gain<NV>
-                        getT(0).getT(0).getT(1).getT(3).getT(1).getT(0).
-                        getT(2);
-		auto& chain522 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain522_t<NV>
-                         getT(1).getT(0).getT(0).getT(1).getT(4);
-		auto& xfader139 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                     // osc1_impl::xfader139_t<NV>
-                          getT(1).getT(0).getT(0).getT(1).getT(4).
-                          getT(0);
-		auto& soft_bypass133 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                // osc1_impl::soft_bypass133_t<NV>
-                               getT(1).getT(0).getT(0).getT(1).getT(4).
-                               getT(1);
-		auto& chain234 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::chain234_t<NV>
-                         getT(0).getT(0).getT(1).getT(4).getT(1).getT(0);
-		auto& add183 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(0).getT(1).getT(4).getT(1).getT(0).
-                       getT(0);
-		auto& gain128 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).               // core::gain<NV>
-                        getT(0).getT(0).getT(1).getT(4).getT(1).getT(0).
+		auto& gain101 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                  // core::gain<NV>
+                        getT(1).getT(0).getT(0).getT(1).getT(3).
                         getT(1);
-		auto& chain521 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain521_t<NV>
-                         getT(1).getT(0).getT(0).getT(1).getT(5);
-		auto& xfader138 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                     // osc1_impl::xfader138_t<NV>
-                          getT(1).getT(0).getT(0).getT(1).getT(5).
-                          getT(0);
-		auto& soft_bypass132 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                // osc1_impl::soft_bypass132_t<NV>
-                               getT(1).getT(0).getT(0).getT(1).getT(5).
-                               getT(1);
-		auto& chain235 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::chain235_t<NV>
-                         getT(0).getT(0).getT(1).getT(5).getT(1).getT(0);
-		auto& add184 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(0).getT(1).getT(5).getT(1).getT(0).
-                       getT(0);
-		auto& gain129 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).               // core::gain<NV>
-                        getT(0).getT(0).getT(1).getT(5).getT(1).getT(0).
+		auto& gain74 = this->getT(2).getT(0).getT(0).getT(0).                           // core::gain<NV>
+                       getT(3).getT(1).getT(0).getT(1);
+		auto& xfader = this->getT(2).getT(0).getT(0).getT(0).                           // osc1_impl::xfader_t<NV>
+                       getT(3).getT(1).getT(0).getT(2);
+		auto& split12 = this->getT(2).getT(0).getT(0).getT(0).                          // osc1_impl::split12_t<NV>
+                        getT(3).getT(1).getT(0).getT(3);
+		auto& chain14 = this->getT(2).getT(0).getT(0).getT(0).                          // osc1_impl::chain14_t<NV>
+                        getT(3).getT(1).getT(0).getT(3).
+                        getT(0);
+		auto& gain1 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                    // core::gain<NV>
+                      getT(1).getT(0).getT(3).getT(0).getT(0);
+		auto& chain57 = this->getT(2).getT(0).getT(0).getT(0).                          // osc1_impl::chain57_t<NV>
+                        getT(3).getT(1).getT(0).getT(3).
                         getT(1);
-		auto& chain520 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain520_t<NV>
-                         getT(1).getT(0).getT(0).getT(1).getT(6);
-		auto& xfader137 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                     // osc1_impl::xfader137_t<NV>
-                          getT(1).getT(0).getT(0).getT(1).getT(6).
-                          getT(0);
-		auto& soft_bypass131 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                // osc1_impl::soft_bypass131_t<NV>
-                               getT(1).getT(0).getT(0).getT(1).getT(6).
-                               getT(1);
-		auto& chain236 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::chain236_t<NV>
-                         getT(0).getT(0).getT(1).getT(6).getT(1).getT(0);
-		auto& branch51 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::branch51_t<NV>
-                         getT(0).getT(0).getT(1).getT(6).getT(1).getT(0).
-                         getT(0);
-		auto& add185 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).        // math::add<NV>
-                       getT(0).getT(1).getT(6).getT(1).getT(0).getT(0).getT(0);
-		auto& add186 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).        // math::add<NV>
-                       getT(0).getT(1).getT(6).getT(1).getT(0).getT(0).getT(1);
-		auto& add187 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).        // math::add<NV>
-                       getT(0).getT(1).getT(6).getT(1).getT(0).getT(0).getT(2);
-		auto& add188 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).        // math::add<NV>
-                       getT(0).getT(1).getT(6).getT(1).getT(0).getT(0).getT(3);
-		auto& add189 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(0).getT(1).getT(6).getT(1).getT(0).
-                       getT(1);
-		auto& gain130 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).               // core::gain<NV>
-                        getT(0).getT(0).getT(1).getT(6).getT(1).getT(0).
-                        getT(2);
-		auto& chain509 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain509_t<NV>
-                         getT(1).getT(0).getT(0).getT(1).getT(7);
-		auto& xfader136 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                     // osc1_impl::xfader136_t<NV>
-                          getT(1).getT(0).getT(0).getT(1).getT(7).
-                          getT(0);
-		auto& soft_bypass130 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                // osc1_impl::soft_bypass130_t<NV>
-                               getT(1).getT(0).getT(0).getT(1).getT(7).
-                               getT(1);
-		auto& chain237 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::chain237_t<NV>
-                         getT(0).getT(0).getT(1).getT(7).getT(1).getT(0);
-		auto& branch52 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::branch52_t<NV>
-                         getT(0).getT(0).getT(1).getT(7).getT(1).getT(0).
-                         getT(0);
-		auto& chain238 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).      // osc1_impl::chain238_t<NV>
-                         getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(0);
-		auto& midi_cc43 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).     // osc1_impl::midi_cc43_t<NV>
-                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(0).
-                          getT(0);
-		auto& add190 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).        // math::add<NV>
-                       getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(0).
-                       getT(1);
-		auto& chain239 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).      // osc1_impl::chain239_t<NV>
-                         getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(1);
-		auto& midi_cc44 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).     // osc1_impl::midi_cc44_t<NV>
-                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(1).
-                          getT(0);
-		auto& add191 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).        // math::add<NV>
-                       getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(1).
-                       getT(1);
-		auto& chain240 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).      // osc1_impl::chain240_t<NV>
-                         getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(2);
-		auto& midi_cc45 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).     // osc1_impl::midi_cc45_t<NV>
-                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(2).
-                          getT(0);
-		auto& add192 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).        // math::add<NV>
-                       getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(2).
-                       getT(1);
-		auto& chain241 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).      // osc1_impl::chain241_t<NV>
-                         getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(3);
-		auto& midi_cc46 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).     // osc1_impl::midi_cc46_t<NV>
-                          getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(3).
-                          getT(0);
-		auto& add193 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).        // math::add<NV>
-                       getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(3).
-                       getT(1);
-		auto& chain242 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).      // osc1_impl::chain242_t<NV>
-                         getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(4);
-		auto& midi32 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).        // osc1_impl::midi32_t<NV>
-                       getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(4).
+		auto& chain15 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                  // osc1_impl::chain15_t<NV>
+                        getT(1).getT(0).getT(3).getT(1).getT(0);
+		auto& branch = this->getT(2).getT(0).getT(0).getT(0).getT(3).                   // osc1_impl::branch_t<NV>
+                       getT(1).getT(0).getT(3).getT(1).getT(0).
                        getT(0);
-		auto& add194 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).        // math::add<NV>
-                       getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(4).
-                       getT(1);
-		auto& chain243 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).      // osc1_impl::chain243_t<NV>
-                         getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(5);
-		auto& midi33 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).        // osc1_impl::midi33_t<NV>
-                       getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(5).
+		auto& chain16 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).          // osc1_impl::chain16_t<NV>
+                        getT(0).getT(3).getT(1).getT(0).getT(0).getT(0);
+		auto& faust = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).            // project::klp<NV>
+                      getT(0).getT(3).getT(1).getT(0).getT(0).getT(0).
+                      getT(0);
+		auto& chain35 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).          // osc1_impl::chain35_t<NV>
+                        getT(0).getT(3).getT(1).getT(0).getT(0).getT(1);
+		auto& faust2 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).           // project::khp2<NV>
+                       getT(0).getT(3).getT(1).getT(0).getT(0).getT(1).
                        getT(0);
-		auto& add195 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).        // math::add<NV>
-                       getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(5).
+		auto& chain37 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).          // osc1_impl::chain37_t<NV>
+                        getT(0).getT(3).getT(1).getT(0).getT(0).getT(2);
+		auto& svf = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).              // filters::svf<NV>
+                    getT(0).getT(3).getT(1).getT(0).getT(0).getT(2).
+                    getT(0);
+		auto& chain36 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).          // osc1_impl::chain36_t<NV>
+                        getT(0).getT(3).getT(1).getT(0).getT(0).getT(3);
+		auto& cable_table = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).      // osc1_impl::cable_table_t<NV>
+                            getT(0).getT(3).getT(1).getT(0).getT(0).getT(3).
+                            getT(0);
+		auto& faust8 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).           // project::Comb<NV>
+                       getT(0).getT(3).getT(1).getT(0).getT(0).getT(3).
                        getT(1);
-		auto& chain244 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).      // osc1_impl::chain244_t<NV>
-                         getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(6);
-		auto& midi34 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).        // osc1_impl::midi34_t<NV>
-                       getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(6).
-                       getT(0);
-		auto& add196 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(0).        // math::add<NV>
-                       getT(0).getT(1).getT(7).getT(1).getT(0).getT(0).getT(6).
-                       getT(1);
-		auto& gain131 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).               // core::gain<NV>
-                        getT(0).getT(0).getT(1).getT(7).getT(1).getT(0).
+		auto& chain55 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).          // osc1_impl::chain55_t<NV>
+                        getT(0).getT(3).getT(1).getT(0).getT(0).getT(4);
+		auto& allpass = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).          // filters::allpass<NV>
+                        getT(0).getT(3).getT(1).getT(0).getT(0).getT(4).
+                        getT(0);
+		auto& gain2 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                    // core::gain<NV>
+                      getT(1).getT(0).getT(3).getT(1).getT(1);
+		auto& send7 = this->getT(2).getT(0).getT(0).getT(0).                            // routing::send<NV, stereo_cable<NV>>
+                      getT(3).getT(1).getT(0).getT(4);
+		auto& gain77 = this->getT(2).getT(0).getT(0).getT(0).                           // core::gain<NV>
+                       getT(3).getT(1).getT(0).getT(5);
+		auto& jpanner3 = this->getT(2).getT(0).getT(0).getT(0).                         // jdsp::jpanner<NV>
+                         getT(3).getT(1).getT(0).getT(6);
+		auto& chain548 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).getT(1); // osc1_impl::chain548_t<NV>
+		auto& chain559 = this->getT(2).getT(0).getT(0).getT(0).                         // osc1_impl::chain559_t<NV>
+                         getT(3).getT(1).getT(1).getT(0);
+		auto& sliderbank1 = this->getT(2).getT(0).getT(0).getT(0).                     // osc1_impl::sliderbank1_t<NV>
+                            getT(3).getT(1).getT(1).getT(0).
+                            getT(0);
+		auto& split48 = this->getT(2).getT(0).getT(0).getT(0).                         // osc1_impl::split48_t<NV>
+                        getT(3).getT(1).getT(1).getT(0).
                         getT(1);
-		auto& peak21 = this->getT(1).getT(1).getT(0).getT(2).                                // osc1_impl::peak21_t<NV>
-                       getT(4).getT(1).getT(0).getT(0).
-                       getT(2);
-		auto& clear2 = this->getT(1).getT(1).getT(0).getT(2).                                // math::clear<NV>
-                       getT(4).getT(1).getT(0).getT(0).
-                       getT(3);
-		auto& pma17 = this->getT(1).getT(1).getT(0).getT(2).                                 // osc1_impl::pma17_t<NV>
-                      getT(4).getT(1).getT(0).getT(0).
-                      getT(4);
-		auto& chain248 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::chain248_t<NV>
-                         getT(4).getT(1).getT(0).getT(0).
-                         getT(5);
-		auto& branch21 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::branch21_t<NV>
-                         getT(1).getT(0).getT(0).getT(5).getT(0);
-		auto& chain250 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain250_t<NV>
-                         getT(1).getT(0).getT(0).getT(5).getT(0).
+		auto& chain549 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                // osc1_impl::chain549_t<NV>
+                         getT(1).getT(1).getT(0).getT(1).getT(0);
+		auto& receive20 = this->getT(2).getT(0).getT(0).getT(0).getT(3).               // routing::receive<NV, stereo_cable<NV>>
+                          getT(1).getT(1).getT(0).getT(1).getT(0).
+                          getT(0);
+		auto& gain81 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                  // core::gain<NV>
+                       getT(1).getT(1).getT(0).getT(1).getT(0).
+                       getT(1);
+		auto& chain550 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                // osc1_impl::chain550_t<NV>
+                         getT(1).getT(1).getT(0).getT(1).getT(1);
+		auto& receive21 = this->getT(2).getT(0).getT(0).getT(0).getT(3).               // routing::receive<NV, stereo_cable<NV>>
+                          getT(1).getT(1).getT(0).getT(1).getT(1).
+                          getT(0);
+		auto& gain82 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                  // core::gain<NV>
+                       getT(1).getT(1).getT(0).getT(1).getT(1).
+                       getT(1);
+		auto& chain551 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                // osc1_impl::chain551_t<NV>
+                         getT(1).getT(1).getT(0).getT(1).getT(2);
+		auto& receive22 = this->getT(2).getT(0).getT(0).getT(0).getT(3).               // routing::receive<NV, stereo_cable<NV>>
+                          getT(1).getT(1).getT(0).getT(1).getT(2).
+                          getT(0);
+		auto& gain83 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                  // core::gain<NV>
+                       getT(1).getT(1).getT(0).getT(1).getT(2).
+                       getT(1);
+		auto& chain552 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                // osc1_impl::chain552_t<NV>
+                         getT(1).getT(1).getT(0).getT(1).getT(3);
+		auto& receive23 = this->getT(2).getT(0).getT(0).getT(0).getT(3).               // routing::receive<NV, stereo_cable<NV>>
+                          getT(1).getT(1).getT(0).getT(1).getT(3).
+                          getT(0);
+		auto& gain84 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                  // core::gain<NV>
+                       getT(1).getT(1).getT(0).getT(1).getT(3).
+                       getT(1);
+		auto& gain73 = this->getT(2).getT(0).getT(0).getT(0).                          // core::gain<NV>
+                       getT(3).getT(1).getT(1).getT(1);
+		auto& xfader143 = this->getT(2).getT(0).getT(0).getT(0).                       // osc1_impl::xfader143_t<NV>
+                          getT(3).getT(1).getT(1).getT(2);
+		auto& split49 = this->getT(2).getT(0).getT(0).getT(0).                         // osc1_impl::split49_t<NV>
+                        getT(3).getT(1).getT(1).getT(3);
+		auto& chain553 = this->getT(2).getT(0).getT(0).getT(0).                        // osc1_impl::chain553_t<NV>
+                         getT(3).getT(1).getT(1).getT(3).
                          getT(0);
-		auto& add213 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(0).getT(5).getT(0).getT(0).getT(0);
-		auto& chain251 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain251_t<NV>
-                         getT(1).getT(0).getT(0).getT(5).getT(0).
-                         getT(1);
-		auto& minmax6 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).               // osc1_impl::minmax6_t<NV>
-                        getT(0).getT(0).getT(5).getT(0).getT(1).getT(0);
-		auto& add214 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(0).getT(5).getT(0).getT(1).getT(1);
-		auto& chain252 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain252_t<NV>
-                         getT(1).getT(0).getT(0).getT(5).getT(0).
-                         getT(2);
-		auto& minmax7 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).               // osc1_impl::minmax7_t<NV>
-                        getT(0).getT(0).getT(5).getT(0).getT(2).getT(0);
-		auto& add215 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(0).getT(5).getT(0).getT(2).getT(1);
-		auto& chain253 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain253_t<NV>
-                         getT(1).getT(0).getT(0).getT(5).getT(0).
-                         getT(3);
-		auto& minmax14 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax14_t<NV>
-                         getT(0).getT(0).getT(5).getT(0).getT(3).getT(0);
-		auto& add216 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(0).getT(5).getT(0).getT(3).getT(1);
-		auto& chain254 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain254_t<NV>
-                         getT(1).getT(0).getT(0).getT(5).getT(0).
-                         getT(4);
-		auto& minmax11 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax11_t<NV>
-                         getT(0).getT(0).getT(5).getT(0).getT(4).getT(0);
-		auto& add217 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(0).getT(5).getT(0).getT(4).getT(1);
-		auto& chain255 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain255_t<NV>
-                         getT(1).getT(0).getT(0).getT(5).getT(0).
-                         getT(5);
-		auto& minmax15 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax15_t<NV>
-                         getT(0).getT(0).getT(5).getT(0).getT(5).getT(0);
-		auto& add218 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(0).getT(5).getT(0).getT(5).getT(1);
-		auto& chain256 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain256_t<NV>
-                         getT(1).getT(0).getT(0).getT(5).getT(0).
-                         getT(6);
-		auto& minmax16 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax16_t<NV>
-                         getT(0).getT(0).getT(5).getT(0).getT(6).getT(0);
-		auto& add219 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(0).getT(5).getT(0).getT(6).getT(1);
-		auto& chain257 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain257_t<NV>
-                         getT(1).getT(0).getT(0).getT(5).getT(0).
-                         getT(7);
-		auto& minmax17 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax17_t<NV>
-                         getT(0).getT(0).getT(5).getT(0).getT(7).getT(0);
-		auto& add220 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(0).getT(5).getT(0).getT(7).getT(1);
-		auto& chain258 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain258_t<NV>
-                         getT(1).getT(0).getT(0).getT(5).getT(0).
-                         getT(8);
-		auto& minmax18 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax18_t<NV>
-                         getT(0).getT(0).getT(5).getT(0).getT(8).getT(0);
-		auto& add221 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(0).getT(5).getT(0).getT(8).getT(1);
-		auto& peak18 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // osc1_impl::peak18_t<NV>
-                       getT(1).getT(0).getT(0).getT(5).getT(1);
-		auto& cable_table5 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                  // osc1_impl::cable_table5_t
-                             getT(1).getT(0).getT(0).getT(5).getT(2);
-		auto& modchain31 = this->getT(1).getT(1).getT(0).getT(2).                            // osc1_impl::modchain31_t<NV>
-                           getT(4).getT(1).getT(0).getT(1);
-		auto& pma33 = this->getT(1).getT(1).getT(0).getT(2).                                 // osc1_impl::pma33_t<NV>
-                      getT(4).getT(1).getT(0).getT(1).
-                      getT(0);
-		auto& chain535 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::chain535_t<NV>
-                         getT(4).getT(1).getT(0).getT(1).
-                         getT(1);
-		auto& branch32 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::branch32_t<NV>
-                         getT(1).getT(0).getT(1).getT(1).getT(0);
-		auto& chain536 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain536_t<NV>
-                         getT(1).getT(0).getT(1).getT(1).getT(0).
-                         getT(0);
-		auto& add551 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(1).getT(1).getT(0).getT(0).getT(0);
-		auto& chain537 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain537_t<NV>
-                         getT(1).getT(0).getT(1).getT(1).getT(0).
-                         getT(1);
-		auto& minmax30 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax30_t<NV>
-                         getT(0).getT(1).getT(1).getT(0).getT(1).getT(0);
-		auto& add552 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(1).getT(1).getT(0).getT(1).getT(1);
-		auto& chain538 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain538_t<NV>
-                         getT(1).getT(0).getT(1).getT(1).getT(0).
-                         getT(2);
-		auto& minmax31 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax31_t<NV>
-                         getT(0).getT(1).getT(1).getT(0).getT(2).getT(0);
-		auto& add553 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(1).getT(1).getT(0).getT(2).getT(1);
-		auto& chain539 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain539_t<NV>
-                         getT(1).getT(0).getT(1).getT(1).getT(0).
-                         getT(3);
-		auto& minmax32 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax32_t<NV>
-                         getT(0).getT(1).getT(1).getT(0).getT(3).getT(0);
-		auto& add554 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(1).getT(1).getT(0).getT(3).getT(1);
-		auto& chain540 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain540_t<NV>
-                         getT(1).getT(0).getT(1).getT(1).getT(0).
-                         getT(4);
-		auto& minmax33 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax33_t<NV>
-                         getT(0).getT(1).getT(1).getT(0).getT(4).getT(0);
-		auto& add555 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(1).getT(1).getT(0).getT(4).getT(1);
-		auto& chain541 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain541_t<NV>
-                         getT(1).getT(0).getT(1).getT(1).getT(0).
-                         getT(5);
-		auto& minmax34 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax34_t<NV>
-                         getT(0).getT(1).getT(1).getT(0).getT(5).getT(0);
-		auto& add556 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(1).getT(1).getT(0).getT(5).getT(1);
-		auto& chain542 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain542_t<NV>
-                         getT(1).getT(0).getT(1).getT(1).getT(0).
-                         getT(6);
-		auto& minmax35 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax35_t<NV>
-                         getT(0).getT(1).getT(1).getT(0).getT(6).getT(0);
-		auto& add557 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(1).getT(1).getT(0).getT(6).getT(1);
-		auto& chain543 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain543_t<NV>
-                         getT(1).getT(0).getT(1).getT(1).getT(0).
-                         getT(7);
-		auto& minmax36 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax36_t<NV>
-                         getT(0).getT(1).getT(1).getT(0).getT(7).getT(0);
-		auto& add558 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(1).getT(1).getT(0).getT(7).getT(1);
-		auto& chain544 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain544_t<NV>
-                         getT(1).getT(0).getT(1).getT(1).getT(0).
-                         getT(8);
-		auto& minmax37 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax37_t<NV>
-                         getT(0).getT(1).getT(1).getT(0).getT(8).getT(0);
-		auto& add559 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(1).getT(1).getT(0).getT(8).getT(1);
-		auto& peak43 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // osc1_impl::peak43_t<NV>
-                       getT(1).getT(0).getT(1).getT(1).getT(1);
-		auto& clear4 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // math::clear<NV>
-                       getT(1).getT(0).getT(1).getT(1).getT(2);
-		auto& clear5 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // math::clear<NV>
-                       getT(1).getT(0).getT(1).getT(1).getT(3);
-		auto& cable_table9 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                  // osc1_impl::cable_table9_t
-                             getT(1).getT(0).getT(1).getT(1).getT(4);
-		auto& modchain30 = this->getT(1).getT(1).getT(0).getT(2).                            // osc1_impl::modchain30_t<NV>
-                           getT(4).getT(1).getT(0).getT(2);
-		auto& pma32 = this->getT(1).getT(1).getT(0).getT(2).                                 // osc1_impl::pma32_t<NV>
-                      getT(4).getT(1).getT(0).getT(2).
-                      getT(0);
-		auto& chain510 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::chain510_t<NV>
-                         getT(4).getT(1).getT(0).getT(2).
-                         getT(1);
-		auto& branch31 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::branch31_t<NV>
-                         getT(1).getT(0).getT(2).getT(1).getT(0);
-		auto& chain511 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain511_t<NV>
-                         getT(1).getT(0).getT(2).getT(1).getT(0).
-                         getT(0);
-		auto& add524 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(2).getT(1).getT(0).getT(0).getT(0);
-		auto& chain512 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain512_t<NV>
-                         getT(1).getT(0).getT(2).getT(1).getT(0).
-                         getT(1);
-		auto& minmax10 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax10_t<NV>
-                         getT(0).getT(2).getT(1).getT(0).getT(1).getT(0);
-		auto& add525 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(2).getT(1).getT(0).getT(1).getT(1);
-		auto& chain513 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain513_t<NV>
-                         getT(1).getT(0).getT(2).getT(1).getT(0).
-                         getT(2);
-		auto& minmax13 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax13_t<NV>
-                         getT(0).getT(2).getT(1).getT(0).getT(2).getT(0);
-		auto& add526 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(2).getT(1).getT(0).getT(2).getT(1);
-		auto& chain514 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain514_t<NV>
-                         getT(1).getT(0).getT(2).getT(1).getT(0).
-                         getT(3);
-		auto& minmax24 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax24_t<NV>
-                         getT(0).getT(2).getT(1).getT(0).getT(3).getT(0);
-		auto& add527 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(2).getT(1).getT(0).getT(3).getT(1);
-		auto& chain515 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain515_t<NV>
-                         getT(1).getT(0).getT(2).getT(1).getT(0).
-                         getT(4);
-		auto& minmax25 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax25_t<NV>
-                         getT(0).getT(2).getT(1).getT(0).getT(4).getT(0);
-		auto& add528 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(2).getT(1).getT(0).getT(4).getT(1);
-		auto& chain516 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain516_t<NV>
-                         getT(1).getT(0).getT(2).getT(1).getT(0).
-                         getT(5);
-		auto& minmax26 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax26_t<NV>
-                         getT(0).getT(2).getT(1).getT(0).getT(5).getT(0);
-		auto& add529 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(2).getT(1).getT(0).getT(5).getT(1);
-		auto& chain517 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain517_t<NV>
-                         getT(1).getT(0).getT(2).getT(1).getT(0).
-                         getT(6);
-		auto& minmax27 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax27_t<NV>
-                         getT(0).getT(2).getT(1).getT(0).getT(6).getT(0);
-		auto& add530 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(2).getT(1).getT(0).getT(6).getT(1);
-		auto& chain518 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain518_t<NV>
-                         getT(1).getT(0).getT(2).getT(1).getT(0).
-                         getT(7);
-		auto& minmax28 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax28_t<NV>
-                         getT(0).getT(2).getT(1).getT(0).getT(7).getT(0);
-		auto& add531 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(2).getT(1).getT(0).getT(7).getT(1);
-		auto& chain519 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain519_t<NV>
-                         getT(1).getT(0).getT(2).getT(1).getT(0).
-                         getT(8);
-		auto& minmax29 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax29_t<NV>
-                         getT(0).getT(2).getT(1).getT(0).getT(8).getT(0);
-		auto& add532 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(2).getT(1).getT(0).getT(8).getT(1);
-		auto& peak31 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // osc1_impl::peak31_t<NV>
-                       getT(1).getT(0).getT(2).getT(1).getT(1);
-		auto& cable_table7 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                  // osc1_impl::cable_table7_t
-                             getT(1).getT(0).getT(2).getT(1).getT(2);
-		auto& modchain29 = this->getT(1).getT(1).getT(0).getT(2).                            // osc1_impl::modchain29_t<NV>
-                           getT(4).getT(1).getT(0).getT(3);
-		auto& pma31 = this->getT(1).getT(1).getT(0).getT(2).                                 // osc1_impl::pma31_t<NV>
-                      getT(4).getT(1).getT(0).getT(3).
-                      getT(0);
-		auto& chain485 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::chain485_t<NV>
-                         getT(4).getT(1).getT(0).getT(3).
-                         getT(1);
-		auto& branch30 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::branch30_t<NV>
-                         getT(1).getT(0).getT(3).getT(1).getT(0);
-		auto& chain486 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain486_t<NV>
-                         getT(1).getT(0).getT(3).getT(1).getT(0).
-                         getT(0);
-		auto& add497 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(3).getT(1).getT(0).getT(0).getT(0);
-		auto& chain487 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain487_t<NV>
-                         getT(1).getT(0).getT(3).getT(1).getT(0).
-                         getT(1);
-		auto& minmax8 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).               // osc1_impl::minmax8_t<NV>
-                        getT(0).getT(3).getT(1).getT(0).getT(1).getT(0);
-		auto& add498 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(3).getT(1).getT(0).getT(1).getT(1);
-		auto& chain488 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain488_t<NV>
-                         getT(1).getT(0).getT(3).getT(1).getT(0).
-                         getT(2);
-		auto& minmax9 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).               // osc1_impl::minmax9_t<NV>
-                        getT(0).getT(3).getT(1).getT(0).getT(2).getT(0);
-		auto& add499 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(3).getT(1).getT(0).getT(2).getT(1);
-		auto& chain489 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain489_t<NV>
-                         getT(1).getT(0).getT(3).getT(1).getT(0).
-                         getT(3);
-		auto& minmax19 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax19_t<NV>
-                         getT(0).getT(3).getT(1).getT(0).getT(3).getT(0);
-		auto& add500 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(3).getT(1).getT(0).getT(3).getT(1);
-		auto& chain490 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain490_t<NV>
-                         getT(1).getT(0).getT(3).getT(1).getT(0).
-                         getT(4);
-		auto& minmax12 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax12_t<NV>
-                         getT(0).getT(3).getT(1).getT(0).getT(4).getT(0);
-		auto& add501 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(3).getT(1).getT(0).getT(4).getT(1);
-		auto& chain491 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain491_t<NV>
-                         getT(1).getT(0).getT(3).getT(1).getT(0).
-                         getT(5);
-		auto& minmax20 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax20_t<NV>
-                         getT(0).getT(3).getT(1).getT(0).getT(5).getT(0);
-		auto& add502 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(3).getT(1).getT(0).getT(5).getT(1);
-		auto& chain492 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain492_t<NV>
-                         getT(1).getT(0).getT(3).getT(1).getT(0).
-                         getT(6);
-		auto& minmax21 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax21_t<NV>
-                         getT(0).getT(3).getT(1).getT(0).getT(6).getT(0);
-		auto& add503 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(3).getT(1).getT(0).getT(6).getT(1);
-		auto& chain493 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain493_t<NV>
-                         getT(1).getT(0).getT(3).getT(1).getT(0).
-                         getT(7);
-		auto& minmax22 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax22_t<NV>
-                         getT(0).getT(3).getT(1).getT(0).getT(7).getT(0);
-		auto& add504 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(3).getT(1).getT(0).getT(7).getT(1);
-		auto& chain494 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain494_t<NV>
-                         getT(1).getT(0).getT(3).getT(1).getT(0).
-                         getT(8);
-		auto& minmax23 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax23_t<NV>
-                         getT(0).getT(3).getT(1).getT(0).getT(8).getT(0);
-		auto& add505 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(3).getT(1).getT(0).getT(8).getT(1);
-		auto& peak29 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // osc1_impl::peak29_t<NV>
-                       getT(1).getT(0).getT(3).getT(1).getT(1);
-		auto& cable_table6 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                  // osc1_impl::cable_table6_t
-                             getT(1).getT(0).getT(3).getT(1).getT(2);
-		auto& modchain32 = this->getT(1).getT(1).getT(0).getT(2).                            // osc1_impl::modchain32_t<NV>
-                           getT(4).getT(1).getT(0).getT(4);
-		auto& pma34 = this->getT(1).getT(1).getT(0).getT(2).                                 // osc1_impl::pma34_t<NV>
-                      getT(4).getT(1).getT(0).getT(4).
-                      getT(0);
-		auto& chain560 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::chain560_t<NV>
-                         getT(4).getT(1).getT(0).getT(4).
-                         getT(1);
-		auto& branch33 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::branch33_t<NV>
-                         getT(1).getT(0).getT(4).getT(1).getT(0);
-		auto& chain561 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain561_t<NV>
-                         getT(1).getT(0).getT(4).getT(1).getT(0).
-                         getT(0);
-		auto& add578 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(4).getT(1).getT(0).getT(0).getT(0);
-		auto& chain562 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain562_t<NV>
-                         getT(1).getT(0).getT(4).getT(1).getT(0).
-                         getT(1);
-		auto& minmax38 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax38_t<NV>
-                         getT(0).getT(4).getT(1).getT(0).getT(1).getT(0);
-		auto& add579 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(4).getT(1).getT(0).getT(1).getT(1);
-		auto& chain563 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain563_t<NV>
-                         getT(1).getT(0).getT(4).getT(1).getT(0).
-                         getT(2);
-		auto& minmax39 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax39_t<NV>
-                         getT(0).getT(4).getT(1).getT(0).getT(2).getT(0);
-		auto& add580 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(4).getT(1).getT(0).getT(2).getT(1);
-		auto& chain564 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain564_t<NV>
-                         getT(1).getT(0).getT(4).getT(1).getT(0).
-                         getT(3);
-		auto& minmax40 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax40_t<NV>
-                         getT(0).getT(4).getT(1).getT(0).getT(3).getT(0);
-		auto& add581 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(4).getT(1).getT(0).getT(3).getT(1);
-		auto& chain565 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain565_t<NV>
-                         getT(1).getT(0).getT(4).getT(1).getT(0).
-                         getT(4);
-		auto& minmax41 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax41_t<NV>
-                         getT(0).getT(4).getT(1).getT(0).getT(4).getT(0);
-		auto& add582 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(4).getT(1).getT(0).getT(4).getT(1);
-		auto& chain566 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain566_t<NV>
-                         getT(1).getT(0).getT(4).getT(1).getT(0).
-                         getT(5);
-		auto& minmax42 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax42_t<NV>
-                         getT(0).getT(4).getT(1).getT(0).getT(5).getT(0);
-		auto& add583 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(4).getT(1).getT(0).getT(5).getT(1);
-		auto& chain567 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain567_t<NV>
-                         getT(1).getT(0).getT(4).getT(1).getT(0).
-                         getT(6);
-		auto& minmax43 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax43_t<NV>
-                         getT(0).getT(4).getT(1).getT(0).getT(6).getT(0);
-		auto& add584 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(4).getT(1).getT(0).getT(6).getT(1);
-		auto& chain568 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain568_t<NV>
-                         getT(1).getT(0).getT(4).getT(1).getT(0).
-                         getT(7);
-		auto& minmax44 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax44_t<NV>
-                         getT(0).getT(4).getT(1).getT(0).getT(7).getT(0);
-		auto& add585 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(4).getT(1).getT(0).getT(7).getT(1);
-		auto& chain569 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                      // osc1_impl::chain569_t<NV>
-                         getT(1).getT(0).getT(4).getT(1).getT(0).
-                         getT(8);
-		auto& minmax45 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).              // osc1_impl::minmax45_t<NV>
-                         getT(0).getT(4).getT(1).getT(0).getT(8).getT(0);
-		auto& add586 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                // math::add<NV>
-                       getT(0).getT(4).getT(1).getT(0).getT(8).getT(1);
-		auto& peak45 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // osc1_impl::peak45_t<NV>
-                       getT(1).getT(0).getT(4).getT(1).getT(1);
-		auto& cable_table10 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                 // osc1_impl::cable_table10_t
-                              getT(1).getT(0).getT(4).getT(1).getT(2);
-		auto& split17 = this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).getT(1);       // osc1_impl::split17_t<NV>
-		auto& chain174 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::chain174_t<NV>
-                         getT(4).getT(1).getT(1).getT(0);
-		auto& split11 = this->getT(1).getT(1).getT(0).getT(2).                               // osc1_impl::split11_t<NV>
-                        getT(4).getT(1).getT(1).getT(0).
-                        getT(0);
-		auto& add222 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // math::add<NV>
-                       getT(1).getT(1).getT(0).getT(0).getT(0);
-		auto& add463 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // math::add<NV>
-                       getT(1).getT(1).getT(0).getT(0).getT(1);
-		auto& branch22 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::branch22_t<NV>
-                         getT(4).getT(1).getT(1).getT(0).
-                         getT(1);
-		auto& file_player6 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                  // osc1_impl::file_player6_t<NV>
-                             getT(1).getT(1).getT(0).getT(1).getT(0);
-		auto& file_player7 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                  // osc1_impl::file_player7_t<NV>
-                             getT(1).getT(1).getT(0).getT(1).getT(1);
-		auto& branch26 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::branch26_t<NV>
-                         getT(4).getT(1).getT(1).getT(0).
-                         getT(2);
-		auto& gain4 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                         // core::gain<NV>
-                      getT(1).getT(1).getT(0).getT(2).getT(0);
-		auto& gain10 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // core::gain<NV>
-                       getT(1).getT(1).getT(0).getT(2).getT(1);
-		auto& gain9 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                         // core::gain<NV>
-                      getT(1).getT(1).getT(0).getT(2).getT(2);
-		auto& gain7 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                         // core::gain<NV>
-                      getT(1).getT(1).getT(0).getT(2).getT(3);
-		auto& chain175 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::chain175_t<NV>
-                         getT(4).getT(1).getT(1).getT(1);
-		auto& split40 = this->getT(1).getT(1).getT(0).getT(2).                               // osc1_impl::split40_t<NV>
-                        getT(4).getT(1).getT(1).getT(1).
-                        getT(0);
-		auto& add474 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // math::add<NV>
-                       getT(1).getT(1).getT(1).getT(0).getT(0);
-		auto& add475 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // math::add<NV>
-                       getT(1).getT(1).getT(1).getT(0).getT(1);
-		auto& branch40 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::branch40_t<NV>
-                         getT(4).getT(1).getT(1).getT(1).
-                         getT(1);
-		auto& file_player8 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                  // osc1_impl::file_player8_t<NV>
-                             getT(1).getT(1).getT(1).getT(1).getT(0);
-		auto& file_player9 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                  // osc1_impl::file_player9_t<NV>
-                             getT(1).getT(1).getT(1).getT(1).getT(1);
-		auto& branch41 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::branch41_t<NV>
-                         getT(4).getT(1).getT(1).getT(1).
-                         getT(2);
-		auto& gain72 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // core::gain<NV>
-                       getT(1).getT(1).getT(1).getT(2).getT(0);
-		auto& gain89 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // core::gain<NV>
-                       getT(1).getT(1).getT(1).getT(2).getT(1);
-		auto& gain90 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // core::gain<NV>
-                       getT(1).getT(1).getT(1).getT(2).getT(2);
-		auto& gain91 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // core::gain<NV>
-                       getT(1).getT(1).getT(1).getT(2).getT(3);
-		auto& chain176 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::chain176_t<NV>
-                         getT(4).getT(1).getT(1).getT(2);
-		auto& split21 = this->getT(1).getT(1).getT(0).getT(2).                               // osc1_impl::split21_t<NV>
-                        getT(4).getT(1).getT(1).getT(2).
-                        getT(0);
-		auto& add469 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // math::add<NV>
-                       getT(1).getT(1).getT(2).getT(0).getT(0);
-		auto& add470 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // math::add<NV>
-                       getT(1).getT(1).getT(2).getT(0).getT(1);
-		auto& branch42 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::branch42_t<NV>
-                         getT(4).getT(1).getT(1).getT(2).
-                         getT(1);
-		auto& file_player10 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                 // osc1_impl::file_player10_t<NV>
-                              getT(1).getT(1).getT(2).getT(1).getT(0);
-		auto& file_player11 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                 // osc1_impl::file_player11_t<NV>
-                              getT(1).getT(1).getT(2).getT(1).getT(1);
-		auto& branch43 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::branch43_t<NV>
-                         getT(4).getT(1).getT(1).getT(2).
-                         getT(2);
-		auto& gain92 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // core::gain<NV>
-                       getT(1).getT(1).getT(2).getT(2).getT(0);
-		auto& gain93 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // core::gain<NV>
-                       getT(1).getT(1).getT(2).getT(2).getT(1);
-		auto& gain94 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // core::gain<NV>
-                       getT(1).getT(1).getT(2).getT(2).getT(2);
-		auto& gain95 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // core::gain<NV>
-                       getT(1).getT(1).getT(2).getT(2).getT(3);
-		auto& chain177 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::chain177_t<NV>
-                         getT(4).getT(1).getT(1).getT(3);
-		auto& split19 = this->getT(1).getT(1).getT(0).getT(2).                               // osc1_impl::split19_t<NV>
-                        getT(4).getT(1).getT(1).getT(3).
-                        getT(0);
-		auto& add464 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // math::add<NV>
+		auto& gain85 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                  // core::gain<NV>
                        getT(1).getT(1).getT(3).getT(0).getT(0);
-		auto& add465 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // math::add<NV>
-                       getT(1).getT(1).getT(3).getT(0).getT(1);
-		auto& branch44 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::branch44_t<NV>
-                         getT(4).getT(1).getT(1).getT(3).
+		auto& chain554 = this->getT(2).getT(0).getT(0).getT(0).                        // osc1_impl::chain554_t<NV>
+                         getT(3).getT(1).getT(1).getT(3).
                          getT(1);
-		auto& file_player12 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                 // osc1_impl::file_player12_t<NV>
-                              getT(1).getT(1).getT(3).getT(1).getT(0);
-		auto& file_player13 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                 // osc1_impl::file_player13_t<NV>
-                              getT(1).getT(1).getT(3).getT(1).getT(1);
-		auto& branch45 = this->getT(1).getT(1).getT(0).getT(2).                              // osc1_impl::branch45_t<NV>
-                         getT(4).getT(1).getT(1).getT(3).
-                         getT(2);
-		auto& gain96 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // core::gain<NV>
-                       getT(1).getT(1).getT(3).getT(2).getT(0);
-		auto& gain97 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // core::gain<NV>
-                       getT(1).getT(1).getT(3).getT(2).getT(1);
-		auto& gain98 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // core::gain<NV>
-                       getT(1).getT(1).getT(3).getT(2).getT(2);
-		auto& gain99 = this->getT(1).getT(1).getT(0).getT(2).getT(4).                        // core::gain<NV>
-                       getT(1).getT(1).getT(3).getT(2).getT(3);
-		auto& branch23 = this->getT(1).getT(1).getT(0).getT(2).getT(5);                      // osc1_impl::branch23_t<NV>
-		auto& chain261 = this->getT(1).getT(1).getT(0).getT(2).getT(5).getT(0);              // osc1_impl::chain261_t<NV>
-		auto& tanh2 = this->getT(1).getT(1).getT(0).getT(2).getT(5).getT(0).getT(0);         // wrap::no_process<math::tanh<NV>>
-		auto& chain262 = this->getT(1).getT(1).getT(0).getT(2).getT(5).getT(1);              // osc1_impl::chain262_t<NV>
-		auto& receive2 = this->getT(1).getT(1).getT(0).getT(2).getT(5).getT(1).getT(0);      // routing::receive<stereo_cable>
-		auto& faust3 = this->getT(1).getT(1).getT(0).getT(2).getT(5).getT(1).getT(1);        // project::shfiter<NV>
-		auto& send2 = this->getT(1).getT(1).getT(0).getT(2).getT(5).getT(1).getT(2);         // routing::send<stereo_cable>
-		auto& chain263 = this->getT(1).getT(1).getT(0).getT(2).getT(5).getT(2);              // osc1_impl::chain263_t<NV>
-		auto& midi42 = this->getT(1).getT(1).getT(0).getT(2).getT(5).getT(2).getT(0);        // osc1_impl::midi42_t<NV>
-		auto& cable_table15 = this->getT(1).getT(1).getT(0).getT(2).getT(5).getT(2).getT(1); // osc1_impl::cable_table15_t<NV>
-		auto& receive3 = this->getT(1).getT(1).getT(0).getT(2).getT(5).getT(2).getT(2);      // routing::receive<stereo_cable>
-		auto& faust4 = this->getT(1).getT(1).getT(0).getT(2).getT(5).getT(2).getT(3);        // project::ps2<NV>
-		auto& faust5 = this->getT(1).getT(1).getT(0).getT(2).getT(5).getT(2).getT(4);        // project::shfiter<NV>
-		auto& send3 = this->getT(1).getT(1).getT(0).getT(2).getT(5).getT(2).getT(5);         // routing::send<stereo_cable>
-		auto& chain101 = this->getT(1).getT(1).getT(0).getT(2).getT(5).getT(3);              // osc1_impl::chain101_t
-		auto& send1 = this->getT(1).getT(1).getT(0).getT(2).getT(6);                         // routing::send<stereo_cable>
-		auto& peak22 = this->getT(1).getT(1).getT(0).getT(2).getT(7);                        // osc1_impl::peak22_t<NV>
-		auto& clear20 = this->getT(1).getT(1).getT(0).getT(2).getT(8);                       // math::clear<NV>
-		auto& chain58 = this->getT(1).getT(1).getT(0).getT(3);                               // osc1_impl::chain58_t<NV>
-		auto& clear24 = this->getT(1).getT(1).getT(0).getT(3).getT(0);                       // math::clear<NV>
-		auto& split31 = this->getT(1).getT(1).getT(0).getT(3).getT(1);                       // osc1_impl::split31_t<NV>
-		auto& chain193 = this->getT(1).getT(1).getT(0).getT(3).getT(1).getT(0);              // osc1_impl::chain193_t<NV>
-		auto& receive13 = this->getT(1).getT(1).getT(0).getT(3).getT(1).getT(0).getT(0);     // routing::receive<stereo_cable>
-		auto& gain45 = this->getT(1).getT(1).getT(0).getT(3).getT(1).getT(0).getT(1);        // core::gain<NV>
-		auto& chain195 = this->getT(1).getT(1).getT(0).getT(3).getT(1).getT(1);              // osc1_impl::chain195_t<NV>
-		auto& receive14 = this->getT(1).getT(1).getT(0).getT(3).getT(1).getT(1).getT(0);     // routing::receive<stereo_cable>
-		auto& gain47 = this->getT(1).getT(1).getT(0).getT(3).getT(1).getT(1).getT(1);        // core::gain<NV>
-		auto& chain194 = this->getT(1).getT(1).getT(0).getT(3).getT(1).getT(2);              // osc1_impl::chain194_t<NV>
-		auto& receive15 = this->getT(1).getT(1).getT(0).getT(3).getT(1).getT(2).getT(0);     // routing::receive<stereo_cable>
-		auto& gain46 = this->getT(1).getT(1).getT(0).getT(3).getT(1).getT(2).getT(1);        // core::gain<NV>
-		auto& xfader = this->getT(1).getT(1).getT(0).getT(3).getT(2);                        // osc1_impl::xfader_t<NV>
-		auto& split12 = this->getT(1).getT(1).getT(0).getT(3).getT(3);                       // osc1_impl::split12_t<NV>
-		auto& chain14 = this->getT(1).getT(1).getT(0).getT(3).getT(3).getT(0);               // osc1_impl::chain14_t<NV>
-		auto& gain1 = this->getT(1).getT(1).getT(0).getT(3).getT(3).getT(0).getT(0);         // core::gain<NV>
-		auto& chain57 = this->getT(1).getT(1).getT(0).getT(3).getT(3).getT(1);               // osc1_impl::chain57_t<NV>
-		auto& chain15 = this->getT(1).getT(1).getT(0).getT(3).getT(3).getT(1).getT(0);       // osc1_impl::chain15_t<NV>
-		auto& branch = this->getT(1).getT(1).getT(0).getT(3).                                // osc1_impl::branch_t<NV>
-                       getT(3).getT(1).getT(0).getT(0);
-		auto& chain16 = this->getT(1).getT(1).getT(0).getT(3).                       // osc1_impl::chain16_t<NV>
-                        getT(3).getT(1).getT(0).getT(0).
+		auto& chain555 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                // osc1_impl::chain555_t<NV>
+                         getT(1).getT(1).getT(3).getT(1).getT(0);
+		auto& branch9 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                 // osc1_impl::branch9_t<NV>
+                        getT(1).getT(1).getT(3).getT(1).getT(0).
                         getT(0);
-		auto& faust = this->getT(1).getT(1).getT(0).getT(3).getT(3).                 // project::klp<NV>
-                      getT(1).getT(0).getT(0).getT(0).getT(0);
-		auto& faust1 = this->getT(1).getT(1).getT(0).getT(3).getT(3).                // project::khp2<NV>
-                       getT(1).getT(0).getT(0).getT(0).getT(1);
-		auto& chain35 = this->getT(1).getT(1).getT(0).getT(3).                       // osc1_impl::chain35_t<NV>
-                        getT(3).getT(1).getT(0).getT(0).
+		auto& chain556 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).        // osc1_impl::chain556_t<NV>
+                         getT(1).getT(3).getT(1).getT(0).getT(0).getT(0);
+		auto& faust31 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).         // project::klp<NV>
+                        getT(1).getT(3).getT(1).getT(0).getT(0).getT(0).
+                        getT(0);
+		auto& chain557 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).        // osc1_impl::chain557_t<NV>
+                         getT(1).getT(3).getT(1).getT(0).getT(0).getT(1);
+		auto& faust32 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).         // project::khp2<NV>
+                        getT(1).getT(3).getT(1).getT(0).getT(0).getT(1).
+                        getT(0);
+		auto& chain60 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).         // osc1_impl::chain60_t<NV>
+                        getT(1).getT(3).getT(1).getT(0).getT(0).getT(2);
+		auto& svf2 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).            // filters::svf<NV>
+                     getT(1).getT(3).getT(1).getT(0).getT(0).getT(2).
+                     getT(0);
+		auto& chain558 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).        // osc1_impl::chain558_t<NV>
+                         getT(1).getT(3).getT(1).getT(0).getT(0).getT(3);
+		auto& cable_table16 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).   // osc1_impl::cable_table16_t<NV>
+                              getT(1).getT(3).getT(1).getT(0).getT(0).getT(3).
+                              getT(0);
+		auto& faust33 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).         // project::Comb<NV>
+                        getT(1).getT(3).getT(1).getT(0).getT(0).getT(3).
                         getT(1);
-		auto& split1 = this->getT(1).getT(1).getT(0).getT(3).getT(3).                // osc1_impl::split1_t<NV>
-                       getT(1).getT(0).getT(0).getT(1).getT(0);
-		auto& faust2 = this->getT(1).getT(1).getT(0).getT(3).getT(3).                // project::klp<NV>
-                       getT(1).getT(0).getT(0).getT(1).getT(0).
-                       getT(0);
-		auto& faust6 = this->getT(1).getT(1).getT(0).getT(3).getT(3).                // project::khp2<NV>
-                       getT(1).getT(0).getT(0).getT(1).getT(0).
-                       getT(1);
-		auto& chain36 = this->getT(1).getT(1).getT(0).getT(3).                       // osc1_impl::chain36_t<NV>
-                        getT(3).getT(1).getT(0).getT(0).
-                        getT(2);
-		auto& cable_table = this->getT(1).getT(1).getT(0).getT(3).getT(3).           // osc1_impl::cable_table_t<NV>
-                            getT(1).getT(0).getT(0).getT(2).getT(0);
-		auto& faust8 = this->getT(1).getT(1).getT(0).getT(3).getT(3).                // project::Comb<NV>
-                       getT(1).getT(0).getT(0).getT(2).getT(1);
-		auto& faust7 = this->getT(1).getT(1).getT(0).getT(3).getT(3).                // project::klp<NV>
-                       getT(1).getT(0).getT(0).getT(2).getT(2);
-		auto& chain37 = this->getT(1).getT(1).getT(0).getT(3).                       // osc1_impl::chain37_t<NV>
-                        getT(3).getT(1).getT(0).getT(0).
-                        getT(3);
-		auto& cable_table2 = this->getT(1).getT(1).getT(0).getT(3).getT(3).          // osc1_impl::cable_table2_t<NV>
-                             getT(1).getT(0).getT(0).getT(3).getT(0);
-		auto& faust10 = this->getT(1).getT(1).getT(0).getT(3).getT(3).               // project::klp<NV>
-                        getT(1).getT(0).getT(0).getT(3).getT(1);
-		auto& faust9 = this->getT(1).getT(1).getT(0).getT(3).getT(3).                // project::Comb<NV>
-                       getT(1).getT(0).getT(0).getT(3).getT(2);
-		auto& split9 = this->getT(1).getT(1).getT(0).getT(3).                        // osc1_impl::split9_t<NV>
-                       getT(3).getT(1).getT(0).getT(0).
+		auto& chain56 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).         // osc1_impl::chain56_t<NV>
+                        getT(1).getT(3).getT(1).getT(0).getT(0).getT(4);
+		auto& allpass1 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).        // filters::allpass<NV>
+                         getT(1).getT(3).getT(1).getT(0).getT(0).getT(4).
+                         getT(0);
+		auto& gain86 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                  // core::gain<NV>
+                       getT(1).getT(1).getT(3).getT(1).getT(1);
+		auto& send9 = this->getT(2).getT(0).getT(0).getT(0).                           // routing::send<NV, stereo_cable<NV>>
+                      getT(3).getT(1).getT(1).getT(4);
+		auto& gain78 = this->getT(2).getT(0).getT(0).getT(0).                          // core::gain<NV>
+                       getT(3).getT(1).getT(1).getT(5);
+		auto& jpanner13 = this->getT(2).getT(0).getT(0).getT(0).                       // jdsp::jpanner<NV>
+                          getT(3).getT(1).getT(1).getT(6);
+		auto& chain193 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(2);        // osc1_impl::chain193_t<NV>
+		auto& split44 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(2).getT(0); // osc1_impl::split44_t<NV>
+		auto& chain396 = this->getT(2).getT(0).getT(0).getT(0).                        // osc1_impl::chain396_t
+                         getT(3).getT(2).getT(0).getT(0);
+		auto& chain397 = this->getT(2).getT(0).getT(0).getT(0).                        // osc1_impl::chain397_t<NV>
+                         getT(3).getT(2).getT(0).getT(1);
+		auto& smoother5 = this->getT(2).getT(0).getT(0).getT(0).                       // core::smoother<NV>
+                          getT(3).getT(2).getT(0).getT(1).
+                          getT(0);
+		auto& tempo_sync11 = this->getT(2).getT(0).getT(0).getT(0).                    // osc1_impl::tempo_sync11_t<NV>
+                             getT(3).getT(2).getT(0).getT(1).
+                             getT(1);
+		auto& converter7 = this->getT(2).getT(0).getT(0).getT(0).                      // osc1_impl::converter7_t<NV>
+                           getT(3).getT(2).getT(0).getT(1).
+                           getT(2);
+		auto& xfade_2x_lin3 = this->getT(2).getT(0).getT(0).getT(0).                   // osc1_impl::xfade_2x_lin3_t<NV>
+                              getT(3).getT(2).getT(0).getT(1).
+                              getT(3);
+		auto& xfader145 = this->getT(2).getT(0).getT(0).getT(0).getT(3).               // osc1_impl::xfader145_t<NV>
+                          getT(2).getT(0).getT(1).getT(3).getT(0);
+		auto& split30 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                 // osc1_impl::split30_t<NV>
+                        getT(2).getT(0).getT(1).getT(3).getT(1);
+		auto& chain194 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                // osc1_impl::chain194_t<NV>
+                         getT(2).getT(0).getT(1).getT(3).getT(1).
+                         getT(0);
+		auto& gain76 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(2).          // core::gain<NV>
+                       getT(0).getT(1).getT(3).getT(1).getT(0).getT(0);
+		auto& chain195 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                // osc1_impl::chain195_t<NV>
+                         getT(2).getT(0).getT(1).getT(3).getT(1).
+                         getT(1);
+		auto& sampleandhold4 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(2).  // fx::sampleandhold<NV>
+                               getT(0).getT(1).getT(3).getT(1).getT(1).getT(0);
+		auto& gain79 = this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(2).  // core::gain<NV>
+                       getT(0).getT(1).getT(3).getT(1).getT(1).getT(1);
+		auto& peak33 = this->getT(2).getT(0).getT(0).getT(0).   // osc1_impl::peak33_t<NV>
+                       getT(3).getT(2).getT(0).getT(1).
                        getT(4);
-		auto& chain55 = this->getT(1).getT(1).getT(0).getT(3).getT(3).               // osc1_impl::chain55_t<NV>
-                        getT(1).getT(0).getT(0).getT(4).getT(0);
-		auto& faust11 = this->getT(1).getT(1).getT(0).getT(3).getT(3).               // project::klp<NV>
-                        getT(1).getT(0).getT(0).getT(4).getT(0).
-                        getT(0);
-		auto& jpanner = this->getT(1).getT(1).getT(0).getT(3).getT(3).               // jdsp::jpanner<NV>
-                        getT(1).getT(0).getT(0).getT(4).getT(0).
-                        getT(1);
-		auto& chain56 = this->getT(1).getT(1).getT(0).getT(3).getT(3).               // osc1_impl::chain56_t<NV>
-                        getT(1).getT(0).getT(0).getT(4).getT(1);
-		auto& faust12 = this->getT(1).getT(1).getT(0).getT(3).getT(3).               // project::klp<NV>
-                        getT(1).getT(0).getT(0).getT(4).getT(1).
-                        getT(0);
-		auto& jpanner2 = this->getT(1).getT(1).getT(0).getT(3).getT(3).              // jdsp::jpanner<NV>
-                         getT(1).getT(0).getT(0).getT(4).getT(1).
-                         getT(1);
-		auto& split13 = this->getT(1).getT(1).getT(0).getT(3).                       // osc1_impl::split13_t<NV>
-                        getT(3).getT(1).getT(0).getT(0).
+		auto& clear12 = this->getT(2).getT(0).getT(0).getT(0).  // math::clear<NV>
+                        getT(3).getT(2).getT(0).getT(1).
                         getT(5);
-		auto& chain60 = this->getT(1).getT(1).getT(0).getT(3).getT(3).               // osc1_impl::chain60_t<NV>
-                        getT(1).getT(0).getT(0).getT(5).getT(0);
-		auto& faust13 = this->getT(1).getT(1).getT(0).getT(3).getT(3).               // project::khp<NV>
-                        getT(1).getT(0).getT(0).getT(5).getT(0).
-                        getT(0);
-		auto& jpanner4 = this->getT(1).getT(1).getT(0).getT(3).getT(3).              // jdsp::jpanner<NV>
-                         getT(1).getT(0).getT(0).getT(5).getT(0).
-                         getT(1);
-		auto& chain61 = this->getT(1).getT(1).getT(0).getT(3).getT(3).               // osc1_impl::chain61_t<NV>
-                        getT(1).getT(0).getT(0).getT(5).getT(1);
-		auto& faust14 = this->getT(1).getT(1).getT(0).getT(3).getT(3).               // project::khp<NV>
-                        getT(1).getT(0).getT(0).getT(5).getT(1).
-                        getT(0);
-		auto& jpanner5 = this->getT(1).getT(1).getT(0).getT(3).getT(3).              // jdsp::jpanner<NV>
-                         getT(1).getT(0).getT(0).getT(5).getT(1).
-                         getT(1);
-		auto& split14 = this->getT(1).getT(1).getT(0).getT(3).                       // osc1_impl::split14_t<NV>
-                        getT(3).getT(1).getT(0).getT(0).
-                        getT(6);
-		auto& chain71 = this->getT(1).getT(1).getT(0).getT(3).getT(3).               // osc1_impl::chain71_t<NV>
-                        getT(1).getT(0).getT(0).getT(6).getT(0);
-		auto& cable_table3 = this->getT(1).getT(1).getT(0).getT(3).getT(3).          // osc1_impl::cable_table3_t<NV>
-                             getT(1).getT(0).getT(0).getT(6).getT(0).
-                             getT(0);
-		auto& faust15 = this->getT(1).getT(1).getT(0).getT(3).getT(3).               // project::Comb<NV>
-                        getT(1).getT(0).getT(0).getT(6).getT(0).
-                        getT(1);
-		auto& jpanner6 = this->getT(1).getT(1).getT(0).getT(3).getT(3).              // jdsp::jpanner<NV>
-                         getT(1).getT(0).getT(0).getT(6).getT(0).
-                         getT(2);
-		auto& chain72 = this->getT(1).getT(1).getT(0).getT(3).getT(3).               // osc1_impl::chain72_t<NV>
-                        getT(1).getT(0).getT(0).getT(6).getT(1);
-		auto& cable_table4 = this->getT(1).getT(1).getT(0).getT(3).getT(3).          // osc1_impl::cable_table4_t<NV>
-                             getT(1).getT(0).getT(0).getT(6).getT(1).
-                             getT(0);
-		auto& faust16 = this->getT(1).getT(1).getT(0).getT(3).getT(3).               // project::Comb<NV>
-                        getT(1).getT(0).getT(0).getT(6).getT(1).
-                        getT(1);
-		auto& jpanner7 = this->getT(1).getT(1).getT(0).getT(3).getT(3).              // jdsp::jpanner<NV>
-                         getT(1).getT(0).getT(0).getT(6).getT(1).
-                         getT(2);
-		auto& send7 = this->getT(1).getT(1).getT(0).getT(3).getT(3).getT(1).getT(1); // routing::send<stereo_cable>
-		auto& gain2 = this->getT(1).getT(1).getT(0).getT(3).getT(3).getT(1).getT(2); // core::gain<NV>
-		auto& peak33 = this->getT(1).getT(1).getT(0).getT(3).getT(4);                // osc1_impl::peak33_t<NV>
-		auto& gain77 = this->getT(2);                                                // core::gain<NV>
-		auto& oscilloscope = this->getT(3);                                          // osc1_impl::oscilloscope_t
-		auto& jpanner3 = this->getT(4);                                              // jdsp::jpanner<NV>
+		auto& oscilloscope = this->getT(3); // osc1_impl::oscilloscope_t
 		
 		// Parameter Connections -------------------------------------------------------------------
 		
@@ -14360,12 +15255,9 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		auto& pitchmode_p = this->getParameterT(3);
 		pitchmode_p.connectT(0, branch1);  // pitchmode -> branch1::Index
 		pitchmode_p.connectT(1, branch3);  // pitchmode -> branch3::Index
-		pitchmode_p.connectT(2, branch7);  // pitchmode -> branch7::Index
-		pitchmode_p.connectT(3, branch12); // pitchmode -> branch12::Index
+		pitchmode_p.connectT(2, branch12); // pitchmode -> branch12::Index
 		
-		auto& step_p = this->getParameterT(4);
-		step_p.connectT(0, minmax2); // step -> minmax2::Step
-		step_p.connectT(1, minmax3); // step -> minmax3::Step
+		this->getParameterT(4).connectT(0, minmax2); // step -> minmax2::Step
 		
 		this->getParameterT(5).connectT(0, pma2); // OsMix -> pma2::Add
 		
@@ -14429,9 +15321,9 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		
 		this->getParameterT(30).connectT(0, pma_unscaled); // WinMod -> pma_unscaled::Multiply
 		
-		this->getParameterT(31).connectT(0, pma18); // FileInput -> pma18::Add
+		this->getParameterT(31).connectT(0, pma18); // Pan2 -> pma18::Add
 		
-		this->getParameterT(32).connectT(0, pma18); // FileInputMod -> pma18::Multiply
+		this->getParameterT(32).connectT(0, pma18); // Pan2Mod -> pma18::Multiply
 		
 		auto& FileUser_p = this->getParameterT(33);
 		FileUser_p.connectT(0, branch40); // FileUser -> branch40::Index
@@ -14450,23 +15342,21 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		this->getParameterT(38).connectT(0, branch54); // FileMidiInput -> branch54::Index
 		
 		auto& Q_p = this->getParameterT(39);
-		Q_p.connectT(0, faust13); // Q -> faust13::Q
-		Q_p.connectT(1, faust11); // Q -> faust11::Q
-		Q_p.connectT(2, faust15); // Q -> faust15::aN
-		Q_p.connectT(3, faust10); // Q -> faust10::Q
-		Q_p.connectT(4, faust8);  // Q -> faust8::aN
-		Q_p.connectT(5, faust);   // Q -> faust::Q
-		Q_p.connectT(6, faust2);  // Q -> faust2::Q
+		Q_p.connectT(0, faust8);  // Q -> faust8::aN
+		Q_p.connectT(1, faust);   // Q -> faust::Q
+		Q_p.connectT(2, faust2);  // Q -> faust2::Q
+		Q_p.connectT(3, svf);     // Q -> svf::Q
+		Q_p.connectT(4, allpass); // Q -> allpass::Q
 		
 		this->getParameterT(40).connectT(0, pma22); // FilterMix -> pma22::Add
 		
 		this->getParameterT(41).connectT(0, pma22); // FilterMod -> pma22::Multiply
 		
-		this->getParameterT(42).connectT(0, pma23); // Cut1 -> pma23::Add
+		this->getParameterT(42).connectT(0, smoothed_parameter); // Cut1 -> smoothed_parameter::Value
 		
 		this->getParameterT(43).connectT(0, pma23); // Cut1Mod -> pma23::Multiply
 		
-		this->getParameterT(44).connectT(0, pma24); // Cut2 -> pma24::Add
+		this->getParameterT(44).connectT(0, smoothed_parameter1); // Cut2 -> smoothed_parameter1::Value
 		
 		this->getParameterT(45).connectT(0, pma24); // Cut2Mod -> pma24::Multiply
 		
@@ -14479,13 +15369,11 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		this->getParameterT(53).connectT(0, branch); // FilterMode -> branch::Index
 		
 		auto& q2_p = this->getParameterT(54);
-		q2_p.connectT(0, faust16); // q2 -> faust16::aN
-		q2_p.connectT(1, faust14); // q2 -> faust14::Q
-		q2_p.connectT(2, faust12); // q2 -> faust12::Q
-		q2_p.connectT(3, faust9);  // q2 -> faust9::aN
-		q2_p.connectT(4, faust7);  // q2 -> faust7::Q
-		q2_p.connectT(5, faust6);  // q2 -> faust6::Q
-		q2_p.connectT(6, faust1);  // q2 -> faust1::Q
+		q2_p.connectT(0, faust31);  // q2 -> faust31::Q
+		q2_p.connectT(1, faust32);  // q2 -> faust32::Q
+		q2_p.connectT(2, faust33);  // q2 -> faust33::aN
+		q2_p.connectT(3, svf2);     // q2 -> svf2::Q
+		q2_p.connectT(4, allpass1); // q2 -> allpass1::Q
 		
 		this->getParameterT(55).connectT(0, ahdsr); // a1 -> ahdsr::Attack
 		
@@ -14536,16 +15424,6 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		this->getParameterT(75).connectT(0, branch11); // Pitch2Midi -> branch11::Index
 		
 		this->getParameterT(76).connectT(0, branch16); // Pitch2PkModSrc -> branch16::Index
-		
-		this->getParameterT(77).connectT(0, branch38); // InSrcOsc1 -> branch38::Index
-		
-		this->getParameterT(78).connectT(0, branch27); // InSrcOsc2 -> branch27::Index
-		
-		this->getParameterT(81).connectT(0, gain45); // FilerInOsc1 -> gain45::Gain
-		
-		this->getParameterT(82).connectT(0, gain47); // FilterInOSc2 -> gain47::Gain
-		
-		this->getParameterT(83).connectT(0, gain46); // FilterInFile -> gain46::Gain
 		
 		this->getParameterT(84).connectT(0, branch19); // OscMixPkIn -> branch19::Index
 		
@@ -14609,10 +15487,6 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		auto& feed_p = this->getParameterT(116);
 		feed_p.connectT(0, receive2); // feed -> receive2::Feedback
 		feed_p.connectT(1, receive3); // feed -> receive3::Feedback
-		
-		auto& FileIn_p = this->getParameterT(117);
-		FileIn_p.connectT(0, receive10); // FileIn -> receive10::Feedback
-		FileIn_p.connectT(1, receive11); // FileIn -> receive11::Feedback
 		
 		auto& OscsOut_p = this->getParameterT(118);
 		OscsOut_p.connectT(0, gain3); // OscsOut -> gain3::Gain
@@ -14683,6 +15557,48 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		this->getParameterT(148).connectT(0, ramp7); // RampOS3 -> ramp7::LoopStart
 		
 		this->getParameterT(149).connectT(0, ramp6); // RampOS4 -> ramp6::LoopStart
+		
+		this->getParameterT(150).connectT(0, branch7); // PitchMode2 -> branch7::Index
+		
+		this->getParameterT(151).connectT(0, xfader143); // FilterMix2 -> xfader143::Value
+		
+		this->getParameterT(152).connectT(0, branch9); // FilterMode2 -> branch9::Index
+		
+		auto& FinputMasterGain_p = this->getParameterT(153);
+		FinputMasterGain_p.connectT(0, gain73); // FinputMasterGain -> gain73::Gain
+		FinputMasterGain_p.connectT(1, gain74); // FinputMasterGain -> gain74::Gain
+		
+		this->getParameterT(154).connectT(0, gain6); // FileInMaster -> gain6::Gain
+		
+		this->getParameterT(155).connectT(0, xfader); // Fmix -> xfader::Value
+		
+		this->getParameterT(156).connectT(0, minmax3); // Step2 -> minmax3::Step
+		
+		this->getParameterT(157).connectT(0, smoother2); // OscPeakSmooth1 -> smoother2::SmoothingTime
+		
+		this->getParameterT(158).connectT(0, smoother3); // OscPeakSmooth2 -> smoother3::SmoothingTime
+		
+		this->getParameterT(159).connectT(0, smoother4); // FilePeakSmooth1 -> smoother4::SmoothingTime
+		
+		this->getParameterT(160).connectT(0, smoother5); // FilPeakSmooth1 -> smoother5::SmoothingTime
+		
+		this->getParameterT(161).connectT(0, xfader63); // OscPeakSH1 -> xfader63::Value
+		
+		this->getParameterT(162).connectT(0, xfader144); // FilePeakSH1 -> xfader144::Value
+		
+		this->getParameterT(163).connectT(0, xfader145); // FilPeakSH1 -> xfader145::Value
+		
+		this->getParameterT(164).connectT(0, tempo_sync3); // OscPeakSHtempo1 -> tempo_sync3::Tempo
+		
+		this->getParameterT(165).connectT(0, tempo_sync4); // OscPeakSHtempo2 -> tempo_sync4::Tempo
+		
+		this->getParameterT(166).connectT(0, tempo_sync10); // FilePeakSHtempo -> tempo_sync10::Tempo
+		
+		this->getParameterT(167).connectT(0, tempo_sync11); // FilPeakSHtempo -> tempo_sync11::Tempo
+		
+		this->getParameterT(168).connectT(0, xfader147); // OscPeakSH2 -> xfader147::Value
+		
+		this->getParameterT(169).connectT(0, branch8); // WtIn -> branch8::Index
 		
 		// Modulation Connections ------------------------------------------------------------------
 		
@@ -14793,13 +15709,13 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		peak5.getParameter().connectT(0, pma3);                               // peak5 -> pma3::Value
 		peak5.getParameter().connectT(1, pma14);                              // peak5 -> pma14::Value
 		peak5.getParameter().connectT(2, pma15);                              // peak5 -> pma15::Value
+		converter1.getWrappedObject().getParameter().connectT(0, phasor_fm2); // converter1 -> phasor_fm2::FreqRatio
+		minmax3.getWrappedObject().getParameter().connectT(0, converter1);    // minmax3 -> converter1::Value
 		converter6.getWrappedObject().getParameter().connectT(0, phasor_fm4); // converter6 -> phasor_fm4::FreqRatio
 		converter6.getWrappedObject().getParameter().connectT(1, phasor_fm7); // converter6 -> phasor_fm7::Frequency
 		tempo_sync1.getParameter().connectT(0, converter6);                   // tempo_sync1 -> converter6::Value
-		converter1.getWrappedObject().getParameter().connectT(0, phasor_fm2); // converter1 -> phasor_fm2::FreqRatio
-		minmax3.getWrappedObject().getParameter().connectT(0, converter1);    // minmax3 -> converter1::Value
-		peak1.getParameter().connectT(0, tempo_sync1);                        // peak1 -> tempo_sync1::Tempo
-		peak1.getParameter().connectT(1, minmax3);                            // peak1 -> minmax3::Value
+		peak1.getParameter().connectT(0, minmax3);                            // peak1 -> minmax3::Value
+		peak1.getParameter().connectT(1, tempo_sync1);                        // peak1 -> tempo_sync1::Tempo
 		global_cable4.getWrappedObject().getParameter().connectT(0, add6);    // global_cable4 -> add6::Value
 		auto& xfader15_p = xfader15.getWrappedObject().getParameter();
 		xfader15_p.getParameterT(1).connectT(0, soft_bypass9);               // xfader15 -> soft_bypass9::Bypassed
@@ -15097,7 +16013,7 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		sliderbank14_p.getParameterT(7).connectT(0, gain139);                 // sliderbank14 -> gain139::Gain
 		sliderbank14_p.getParameterT(7).connectT(1, xfader64);                // sliderbank14 -> xfader64::Value
 		global_cable48.getWrappedObject().getParameter().connectT(0, add198); // global_cable48 -> add198::Value
-		pma18.getWrappedObject().getParameter().connectT(0, gain6);           // pma18 -> gain6::Gain
+		pma18.getWrappedObject().getParameter().connectT(0, jpanner13);       // pma18 -> jpanner13::Pan
 		peak34.getParameter().connectT(0, pma18);                             // peak34 -> pma18::Value
 		global_cable51.getWrappedObject().getParameter().connectT(0, add225); // global_cable51 -> add225::Value
 		auto& xfader71_p = xfader71.getWrappedObject().getParameter();
@@ -15288,26 +16204,23 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		auto& xfader97_p = xfader97.getWrappedObject().getParameter();
 		xfader97_p.getParameterT(1).connectT(0, soft_bypass91); // xfader97 -> soft_bypass91::Bypassed
 		auto& sliderbank18_p = sliderbank18.getWrappedObject().getParameter();
-		sliderbank18_p.getParameterT(0).connectT(0, gain244);   // sliderbank18 -> gain244::Gain
-		sliderbank18_p.getParameterT(0).connectT(1, xfader88);  // sliderbank18 -> xfader88::Value
-		sliderbank18_p.getParameterT(1).connectT(0, gain245);   // sliderbank18 -> gain245::Gain
-		sliderbank18_p.getParameterT(1).connectT(1, xfader103); // sliderbank18 -> xfader103::Value
-		sliderbank18_p.getParameterT(2).connectT(0, gain246);   // sliderbank18 -> gain246::Gain
-		sliderbank18_p.getParameterT(2).connectT(1, xfader102); // sliderbank18 -> xfader102::Value
-		sliderbank18_p.getParameterT(3).connectT(0, gain247);   // sliderbank18 -> gain247::Gain
-		sliderbank18_p.getParameterT(4).connectT(0, gain248);   // sliderbank18 -> gain248::Gain
-		sliderbank18_p.getParameterT(4).connectT(1, xfader100); // sliderbank18 -> xfader100::Value
-		sliderbank18_p.getParameterT(4).connectT(2, xfader101); // sliderbank18 -> xfader101::Value
-		sliderbank18_p.getParameterT(5).connectT(0, gain249);   // sliderbank18 -> gain249::Gain
-		sliderbank18_p.getParameterT(5).connectT(1, xfader99);  // sliderbank18 -> xfader99::Value
-		sliderbank18_p.getParameterT(6).connectT(0, gain250);   // sliderbank18 -> gain250::Gain
-		sliderbank18_p.getParameterT(6).connectT(1, xfader98);  // sliderbank18 -> xfader98::Value
-		sliderbank18_p.getParameterT(7).connectT(0, gain251);   // sliderbank18 -> gain251::Gain
-		sliderbank18_p.getParameterT(7).connectT(1, xfader97);  // sliderbank18 -> xfader97::Value
-		auto& xfader_p = xfader.getWrappedObject().getParameter();
-		xfader_p.getParameterT(0).connectT(0, gain1);                         // xfader -> gain1::Gain
-		xfader_p.getParameterT(1).connectT(0, gain2);                         // xfader -> gain2::Gain
-		pma22.getWrappedObject().getParameter().connectT(0, xfader);          // pma22 -> xfader::Value
+		sliderbank18_p.getParameterT(0).connectT(0, gain244);                 // sliderbank18 -> gain244::Gain
+		sliderbank18_p.getParameterT(0).connectT(1, xfader88);                // sliderbank18 -> xfader88::Value
+		sliderbank18_p.getParameterT(1).connectT(0, gain245);                 // sliderbank18 -> gain245::Gain
+		sliderbank18_p.getParameterT(1).connectT(1, xfader103);               // sliderbank18 -> xfader103::Value
+		sliderbank18_p.getParameterT(2).connectT(0, gain246);                 // sliderbank18 -> gain246::Gain
+		sliderbank18_p.getParameterT(2).connectT(1, xfader102);               // sliderbank18 -> xfader102::Value
+		sliderbank18_p.getParameterT(3).connectT(0, gain247);                 // sliderbank18 -> gain247::Gain
+		sliderbank18_p.getParameterT(4).connectT(0, gain248);                 // sliderbank18 -> gain248::Gain
+		sliderbank18_p.getParameterT(4).connectT(1, xfader100);               // sliderbank18 -> xfader100::Value
+		sliderbank18_p.getParameterT(4).connectT(2, xfader101);               // sliderbank18 -> xfader101::Value
+		sliderbank18_p.getParameterT(5).connectT(0, gain249);                 // sliderbank18 -> gain249::Gain
+		sliderbank18_p.getParameterT(5).connectT(1, xfader99);                // sliderbank18 -> xfader99::Value
+		sliderbank18_p.getParameterT(6).connectT(0, gain250);                 // sliderbank18 -> gain250::Gain
+		sliderbank18_p.getParameterT(6).connectT(1, xfader98);                // sliderbank18 -> xfader98::Value
+		sliderbank18_p.getParameterT(7).connectT(0, gain251);                 // sliderbank18 -> gain251::Gain
+		sliderbank18_p.getParameterT(7).connectT(1, xfader97);                // sliderbank18 -> xfader97::Value
+		pma22.getWrappedObject().getParameter().connectT(0, gain78);          // pma22 -> gain78::Gain
 		peak38.getParameter().connectT(0, pma22);                             // peak38 -> pma22::Value
 		global_cable67.getWrappedObject().getParameter().connectT(0, add276); // global_cable67 -> add276::Value
 		auto& xfader96_p = xfader96.getWrappedObject().getParameter();
@@ -15353,16 +16266,14 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		sliderbank19_p.getParameterT(6).connectT(1, xfader106);               // sliderbank19 -> xfader106::Value
 		sliderbank19_p.getParameterT(7).connectT(0, gain259);                 // sliderbank19 -> gain259::Gain
 		sliderbank19_p.getParameterT(7).connectT(1, xfader105);               // sliderbank19 -> xfader105::Value
-		cable_table3.getWrappedObject().getParameter().connectT(0, faust15);  // cable_table3 -> faust15::del
 		cable_table.getWrappedObject().getParameter().connectT(0, faust8);    // cable_table -> faust8::del
 		pma23.getWrappedObject().getParameter().connectT(0, faust);           // pma23 -> faust::freq
-		pma23.getWrappedObject().getParameter().connectT(1, cable_table3);    // pma23 -> cable_table3::Value
-		pma23.getWrappedObject().getParameter().connectT(2, faust11);         // pma23 -> faust11::freq
-		pma23.getWrappedObject().getParameter().connectT(3, faust10);         // pma23 -> faust10::freq
-		pma23.getWrappedObject().getParameter().connectT(4, cable_table);     // pma23 -> cable_table::Value
-		pma23.getWrappedObject().getParameter().connectT(5, faust2);          // pma23 -> faust2::freq
-		pma23.getWrappedObject().getParameter().connectT(6, faust13);         // pma23 -> faust13::freq
+		pma23.getWrappedObject().getParameter().connectT(1, cable_table);     // pma23 -> cable_table::Value
+		pma23.getWrappedObject().getParameter().connectT(2, faust2);          // pma23 -> faust2::freq
+		pma23.getWrappedObject().getParameter().connectT(3, allpass);         // pma23 -> allpass::Frequency
+		pma23.getWrappedObject().getParameter().connectT(4, svf);             // pma23 -> svf::Frequency
 		peak39.getParameter().connectT(0, pma23);                             // peak39 -> pma23::Value
+		smoothed_parameter.getParameter().connectT(0, pma23);                 // smoothed_parameter -> pma23::Add
 		global_cable71.getWrappedObject().getParameter().connectT(0, add287); // global_cable71 -> add287::Value
 		auto& xfader104_p = xfader104.getWrappedObject().getParameter();
 		xfader104_p.getParameterT(1).connectT(0, soft_bypass98);              // xfader104 -> soft_bypass98::Bypassed
@@ -15407,16 +16318,14 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		sliderbank20_p.getParameterT(6).connectT(1, xfader114);               // sliderbank20 -> xfader114::Value
 		sliderbank20_p.getParameterT(7).connectT(0, gain267);                 // sliderbank20 -> gain267::Gain
 		sliderbank20_p.getParameterT(7).connectT(1, xfader113);               // sliderbank20 -> xfader113::Value
-		cable_table4.getWrappedObject().getParameter().connectT(0, faust16);  // cable_table4 -> faust16::del
-		cable_table2.getWrappedObject().getParameter().connectT(0, faust9);   // cable_table2 -> faust9::del
-		pma24.getWrappedObject().getParameter().connectT(0, cable_table4);    // pma24 -> cable_table4::Value
-		pma24.getWrappedObject().getParameter().connectT(1, faust14);         // pma24 -> faust14::freq
-		pma24.getWrappedObject().getParameter().connectT(2, faust12);         // pma24 -> faust12::freq
-		pma24.getWrappedObject().getParameter().connectT(3, cable_table2);    // pma24 -> cable_table2::Value
-		pma24.getWrappedObject().getParameter().connectT(4, faust7);          // pma24 -> faust7::freq
-		pma24.getWrappedObject().getParameter().connectT(5, faust6);          // pma24 -> faust6::freq
-		pma24.getWrappedObject().getParameter().connectT(6, faust1);          // pma24 -> faust1::freq
+		cable_table16.getWrappedObject().getParameter().connectT(0, faust33); // cable_table16 -> faust33::del
+		pma24.getWrappedObject().getParameter().connectT(0, faust31);         // pma24 -> faust31::freq
+		pma24.getWrappedObject().getParameter().connectT(1, faust32);         // pma24 -> faust32::freq
+		pma24.getWrappedObject().getParameter().connectT(2, cable_table16);   // pma24 -> cable_table16::Value
+		pma24.getWrappedObject().getParameter().connectT(3, svf2);            // pma24 -> svf2::Frequency
+		pma24.getWrappedObject().getParameter().connectT(4, allpass1);        // pma24 -> allpass1::Frequency
 		peak40.getParameter().connectT(0, pma24);                             // peak40 -> pma24::Value
+		smoothed_parameter1.getParameter().connectT(0, pma24);                // smoothed_parameter1 -> pma24::Add
 		global_cable75.getWrappedObject().getParameter().connectT(0, add298); // global_cable75 -> add298::Value
 		auto& xfader112_p = xfader112.getWrappedObject().getParameter();
 		xfader112_p.getParameterT(1).connectT(0, soft_bypass106);             // xfader112 -> soft_bypass106::Bypassed
@@ -15555,40 +16464,77 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		peak16.getParameter().connectT(13, add292);                          // peak16 -> add292::Value
 		peak16.getParameter().connectT(14, add303);                          // peak16 -> add303::Value
 		peak16.getParameter().connectT(15, add270);                          // peak16 -> add270::Value
-		peak17.getParameter().connectT(0, add3);                             // peak17 -> add3::Value
-		peak17.getParameter().connectT(1, add25);                            // peak17 -> add25::Value
-		peak17.getParameter().connectT(2, add103);                           // peak17 -> add103::Value
-		peak17.getParameter().connectT(3, add107);                           // peak17 -> add107::Value
-		peak17.getParameter().connectT(4, add117);                           // peak17 -> add117::Value
-		peak17.getParameter().connectT(5, add167);                           // peak17 -> add167::Value
-		peak17.getParameter().connectT(6, add149);                           // peak17 -> add149::Value
-		peak17.getParameter().connectT(7, add185);                           // peak17 -> add185::Value
-		peak17.getParameter().connectT(8, add203);                           // peak17 -> add203::Value
-		peak17.getParameter().connectT(9, add249);                           // peak17 -> add249::Value
-		peak17.getParameter().connectT(10, add231);                          // peak17 -> add231::Value
-		peak17.getParameter().connectT(11, add260);                          // peak17 -> add260::Value
-		peak17.getParameter().connectT(12, add282);                          // peak17 -> add282::Value
-		peak17.getParameter().connectT(13, add293);                          // peak17 -> add293::Value
-		peak17.getParameter().connectT(14, add304);                          // peak17 -> add304::Value
-		peak17.getParameter().connectT(15, add315);                          // peak17 -> add315::Value
-		peak17.getParameter().connectT(16, add271);                          // peak17 -> add271::Value
-		peak20.getParameter().connectT(0, add23);                            // peak20 -> add23::Value
-		peak20.getParameter().connectT(1, add30);                            // peak20 -> add30::Value
-		peak20.getParameter().connectT(2, add104);                           // peak20 -> add104::Value
-		peak20.getParameter().connectT(3, add108);                           // peak20 -> add108::Value
-		peak20.getParameter().connectT(4, add118);                           // peak20 -> add118::Value
-		peak20.getParameter().connectT(5, add168);                           // peak20 -> add168::Value
-		peak20.getParameter().connectT(6, add150);                           // peak20 -> add150::Value
-		peak20.getParameter().connectT(7, add186);                           // peak20 -> add186::Value
-		peak20.getParameter().connectT(8, add204);                           // peak20 -> add204::Value
-		peak20.getParameter().connectT(9, add250);                           // peak20 -> add250::Value
-		peak20.getParameter().connectT(10, add232);                          // peak20 -> add232::Value
-		peak20.getParameter().connectT(11, add261);                          // peak20 -> add261::Value
-		peak20.getParameter().connectT(12, add283);                          // peak20 -> add283::Value
-		peak20.getParameter().connectT(13, add294);                          // peak20 -> add294::Value
-		peak20.getParameter().connectT(14, add305);                          // peak20 -> add305::Value
-		peak20.getParameter().connectT(15, add316);                          // peak20 -> add316::Value
-		peak20.getParameter().connectT(16, add272);                          // peak20 -> add272::Value
+		auto& sliderbank9_p = sliderbank9.getWrappedObject().getParameter();
+		sliderbank9_p.getParameterT(0).connectT(0, gain106);                      // sliderbank9 -> gain106::Gain
+		sliderbank9_p.getParameterT(0).connectT(1, receive33);                    // sliderbank9 -> receive33::Feedback
+		sliderbank9_p.getParameterT(1).connectT(0, gain107);                      // sliderbank9 -> gain107::Gain
+		sliderbank9_p.getParameterT(1).connectT(1, receive34);                    // sliderbank9 -> receive34::Feedback
+		sliderbank9_p.getParameterT(2).connectT(0, gain148);                      // sliderbank9 -> gain148::Gain
+		sliderbank9_p.getParameterT(2).connectT(1, receive35);                    // sliderbank9 -> receive35::Feedback
+		sliderbank9_p.getParameterT(3).connectT(0, gain149);                      // sliderbank9 -> gain149::Gain
+		sliderbank9_p.getParameterT(3).connectT(1, receive36);                    // sliderbank9 -> receive36::Feedback
+		converter2.getWrappedObject().getParameter().connectT(0, sampleandhold1); // converter2 -> sampleandhold1::Counter
+		tempo_sync3.getParameter().connectT(0, converter2);                       // tempo_sync3 -> converter2::Value
+		auto& xfader63_p = xfader63.getWrappedObject().getParameter();
+		xfader63_p.getParameterT(0).connectT(0, gain45); // xfader63 -> gain45::Gain
+		xfader63_p.getParameterT(1).connectT(0, gain46); // xfader63 -> gain46::Gain
+		peak17.getParameter().connectT(0, add3);         // peak17 -> add3::Value
+		peak17.getParameter().connectT(1, add25);        // peak17 -> add25::Value
+		peak17.getParameter().connectT(2, add103);       // peak17 -> add103::Value
+		peak17.getParameter().connectT(3, add107);       // peak17 -> add107::Value
+		peak17.getParameter().connectT(4, add117);       // peak17 -> add117::Value
+		peak17.getParameter().connectT(5, add167);       // peak17 -> add167::Value
+		peak17.getParameter().connectT(6, add149);       // peak17 -> add149::Value
+		peak17.getParameter().connectT(7, add185);       // peak17 -> add185::Value
+		peak17.getParameter().connectT(8, add203);       // peak17 -> add203::Value
+		peak17.getParameter().connectT(9, add249);       // peak17 -> add249::Value
+		peak17.getParameter().connectT(10, add231);      // peak17 -> add231::Value
+		peak17.getParameter().connectT(11, add260);      // peak17 -> add260::Value
+		peak17.getParameter().connectT(12, add282);      // peak17 -> add282::Value
+		peak17.getParameter().connectT(13, add293);      // peak17 -> add293::Value
+		peak17.getParameter().connectT(14, add304);      // peak17 -> add304::Value
+		peak17.getParameter().connectT(15, add315);      // peak17 -> add315::Value
+		peak17.getParameter().connectT(16, add271);      // peak17 -> add271::Value
+		auto& sliderbank10_p = sliderbank10.getWrappedObject().getParameter();
+		sliderbank10_p.getParameterT(0).connectT(0, gain150);                    // sliderbank10 -> gain150::Gain
+		sliderbank10_p.getParameterT(0).connectT(1, receive37);                  // sliderbank10 -> receive37::Feedback
+		sliderbank10_p.getParameterT(1).connectT(0, gain151);                    // sliderbank10 -> gain151::Gain
+		sliderbank10_p.getParameterT(1).connectT(1, receive38);                  // sliderbank10 -> receive38::Feedback
+		sliderbank10_p.getParameterT(2).connectT(0, gain152);                    // sliderbank10 -> gain152::Gain
+		sliderbank10_p.getParameterT(2).connectT(1, receive39);                  // sliderbank10 -> receive39::Feedback
+		sliderbank10_p.getParameterT(3).connectT(0, gain153);                    // sliderbank10 -> gain153::Gain
+		sliderbank10_p.getParameterT(3).connectT(1, receive40);                  // sliderbank10 -> receive40::Feedback
+		converter3.getWrappedObject().getParameter().connectT(0, sampleandhold); // converter3 -> sampleandhold::Counter
+		tempo_sync4.getParameter().connectT(0, converter3);                      // tempo_sync4 -> converter3::Value
+		auto& xfader147_p = xfader147.getWrappedObject().getParameter();
+		xfader147_p.getParameterT(0).connectT(0, gain155); // xfader147 -> gain155::Gain
+		xfader147_p.getParameterT(1).connectT(0, gain156); // xfader147 -> gain156::Gain
+		peak20.getParameter().connectT(0, add23);          // peak20 -> add23::Value
+		peak20.getParameter().connectT(1, add30);          // peak20 -> add30::Value
+		peak20.getParameter().connectT(2, add104);         // peak20 -> add104::Value
+		peak20.getParameter().connectT(3, add108);         // peak20 -> add108::Value
+		peak20.getParameter().connectT(4, add118);         // peak20 -> add118::Value
+		peak20.getParameter().connectT(5, add168);         // peak20 -> add168::Value
+		peak20.getParameter().connectT(6, add150);         // peak20 -> add150::Value
+		peak20.getParameter().connectT(7, add186);         // peak20 -> add186::Value
+		peak20.getParameter().connectT(8, add204);         // peak20 -> add204::Value
+		peak20.getParameter().connectT(9, add250);         // peak20 -> add250::Value
+		peak20.getParameter().connectT(10, add232);        // peak20 -> add232::Value
+		peak20.getParameter().connectT(11, add261);        // peak20 -> add261::Value
+		peak20.getParameter().connectT(12, add283);        // peak20 -> add283::Value
+		peak20.getParameter().connectT(13, add294);        // peak20 -> add294::Value
+		peak20.getParameter().connectT(14, add305);        // peak20 -> add305::Value
+		peak20.getParameter().connectT(15, add316);        // peak20 -> add316::Value
+		peak20.getParameter().connectT(16, add272);        // peak20 -> add272::Value
+		auto& sliderbank8_p = sliderbank8.getWrappedObject().getParameter();
+		sliderbank8_p.getParameterT(0).connectT(0, gain102);   // sliderbank8 -> gain102::Gain
+		sliderbank8_p.getParameterT(0).connectT(1, receive29); // sliderbank8 -> receive29::Feedback
+		sliderbank8_p.getParameterT(1).connectT(0, gain103);   // sliderbank8 -> gain103::Gain
+		sliderbank8_p.getParameterT(1).connectT(1, receive30); // sliderbank8 -> receive30::Feedback
+		sliderbank8_p.getParameterT(2).connectT(0, gain104);   // sliderbank8 -> gain104::Gain
+		sliderbank8_p.getParameterT(2).connectT(1, receive31); // sliderbank8 -> receive31::Feedback
+		sliderbank8_p.getParameterT(3).connectT(0, gain105);   // sliderbank8 -> gain105::Gain
+		sliderbank8_p.getParameterT(3).connectT(1, receive32); // sliderbank8 -> receive32::Feedback
 		auto& sliderbank_p = sliderbank.getWrappedObject().getParameter();
 		sliderbank_p.getParameterT(0).connectT(0, gain7);                     // sliderbank -> gain7::Gain
 		sliderbank_p.getParameterT(1).connectT(0, gain91);                    // sliderbank -> gain91::Gain
@@ -15698,104 +16644,143 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		auto& xfader136_p = xfader136.getWrappedObject().getParameter();
 		xfader136_p.getParameterT(1).connectT(0, soft_bypass130); // xfader136 -> soft_bypass130::Bypassed
 		auto& sliderbank13_p = sliderbank13.getWrappedObject().getParameter();
-		sliderbank13_p.getParameterT(0).connectT(0, gain124);                // sliderbank13 -> gain124::Gain
-		sliderbank13_p.getParameterT(0).connectT(1, xfader135);              // sliderbank13 -> xfader135::Value
-		sliderbank13_p.getParameterT(1).connectT(0, gain125);                // sliderbank13 -> gain125::Gain
-		sliderbank13_p.getParameterT(1).connectT(1, xfader142);              // sliderbank13 -> xfader142::Value
-		sliderbank13_p.getParameterT(2).connectT(0, gain126);                // sliderbank13 -> gain126::Gain
-		sliderbank13_p.getParameterT(2).connectT(1, xfader141);              // sliderbank13 -> xfader141::Value
-		sliderbank13_p.getParameterT(3).connectT(0, gain127);                // sliderbank13 -> gain127::Gain
-		sliderbank13_p.getParameterT(3).connectT(1, xfader140);              // sliderbank13 -> xfader140::Value
-		sliderbank13_p.getParameterT(4).connectT(0, gain128);                // sliderbank13 -> gain128::Gain
-		sliderbank13_p.getParameterT(4).connectT(1, xfader139);              // sliderbank13 -> xfader139::Value
-		sliderbank13_p.getParameterT(5).connectT(0, gain129);                // sliderbank13 -> gain129::Gain
-		sliderbank13_p.getParameterT(5).connectT(1, xfader138);              // sliderbank13 -> xfader138::Value
-		sliderbank13_p.getParameterT(6).connectT(0, gain130);                // sliderbank13 -> gain130::Gain
-		sliderbank13_p.getParameterT(6).connectT(1, xfader137);              // sliderbank13 -> xfader137::Value
-		sliderbank13_p.getParameterT(7).connectT(0, gain131);                // sliderbank13 -> gain131::Gain
-		sliderbank13_p.getParameterT(7).connectT(1, xfader136);              // sliderbank13 -> xfader136::Value
-		minmax6.getWrappedObject().getParameter().connectT(0, add214);       // minmax6 -> add214::Value
-		minmax7.getWrappedObject().getParameter().connectT(0, add215);       // minmax7 -> add215::Value
-		minmax14.getWrappedObject().getParameter().connectT(0, add216);      // minmax14 -> add216::Value
-		minmax11.getWrappedObject().getParameter().connectT(0, add217);      // minmax11 -> add217::Value
-		minmax15.getWrappedObject().getParameter().connectT(0, add218);      // minmax15 -> add218::Value
-		minmax16.getWrappedObject().getParameter().connectT(0, add219);      // minmax16 -> add219::Value
-		minmax17.getWrappedObject().getParameter().connectT(0, add220);      // minmax17 -> add220::Value
-		minmax18.getWrappedObject().getParameter().connectT(0, add221);      // minmax18 -> add221::Value
-		pma17.getWrappedObject().getParameter().connectT(0, minmax6);        // pma17 -> minmax6::Value
-		pma17.getWrappedObject().getParameter().connectT(1, minmax7);        // pma17 -> minmax7::Value
-		pma17.getWrappedObject().getParameter().connectT(2, minmax14);       // pma17 -> minmax14::Value
-		pma17.getWrappedObject().getParameter().connectT(3, minmax11);       // pma17 -> minmax11::Value
-		pma17.getWrappedObject().getParameter().connectT(4, minmax15);       // pma17 -> minmax15::Value
-		pma17.getWrappedObject().getParameter().connectT(5, minmax16);       // pma17 -> minmax16::Value
-		pma17.getWrappedObject().getParameter().connectT(6, minmax17);       // pma17 -> minmax17::Value
-		pma17.getWrappedObject().getParameter().connectT(7, add213);         // pma17 -> add213::Value
-		pma17.getWrappedObject().getParameter().connectT(8, minmax18);       // pma17 -> minmax18::Value
-		peak21.getParameter().connectT(0, pma17);                            // peak21 -> pma17::Value
-		peak18.getParameter().connectT(0, add222);                           // peak18 -> add222::Value
-		peak18.getParameter().connectT(1, cable_table5);                     // peak18 -> cable_table5::Value
-		peak18.getParameter().connectT(2, add474);                           // peak18 -> add474::Value
-		peak18.getParameter().connectT(3, add469);                           // peak18 -> add469::Value
-		peak18.getParameter().connectT(4, add464);                           // peak18 -> add464::Value
-		peak43.getParameter().connectT(0, cable_table9);                     // peak43 -> cable_table9::Value
-		peak43.getParameter().connectT(1, add463);                           // peak43 -> add463::Value
-		peak31.getParameter().connectT(0, cable_table7);                     // peak31 -> cable_table7::Value
-		peak31.getParameter().connectT(1, add475);                           // peak31 -> add475::Value
-		peak29.getParameter().connectT(0, cable_table6);                     // peak29 -> cable_table6::Value
-		peak29.getParameter().connectT(1, add470);                           // peak29 -> add470::Value
-		peak45.getParameter().connectT(0, cable_table10);                    // peak45 -> cable_table10::Value
-		peak45.getParameter().connectT(1, add465);                           // peak45 -> add465::Value
-		cable_table15.getWrappedObject().getParameter().connectT(0, faust4); // cable_table15 -> faust4::shiftfreq
-		midi42.getParameter().connectT(0, cable_table15);                    // midi42 -> cable_table15::Value
-		peak22.getParameter().connectT(0, add21);                            // peak22 -> add21::Value
-		peak22.getParameter().connectT(1, add74);                            // peak22 -> add74::Value
-		peak22.getParameter().connectT(2, add105);                           // peak22 -> add105::Value
-		peak22.getParameter().connectT(3, add109);                           // peak22 -> add109::Value
-		peak22.getParameter().connectT(4, add119);                           // peak22 -> add119::Value
-		peak22.getParameter().connectT(5, add169);                           // peak22 -> add169::Value
-		peak22.getParameter().connectT(6, add151);                           // peak22 -> add151::Value
-		peak22.getParameter().connectT(7, add187);                           // peak22 -> add187::Value
-		peak22.getParameter().connectT(8, add205);                           // peak22 -> add205::Value
-		peak22.getParameter().connectT(9, add251);                           // peak22 -> add251::Value
-		peak22.getParameter().connectT(10, add233);                          // peak22 -> add233::Value
-		peak22.getParameter().connectT(11, add262);                          // peak22 -> add262::Value
-		peak22.getParameter().connectT(12, add284);                          // peak22 -> add284::Value
-		peak22.getParameter().connectT(13, add295);                          // peak22 -> add295::Value
-		peak22.getParameter().connectT(14, add306);                          // peak22 -> add306::Value
-		peak22.getParameter().connectT(15, add317);                          // peak22 -> add317::Value
-		peak22.getParameter().connectT(16, add273);                          // peak22 -> add273::Value
-		peak33.getParameter().connectT(0, add9);                             // peak33 -> add9::Value
-		peak33.getParameter().connectT(1, add99);                            // peak33 -> add99::Value
-		peak33.getParameter().connectT(2, add106);                           // peak33 -> add106::Value
-		peak33.getParameter().connectT(3, add110);                           // peak33 -> add110::Value
-		peak33.getParameter().connectT(4, add120);                           // peak33 -> add120::Value
-		peak33.getParameter().connectT(5, add170);                           // peak33 -> add170::Value
-		peak33.getParameter().connectT(6, add152);                           // peak33 -> add152::Value
-		peak33.getParameter().connectT(7, add188);                           // peak33 -> add188::Value
-		peak33.getParameter().connectT(8, add206);                           // peak33 -> add206::Value
-		peak33.getParameter().connectT(9, add234);                           // peak33 -> add234::Value
-		peak33.getParameter().connectT(10, add263);                          // peak33 -> add263::Value
-		peak33.getParameter().connectT(11, add285);                          // peak33 -> add285::Value
-		peak33.getParameter().connectT(12, add296);                          // peak33 -> add296::Value
-		peak33.getParameter().connectT(13, add307);                          // peak33 -> add307::Value
-		peak33.getParameter().connectT(14, add318);                          // peak33 -> add318::Value
-		peak33.getParameter().connectT(15, add274);                          // peak33 -> add274::Value
+		sliderbank13_p.getParameterT(0).connectT(0, gain124);                     // sliderbank13 -> gain124::Gain
+		sliderbank13_p.getParameterT(0).connectT(1, xfader135);                   // sliderbank13 -> xfader135::Value
+		sliderbank13_p.getParameterT(1).connectT(0, gain125);                     // sliderbank13 -> gain125::Gain
+		sliderbank13_p.getParameterT(1).connectT(1, xfader142);                   // sliderbank13 -> xfader142::Value
+		sliderbank13_p.getParameterT(2).connectT(0, gain126);                     // sliderbank13 -> gain126::Gain
+		sliderbank13_p.getParameterT(2).connectT(1, xfader141);                   // sliderbank13 -> xfader141::Value
+		sliderbank13_p.getParameterT(3).connectT(0, gain127);                     // sliderbank13 -> gain127::Gain
+		sliderbank13_p.getParameterT(3).connectT(1, xfader140);                   // sliderbank13 -> xfader140::Value
+		sliderbank13_p.getParameterT(4).connectT(0, gain128);                     // sliderbank13 -> gain128::Gain
+		sliderbank13_p.getParameterT(4).connectT(1, xfader139);                   // sliderbank13 -> xfader139::Value
+		sliderbank13_p.getParameterT(5).connectT(0, gain129);                     // sliderbank13 -> gain129::Gain
+		sliderbank13_p.getParameterT(5).connectT(1, xfader138);                   // sliderbank13 -> xfader138::Value
+		sliderbank13_p.getParameterT(6).connectT(0, gain130);                     // sliderbank13 -> gain130::Gain
+		sliderbank13_p.getParameterT(6).connectT(1, xfader137);                   // sliderbank13 -> xfader137::Value
+		sliderbank13_p.getParameterT(7).connectT(0, gain131);                     // sliderbank13 -> gain131::Gain
+		sliderbank13_p.getParameterT(7).connectT(1, xfader136);                   // sliderbank13 -> xfader136::Value
+		minmax6.getWrappedObject().getParameter().connectT(0, add214);            // minmax6 -> add214::Value
+		minmax7.getWrappedObject().getParameter().connectT(0, add215);            // minmax7 -> add215::Value
+		minmax14.getWrappedObject().getParameter().connectT(0, add216);           // minmax14 -> add216::Value
+		minmax11.getWrappedObject().getParameter().connectT(0, add217);           // minmax11 -> add217::Value
+		minmax15.getWrappedObject().getParameter().connectT(0, add218);           // minmax15 -> add218::Value
+		minmax16.getWrappedObject().getParameter().connectT(0, add219);           // minmax16 -> add219::Value
+		minmax17.getWrappedObject().getParameter().connectT(0, add220);           // minmax17 -> add220::Value
+		minmax18.getWrappedObject().getParameter().connectT(0, add221);           // minmax18 -> add221::Value
+		pma17.getWrappedObject().getParameter().connectT(0, minmax6);             // pma17 -> minmax6::Value
+		pma17.getWrappedObject().getParameter().connectT(1, minmax7);             // pma17 -> minmax7::Value
+		pma17.getWrappedObject().getParameter().connectT(2, minmax14);            // pma17 -> minmax14::Value
+		pma17.getWrappedObject().getParameter().connectT(3, minmax11);            // pma17 -> minmax11::Value
+		pma17.getWrappedObject().getParameter().connectT(4, minmax15);            // pma17 -> minmax15::Value
+		pma17.getWrappedObject().getParameter().connectT(5, minmax16);            // pma17 -> minmax16::Value
+		pma17.getWrappedObject().getParameter().connectT(6, minmax17);            // pma17 -> minmax17::Value
+		pma17.getWrappedObject().getParameter().connectT(7, add213);              // pma17 -> add213::Value
+		pma17.getWrappedObject().getParameter().connectT(8, minmax18);            // pma17 -> minmax18::Value
+		peak21.getParameter().connectT(0, pma17);                                 // peak21 -> pma17::Value
+		peak18.getParameter().connectT(0, add222);                                // peak18 -> add222::Value
+		peak18.getParameter().connectT(1, cable_table5);                          // peak18 -> cable_table5::Value
+		peak18.getParameter().connectT(2, add474);                                // peak18 -> add474::Value
+		peak18.getParameter().connectT(3, add469);                                // peak18 -> add469::Value
+		peak18.getParameter().connectT(4, add464);                                // peak18 -> add464::Value
+		peak43.getParameter().connectT(0, cable_table9);                          // peak43 -> cable_table9::Value
+		peak43.getParameter().connectT(1, add463);                                // peak43 -> add463::Value
+		peak31.getParameter().connectT(0, cable_table7);                          // peak31 -> cable_table7::Value
+		peak31.getParameter().connectT(1, add475);                                // peak31 -> add475::Value
+		peak29.getParameter().connectT(0, cable_table6);                          // peak29 -> cable_table6::Value
+		peak29.getParameter().connectT(1, add470);                                // peak29 -> add470::Value
+		peak45.getParameter().connectT(0, cable_table10);                         // peak45 -> cable_table10::Value
+		peak45.getParameter().connectT(1, add465);                                // peak45 -> add465::Value
+		cable_table15.getWrappedObject().getParameter().connectT(0, faust4);      // cable_table15 -> faust4::shiftfreq
+		midi42.getParameter().connectT(0, cable_table15);                         // midi42 -> cable_table15::Value
+		converter4.getWrappedObject().getParameter().connectT(0, sampleandhold3); // converter4 -> sampleandhold3::Counter
+		tempo_sync10.getParameter().connectT(0, converter4);                      // tempo_sync10 -> converter4::Value
+		auto& xfader144_p = xfader144.getWrappedObject().getParameter();
+		xfader144_p.getParameterT(0).connectT(0, gain47); // xfader144 -> gain47::Gain
+		xfader144_p.getParameterT(1).connectT(0, gain75); // xfader144 -> gain75::Gain
+		peak22.getParameter().connectT(0, add21);         // peak22 -> add21::Value
+		peak22.getParameter().connectT(1, add74);         // peak22 -> add74::Value
+		peak22.getParameter().connectT(2, add105);        // peak22 -> add105::Value
+		peak22.getParameter().connectT(3, add109);        // peak22 -> add109::Value
+		peak22.getParameter().connectT(4, add119);        // peak22 -> add119::Value
+		peak22.getParameter().connectT(5, add169);        // peak22 -> add169::Value
+		peak22.getParameter().connectT(6, add151);        // peak22 -> add151::Value
+		peak22.getParameter().connectT(7, add187);        // peak22 -> add187::Value
+		peak22.getParameter().connectT(8, add205);        // peak22 -> add205::Value
+		peak22.getParameter().connectT(9, add251);        // peak22 -> add251::Value
+		peak22.getParameter().connectT(10, add233);       // peak22 -> add233::Value
+		peak22.getParameter().connectT(11, add262);       // peak22 -> add262::Value
+		peak22.getParameter().connectT(12, add284);       // peak22 -> add284::Value
+		peak22.getParameter().connectT(13, add295);       // peak22 -> add295::Value
+		peak22.getParameter().connectT(14, add306);       // peak22 -> add306::Value
+		peak22.getParameter().connectT(15, add317);       // peak22 -> add317::Value
+		peak22.getParameter().connectT(16, add273);       // peak22 -> add273::Value
+		auto& sliderbank2_p = sliderbank2.getWrappedObject().getParameter();
+		sliderbank2_p.getParameterT(0).connectT(0, gain87);  // sliderbank2 -> gain87::Gain
+		sliderbank2_p.getParameterT(1).connectT(0, gain88);  // sliderbank2 -> gain88::Gain
+		sliderbank2_p.getParameterT(2).connectT(0, gain100); // sliderbank2 -> gain100::Gain
+		sliderbank2_p.getParameterT(3).connectT(0, gain101); // sliderbank2 -> gain101::Gain
+		auto& xfader_p = xfader.getWrappedObject().getParameter();
+		xfader_p.getParameterT(0).connectT(0, gain1); // xfader -> gain1::Gain
+		xfader_p.getParameterT(1).connectT(0, gain2); // xfader -> gain2::Gain
+		auto& sliderbank1_p = sliderbank1.getWrappedObject().getParameter();
+		sliderbank1_p.getParameterT(0).connectT(0, gain81);    // sliderbank1 -> gain81::Gain
+		sliderbank1_p.getParameterT(0).connectT(1, receive20); // sliderbank1 -> receive20::Feedback
+		sliderbank1_p.getParameterT(1).connectT(0, gain82);    // sliderbank1 -> gain82::Gain
+		sliderbank1_p.getParameterT(1).connectT(1, receive21); // sliderbank1 -> receive21::Feedback
+		sliderbank1_p.getParameterT(2).connectT(0, gain83);    // sliderbank1 -> gain83::Gain
+		sliderbank1_p.getParameterT(2).connectT(1, receive22); // sliderbank1 -> receive22::Feedback
+		sliderbank1_p.getParameterT(3).connectT(0, gain84);    // sliderbank1 -> gain84::Gain
+		sliderbank1_p.getParameterT(3).connectT(1, receive23); // sliderbank1 -> receive23::Feedback
+		auto& xfader143_p = xfader143.getWrappedObject().getParameter();
+		xfader143_p.getParameterT(0).connectT(0, gain85);                         // xfader143 -> gain85::Gain
+		xfader143_p.getParameterT(1).connectT(0, gain86);                         // xfader143 -> gain86::Gain
+		converter7.getWrappedObject().getParameter().connectT(0, sampleandhold4); // converter7 -> sampleandhold4::Counter
+		tempo_sync11.getParameter().connectT(0, converter7);                      // tempo_sync11 -> converter7::Value
+		auto& xfader145_p = xfader145.getWrappedObject().getParameter();
+		xfader145_p.getParameterT(0).connectT(0, gain76); // xfader145 -> gain76::Gain
+		xfader145_p.getParameterT(1).connectT(0, gain79); // xfader145 -> gain79::Gain
+		peak33.getParameter().connectT(0, add9);          // peak33 -> add9::Value
+		peak33.getParameter().connectT(1, add99);         // peak33 -> add99::Value
+		peak33.getParameter().connectT(2, add106);        // peak33 -> add106::Value
+		peak33.getParameter().connectT(3, add110);        // peak33 -> add110::Value
+		peak33.getParameter().connectT(4, add120);        // peak33 -> add120::Value
+		peak33.getParameter().connectT(5, add170);        // peak33 -> add170::Value
+		peak33.getParameter().connectT(6, add152);        // peak33 -> add152::Value
+		peak33.getParameter().connectT(7, add188);        // peak33 -> add188::Value
+		peak33.getParameter().connectT(8, add206);        // peak33 -> add206::Value
+		peak33.getParameter().connectT(9, add234);        // peak33 -> add234::Value
+		peak33.getParameter().connectT(10, add263);       // peak33 -> add263::Value
+		peak33.getParameter().connectT(11, add285);       // peak33 -> add285::Value
+		peak33.getParameter().connectT(12, add296);       // peak33 -> add296::Value
+		peak33.getParameter().connectT(13, add307);       // peak33 -> add307::Value
+		peak33.getParameter().connectT(14, add318);       // peak33 -> add318::Value
+		peak33.getParameter().connectT(15, add274);       // peak33 -> add274::Value
 		
 		// Send Connections ------------------------------------------------------------------------
 		
-		send.connect(receive10);
-		send.connect(receive13);
-		send.connect(receive6);
-		send6.connect(receive11);
-		send6.connect(receive14);
-		send6.connect(receive7);
+		send.connect(receive20);
+		send.connect(receive25);
+		send.connect(receive29);
+		send.connect(receive37);
+		send6.connect(receive21);
+		send6.connect(receive26);
+		send6.connect(receive30);
+		send6.connect(receive33);
 		send2.connect(receive2);
 		send3.connect(receive3);
-		send1.connect(receive15);
-		send1.connect(receive5);
-		send1.connect(receive8);
-		send7.connect(receive4);
-		send7.connect(receive9);
+		send1.connect(receive22);
+		send1.connect(receive27);
+		send1.connect(receive34);
+		send1.connect(receive38);
+		send7.connect(receive23);
+		send7.connect(receive31);
+		send7.connect(receive35);
+		send7.connect(receive39);
+		send9.connect(receive28);
+		send9.connect(receive32);
+		send9.connect(receive36);
+		send9.connect(receive40);
 		
 		// Default Values --------------------------------------------------------------------------
 		
@@ -17367,6 +18352,10 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		gain259.setParameterT(1, 20.); // core::gain::Smoothing
 		gain259.setParameterT(2, 0.);  // core::gain::ResetValue
 		
+		;                                           // smoothed_parameter::Value is automated
+		smoothed_parameter.setParameterT(1, 125.9); // control::smoothed_parameter::SmoothingTime
+		smoothed_parameter.setParameterT(2, 1.);    // control::smoothed_parameter::Enabled
+		
 		; // pma23::Value is automated
 		; // pma23::Multiply is automated
 		; // pma23::Add is automated
@@ -17484,6 +18473,10 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		;                              // gain267::Gain is automated
 		gain267.setParameterT(1, 20.); // core::gain::Smoothing
 		gain267.setParameterT(2, 0.);  // core::gain::ResetValue
+		
+		;                                            // smoothed_parameter1::Value is automated
+		smoothed_parameter1.setParameterT(1, 125.9); // control::smoothed_parameter::SmoothingTime
+		smoothed_parameter1.setParameterT(2, 1.);    // control::smoothed_parameter::Enabled
 		
 		; // pma24::Value is automated
 		; // pma24::Multiply is automated
@@ -17819,15 +18812,35 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		
 		; // add102::Value is automated
 		
+		; // branch8::Index is automated
+		
 		clear23.setParameterT(0, 0.); // math::clear::Value
 		
-		; // branch38::Index is automated
+		sliderbank9.setParameterT(0, 1.); // control::sliderbank::Value
 		
-		receive7.setParameterT(0, 1.); // routing::receive::Feedback
+		; // receive33::Feedback is automated
 		
-		receive8.setParameterT(0, 1.); // routing::receive::Feedback
+		;                                // gain106::Gain is automated
+		gain106.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain106.setParameterT(2, -100.); // core::gain::ResetValue
 		
-		receive9.setParameterT(0, 1.); // routing::receive::Feedback
+		; // receive34::Feedback is automated
+		
+		;                                // gain107::Gain is automated
+		gain107.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain107.setParameterT(2, -100.); // core::gain::ResetValue
+		
+		; // receive35::Feedback is automated
+		
+		;                                // gain148::Gain is automated
+		gain148.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain148.setParameterT(2, -100.); // core::gain::ResetValue
+		
+		; // receive36::Feedback is automated
+		
+		;                                // gain149::Gain is automated
+		gain149.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain149.setParameterT(2, -100.); // core::gain::ResetValue
 		
 		;                             // gain::Gain is automated
 		gain.setParameterT(1, 0.);    // core::gain::Smoothing
@@ -17844,7 +18857,7 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		
 		;                                // tempo_sync::Tempo is automated
 		;                                // tempo_sync::Multiplier is automated
-		tempo_sync.setParameterT(2, 0.); // control::tempo_sync::Enabled
+		tempo_sync.setParameterT(2, 1.); // control::tempo_sync::Enabled
 		tempo_sync.setParameterT(3, 0.); // control::tempo_sync::UnsyncedTime
 		
 		; // converter5::Value is automated
@@ -17861,10 +18874,10 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		;                                  // phasor_fm3::FreqRatio is automated
 		phasor_fm3.setParameterT(3, 0.);   // core::phasor_fm::Phase
 		
-		phasor_fm1.setParameterT(0, 1.); // core::phasor_fm::Gate
-		;                                // phasor_fm1::Frequency is automated
-		phasor_fm1.setParameterT(2, 0.); // core::phasor_fm::FreqRatio
-		phasor_fm1.setParameterT(3, 0.); // core::phasor_fm::Phase
+		phasor_fm1.setParameterT(0, 1.);     // core::phasor_fm::Gate
+		;                                    // phasor_fm1::Frequency is automated
+		phasor_fm1.setParameterT(2, 0.9725); // core::phasor_fm::FreqRatio
+		phasor_fm1.setParameterT(3, 0.);     // core::phasor_fm::Phase
 		
 		pma6.setParameterT(0, 0.); // control::pma::Value
 		pma6.setParameterT(1, 0.); // control::pma::Multiply
@@ -17914,6 +18927,8 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		
 		sin7.setParameterT(0, 1.); // math::sin::Value
 		
+		expr5.setParameterT(0, 1.); // math::expr::Value
+		
 		pi9.setParameterT(0, 0.5); // math::pi::Value
 		
 		sin1.setParameterT(0, 1.); // math::sin::Value
@@ -17928,15 +18943,17 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		
 		pi3.setParameterT(0, 0.465825); // math::pi::Value
 		
-		; // phase_delay1::Frequency is automated
+		sin10.setParameterT(0, 1.); // math::sin::Value
 		
 		;                              // gain59::Gain is automated
 		gain59.setParameterT(1, 20.);  // core::gain::Smoothing
 		gain59.setParameterT(2, -12.); // core::gain::ResetValue
 		
-		expr8.setParameterT(0, 0.479197); // math::expr::Value
+		expr9.setParameterT(0, 0.498664); // math::expr::Value
 		
-		sin10.setParameterT(0, 1.); // math::sin::Value
+		expr8.setParameterT(0, 1.); // math::expr::Value
+		
+		; // phase_delay1::Frequency is automated
 		
 		;                              // gain63::Gain is automated
 		gain63.setParameterT(1, 10.8); // core::gain::Smoothing
@@ -17959,17 +18976,59 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		gain3.setParameterT(1, 20.); // core::gain::Smoothing
 		gain3.setParameterT(2, 0.);  // core::gain::ResetValue
 		
+		;                               // smoother2::SmoothingTime is automated
+		smoother2.setParameterT(1, 0.); // core::smoother::DefaultValue
+		
+		;                                   // tempo_sync3::Tempo is automated
+		tempo_sync3.setParameterT(1, 4.);   // control::tempo_sync::Multiplier
+		tempo_sync3.setParameterT(2, 1.);   // control::tempo_sync::Enabled
+		tempo_sync3.setParameterT(3, 200.); // control::tempo_sync::UnsyncedTime
+		
+		; // converter2::Value is automated
+		
+		; // xfader63::Value is automated
+		
+		;                             // gain45::Gain is automated
+		gain45.setParameterT(1, 20.); // core::gain::Smoothing
+		gain45.setParameterT(2, 0.);  // core::gain::ResetValue
+		
+		; // sampleandhold1::Counter is automated
+		
+		;                             // gain46::Gain is automated
+		gain46.setParameterT(1, 20.); // core::gain::Smoothing
+		gain46.setParameterT(2, 0.);  // core::gain::ResetValue
+		
+		clear6.setParameterT(0, 0.); // math::clear::Value
+		
 		clear19.setParameterT(0, 0.); // math::clear::Value
 		
 		clear22.setParameterT(0, 0.); // math::clear::Value
 		
-		; // branch27::Index is automated
+		sliderbank10.setParameterT(0, 1.); // control::sliderbank::Value
 		
-		receive6.setParameterT(0, 1.); // routing::receive::Feedback
+		; // receive37::Feedback is automated
 		
-		receive5.setParameterT(0, 1.); // routing::receive::Feedback
+		;                                // gain150::Gain is automated
+		gain150.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain150.setParameterT(2, -100.); // core::gain::ResetValue
 		
-		receive4.setParameterT(0, 1.); // routing::receive::Feedback
+		; // receive38::Feedback is automated
+		
+		;                                // gain151::Gain is automated
+		gain151.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain151.setParameterT(2, -100.); // core::gain::ResetValue
+		
+		; // receive39::Feedback is automated
+		
+		;                                // gain152::Gain is automated
+		gain152.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain152.setParameterT(2, -100.); // core::gain::ResetValue
+		
+		; // receive40::Feedback is automated
+		
+		;                                // gain153::Gain is automated
+		gain153.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain153.setParameterT(2, -100.); // core::gain::ResetValue
 		
 		;                             // gain11::Gain is automated
 		gain11.setParameterT(1, 20.); // core::gain::Smoothing
@@ -18093,9 +19152,29 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		one_pole2.setParameterT(4, 1.);      // filters::one_pole::Mode
 		one_pole2.setParameterT(5, 1.);      // filters::one_pole::Enabled
 		
-		gain73.setParameterT(0, -6);  // core::gain::Gain
-		gain73.setParameterT(1, 20.); // core::gain::Smoothing
-		gain73.setParameterT(2, 0.);  // core::gain::ResetValue
+		;                               // smoother3::SmoothingTime is automated
+		smoother3.setParameterT(1, 0.); // core::smoother::DefaultValue
+		
+		;                                   // tempo_sync4::Tempo is automated
+		tempo_sync4.setParameterT(1, 4.);   // control::tempo_sync::Multiplier
+		tempo_sync4.setParameterT(2, 1.);   // control::tempo_sync::Enabled
+		tempo_sync4.setParameterT(3, 200.); // control::tempo_sync::UnsyncedTime
+		
+		; // xfader147::Value is automated
+		
+		;                              // gain155::Gain is automated
+		gain155.setParameterT(1, 20.); // core::gain::Smoothing
+		gain155.setParameterT(2, 0.);  // core::gain::ResetValue
+		
+		; // converter3::Value is automated
+		
+		; // sampleandhold::Counter is automated
+		
+		;                              // gain156::Gain is automated
+		gain156.setParameterT(1, 20.); // core::gain::Smoothing
+		gain156.setParameterT(2, 0.);  // core::gain::ResetValue
+		
+		clear7.setParameterT(0, 0.); // math::clear::Value
 		
 		;                            // gain5::Gain is automated
 		gain5.setParameterT(1, 20.); // core::gain::Smoothing
@@ -18105,17 +19184,39 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		
 		clear25.setParameterT(0, 0.); // math::clear::Value
 		
-		; // receive10::Feedback is automated
+		;                              // gain6::Gain is automated
+		gain6.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain6.setParameterT(2, -100.); // core::gain::ResetValue
+		
+		sliderbank8.setParameterT(0, 1.); // control::sliderbank::Value
+		
+		; // receive29::Feedback is automated
+		
+		;                                // gain102::Gain is automated
+		gain102.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain102.setParameterT(2, -100.); // core::gain::ResetValue
+		
+		; // receive30::Feedback is automated
+		
+		;                                // gain103::Gain is automated
+		gain103.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain103.setParameterT(2, -100.); // core::gain::ResetValue
+		
+		; // receive31::Feedback is automated
+		
+		;                                // gain104::Gain is automated
+		gain104.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain104.setParameterT(2, -100.); // core::gain::ResetValue
+		
+		; // receive32::Feedback is automated
+		
+		;                                // gain105::Gain is automated
+		gain105.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain105.setParameterT(2, -100.); // core::gain::ResetValue
 		
 		;                              // gain8::Gain is automated
 		gain8.setParameterT(1, 0.);    // core::gain::Smoothing
 		gain8.setParameterT(2, -100.); // core::gain::ResetValue
-		
-		; // receive11::Feedback is automated
-		
-		;                              // gain6::Gain is automated
-		gain6.setParameterT(1, 0.);    // core::gain::Smoothing
-		gain6.setParameterT(2, -100.); // core::gain::ResetValue
 		
 		; // branch39::Index is automated
 		
@@ -18400,21 +19501,21 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		
 		; // add551::Value is automated
 		
-		;                              // minmax30::Value is automated
-		minmax30.setParameterT(1, 0.); // control::minmax::Minimum
-		minmax30.setParameterT(2, 1.); // control::minmax::Maximum
-		minmax30.setParameterT(3, 1.); // control::minmax::Skew
-		minmax30.setParameterT(4, 0.); // control::minmax::Step
-		minmax30.setParameterT(5, 0.); // control::minmax::Polarity
+		;                                   // minmax30::Value is automated
+		minmax30.setParameterT(1, 0.);      // control::minmax::Minimum
+		minmax30.setParameterT(2, 1.);      // control::minmax::Maximum
+		minmax30.setParameterT(3, 1.);      // control::minmax::Skew
+		minmax30.setParameterT(4, 0.00024); // control::minmax::Step
+		minmax30.setParameterT(5, 0.);      // control::minmax::Polarity
 		
 		; // add552::Value is automated
 		
-		;                              // minmax31::Value is automated
-		minmax31.setParameterT(1, 0.); // control::minmax::Minimum
-		minmax31.setParameterT(2, 1.); // control::minmax::Maximum
-		minmax31.setParameterT(3, 1.); // control::minmax::Skew
-		minmax31.setParameterT(4, 0.); // control::minmax::Step
-		minmax31.setParameterT(5, 0.); // control::minmax::Polarity
+		;                                       // minmax31::Value is automated
+		minmax31.setParameterT(1, 0.);          // control::minmax::Minimum
+		minmax31.setParameterT(2, 1.);          // control::minmax::Maximum
+		minmax31.setParameterT(3, 1.);          // control::minmax::Skew
+		minmax31.setParameterT(4, 0.000488281); // control::minmax::Step
+		minmax31.setParameterT(5, 0.);          // control::minmax::Polarity
 		
 		; // add553::Value is automated
 		
@@ -18427,30 +19528,30 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		
 		; // add554::Value is automated
 		
-		;                                      // minmax33::Value is automated
-		minmax33.setParameterT(1, 0.);         // control::minmax::Minimum
-		minmax33.setParameterT(2, 1.);         // control::minmax::Maximum
-		minmax33.setParameterT(3, 1.);         // control::minmax::Skew
-		minmax33.setParameterT(4, 0.00195312); // control::minmax::Step
-		minmax33.setParameterT(5, 0.);         // control::minmax::Polarity
+		;                                   // minmax33::Value is automated
+		minmax33.setParameterT(1, 0.);      // control::minmax::Minimum
+		minmax33.setParameterT(2, 1.);      // control::minmax::Maximum
+		minmax33.setParameterT(3, 1.);      // control::minmax::Skew
+		minmax33.setParameterT(4, 0.00195); // control::minmax::Step
+		minmax33.setParameterT(5, 0.);      // control::minmax::Polarity
 		
 		; // add555::Value is automated
 		
-		;                                     // minmax34::Value is automated
-		minmax34.setParameterT(1, 0.);        // control::minmax::Minimum
-		minmax34.setParameterT(2, 1.);        // control::minmax::Maximum
-		minmax34.setParameterT(3, 1.);        // control::minmax::Skew
-		minmax34.setParameterT(4, 0.0117188); // control::minmax::Step
-		minmax34.setParameterT(5, 0.);        // control::minmax::Polarity
+		;                                      // minmax34::Value is automated
+		minmax34.setParameterT(1, 0.);         // control::minmax::Minimum
+		minmax34.setParameterT(2, 1.);         // control::minmax::Maximum
+		minmax34.setParameterT(3, 1.);         // control::minmax::Skew
+		minmax34.setParameterT(4, 0.00390625); // control::minmax::Step
+		minmax34.setParameterT(5, 0.);         // control::minmax::Polarity
 		
 		; // add556::Value is automated
 		
-		;                              // minmax35::Value is automated
-		minmax35.setParameterT(1, 0.); // control::minmax::Minimum
-		minmax35.setParameterT(2, 1.); // control::minmax::Maximum
-		minmax35.setParameterT(3, 1.); // control::minmax::Skew
-		minmax35.setParameterT(4, 0.); // control::minmax::Step
-		minmax35.setParameterT(5, 0.); // control::minmax::Polarity
+		;                                   // minmax35::Value is automated
+		minmax35.setParameterT(1, 0.);      // control::minmax::Minimum
+		minmax35.setParameterT(2, 1.);      // control::minmax::Maximum
+		minmax35.setParameterT(3, 1.);      // control::minmax::Skew
+		minmax35.setParameterT(4, 0.00781); // control::minmax::Step
+		minmax35.setParameterT(5, 0.);      // control::minmax::Polarity
 		
 		; // add557::Value is automated
 		
@@ -18486,21 +19587,21 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		
 		; // add524::Value is automated
 		
-		;                              // minmax10::Value is automated
-		minmax10.setParameterT(1, 0.); // control::minmax::Minimum
-		minmax10.setParameterT(2, 1.); // control::minmax::Maximum
-		minmax10.setParameterT(3, 1.); // control::minmax::Skew
-		minmax10.setParameterT(4, 0.); // control::minmax::Step
-		minmax10.setParameterT(5, 0.); // control::minmax::Polarity
+		;                                   // minmax10::Value is automated
+		minmax10.setParameterT(1, 0.);      // control::minmax::Minimum
+		minmax10.setParameterT(2, 1.);      // control::minmax::Maximum
+		minmax10.setParameterT(3, 1.);      // control::minmax::Skew
+		minmax10.setParameterT(4, 0.00024); // control::minmax::Step
+		minmax10.setParameterT(5, 0.);      // control::minmax::Polarity
 		
 		; // add525::Value is automated
 		
-		;                              // minmax13::Value is automated
-		minmax13.setParameterT(1, 0.); // control::minmax::Minimum
-		minmax13.setParameterT(2, 1.); // control::minmax::Maximum
-		minmax13.setParameterT(3, 1.); // control::minmax::Skew
-		minmax13.setParameterT(4, 0.); // control::minmax::Step
-		minmax13.setParameterT(5, 0.); // control::minmax::Polarity
+		;                                       // minmax13::Value is automated
+		minmax13.setParameterT(1, 0.);          // control::minmax::Minimum
+		minmax13.setParameterT(2, 1.);          // control::minmax::Maximum
+		minmax13.setParameterT(3, 1.);          // control::minmax::Skew
+		minmax13.setParameterT(4, 0.000488281); // control::minmax::Step
+		minmax13.setParameterT(5, 0.);          // control::minmax::Polarity
 		
 		; // add526::Value is automated
 		
@@ -18513,30 +19614,30 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		
 		; // add527::Value is automated
 		
-		;                                      // minmax25::Value is automated
-		minmax25.setParameterT(1, 0.);         // control::minmax::Minimum
-		minmax25.setParameterT(2, 1.);         // control::minmax::Maximum
-		minmax25.setParameterT(3, 1.);         // control::minmax::Skew
-		minmax25.setParameterT(4, 0.00195312); // control::minmax::Step
-		minmax25.setParameterT(5, 0.);         // control::minmax::Polarity
+		;                                   // minmax25::Value is automated
+		minmax25.setParameterT(1, 0.);      // control::minmax::Minimum
+		minmax25.setParameterT(2, 1.);      // control::minmax::Maximum
+		minmax25.setParameterT(3, 1.);      // control::minmax::Skew
+		minmax25.setParameterT(4, 0.00195); // control::minmax::Step
+		minmax25.setParameterT(5, 0.);      // control::minmax::Polarity
 		
 		; // add528::Value is automated
 		
-		;                                     // minmax26::Value is automated
-		minmax26.setParameterT(1, 0.);        // control::minmax::Minimum
-		minmax26.setParameterT(2, 1.);        // control::minmax::Maximum
-		minmax26.setParameterT(3, 1.);        // control::minmax::Skew
-		minmax26.setParameterT(4, 0.0117188); // control::minmax::Step
-		minmax26.setParameterT(5, 0.);        // control::minmax::Polarity
+		;                                      // minmax26::Value is automated
+		minmax26.setParameterT(1, 0.);         // control::minmax::Minimum
+		minmax26.setParameterT(2, 1.);         // control::minmax::Maximum
+		minmax26.setParameterT(3, 1.);         // control::minmax::Skew
+		minmax26.setParameterT(4, 0.00390625); // control::minmax::Step
+		minmax26.setParameterT(5, 0.);         // control::minmax::Polarity
 		
 		; // add529::Value is automated
 		
-		;                              // minmax27::Value is automated
-		minmax27.setParameterT(1, 0.); // control::minmax::Minimum
-		minmax27.setParameterT(2, 1.); // control::minmax::Maximum
-		minmax27.setParameterT(3, 1.); // control::minmax::Skew
-		minmax27.setParameterT(4, 0.); // control::minmax::Step
-		minmax27.setParameterT(5, 0.); // control::minmax::Polarity
+		;                                   // minmax27::Value is automated
+		minmax27.setParameterT(1, 0.);      // control::minmax::Minimum
+		minmax27.setParameterT(2, 1.);      // control::minmax::Maximum
+		minmax27.setParameterT(3, 1.);      // control::minmax::Skew
+		minmax27.setParameterT(4, 0.00781); // control::minmax::Step
+		minmax27.setParameterT(5, 0.);      // control::minmax::Polarity
 		
 		; // add530::Value is automated
 		
@@ -18568,12 +19669,12 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		
 		; // add497::Value is automated
 		
-		;                             // minmax8::Value is automated
-		minmax8.setParameterT(1, 0.); // control::minmax::Minimum
-		minmax8.setParameterT(2, 1.); // control::minmax::Maximum
-		minmax8.setParameterT(3, 1.); // control::minmax::Skew
-		minmax8.setParameterT(4, 0.); // control::minmax::Step
-		minmax8.setParameterT(5, 0.); // control::minmax::Polarity
+		;                                  // minmax8::Value is automated
+		minmax8.setParameterT(1, 0.);      // control::minmax::Minimum
+		minmax8.setParameterT(2, 1.);      // control::minmax::Maximum
+		minmax8.setParameterT(3, 1.);      // control::minmax::Skew
+		minmax8.setParameterT(4, 0.00024); // control::minmax::Step
+		minmax8.setParameterT(5, 0.);      // control::minmax::Polarity
 		
 		; // add498::Value is automated
 		
@@ -18613,12 +19714,12 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		
 		; // add502::Value is automated
 		
-		;                              // minmax21::Value is automated
-		minmax21.setParameterT(1, 0.); // control::minmax::Minimum
-		minmax21.setParameterT(2, 1.); // control::minmax::Maximum
-		minmax21.setParameterT(3, 1.); // control::minmax::Skew
-		minmax21.setParameterT(4, 0.); // control::minmax::Step
-		minmax21.setParameterT(5, 0.); // control::minmax::Polarity
+		;                                   // minmax21::Value is automated
+		minmax21.setParameterT(1, 0.);      // control::minmax::Minimum
+		minmax21.setParameterT(2, 1.);      // control::minmax::Maximum
+		minmax21.setParameterT(3, 1.);      // control::minmax::Skew
+		minmax21.setParameterT(4, 0.00781); // control::minmax::Step
+		minmax21.setParameterT(5, 0.);      // control::minmax::Polarity
 		
 		; // add503::Value is automated
 		
@@ -18650,21 +19751,21 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		
 		; // add578::Value is automated
 		
-		;                              // minmax38::Value is automated
-		minmax38.setParameterT(1, 0.); // control::minmax::Minimum
-		minmax38.setParameterT(2, 1.); // control::minmax::Maximum
-		minmax38.setParameterT(3, 1.); // control::minmax::Skew
-		minmax38.setParameterT(4, 0.); // control::minmax::Step
-		minmax38.setParameterT(5, 0.); // control::minmax::Polarity
+		;                                   // minmax38::Value is automated
+		minmax38.setParameterT(1, 0.);      // control::minmax::Minimum
+		minmax38.setParameterT(2, 1.);      // control::minmax::Maximum
+		minmax38.setParameterT(3, 1.);      // control::minmax::Skew
+		minmax38.setParameterT(4, 0.00024); // control::minmax::Step
+		minmax38.setParameterT(5, 0.);      // control::minmax::Polarity
 		
 		; // add579::Value is automated
 		
-		;                              // minmax39::Value is automated
-		minmax39.setParameterT(1, 0.); // control::minmax::Minimum
-		minmax39.setParameterT(2, 1.); // control::minmax::Maximum
-		minmax39.setParameterT(3, 1.); // control::minmax::Skew
-		minmax39.setParameterT(4, 0.); // control::minmax::Step
-		minmax39.setParameterT(5, 0.); // control::minmax::Polarity
+		;                                       // minmax39::Value is automated
+		minmax39.setParameterT(1, 0.);          // control::minmax::Minimum
+		minmax39.setParameterT(2, 1.);          // control::minmax::Maximum
+		minmax39.setParameterT(3, 1.);          // control::minmax::Skew
+		minmax39.setParameterT(4, 0.000488281); // control::minmax::Step
+		minmax39.setParameterT(5, 0.);          // control::minmax::Polarity
 		
 		; // add580::Value is automated
 		
@@ -18677,30 +19778,30 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		
 		; // add581::Value is automated
 		
-		;                                      // minmax41::Value is automated
-		minmax41.setParameterT(1, 0.);         // control::minmax::Minimum
-		minmax41.setParameterT(2, 1.);         // control::minmax::Maximum
-		minmax41.setParameterT(3, 1.);         // control::minmax::Skew
-		minmax41.setParameterT(4, 0.00195312); // control::minmax::Step
-		minmax41.setParameterT(5, 0.);         // control::minmax::Polarity
+		;                                   // minmax41::Value is automated
+		minmax41.setParameterT(1, 0.);      // control::minmax::Minimum
+		minmax41.setParameterT(2, 1.);      // control::minmax::Maximum
+		minmax41.setParameterT(3, 1.);      // control::minmax::Skew
+		minmax41.setParameterT(4, 0.00195); // control::minmax::Step
+		minmax41.setParameterT(5, 0.);      // control::minmax::Polarity
 		
 		; // add582::Value is automated
 		
-		;                                     // minmax42::Value is automated
-		minmax42.setParameterT(1, 0.);        // control::minmax::Minimum
-		minmax42.setParameterT(2, 1.);        // control::minmax::Maximum
-		minmax42.setParameterT(3, 1.);        // control::minmax::Skew
-		minmax42.setParameterT(4, 0.0117188); // control::minmax::Step
-		minmax42.setParameterT(5, 0.);        // control::minmax::Polarity
+		;                                      // minmax42::Value is automated
+		minmax42.setParameterT(1, 0.);         // control::minmax::Minimum
+		minmax42.setParameterT(2, 1.);         // control::minmax::Maximum
+		minmax42.setParameterT(3, 1.);         // control::minmax::Skew
+		minmax42.setParameterT(4, 0.00390625); // control::minmax::Step
+		minmax42.setParameterT(5, 0.);         // control::minmax::Polarity
 		
 		; // add583::Value is automated
 		
-		;                              // minmax43::Value is automated
-		minmax43.setParameterT(1, 0.); // control::minmax::Minimum
-		minmax43.setParameterT(2, 1.); // control::minmax::Maximum
-		minmax43.setParameterT(3, 1.); // control::minmax::Skew
-		minmax43.setParameterT(4, 0.); // control::minmax::Step
-		minmax43.setParameterT(5, 0.); // control::minmax::Polarity
+		;                                   // minmax43::Value is automated
+		minmax43.setParameterT(1, 0.);      // control::minmax::Minimum
+		minmax43.setParameterT(2, 1.);      // control::minmax::Maximum
+		minmax43.setParameterT(3, 1.);      // control::minmax::Skew
+		minmax43.setParameterT(4, 0.00781); // control::minmax::Step
+		minmax43.setParameterT(5, 0.);      // control::minmax::Polarity
 		
 		; // add584::Value is automated
 		
@@ -18882,27 +19983,63 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		; // faust5::windowsamples is automated
 		; // faust5::xfadesamples is automated
 		
+		;                               // smoother4::SmoothingTime is automated
+		smoother4.setParameterT(1, 0.); // core::smoother::DefaultValue
+		
+		;                                    // tempo_sync10::Tempo is automated
+		tempo_sync10.setParameterT(1, 4.);   // control::tempo_sync::Multiplier
+		tempo_sync10.setParameterT(2, 1.);   // control::tempo_sync::Enabled
+		tempo_sync10.setParameterT(3, 200.); // control::tempo_sync::UnsyncedTime
+		
+		; // converter4::Value is automated
+		
+		; // xfader144::Value is automated
+		
+		;                             // gain47::Gain is automated
+		gain47.setParameterT(1, 20.); // core::gain::Smoothing
+		gain47.setParameterT(2, 0.);  // core::gain::ResetValue
+		
+		; // sampleandhold3::Counter is automated
+		
+		;                             // gain75::Gain is automated
+		gain75.setParameterT(1, 20.); // core::gain::Smoothing
+		gain75.setParameterT(2, 0.);  // core::gain::ResetValue
+		
+		clear11.setParameterT(0, 0.); // math::clear::Value
+		
 		clear20.setParameterT(0, 0.); // math::clear::Value
 		
 		clear24.setParameterT(0, 0.); // math::clear::Value
 		
-		receive13.setParameterT(0, 1.); // routing::receive::Feedback
+		sliderbank2.setParameterT(0, 1.); // control::sliderbank::Value
 		
-		;                               // gain45::Gain is automated
-		gain45.setParameterT(1, 20.);   // core::gain::Smoothing
-		gain45.setParameterT(2, -100.); // core::gain::ResetValue
+		receive25.setParameterT(0, 1.); // routing::receive::Feedback
 		
-		receive14.setParameterT(0, 1.); // routing::receive::Feedback
+		;                               // gain87::Gain is automated
+		gain87.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain87.setParameterT(2, -100.); // core::gain::ResetValue
 		
-		;                               // gain47::Gain is automated
-		gain47.setParameterT(1, 20.);   // core::gain::Smoothing
-		gain47.setParameterT(2, -100.); // core::gain::ResetValue
+		receive26.setParameterT(0, 1.); // routing::receive::Feedback
 		
-		receive15.setParameterT(0, 1.); // routing::receive::Feedback
+		;                               // gain88::Gain is automated
+		gain88.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain88.setParameterT(2, -100.); // core::gain::ResetValue
 		
-		;                               // gain46::Gain is automated
-		gain46.setParameterT(1, 20.);   // core::gain::Smoothing
-		gain46.setParameterT(2, -100.); // core::gain::ResetValue
+		receive27.setParameterT(0, 1.); // routing::receive::Feedback
+		
+		;                                // gain100::Gain is automated
+		gain100.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain100.setParameterT(2, -100.); // core::gain::ResetValue
+		
+		receive28.setParameterT(0, 1.); // routing::receive::Feedback
+		
+		;                                // gain101::Gain is automated
+		gain101.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain101.setParameterT(2, -100.); // core::gain::ResetValue
+		
+		;                               // gain74::Gain is automated
+		gain74.setParameterT(1, 0.);    // core::gain::Smoothing
+		gain74.setParameterT(2, -100.); // core::gain::ResetValue
 		
 		; // xfader::Value is automated
 		
@@ -18915,70 +20052,27 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		; // faust::Q is automated
 		; // faust::freq is automated
 		
-		; // faust1::Q is automated
-		; // faust1::freq is automated
-		
 		; // faust2::Q is automated
 		; // faust2::freq is automated
 		
-		; // faust6::Q is automated
-		; // faust6::freq is automated
+		;                                 // svf::Frequency is automated
+		;                                 // svf::Q is automated
+		svf.setParameterT(2, 0.);         // filters::svf::Gain
+		svf.setParameterT(3, 0.00659917); // filters::svf::Smoothing
+		svf.setParameterT(4, 2.);         // filters::svf::Mode
+		svf.setParameterT(5, 1.);         // filters::svf::Enabled
 		
 		; // cable_table::Value is automated
 		
 		; // faust8::aN is automated
 		; // faust8::del is automated
 		
-		; // faust7::Q is automated
-		; // faust7::freq is automated
-		
-		; // cable_table2::Value is automated
-		
-		; // faust10::Q is automated
-		; // faust10::freq is automated
-		
-		; // faust9::aN is automated
-		; // faust9::del is automated
-		
-		; // faust11::Q is automated
-		; // faust11::freq is automated
-		
-		jpanner.setParameterT(0, -1.); // jdsp::jpanner::Pan
-		jpanner.setParameterT(1, 1.);  // jdsp::jpanner::Rule
-		
-		; // faust12::Q is automated
-		; // faust12::freq is automated
-		
-		jpanner2.setParameterT(0, 1.); // jdsp::jpanner::Pan
-		jpanner2.setParameterT(1, 1.); // jdsp::jpanner::Rule
-		
-		; // faust13::Q is automated
-		; // faust13::freq is automated
-		
-		jpanner4.setParameterT(0, -1.); // jdsp::jpanner::Pan
-		jpanner4.setParameterT(1, 1.);  // jdsp::jpanner::Rule
-		
-		; // faust14::Q is automated
-		; // faust14::freq is automated
-		
-		jpanner5.setParameterT(0, 10.); // jdsp::jpanner::Pan
-		jpanner5.setParameterT(1, 1.);  // jdsp::jpanner::Rule
-		
-		; // cable_table3::Value is automated
-		
-		; // faust15::aN is automated
-		; // faust15::del is automated
-		
-		jpanner6.setParameterT(0, -1.); // jdsp::jpanner::Pan
-		jpanner6.setParameterT(1, 1.);  // jdsp::jpanner::Rule
-		
-		; // cable_table4::Value is automated
-		
-		; // faust16::aN is automated
-		; // faust16::del is automated
-		
-		jpanner7.setParameterT(0, 10.); // jdsp::jpanner::Pan
-		jpanner7.setParameterT(1, 1.);  // jdsp::jpanner::Rule
+		;                               // allpass::Frequency is automated
+		;                               // allpass::Q is automated
+		allpass.setParameterT(2, 0.);   // filters::allpass::Gain
+		allpass.setParameterT(3, 0.01); // filters::allpass::Smoothing
+		allpass.setParameterT(4, 0.);   // filters::allpass::Mode
+		allpass.setParameterT(5, 1.);   // filters::allpass::Enabled
 		
 		;                             // gain2::Gain is automated
 		gain2.setParameterT(1, 20.);  // core::gain::Smoothing
@@ -18991,37 +20085,135 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		;                              // jpanner3::Pan is automated
 		jpanner3.setParameterT(1, 1.); // jdsp::jpanner::Rule
 		
-		this->setParameterT(0, 3.2);
-		this->setParameterT(1, 16.);
+		sliderbank1.setParameterT(0, 1.); // control::sliderbank::Value
+		
+		; // receive20::Feedback is automated
+		
+		;                               // gain81::Gain is automated
+		gain81.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain81.setParameterT(2, -100.); // core::gain::ResetValue
+		
+		; // receive21::Feedback is automated
+		
+		;                               // gain82::Gain is automated
+		gain82.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain82.setParameterT(2, -100.); // core::gain::ResetValue
+		
+		; // receive22::Feedback is automated
+		
+		;                               // gain83::Gain is automated
+		gain83.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain83.setParameterT(2, -100.); // core::gain::ResetValue
+		
+		; // receive23::Feedback is automated
+		
+		;                               // gain84::Gain is automated
+		gain84.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain84.setParameterT(2, -100.); // core::gain::ResetValue
+		
+		;                               // gain73::Gain is automated
+		gain73.setParameterT(1, 20.);   // core::gain::Smoothing
+		gain73.setParameterT(2, -100.); // core::gain::ResetValue
+		
+		; // xfader143::Value is automated
+		
+		;                              // gain85::Gain is automated
+		gain85.setParameterT(1, 20.);  // core::gain::Smoothing
+		gain85.setParameterT(2, -12.); // core::gain::ResetValue
+		
+		; // branch9::Index is automated
+		
+		; // faust31::Q is automated
+		; // faust31::freq is automated
+		
+		; // faust32::Q is automated
+		; // faust32::freq is automated
+		
+		;                                  // svf2::Frequency is automated
+		;                                  // svf2::Q is automated
+		svf2.setParameterT(2, 0.);         // filters::svf::Gain
+		svf2.setParameterT(3, 0.00659917); // filters::svf::Smoothing
+		svf2.setParameterT(4, 2.);         // filters::svf::Mode
+		svf2.setParameterT(5, 1.);         // filters::svf::Enabled
+		
+		; // cable_table16::Value is automated
+		
+		; // faust33::aN is automated
+		; // faust33::del is automated
+		
+		;                                // allpass1::Frequency is automated
+		;                                // allpass1::Q is automated
+		allpass1.setParameterT(2, 0.);   // filters::allpass::Gain
+		allpass1.setParameterT(3, 0.01); // filters::allpass::Smoothing
+		allpass1.setParameterT(4, 0.);   // filters::allpass::Mode
+		allpass1.setParameterT(5, 1.);   // filters::allpass::Enabled
+		
+		;                              // gain86::Gain is automated
+		gain86.setParameterT(1, 20.);  // core::gain::Smoothing
+		gain86.setParameterT(2, -16.); // core::gain::ResetValue
+		
+		;                              // gain78::Gain is automated
+		gain78.setParameterT(1, 0.2);  // core::gain::Smoothing
+		gain78.setParameterT(2, -10.); // core::gain::ResetValue
+		
+		;                               // jpanner13::Pan is automated
+		jpanner13.setParameterT(1, 1.); // jdsp::jpanner::Rule
+		
+		;                               // smoother5::SmoothingTime is automated
+		smoother5.setParameterT(1, 0.); // core::smoother::DefaultValue
+		
+		;                                    // tempo_sync11::Tempo is automated
+		tempo_sync11.setParameterT(1, 4.);   // control::tempo_sync::Multiplier
+		tempo_sync11.setParameterT(2, 1.);   // control::tempo_sync::Enabled
+		tempo_sync11.setParameterT(3, 200.); // control::tempo_sync::UnsyncedTime
+		
+		; // converter7::Value is automated
+		
+		; // xfader145::Value is automated
+		
+		;                             // gain76::Gain is automated
+		gain76.setParameterT(1, 20.); // core::gain::Smoothing
+		gain76.setParameterT(2, 0.);  // core::gain::ResetValue
+		
+		; // sampleandhold4::Counter is automated
+		
+		;                             // gain79::Gain is automated
+		gain79.setParameterT(1, 20.); // core::gain::Smoothing
+		gain79.setParameterT(2, 0.);  // core::gain::ResetValue
+		
+		clear12.setParameterT(0, 0.); // math::clear::Value
+		
+		this->setParameterT(0, -5.7);
+		this->setParameterT(1, 6.);
 		this->setParameterT(2, 1.);
 		this->setParameterT(3, 1.);
 		this->setParameterT(4, 0.);
-		this->setParameterT(5, 0.);
-		this->setParameterT(6, 1.);
-		this->setParameterT(7, 0.78);
+		this->setParameterT(5, 0.66);
+		this->setParameterT(6, 0.);
+		this->setParameterT(7, 1.);
 		this->setParameterT(8, 0.);
 		this->setParameterT(9, 0.);
 		this->setParameterT(10, 0.);
 		this->setParameterT(11, 1.);
-		this->setParameterT(12, 0.98);
-		this->setParameterT(13, 1.);
+		this->setParameterT(12, 0.);
+		this->setParameterT(13, 0.);
 		this->setParameterT(14, 20.);
-		this->setParameterT(15, 20.);
-		this->setParameterT(16, 1.);
-		this->setParameterT(17, 1.);
+		this->setParameterT(15, 22.1);
+		this->setParameterT(16, 5.);
+		this->setParameterT(17, 3.);
 		this->setParameterT(18, 0.);
-		this->setParameterT(19, 0.);
+		this->setParameterT(19, 0.04);
 		this->setParameterT(20, 1.);
 		this->setParameterT(21, 1.);
-		this->setParameterT(22, 0.94);
-		this->setParameterT(23, 0.);
+		this->setParameterT(22, 0.);
+		this->setParameterT(23, 0.49);
 		this->setParameterT(24, 1.);
-		this->setParameterT(25, 20.);
-		this->setParameterT(26, 3.57628e-07);
-		this->setParameterT(27, 1.);
-		this->setParameterT(28, 0.);
-		this->setParameterT(29, 4021.42);
-		this->setParameterT(30, 0.);
+		this->setParameterT(25, 1603.71);
+		this->setParameterT(26, 9);
+		this->setParameterT(27, 4.);
+		this->setParameterT(28, 0.924141);
+		this->setParameterT(29, 523.76);
+		this->setParameterT(30, -1.);
 		this->setParameterT(31, 0.);
 		this->setParameterT(32, 0.);
 		this->setParameterT(33, 0.);
@@ -19030,74 +20222,74 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		this->setParameterT(36, 1.);
 		this->setParameterT(37, 1.);
 		this->setParameterT(38, 1.);
-		this->setParameterT(39, 0.99);
-		this->setParameterT(40, 0.);
+		this->setParameterT(39, 0.7);
+		this->setParameterT(40, 0.54);
 		this->setParameterT(41, 0.);
-		this->setParameterT(42, 5746.);
-		this->setParameterT(43, 1.);
-		this->setParameterT(44, 178.);
-		this->setParameterT(45, 0.92);
+		this->setParameterT(42, 185.);
+		this->setParameterT(43, 0.66);
+		this->setParameterT(44, 3775.);
+		this->setParameterT(45, 0.23);
 		this->setParameterT(46, 1.);
-		this->setParameterT(47, 6.);
-		this->setParameterT(48, 1.);
+		this->setParameterT(47, 1.);
+		this->setParameterT(48, 6.);
 		this->setParameterT(49, 1.);
 		this->setParameterT(50, 1.);
 		this->setParameterT(51, 0.8);
 		this->setParameterT(52, 1.49012e-06);
-		this->setParameterT(53, 7.);
-		this->setParameterT(54, 0.8);
-		this->setParameterT(55, 10000.);
-		this->setParameterT(56, 893.);
-		this->setParameterT(57, 0.);
+		this->setParameterT(53, 3.);
+		this->setParameterT(54, 0.92);
+		this->setParameterT(55, 10.);
+		this->setParameterT(56, 0.);
+		this->setParameterT(57, 599.);
 		this->setParameterT(58, 0.);
-		this->setParameterT(59, 3767.);
-		this->setParameterT(60, 401.);
-		this->setParameterT(61, 0.);
-		this->setParameterT(62, 17.);
-		this->setParameterT(63, 0.46);
-		this->setParameterT(64, 853.);
+		this->setParameterT(59, 7039.);
+		this->setParameterT(60, 208.);
+		this->setParameterT(61, 554.);
+		this->setParameterT(62, 18.);
+		this->setParameterT(63, 0.09);
+		this->setParameterT(64, 0.);
 		this->setParameterT(65, 0.);
 		this->setParameterT(66, 0.);
-		this->setParameterT(67, 11.);
-		this->setParameterT(68, 0.);
+		this->setParameterT(67, 0.);
+		this->setParameterT(68, 4.);
 		this->setParameterT(69, 1.);
-		this->setParameterT(70, 1.);
-		this->setParameterT(71, 0.);
+		this->setParameterT(70, 0.);
+		this->setParameterT(71, 1.);
 		this->setParameterT(72, 0.);
 		this->setParameterT(73, 0.);
-		this->setParameterT(74, 2.);
+		this->setParameterT(74, 3.);
 		this->setParameterT(75, 1.);
-		this->setParameterT(76, 4.);
+		this->setParameterT(76, 1.);
 		this->setParameterT(77, 3.);
-		this->setParameterT(78, 2.);
+		this->setParameterT(78, 1.);
 		this->setParameterT(79, 1.);
 		this->setParameterT(80, 0.868531);
-		this->setParameterT(81, 0.);
-		this->setParameterT(82, 0.);
+		this->setParameterT(81, 0.0433594);
+		this->setParameterT(82, 0.627246);
 		this->setParameterT(83, 1.);
 		this->setParameterT(84, 1.);
 		this->setParameterT(85, 0.);
-		this->setParameterT(86, 0.);
-		this->setParameterT(87, 1.);
+		this->setParameterT(86, 1.);
+		this->setParameterT(87, 3.);
 		this->setParameterT(88, 1.);
 		this->setParameterT(89, 1.);
-		this->setParameterT(90, 2.);
+		this->setParameterT(90, 4.);
 		this->setParameterT(91, 1.);
-		this->setParameterT(92, 4.);
+		this->setParameterT(92, 1.);
 		this->setParameterT(93, 1.);
-		this->setParameterT(94, 0.);
-		this->setParameterT(95, 0.);
+		this->setParameterT(94, 0.54);
+		this->setParameterT(95, 1.);
 		this->setParameterT(96, 1.);
-		this->setParameterT(97, 4.);
+		this->setParameterT(97, 1.);
 		this->setParameterT(98, 1.);
 		this->setParameterT(99, 1.);
-		this->setParameterT(100, 0.91);
+		this->setParameterT(100, 1.);
 		this->setParameterT(101, 1.);
 		this->setParameterT(102, 0.);
 		this->setParameterT(103, 0.);
 		this->setParameterT(104, 3.);
-		this->setParameterT(105, 1.);
-		this->setParameterT(106, 1.);
+		this->setParameterT(105, 3.);
+		this->setParameterT(106, 6.);
 		this->setParameterT(107, 1.);
 		this->setParameterT(108, 1.);
 		this->setParameterT(109, 1.);
@@ -19107,19 +20299,19 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		this->setParameterT(113, 1.);
 		this->setParameterT(114, 1.);
 		this->setParameterT(115, 1.);
-		this->setParameterT(116, 1.);
+		this->setParameterT(116, 0.);
 		this->setParameterT(117, 0.);
 		this->setParameterT(118, 0.);
-		this->setParameterT(119, -23.);
-		this->setParameterT(120, -1.);
+		this->setParameterT(119, 10.);
+		this->setParameterT(120, 0.);
 		this->setParameterT(121, 1.);
-		this->setParameterT(122, 1.);
-		this->setParameterT(123, 0.);
-		this->setParameterT(124, 1.);
-		this->setParameterT(125, 0.);
-		this->setParameterT(126, 0.);
+		this->setParameterT(122, 0.);
+		this->setParameterT(123, 1.);
+		this->setParameterT(124, 0.);
+		this->setParameterT(125, 0.71);
+		this->setParameterT(126, 1.);
 		this->setParameterT(127, 0.);
-		this->setParameterT(128, 0.);
+		this->setParameterT(128, 0.16);
 		this->setParameterT(129, 0.);
 		this->setParameterT(130, 0.);
 		this->setParameterT(131, 0.);
@@ -19127,20 +20319,40 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		this->setParameterT(133, 0.243164);
 		this->setParameterT(134, 0.);
 		this->setParameterT(135, 0.);
-		this->setParameterT(136, 1.);
-		this->setParameterT(137, 4.);
+		this->setParameterT(136, 4.);
+		this->setParameterT(137, 8.);
 		this->setParameterT(138, 0.);
 		this->setParameterT(139, 0.);
 		this->setParameterT(140, 0.);
 		this->setParameterT(141, 0.);
 		this->setParameterT(142, 4.);
-		this->setParameterT(143, 1.);
+		this->setParameterT(143, 2.);
 		this->setParameterT(144, 0.);
 		this->setParameterT(145, 0.);
 		this->setParameterT(146, 0.);
 		this->setParameterT(147, 0.);
 		this->setParameterT(148, 0.);
 		this->setParameterT(149, 0.);
+		this->setParameterT(150, 1.);
+		this->setParameterT(151, 0.86);
+		this->setParameterT(152, 1.);
+		this->setParameterT(153, 0.487857);
+		this->setParameterT(154, 1.);
+		this->setParameterT(155, 0.);
+		this->setParameterT(156, 1.);
+		this->setParameterT(157, 1.);
+		this->setParameterT(158, 1.);
+		this->setParameterT(159, 1.);
+		this->setParameterT(160, 1.);
+		this->setParameterT(161, 1.);
+		this->setParameterT(162, 1.);
+		this->setParameterT(163, 1.);
+		this->setParameterT(164, 1.);
+		this->setParameterT(165, 1.);
+		this->setParameterT(166, 1.);
+		this->setParameterT(167, 1.);
+		this->setParameterT(168, 0.);
+		this->setParameterT(169, 0.);
 		this->setExternalData({}, -1);
 	}
 	~instance() override
@@ -19226,18 +20438,14 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		this->getT(0).getT(15).getT(1).getT(1).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c); // osc1_impl::global_cable80_t<NV>
 		this->getT(0).getT(15).getT(1).getT(2).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c); // osc1_impl::global_cable81_t<NV>
 		this->getT(0).getT(15).getT(1).getT(3).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c); // osc1_impl::global_cable82_t<NV>
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).                                                   // osc1_impl::global_cable43_t<NV>
-        getT(0).getT(0).getT(1).getT(0).getT(1).getT(0).
-        getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).  // osc1_impl::global_cable44_t<NV>
-        getT(0).getT(0).getT(1).getT(1).getT(1).getT(0).
-        getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).  // osc1_impl::global_cable45_t<NV>
-        getT(0).getT(0).getT(1).getT(2).getT(1).getT(0).
-        getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).getT(1).  // osc1_impl::global_cable46_t<NV>
-        getT(0).getT(0).getT(1).getT(3).getT(1).getT(0).
-        getT(0).connectToRuntimeTarget(addConnection, c);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).                                           // osc1_impl::global_cable43_t<NV>
+        getT(0).getT(0).getT(1).getT(0).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).  // osc1_impl::global_cable44_t<NV>
+        getT(0).getT(0).getT(1).getT(1).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).  // osc1_impl::global_cable45_t<NV>
+        getT(0).getT(0).getT(1).getT(2).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(5).getT(1).  // osc1_impl::global_cable46_t<NV>
+        getT(0).getT(0).getT(1).getT(3).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
 	}
 	
 	void setExternalData(const ExternalData& b, int index)
@@ -19279,105 +20487,140 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		this->getT(0).getT(14).getT(2).setExternalData(b, index);                                // osc1_impl::peak41_t<NV>
 		this->getT(0).getT(15).getT(0).setExternalData(b, index);                                // osc1_impl::sliderbank22_t<NV>
 		this->getT(0).getT(15).getT(2).setExternalData(b, index);                                // osc1_impl::peak42_t<NV>
-		this->getT(1).getT(0).getT(0).getT(0).getT(0).getT(0).getT(1).setExternalData(b, index); // osc1_impl::ramp_t<NV>
-		this->getT(1).getT(0).getT(0).getT(0).getT(0).getT(1).getT(0).setExternalData(b, index); // osc1_impl::clock_ramp_t<NV>
-		this->getT(1).getT(0).getT(0).getT(0).getT(1).setExternalData(b, index);                 // osc1_impl::peak2_t<NV>
-		this->getT(1).getT(0).getT(0).getT(0).getT(3).getT(0).getT(1).setExternalData(b, index); // osc1_impl::ahdsr_t<NV>
-		this->getT(1).getT(0).getT(0).getT(0).getT(3).getT(1).getT(1).setExternalData(b, index); // osc1_impl::cable_table1_t<NV>
-		this->getT(1).getT(0).getT(0).getT(0).getT(4).setExternalData(b, index);                 // osc1_impl::peak7_t<NV>
-		this->getT(1).getT(0).getT(0).getT(1).getT(0).getT(0).getT(1).setExternalData(b, index); // osc1_impl::ramp4_t<NV>
-		this->getT(1).getT(0).getT(0).getT(1).getT(0).getT(1).getT(0).setExternalData(b, index); // osc1_impl::clock_ramp3_t<NV>
-		this->getT(1).getT(0).getT(0).getT(1).getT(1).setExternalData(b, index);                 // osc1_impl::peak14_t<NV>
-		this->getT(1).getT(0).getT(0).getT(1).getT(3).getT(0).getT(1).setExternalData(b, index); // osc1_impl::ahdsr6_t<NV>
-		this->getT(1).getT(0).getT(0).getT(1).getT(3).getT(1).getT(1).setExternalData(b, index); // osc1_impl::cable_table8_t<NV>
-		this->getT(1).getT(0).getT(0).getT(1).getT(4).setExternalData(b, index);                 // osc1_impl::peak16_t<NV>
-		this->getT(1).getT(1).getT(0).getT(0).getT(0).getT(2).setExternalData(b, index);         // osc1_impl::peak8_t
-		this->getT(1).getT(1).getT(0).getT(0).                                                   // osc1_impl::table5_t
-        getT(0).getT(8).getT(6).getT(2).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(0).                                                   // osc1_impl::peak17_t<NV>
-        getT(4).getT(0).getT(1).getT(0).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(1).                                                   // osc1_impl::oscilloscope2_t
-        getT(0).getT(7).getT(2).getT(4).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(1).                                                   // osc1_impl::table6_t
-        getT(0).getT(7).getT(6).getT(2).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(1).getT(3).getT(0).setExternalData(b, index);         // osc1_impl::peak20_t<NV>
-		this->getT(1).getT(1).getT(0).getT(2).getT(2).getT(3).setExternalData(b, index);         // osc1_impl::sliderbank_t<NV>
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::ramp5_t<NV>
-        getT(0).getT(0).getT(0).getT(0).getT(1).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).                                                   // osc1_impl::peak15_t<NV>
-        getT(4).getT(0).getT(0).getT(0).
+		this->getT(1).getT(0).getT(0).getT(0).getT(0).getT(1).setExternalData(b, index);         // osc1_impl::ramp_t<NV>
+		this->getT(1).getT(0).getT(0).getT(0).getT(1).getT(0).setExternalData(b, index);         // osc1_impl::clock_ramp_t<NV>
+		this->getT(1).getT(0).getT(0).getT(1).setExternalData(b, index);                         // osc1_impl::peak2_t<NV>
+		this->getT(1).getT(0).getT(0).getT(3).getT(0).getT(1).setExternalData(b, index);         // osc1_impl::ahdsr_t<NV>
+		this->getT(1).getT(0).getT(0).getT(3).getT(1).getT(1).setExternalData(b, index);         // osc1_impl::cable_table1_t<NV>
+		this->getT(1).getT(0).getT(0).getT(4).setExternalData(b, index);                         // osc1_impl::peak7_t<NV>
+		this->getT(1).getT(0).getT(1).getT(0).getT(0).getT(1).setExternalData(b, index);         // osc1_impl::ramp4_t<NV>
+		this->getT(1).getT(0).getT(1).getT(0).getT(1).getT(0).setExternalData(b, index);         // osc1_impl::clock_ramp3_t<NV>
+		this->getT(1).getT(0).getT(1).getT(1).setExternalData(b, index);                         // osc1_impl::peak14_t<NV>
+		this->getT(1).getT(0).getT(1).getT(3).getT(0).getT(1).setExternalData(b, index);         // osc1_impl::ahdsr6_t<NV>
+		this->getT(1).getT(0).getT(1).getT(3).getT(1).getT(1).setExternalData(b, index);         // osc1_impl::cable_table8_t<NV>
+		this->getT(1).getT(0).getT(1).getT(4).setExternalData(b, index);                         // osc1_impl::peak16_t<NV>
+		this->getT(2).getT(0).getT(0).getT(0).getT(0).                                           // osc1_impl::sliderbank9_t<NV>
+        getT(0).getT(0).getT(0).getT(1).getT(0).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(0).                                           // osc1_impl::peak8_t
+        getT(0).getT(0).getT(0).getT(1).getT(3).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).                                                   // osc1_impl::table5_t
+        getT(0).getT(0).getT(3).getT(6).
         getT(2).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::ramp8_t<NV>
-        getT(0).getT(0).getT(1).getT(0).getT(1).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).                                                   // osc1_impl::peak49_t<NV>
-        getT(4).getT(0).getT(0).getT(1).
+		this->getT(2).getT(0).getT(0).getT(0).                                                   // osc1_impl::peak17_t<NV>
+        getT(0).getT(5).getT(0).getT(1).
+        getT(4).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).                                                   // osc1_impl::sliderbank10_t<NV>
+        getT(1).getT(0).getT(1).getT(0).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).                                                   // osc1_impl::oscilloscope2_t
+        getT(1).getT(0).getT(7).getT(2).
+        getT(4).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).                                                   // osc1_impl::table6_t
+        getT(1).getT(0).getT(7).getT(6).
         getT(2).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::ramp7_t<NV>
-        getT(0).getT(0).getT(2).getT(0).getT(1).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).                                                   // osc1_impl::peak48_t<NV>
-        getT(4).getT(0).getT(0).getT(2).
+		this->getT(2).getT(0).getT(0).getT(0).                                                   // osc1_impl::peak20_t<NV>
+        getT(1).getT(3).getT(0).getT(1).
+        getT(3).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(1).getT(1).setExternalData(b, index); // osc1_impl::sliderbank8_t<NV>
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).getT(3).getT(3).setExternalData(b, index); // osc1_impl::sliderbank_t<NV>
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).                                           // osc1_impl::ramp5_t<NV>
+        getT(5).getT(0).getT(0).getT(0).getT(0).
+        getT(1).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::peak15_t<NV>
+        getT(5).getT(0).getT(0).getT(0).getT(2).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::ramp8_t<NV>
+        getT(5).getT(0).getT(0).getT(1).getT(0).
+        getT(1).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::peak49_t<NV>
+        getT(5).getT(0).getT(0).getT(1).getT(2).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::ramp7_t<NV>
+        getT(5).getT(0).getT(0).getT(2).getT(0).
+        getT(1).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::peak48_t<NV>
+        getT(5).getT(0).getT(0).getT(2).getT(2).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::ramp6_t<NV>
+        getT(5).getT(0).getT(0).getT(3).getT(0).
+        getT(1).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::peak47_t<NV>
+        getT(5).getT(0).getT(0).getT(3).getT(2).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::sliderbank13_t<NV>
+        getT(5).getT(1).getT(0).getT(0).getT(0).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::peak21_t<NV>
+        getT(5).getT(1).getT(0).getT(0).getT(2).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::peak18_t<NV>
+        getT(5).getT(1).getT(0).getT(0).getT(5).
+        getT(1).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::cable_table5_t
+        getT(5).getT(1).getT(0).getT(0).getT(5).
         getT(2).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::ramp6_t<NV>
-        getT(0).getT(0).getT(3).getT(0).getT(1).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).                                                   // osc1_impl::peak47_t<NV>
-        getT(4).getT(0).getT(0).getT(3).
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::peak43_t<NV>
+        getT(5).getT(1).getT(0).getT(1).getT(1).
+        getT(1).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::cable_table9_t
+        getT(5).getT(1).getT(0).getT(1).getT(1).
+        getT(4).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::peak31_t<NV>
+        getT(5).getT(1).getT(0).getT(2).getT(1).
+        getT(1).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::cable_table7_t
+        getT(5).getT(1).getT(0).getT(2).getT(1).
         getT(2).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).                                                   // osc1_impl::sliderbank13_t<NV>
-        getT(4).getT(1).getT(0).getT(0).
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::peak29_t<NV>
+        getT(5).getT(1).getT(0).getT(3).getT(1).
+        getT(1).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::cable_table6_t
+        getT(5).getT(1).getT(0).getT(3).getT(1).
+        getT(2).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::peak45_t<NV>
+        getT(5).getT(1).getT(0).getT(4).getT(1).
+        getT(1).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::cable_table10_t
+        getT(5).getT(1).getT(0).getT(4).getT(1).
+        getT(2).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::file_player6_t<NV>
+        getT(5).getT(1).getT(1).getT(0).getT(1).
         getT(0).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).                                                   // osc1_impl::peak21_t<NV>
-        getT(4).getT(1).getT(0).getT(0).
-        getT(2).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::peak18_t<NV>
-        getT(1).getT(0).getT(0).getT(5).getT(1).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::cable_table5_t
-        getT(1).getT(0).getT(0).getT(5).getT(2).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::peak43_t<NV>
-        getT(1).getT(0).getT(1).getT(1).getT(1).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::cable_table9_t
-        getT(1).getT(0).getT(1).getT(1).getT(4).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::peak31_t<NV>
-        getT(1).getT(0).getT(2).getT(1).getT(1).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::cable_table7_t
-        getT(1).getT(0).getT(2).getT(1).getT(2).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::peak29_t<NV>
-        getT(1).getT(0).getT(3).getT(1).getT(1).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::cable_table6_t
-        getT(1).getT(0).getT(3).getT(1).getT(2).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::peak45_t<NV>
-        getT(1).getT(0).getT(4).getT(1).getT(1).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::cable_table10_t
-        getT(1).getT(0).getT(4).getT(1).getT(2).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::file_player6_t<NV>
-        getT(1).getT(1).getT(0).getT(1).getT(0).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::file_player7_t<NV>
-        getT(1).getT(1).getT(0).getT(1).getT(1).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::file_player8_t<NV>
-        getT(1).getT(1).getT(1).getT(1).getT(0).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::file_player9_t<NV>
-        getT(1).getT(1).getT(1).getT(1).getT(1).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::file_player10_t<NV>
-        getT(1).getT(1).getT(2).getT(1).getT(0).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::file_player11_t<NV>
-        getT(1).getT(1).getT(2).getT(1).getT(1).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::file_player12_t<NV>
-        getT(1).getT(1).getT(3).getT(1).getT(0).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(4).                                           // osc1_impl::file_player13_t<NV>
-        getT(1).getT(1).getT(3).getT(1).getT(1).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(2).getT(5).getT(2).getT(1).setExternalData(b, index); // osc1_impl::cable_table15_t<NV>
-		this->getT(1).getT(1).getT(0).getT(2).getT(7).setExternalData(b, index);                 // osc1_impl::peak22_t<NV>
-		this->getT(1).getT(1).getT(0).getT(3).getT(3).                                           // osc1_impl::cable_table_t<NV>
-        getT(1).getT(0).getT(0).getT(2).getT(0).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(3).getT(3).                           // osc1_impl::cable_table2_t<NV>
-        getT(1).getT(0).getT(0).getT(3).getT(0).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(3).getT(3).                           // osc1_impl::cable_table3_t<NV>
-        getT(1).getT(0).getT(0).getT(6).getT(0).
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::file_player7_t<NV>
+        getT(5).getT(1).getT(1).getT(0).getT(1).
+        getT(1).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::file_player8_t<NV>
+        getT(5).getT(1).getT(1).getT(1).getT(1).
         getT(0).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(3).getT(3).                           // osc1_impl::cable_table4_t<NV>
-        getT(1).getT(0).getT(0).getT(6).getT(1).
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::file_player9_t<NV>
+        getT(5).getT(1).getT(1).getT(1).getT(1).
+        getT(1).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::file_player10_t<NV>
+        getT(5).getT(1).getT(1).getT(2).getT(1).
         getT(0).setExternalData(b, index);
-		this->getT(1).getT(1).getT(0).getT(3).getT(4).setExternalData(b, index); // osc1_impl::peak33_t<NV>
-		this->getT(3).setExternalData(b, index);                                 // osc1_impl::oscilloscope_t
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::file_player11_t<NV>
+        getT(5).getT(1).getT(1).getT(2).getT(1).
+        getT(1).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::file_player12_t<NV>
+        getT(5).getT(1).getT(1).getT(3).getT(1).
+        getT(0).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(2).          // osc1_impl::file_player13_t<NV>
+        getT(5).getT(1).getT(1).getT(3).getT(1).
+        getT(1).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).                  // osc1_impl::cable_table15_t<NV>
+        getT(2).getT(6).getT(2).getT(1).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).                  // osc1_impl::peak22_t<NV>
+        getT(2).getT(8).getT(0).getT(1).
+        getT(4).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).                  // osc1_impl::sliderbank2_t<NV>
+        getT(3).getT(1).getT(0).getT(0).
+        getT(0).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).  // osc1_impl::cable_table_t<NV>
+        getT(0).getT(3).getT(1).getT(0).getT(0).getT(3).
+        getT(0).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).                  // osc1_impl::sliderbank1_t<NV>
+        getT(3).getT(1).getT(1).getT(0).
+        getT(0).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).getT(3).getT(1).  // osc1_impl::cable_table16_t<NV>
+        getT(1).getT(3).getT(1).getT(0).getT(0).getT(3).
+        getT(0).setExternalData(b, index);
+		this->getT(2).getT(0).getT(0).getT(0).   // osc1_impl::peak33_t<NV>
+        getT(3).getT(2).getT(0).getT(1).
+        getT(4).setExternalData(b, index);
+		this->getT(3).setExternalData(b, index); // osc1_impl::oscilloscope_t
 	}
 };
 }

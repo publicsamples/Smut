@@ -1,7 +1,7 @@
 //osc1
 
-const var OsdDp1 = Synth.getDisplayBufferSource("Osc1");
-const var rb1 = OsdDp1.getDisplayBuffer(2);
+const var OsdDp1 = Synth.getDisplayBufferSource("AHDSR Envelope1");
+const var rb1 = OsdDp1.getDisplayBuffer(0);
 
 
 const var BUFFER_LENGTH1 = 256;

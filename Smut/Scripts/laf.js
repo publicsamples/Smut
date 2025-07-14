@@ -136,8 +136,12 @@ const var EnvButtons = [Content.getComponent("EnvMode1"),
 for(s in EnvButtons)
       s.setLocalLookAndFeel(LAF_Button);  
       
+      const var UniDelSync = Content.getComponent("UniDelSync");
+      
+      
+      
 const var MiscButtons = [Content.getComponent("LpHpCt"),
-                         Content.getComponent("ScriptButton1")];
+						Content.getComponent("UniDelSync")];
 
  
  for(s in MiscButtons)

@@ -105,6 +105,8 @@ for (file in AudioList) {
 
 
    FirstCB.set("items", foldersV1.join("\n"));
+   FirstSp.set("items", foldersV1.join("\n"));
+
 }
 
 

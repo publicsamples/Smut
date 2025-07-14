@@ -13,7 +13,7 @@
   <OSXStaticLibs value=""/>
   <WindowsStaticLibFolder value=""/>
   <ExtraDefinitionsWindows value=""/>
-  <ExtraDefinitionsOSX value=""/>
+  <ExtraDefinitionsOSX value="&#10;USE_IPP=0"/>
   <ExtraDefinitionsIOS value=""/>
   <ExtraDefinitionsLinux value=""/>
   <AppGroupID value=""/>

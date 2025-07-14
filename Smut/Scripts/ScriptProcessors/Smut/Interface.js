@@ -1,7 +1,6 @@
-Content.makeFrontInterface(900, 910);
+;Content.makeFrontInterface(880, 880);
 
 Engine.loadFontAs("{PROJECT_FOLDER}Montserrat-Medium.ttf", "mon");
-
 
 const var Smut = Synth.getChildSynth("Smut");
 
@@ -18,30 +17,34 @@ include("Loading.js");
 include("V1.js");
 
 
-
-
 inline function onHiQControl(component, value)
 {
 
 	if (value == 1){
 		
-	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 8);
-	Engine.setMaximumBlockSize(256);
+	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 6);
+
 	}
 	
 	if (value == 2){
 			
-	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 8);
-	Engine.setMaximumBlockSize(64);
+	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 6);
+	
 		}
 	
 	if (value == 3){
 			
-	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 8);
-	Engine.setMaximumBlockSize(16);
+	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 4);
+
 		}
 	
-	
+	if (value == 4){
+			
+	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 1);
+
+		}	
+		
+
 };
 
 Content.getComponent("HiQ").setControlCallback(onHiQControl);
@@ -50,7 +53,7 @@ Content.getComponent("HiQ").setControlCallback(onHiQControl);
 
 const var Filter1 = Synth.getEffect("Osc1");
 
-Settings.setZoomLevel(0.8);
+Settings.setZoomLevel(1);
 
 
 //Voice Pages
@@ -81,25 +84,31 @@ const var rm = Engine.getGlobalRoutingManager();
 const var Files = Content.getComponent("Files");
 
 
+//Tabs
 
-/// MOD
+const var NUM_BUTTONS = 6;
+const var buttons = [];
+const var panels = [];
 
-const var ModPages =[];
-
-ModPages[0] = Content.getComponent("lfo1");
-ModPages[1] = Content.getComponent("lfo2");
-ModPages[2] = Content.getComponent("lfo3");
-ModPages[3] = Content.getComponent("lfo4");
-ModPages[4] = Content.getComponent("Env1");
-
-
-inline function onModSelectControl(component, value)
+for (i = 0; i < NUM_BUTTONS; i++)
 {
-	  for (i = 0; i < ModPages.length; i++)
-        ModPages[i].showControl(value - 1 == i);
-};
+    buttons[i] = Content.getComponent("Button" + (i+1));
+    panels[i] = Content.getComponent("lfo" + (i+1));
+    buttons[i].setControlCallback(onButtonControl);
+}
 
-Content.getComponent("ModSelect").setControlCallback(onModSelectControl);
+inline function onButtonControl(component, value)
+{
+	local idx = buttons.indexOf(component);
+		
+	for (i = 0; i < panels.length; i++)
+    {
+        panels[i].showControl(idx == i);
+        buttons[i].setValue(i == idx && value);
+    }
+}
+
+onButtonControl(buttons[0], true);
 
 
 
@@ -479,15 +488,6 @@ inline function populatePresetsMenu()
 	}
 }
 
-
-const var Verb = Content.getComponent("Verb");
-
-inline function onShowVerbControl(component, value)
-{
-	Verb.showControl(value);
-};
-
-Content.getComponent("ShowVerb").setControlCallback(onShowVerbControl);
 
 
 

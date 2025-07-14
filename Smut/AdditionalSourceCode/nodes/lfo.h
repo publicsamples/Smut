@@ -387,6 +387,15 @@ using pma3_mod_5 = parameter::from0To1<core::smoother<NV>,
 
 template <int NV> using pma3_mod_6 = xfader_c0<NV>;
 
+DECLARE_PARAMETER_RANGE_SKEW(pma3_mod_7Range, 
+                             0., 
+                             1000., 
+                             0.30103);
+
+using pma3_mod_7 = parameter::from0To1<core::fix_delay, 
+                                       0, 
+                                       pma3_mod_7Range>;
+
 template <int NV>
 using pma3_mod = parameter::chain<ranges::Identity, 
                                   parameter::plain<pma4_t<NV>, 2>, 
@@ -395,7 +404,8 @@ using pma3_mod = parameter::chain<ranges::Identity,
                                   pma3_mod_3<NV>, 
                                   pma3_mod_4<NV>, 
                                   pma3_mod_5<NV>, 
-                                  pma3_mod_6<NV>>;
+                                  pma3_mod_6<NV>, 
+                                  pma3_mod_7>;
 
 template <int NV>
 using pma3_t = control::pma<NV, pma3_mod<NV>>;
@@ -779,10 +789,15 @@ using chain18_t = container::chain<parameter::empty,
                                    math::rect<NV>>;
 template <int NV>
 using oscillator_t = wrap::no_data<core::oscillator<NV>>;
+template <int NV>
+using branch6_t = container::branch<parameter::empty, 
+                                    wrap::fix<1, fx::sampleandhold<NV>>, 
+                                    fx::sampleandhold<NV>>;
 
 template <int NV>
 using chain31_t = container::chain<parameter::empty, 
                                    wrap::fix<1, oscillator_t<NV>>, 
+                                   branch6_t<NV>, 
                                    math::sig2mod<NV>>;
 
 template <int NV>
@@ -820,13 +835,13 @@ using chain74_t = container::chain<parameter::empty,
                                    wrap::no_process<math::sig2mod<NV>>, 
                                    wrap::no_process<math::sin<NV>>>;
 template <int NV>
-using branch6_t = container::branch<parameter::empty, 
-                                    wrap::fix<1, fx::sampleandhold<NV>>, 
-                                    fx::sampleandhold<NV>>;
+using mono_cable = cable::block<NV, 1>;
 
 template <int NV>
 using chain22_t = container::chain<parameter::empty, 
-                                   wrap::fix<1, branch6_t<NV>>, 
+                                   wrap::fix<1, routing::receive<NV, mono_cable<NV>>>, 
+                                   core::fix_delay, 
+                                   routing::send<NV, mono_cable<NV>>, 
                                    core::gain<NV>, 
                                    wrap::no_process<math::sig2mod<NV>>, 
                                    wrap::no_process<math::sin<NV>>>;
@@ -1414,46 +1429,53 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 		
 		SNEX_METADATA_ID(lfo);
 		SNEX_METADATA_NUM_CHANNELS(2);
-		SNEX_METADATA_ENCODED_PARAMETERS(300)
+		SNEX_METADATA_ENCODED_PARAMETERS(310)
 		{
-			0x005B, 0x0000, 0x7400, 0x6D65, 0x6F70, 0x0000, 0x0000, 0x0000, 
-            0x9000, 0x0041, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x5B3F, 
-            0x0001, 0x0000, 0x6544, 0x7473, 0x0000, 0x0000, 0x0000, 0x4000, 
-            0x0040, 0x4000, 0x0040, 0x8000, 0x003F, 0x8000, 0x5B3F, 0x0002, 
-            0x0000, 0x6A41, 0x7375, 0x4D74, 0x646F, 0x0065, 0x0000, 0x3F80, 
-            0x0000, 0x40E0, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 
-            0x035B, 0x0000, 0x4300, 0x6B6C, 0x0000, 0x0000, 0x0000, 0x8000, 
-            0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0004, 
-            0x0000, 0x6944, 0x0076, 0x0000, 0x3F80, 0x0000, 0x4200, 0x0000, 
-            0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x055B, 0x0000, 0x4700, 
-            0x7461, 0x0065, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 
-            0x0000, 0x3F80, 0x0000, 0x3F80, 0x065B, 0x0000, 0x4100, 0x6A64, 
-            0x7375, 0x0074, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F00, 
-            0x0000, 0x3F80, 0x0000, 0x0000, 0x075B, 0x0000, 0x5300, 0x6168, 
-            0x6570, 0x0000, 0x8000, 0x003F, 0xE000, 0x0040, 0x8000, 0x003F, 
-            0x8000, 0x003F, 0x8000, 0x5B3F, 0x0008, 0x0000, 0x694D, 0x006E, 
-            0x0000, 0x41C0, 0x0000, 0x42C0, 0x0000, 0x41C0, 0x0000, 0x3F80, 
-            0x0000, 0x3F80, 0x095B, 0x0000, 0x4D00, 0x7861, 0x0000, 0xC000, 
-            0x0041, 0xC000, 0x0042, 0xC000, 0x0042, 0x8000, 0x003F, 0x0000, 
-            0x5B00, 0x000A, 0x0000, 0x7453, 0x7065, 0x0000, 0x0000, 0x0000, 
-            0x4000, 0x0041, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5B00, 
-            0x000B, 0x0000, 0x6554, 0x706D, 0x4D6F, 0x646F, 0x0000, 0x8000, 
+			0x005C, 0x0000, 0x0000, 0x6574, 0x706D, 0x006F, 0x0000, 0x0000, 
+            0x0000, 0x4190, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x005C, 0x0001, 0x0000, 0x6544, 0x7473, 0x0000, 0x0000, 0x0000, 
+            0x4000, 0x0040, 0x4000, 0x0040, 0x8000, 0x003F, 0x8000, 0x5C3F, 
+            0x0200, 0x0000, 0x4100, 0x756A, 0x7473, 0x6F4D, 0x6564, 0x0000, 
+            0x8000, 0x003F, 0xE000, 0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 
+            0x8000, 0x5C3F, 0x0300, 0x0000, 0x4300, 0x6B6C, 0x0000, 0x0000, 
+            0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 
+            0x5C00, 0x0400, 0x0000, 0x4400, 0x7669, 0x0000, 0x8000, 0x003F, 
+            0x0000, 0x0042, 0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 
+            0x0500, 0x0000, 0x4700, 0x7461, 0x0065, 0x0000, 0x0000, 0x0000, 
+            0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
+            0x0006, 0x0000, 0x6441, 0x756A, 0x7473, 0x0000, 0x0000, 0x0000, 
+            0x8000, 0x003F, 0x0000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 
+            0x0700, 0x0000, 0x5300, 0x6168, 0x6570, 0x0000, 0x8000, 0x003F, 
+            0xE000, 0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 
+            0x0800, 0x0000, 0x4D00, 0x6E69, 0x0000, 0xC000, 0x0041, 0xC000, 
+            0x0042, 0xC000, 0x0041, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x0900, 
+            0x0000, 0x4D00, 0x7861, 0x0000, 0xC000, 0x0041, 0xC000, 0x0042, 
+            0xC000, 0x0042, 0x8000, 0x003F, 0x0000, 0x5C00, 0x0A00, 0x0000, 
+            0x5300, 0x6574, 0x0070, 0x0000, 0x0000, 0x0000, 0x4140, 0x0000, 
+            0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x000B, 0x0000, 
+            0x6554, 0x706D, 0x4D6F, 0x646F, 0x0000, 0x8000, 0x00BF, 0x8000, 
+            0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x0C00, 
+            0x0000, 0x4100, 0x6A64, 0x6F4D, 0x0064, 0x0000, 0xBF80, 0x0000, 
+            0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 
+            0x000D, 0x0000, 0x6147, 0x6574, 0x6F4D, 0x0064, 0x0000, 0x0000, 
+            0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x005C, 0x000E, 0x0000, 0x6944, 0x4D76, 0x646F, 0x0000, 0x8000, 
             0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 
-            0x5B00, 0x000C, 0x0000, 0x6441, 0x4D6A, 0x646F, 0x0000, 0x8000, 
-            0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 
-            0x5B00, 0x000D, 0x0000, 0x6147, 0x6574, 0x6F4D, 0x0064, 0x0000, 
-            0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
-            0x3F80, 0x0E5B, 0x0000, 0x4400, 0x7669, 0x6F4D, 0x0064, 0x0000, 
-            0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
-            0x0000, 0x0F5B, 0x0000, 0x7400, 0x6D65, 0x6F70, 0x7253, 0x0063, 
+            0x5C00, 0x0F00, 0x0000, 0x7400, 0x6D65, 0x6F70, 0x7253, 0x0063, 
             0x0000, 0x3F80, 0x0000, 0x40C0, 0x0000, 0x3F80, 0x0000, 0x3F80, 
-            0x0000, 0x0000, 0x105B, 0x0000, 0x4100, 0x6A64, 0x7253, 0x0063, 
-            0x0000, 0x3F80, 0x0000, 0x40C0, 0x0000, 0x3F80, 0x0000, 0x3F80, 
-            0x0000, 0x0000, 0x115B, 0x0000, 0x4700, 0x7461, 0x5365, 0x6372, 
-            0x0000, 0x8000, 0x003F, 0xA000, 0x0040, 0x8000, 0x003F, 0x8000, 
-            0x003F, 0x0000, 0x5B00, 0x0012, 0x0000, 0x6944, 0x7376, 0x6372, 
+            0x0000, 0x0000, 0x005C, 0x0010, 0x0000, 0x6441, 0x536A, 0x6372, 
             0x0000, 0x8000, 0x003F, 0xC000, 0x0040, 0x8000, 0x003F, 0x8000, 
-            0x003F, 0x0000, 0x0000, 0x0000
+            0x003F, 0x0000, 0x5C00, 0x1100, 0x0000, 0x4700, 0x7461, 0x5365, 
+            0x6372, 0x0000, 0x8000, 0x003F, 0xA000, 0x0040, 0x8000, 0x003F, 
+            0x8000, 0x003F, 0x0000, 0x5C00, 0x1200, 0x0000, 0x4400, 0x7669, 
+            0x7273, 0x0063, 0x0000, 0x3F80, 0x0000, 0x40C0, 0x0000, 0x3F80, 
+            0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x0000
+		};
+		SNEX_METADATA_ENCODED_MOD_INFO(17)
+		{
+			0x003A, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+            0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+            0x0000
 		};
 	};
 	
@@ -1771,7 +1793,12 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 		auto& rect3 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(3).getT(1);         // math::rect<NV>
 		auto& chain31 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(4);               // lfo_impl::chain31_t<NV>
 		auto& oscillator = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(4).getT(0);    // lfo_impl::oscillator_t<NV>
-		auto& sig2mod1 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(4).getT(1);      // math::sig2mod<NV>
+		auto& branch6 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(4).getT(1);       // lfo_impl::branch6_t<NV>
+		auto& sampleandhold = this->getT(1).getT(0).getT(1).getT(2).                         // fx::sampleandhold<NV>
+                              getT(0).getT(4).getT(1).getT(0);
+		auto& sampleandhold2 = this->getT(1).getT(0).getT(1).getT(2).                        // fx::sampleandhold<NV>
+                               getT(0).getT(4).getT(1).getT(1);
+		auto& sig2mod1 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(4).getT(2);      // math::sig2mod<NV>
 		auto& chain32 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(5);               // lfo_impl::chain32_t<NV>
 		auto& clear1 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(5).getT(0);        // wrap::no_process<math::clear<NV>>
 		auto& input_toggle = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(5).getT(1);  // lfo_impl::input_toggle_t<NV>
@@ -1792,31 +1819,29 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 		auto& sig2mod5 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(1).getT(1);      // wrap::no_process<math::sig2mod<NV>>
 		auto& sin13 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(1).getT(2);         // wrap::no_process<math::sin<NV>>
 		auto& chain22 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(2);               // lfo_impl::chain22_t<NV>
-		auto& branch6 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(2).getT(0);       // lfo_impl::branch6_t<NV>
-		auto& sampleandhold = this->getT(1).getT(0).getT(1).getT(2).                         // fx::sampleandhold<NV>
-                              getT(2).getT(2).getT(0).getT(0);
-		auto& sampleandhold2 = this->getT(1).getT(0).getT(1).getT(2).                   // fx::sampleandhold<NV>
-                               getT(2).getT(2).getT(0).getT(1);
-		auto& gain = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(2).getT(1);     // core::gain<NV>
-		auto& sig2mod2 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(2).getT(2); // wrap::no_process<math::sig2mod<NV>>
-		auto& sin4 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(2).getT(3);     // wrap::no_process<math::sin<NV>>
-		auto& chain26 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(3);          // lfo_impl::chain26_t<NV>
-		auto& gain37 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(3).getT(0);   // core::gain<NV>
-		auto& pi5 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(3).getT(1);      // math::pi<NV>
-		auto& fmod2 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(3).getT(2);    // math::fmod<NV>
-		auto& chain65 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(4);          // lfo_impl::chain65_t<NV>
-		auto& expr4 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(4).getT(0);    // math::expr<NV, custom::expr4>
-		auto& chain27 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(5);          // lfo_impl::chain27_t<NV>
-		auto& sin = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(5).getT(0);      // wrap::no_process<math::sin<NV>>
-		auto& expr1 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(5).getT(1);    // math::expr<NV, custom::expr1>
-		auto& chain56 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(6);          // lfo_impl::chain56_t<NV>
-		auto& expr2 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(6).getT(0);    // math::expr<NV, custom::expr2>
-		auto& peak11 = this->getT(1).getT(0).getT(1).getT(2).getT(3);                   // lfo_impl::peak11_t
-		auto& branch = this->getT(1).getT(0).getT(1).getT(2).getT(4);                   // lfo_impl::branch_t<NV>
-		auto& chain = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(0);            // lfo_impl::chain_t<NV>
-		auto& peak1 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(0).getT(0);    // lfo_impl::peak1_t<NV>
-		auto& split = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(0).getT(1);    // lfo_impl::split_t<NV>
-		auto& chain4 = this->getT(1).getT(0).getT(1).getT(2).                           // lfo_impl::chain4_t
+		auto& receive = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(2).getT(0);       // routing::receive<NV, mono_cable<NV>>
+		auto& fix_delay = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(2).getT(1);     // core::fix_delay
+		auto& send = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(2).getT(2);          // routing::send<NV, mono_cable<NV>>
+		auto& gain = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(2).getT(3);          // core::gain<NV>
+		auto& sig2mod2 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(2).getT(4);      // wrap::no_process<math::sig2mod<NV>>
+		auto& sin4 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(2).getT(5);          // wrap::no_process<math::sin<NV>>
+		auto& chain26 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(3);               // lfo_impl::chain26_t<NV>
+		auto& gain37 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(3).getT(0);        // core::gain<NV>
+		auto& pi5 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(3).getT(1);           // math::pi<NV>
+		auto& fmod2 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(3).getT(2);         // math::fmod<NV>
+		auto& chain65 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(4);               // lfo_impl::chain65_t<NV>
+		auto& expr4 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(4).getT(0);         // math::expr<NV, custom::expr4>
+		auto& chain27 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(5);               // lfo_impl::chain27_t<NV>
+		auto& sin = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(5).getT(0);           // wrap::no_process<math::sin<NV>>
+		auto& expr1 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(5).getT(1);         // math::expr<NV, custom::expr1>
+		auto& chain56 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(6);               // lfo_impl::chain56_t<NV>
+		auto& expr2 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(6).getT(0);         // math::expr<NV, custom::expr2>
+		auto& peak11 = this->getT(1).getT(0).getT(1).getT(2).getT(3);                        // lfo_impl::peak11_t
+		auto& branch = this->getT(1).getT(0).getT(1).getT(2).getT(4);                        // lfo_impl::branch_t<NV>
+		auto& chain = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(0);                 // lfo_impl::chain_t<NV>
+		auto& peak1 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(0).getT(0);         // lfo_impl::peak1_t<NV>
+		auto& split = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(0).getT(1);         // lfo_impl::split_t<NV>
+		auto& chain4 = this->getT(1).getT(0).getT(1).getT(2).                                // lfo_impl::chain4_t
                        getT(4).getT(0).getT(1).getT(0);
 		auto& global_cable = this->getT(1).getT(0).getT(1).getT(2).                    // routing::global_cable<global_cable_t_index, parameter::empty>
                              getT(4).getT(0).getT(1).getT(0).
@@ -2139,6 +2164,7 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 		pma3.getWrappedObject().getParameter().connectT(4, expr2);           // pma3 -> expr2::Value
 		pma3.getWrappedObject().getParameter().connectT(5, smoother1);       // pma3 -> smoother1::SmoothingTime
 		pma3.getWrappedObject().getParameter().connectT(6, gain);            // pma3 -> gain::Gain
+		pma3.getWrappedObject().getParameter().connectT(7, fix_delay);       // pma3 -> fix_delay::DelayTime
 		peak8.getParameter().connectT(0, pma3);                              // peak8 -> pma3::Value
 		auto& xfader1_p = xfader1.getWrappedObject().getParameter();
 		xfader1_p.getParameterT(0).connectT(0, gain28);                      // xfader1 -> gain28::Gain
@@ -2199,6 +2225,10 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 		minmax8.getWrappedObject().getParameter().connectT(0, chain182);        // minmax8 -> chain182::note
 		change13.getWrappedObject().getParameter().connectT(0, minmax8);        // change13 -> minmax8::Value
 		peak24.getParameter().connectT(0, change13);                            // peak24 -> change13::Value
+		
+		// Send Connections ------------------------------------------------------------------------
+		
+		send.connect(receive);
 		
 		// Default Values --------------------------------------------------------------------------
 		
@@ -2452,6 +2482,12 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 		oscillator.setParameterT(4, 0.);   // core::oscillator::Phase
 		oscillator.setParameterT(5, 1.);   // core::oscillator::Gain
 		
+		; // branch6::Index is automated
+		
+		; // sampleandhold::Counter is automated
+		
+		; // sampleandhold2::Counter is automated
+		
 		sig2mod1.setParameterT(0, 0.); // math::sig2mod::Value
 		
 		clear1.setParameterT(0, 0.); // math::clear::Value
@@ -2491,11 +2527,10 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 		
 		sin13.setParameterT(0, 1.); // math::sin::Value
 		
-		; // branch6::Index is automated
+		receive.setParameterT(0, 0.752863); // routing::receive::Feedback
 		
-		; // sampleandhold::Counter is automated
-		
-		; // sampleandhold2::Counter is automated
+		;                                 // fix_delay::DelayTime is automated
+		fix_delay.setParameterT(1, 512.); // core::fix_delay::FadeTime
 		
 		;                           // gain::Gain is automated
 		gain.setParameterT(1, 20.); // core::gain::Smoothing
