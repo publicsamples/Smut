@@ -324,10 +324,7 @@
     </Processor>
     <Processor Type="EffectChain" ID="FX" Bypassed="0">
       <ChildProcessors>
-        <Processor Type="Hardcoded Master FX" ID="Verb" Bypassed="1" Network="Revern"
-                   Mix="0.6200000047683716" Size="2.369999885559082" Time="0.1609999984502792"
-                   Damp="0.4900000095367432" Diffuse="0.5" Feedbk="0.3300000131130219"
-                   Depth="0.1000000014901161" Freq="0.0">
+        <Processor Type="Hardcoded Master FX" ID="Verb" Bypassed="1" Network="">
           <ChildProcessors/>
           <RoutingMatrix NumSourceChannels="2" Channel0="0" Send0="-1" Channel1="1" Send1="-1"/>
         </Processor>
@@ -397,77 +394,21 @@
         </Processor>
         <Processor Type="EffectChain" ID="FX" Bypassed="0">
           <ChildProcessors>
-            <Processor Type="Hardcoded Master FX" ID="LFO1" Bypassed="0" Network="lfo"
-                       tempo="5.0" Dest="0.0" AjustMode="1.0" Clk="0.0" Div="1.0" Gate="0.0"
-                       Adjust="1.0" Shape="1.0" Min="0.0" Max="0.0" Step="0.0" TempoMod="0.0"
-                       AdjMod="0.0" GateMod="0.0" DivMod="0.0" tempoSrc="0.0" AdjSrc="1.0"
-                       GateSrc="0.0" Divsrc="0.0">
+            <Processor Type="Hardcoded Master FX" ID="LFO1" Bypassed="0" Network="">
               <ChildProcessors/>
               <RoutingMatrix NumSourceChannels="2" Channel0="0" Send0="-1" Channel1="1" Send1="-1"/>
-              <Tables>
-                <Table EmbeddedData=""/>
-                <Table EmbeddedData=""/>
-              </Tables>
-              <SliderPacks>
-                <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
-                <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
-                <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
-                <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
-              </SliderPacks>
             </Processor>
-            <Processor Type="Hardcoded Master FX" ID="LFO2" Bypassed="0" Network="lfo"
-                       tempo="0.0" Dest="1.0" AjustMode="1.0" Clk="0.0" Div="5.0" Gate="0.0"
-                       Adjust="1.0" Shape="1.0" Min="24.0" Max="96.0" Step="0.0" TempoMod="0.0"
-                       AdjMod="0.0" GateMod="1.0" DivMod="0.0" tempoSrc="1.0" AdjSrc="1.0"
-                       GateSrc="5.0" Divsrc="1.0">
+            <Processor Type="Hardcoded Master FX" ID="LFO2" Bypassed="0" Network="">
               <ChildProcessors/>
               <RoutingMatrix NumSourceChannels="2" Channel0="0" Send0="-1" Channel1="1" Send1="-1"/>
-              <Tables>
-                <Table EmbeddedData=""/>
-                <Table EmbeddedData=""/>
-              </Tables>
-              <SliderPacks>
-                <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
-                <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
-                <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
-                <SliderPack EmbeddedData="64...........viBW2O...f+...........ov0C+jBWO7C6QgaOMyLS+rGEt8C..........zLyL6C.....gqGU+."/>
-              </SliderPacks>
             </Processor>
-            <Processor Type="Hardcoded Master FX" ID="LFO3" Bypassed="0" Network="lfo"
-                       tempo="3.0" Dest="2.0" AjustMode="4.0" Clk="0.0" Div="17.0" Gate="0.0"
-                       Adjust="0.1500000059604645" Shape="3.0" Min="24.0" Max="96.0"
-                       Step="0.0" TempoMod="0.0" AdjMod="0.0" GateMod="0.0" DivMod="0.0"
-                       tempoSrc="1.0" AdjSrc="1.0" GateSrc="1.0" Divsrc="1.0">
+            <Processor Type="Hardcoded Master FX" ID="LFO3" Bypassed="0" Network="">
               <ChildProcessors/>
               <RoutingMatrix NumSourceChannels="2" Channel0="0" Send0="-1" Channel1="1" Send1="-1"/>
-              <Tables>
-                <Table EmbeddedData=""/>
-                <Table EmbeddedData="60..........9C...vOBrxA+XlYl6StdT1Oamue+.....POJb2Oamue+.........vO...f+.........vO"/>
-              </Tables>
-              <SliderPacks>
-                <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
-                <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
-                <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
-                <SliderPack EmbeddedData="64.Rgqm9zLyL6y0iBuOtdT39jBWO5CtdTnOrGEt9zLyL6C...3Ob8nP+v0iB6C...nOov0i9vdT33y0iByO...f+."/>
-              </SliderPacks>
             </Processor>
-            <Processor Type="Hardcoded Master FX" ID="LFO4" Bypassed="0" Network="lfo"
-                       tempo="14.0" Dest="3.0" AjustMode="1.0" Clk="0.0" Div="5.0" Gate="0.0"
-                       Adjust="1.0" Shape="0.0" Min="24.0" Max="96.0" Step="0.0" TempoMod="0.0"
-                       AdjMod="0.0" GateMod="0.0" DivMod="0.0" tempoSrc="1.0" AdjSrc="1.0"
-                       GateSrc="1.0" Divsrc="1.0">
+            <Processor Type="Hardcoded Master FX" ID="LFO4" Bypassed="0" Network="">
               <ChildProcessors/>
               <RoutingMatrix NumSourceChannels="2" Channel0="0" Send0="-1" Channel1="1" Send1="-1"/>
-              <Tables>
-                <Table EmbeddedData=""/>
-                <Table EmbeddedData="48..........9C...vO246G+LyLC7CJb8vOHEtd+......EtdxO...f+.........vO"/>
-              </Tables>
-              <SliderPacks>
-                <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
-                <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
-                <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
-                <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
-              </SliderPacks>
             </Processor>
           </ChildProcessors>
         </Processor>
@@ -495,111 +436,9 @@
         </Processor>
         <Processor Type="EffectChain" ID="FX" Bypassed="0">
           <ChildProcessors>
-            <Processor Type="HardcodedPolyphonicFX" ID="Osc1" Bypassed="0" Network="osc1"
-                       Pitch="3.576278686523438e-7" tempo="6.0" div="1.0" pitchmode="1.0"
-                       step="0.0" OsMix="1.0" PitchMod="0.0" OscMixMod="0.0" Input1="0.0"
-                       InMod1="0.0" Tempo2="0.0" MidiSlotPitch="1.0" Width2="1.0" Width2Mod="0.0"
-                       Bend2="20.0" Bend="20.0" Shape2="1.0" Shape="2.0" WidhMod="0.9200000166893005"
-                       Width="0.0" MidiWidth2="1.0" MidiWidth="1.0" PositionMod="0.119999997317791"
-                       Position="0.3899999856948853" QuantisePositiion="1.0" PosSmooth="327.0"
-                       FilePitch="7.600000381469727" PtichShiftOn="1.0" FilePitchMod="0.0"
-                       PitchWin="3618.56005859375" WinMod="0.0" Pan2="0.0" Pan2Mod="0.0"
-                       FileUser="0.0" FileMidiPitch="1.0" FileMidipos2="1.0" FileWinPk="1.0"
-                       FileMidiwindow="1.0" FileMidiInput="1.0" Q="0.7799999713897705"
-                       FilterMix="1.0" FilterMod="0.0" Cut1="20.0" Cut1Mod="0.0" Cut2="20.0"
-                       Cut2Mod="0.0" FilterMidiMix="1.0" FilterMidiCut1="1.0" FilterMidiCut2="6.0"
-                       FilterOsc="1.0" Osc2Filter2="1.0" osc2Gain="0.800000011920929"
-                       PreFilterGain="1.490116119384766e-6" FilterMode="1.0" q2="0.0"
-                       a1="0.0" h1="0.0" d1="2672.0" s1="0.0" r1="7039.0" a2="208.0"
-                       h2="554.0" d2="18.0" s2="0.09000000357627869" r2="0.0" EnvClock1="0.0"
-                       EnvClock12="0.0" EnvTempo1="0.0" EnvTempo2="4.0" EnvDiv="1.0"
-                       EnvTrigIn1="0.0" EnvTrigIn2="1.0" EnvType1="0.0" EnvType2="0.0"
-                       PitchPkModSrc1="3.0" Pitch2Midi="1.0" Pitch2PkModSrc="1.0" InSrcOsc1="3.0"
-                       InSrcOsc2="1.0" FileInOsc1="1.0" FileInOsc2="0.8685312271118164"
-                       FilerInOsc1="1.0" FilterInOSc2="0.0" FilterInFile="1.0" OscMixPkIn="1.0"
-                       OscInput2="0.0" Osc2InMod="0.0" OscInPeak="3.0" OscInPEak2="1.0"
-                       Osc2Mid="1.0" OscWidthPk="4.0" OscWidthPk2="1.0" FileMidPk="1.0"
-                       FileInPk="1.0" FileXrossFade="0.0" FileXrossFadeMod="0.0" FileXrossFadePk="1.0"
-                       FileXrossFadeMode="1.0" FileXrossFadeMidi="1.0" FilePitchPk="1.0"
-                       Gain="0.0" GainMod="0.0" PAn="-0.03999999910593033" PanMod="0.0"
-                       CutPK="3.0" Cut2Pk="3.0" GainMidi="6.0" GainPk="1.0" PanMidi="1.0"
-                       PanPk="1.0" FilterMixPk="1.0" GainA="0.0" GainH="0.0" GainD="1.0"
-                       GainS="1.0" GainR="1.0" feed="1.0" FileIn="0.0" OscsOut="0.0"
-                       Pitch2="-15.89999961853027" Pitch2Mod="0.0" Input1Midi="1.0"
-                       _1pMod="1.0" EnvDiv2="3.0" PosAMod="0.0" PosA="0.3300000131130219"
-                       PosB="0.6399999856948853" PosBmod="0.0" PosC="0.1599999964237213"
-                       PosCMod="0.0" PosD="0.0" PosDMod="0.0" EnvOS1="0.0" EnvOS2="0.2431640625"
-                       RampTempo1="0.0" RampTempo2="0.0" RampDiv1="1.0" RampDiv2="8.0"
-                       RampInv1="0.0" RampInv2="0.0" RampTemo3="0.0" RampTempo4="0.0"
-                       RampDiv3="4.0" RampDiv4="2.0" RampInv3="0.0" RampInv4="0.0" RampOS1="0.0"
-                       RampOS2="0.0" RampOS3="0.0" RampOS4="0.0" PitchMode2="1.0" FilterMix2="0.8600000143051147"
-                       FilterMode2="2.0" FinputMasterGain="0.4878566563129425" FileInMaster="0.63620924949646"
-                       Fmix="1.0" Step2="0.0" OscPeakSmooth1="1.0" OscPeakSmooth2="1.0"
-                       FilePeakSmooth1="1.0" FilPeakSmooth1="1.0" OscPeakSH1="1.0" FilePeakSH1="1.0"
-                       FilPeakSH1="1.0" OscPeakSHtempo1="1.0" OscPeakSHtempo2="1.0"
-                       FilePeakSHtempo="1.0" FilPeakSHtempo="1.0" OscPeakSH2="0.0" WtIn="0.0">
+            <Processor Type="HardcodedPolyphonicFX" ID="Osc1" Bypassed="0" Network="">
               <ChildProcessors/>
               <RoutingMatrix NumSourceChannels="2" Channel0="0" Send0="-1" Channel1="1" Send1="-1"/>
-              <Tables>
-                <Table EmbeddedData=""/>
-                <Table EmbeddedData=""/>
-                <Table EmbeddedData=""/>
-                <Table EmbeddedData=""/>
-                <Table EmbeddedData=""/>
-                <Table EmbeddedData=""/>
-                <Table EmbeddedData=""/>
-                <Table EmbeddedData=""/>
-                <Table EmbeddedData=""/>
-                <Table EmbeddedData=""/>
-                <Table EmbeddedData=""/>
-                <Table EmbeddedData=""/>
-                <Table EmbeddedData=""/>
-              </Tables>
-              <SliderPacks>
-                <SliderPack EmbeddedData="32............................................"/>
-                <SliderPack EmbeddedData="32............................................"/>
-                <SliderPack EmbeddedData="32............................................"/>
-                <SliderPack EmbeddedData="32............................................"/>
-                <SliderPack EmbeddedData="32............................................"/>
-                <SliderPack EmbeddedData="32..........9C................................"/>
-                <SliderPack EmbeddedData="32............................................"/>
-                <SliderPack EmbeddedData="32....f+......................................"/>
-                <SliderPack EmbeddedData="32............................................"/>
-                <SliderPack EmbeddedData="32............................................"/>
-                <SliderPack EmbeddedData="32............................................"/>
-                <SliderPack EmbeddedData="32............................................"/>
-                <SliderPack EmbeddedData="32............................................"/>
-                <SliderPack EmbeddedData="32............................................"/>
-                <SliderPack EmbeddedData="32............................................"/>
-                <SliderPack EmbeddedData="32............................................"/>
-                <SliderPack EmbeddedData="32............................................"/>
-                <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
-                <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
-                <SliderPack EmbeddedData="16....f+....9C...3O...f+."/>
-                <SliderPack EmbeddedData="16.MyLS+................."/>
-                <SliderPack EmbeddedData="12.HEtN+rGEt8CRgq2O"/>
-                <SliderPack EmbeddedData="16.gqGU+XOJb6yLyLqO...f+."/>
-                <SliderPack EmbeddedData="16......................."/>
-                <SliderPack EmbeddedData="16....f+................."/>
-              </SliderPacks>
-              <AudioFiles>
-                <AudioFile EmbeddedData="{PROJECT_FOLDER}Single Cycle/Synths1/202-11.wav"
-                           MinValue="0" MaxValue="256"/>
-                <AudioFile EmbeddedData="{PROJECT_FOLDER}Single Cycle/Drawn/AD-Draw2.wav"
-                           MinValue="0" MaxValue="437"/>
-                <AudioFile EmbeddedData="{PROJECT_FOLDER}Single Cycle/Drawn/amp1.wav" MinValue="0"
-                           MaxValue="128"/>
-                <AudioFile EmbeddedData="{PROJECT_FOLDER}Single Cycle/Synths2/Synth16.WAV"
-                           MinValue="0" MaxValue="4096"/>
-                <AudioFile EmbeddedData="/Users/rick/Documents/GitHub/Shapey/AudioFiles/Wavetables/1024/03_1024.wav"
-                           MinValue="0" MaxValue="0"/>
-                <AudioFile EmbeddedData="/Users/rick/Documents/GitHub/Shapey/AudioFiles/Wavetables/1024/03_1024.wav"
-                           MinValue="0" MaxValue="0"/>
-                <AudioFile EmbeddedData="/Users/rick/Documents/GitHub/Shapey/AudioFiles/Wavetables/1024/03_1024.wav"
-                           MinValue="0" MaxValue="0"/>
-                <AudioFile EmbeddedData="/Users/rick/Documents/GitHub/Shapey/AudioFiles/Wavetables/1024/03_1024.wav"
-                           MinValue="0" MaxValue="0"/>
-              </AudioFiles>
             </Processor>
             <Processor Type="PolyScriptFX" ID="AHDSR Envelope1" Bypassed="0" NumTables="13"
                        NumSliderPacks="25" NumAudioFiles="8" NumDisplayBuffers="3">

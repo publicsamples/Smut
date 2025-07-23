@@ -4,17 +4,17 @@ Engine.loadFontAs("{PROJECT_FOLDER}Montserrat-Medium.ttf", "mon");
 
 const var Smut = Synth.getChildSynth("Smut");
 
-//include("laf.js");
-//include("KnobLAF1.js");
-//include("KnobLAF2.js");
-//include("KnobLAF3.js");
-//include("KnobLAF4.js");
-//include("Rect.js");
+include("laf.js");
+include("KnobLAF1.js");
+include("KnobLAF2.js");
+include("KnobLAF3.js");
+include("KnobLAF4.js");
+include("Rect.js");
 
-i//nclude("Scopes.js");
-//include("Loading.js");
+include("Scopes.js");
+include("Loading.js");
 
-//include("V1.js");
+include("V1.js");
 
 
 inline function onHiQControl(component, value)
