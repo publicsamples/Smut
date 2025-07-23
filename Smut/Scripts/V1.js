@@ -6,7 +6,7 @@ const var Osc1 = Synth.getEffect("Osc1");
 
 const var Osc1Mods =[];
 
-for (i = 0; i < 6; i++)
+for (i = 0; i < 8; i++)
 {
     Osc1Mods[i] = Content.getComponent("OsModRouteA"+(i+1));
 
@@ -43,7 +43,7 @@ Content.getComponent("fileModRoutPage1").setControlCallback(onfileModRoutPage1Co
 
 const var Filter1Mods =[];
 
-for (i = 0; i < 5; i++)
+for (i = 0; i < 8; i++)
 {
     Filter1Mods[i] = Content.getComponent("fModRouteA"+(i+1));
 

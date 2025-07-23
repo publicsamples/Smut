@@ -9561,13 +9561,10 @@ template <int NV> using sliderbank2_c1 = pma2_mod<NV>;
 
 template <int NV> using sliderbank2_c2 = pma2_mod<NV>;
 
-template <int NV> using sliderbank2_c3 = pma2_mod<NV>;
-
 template <int NV>
 using sliderbank2_multimod = parameter::list<sliderbank2_c0<NV>, 
                                              sliderbank2_c1<NV>, 
-                                             sliderbank2_c2<NV>, 
-                                             sliderbank2_c3<NV>>;
+                                             sliderbank2_c2<NV>>;
 
 template <int NV>
 using sliderbank2_t = wrap::data<control::sliderbank<sliderbank2_multimod<NV>>, 
@@ -9579,14 +9576,11 @@ template <int NV> using chain572_t = chain581_t<NV>;
 
 template <int NV> using chain573_t = chain581_t<NV>;
 
-template <int NV> using chain574_t = chain581_t<NV>;
-
 template <int NV>
 using split50_t = container::split<parameter::empty, 
                                    wrap::fix<2, chain571_t<NV>>, 
                                    chain572_t<NV>, 
-                                   chain573_t<NV>, 
-                                   chain574_t<NV>>;
+                                   chain573_t<NV>>;
 
 template <int NV>
 using chain570_t = container::chain<parameter::empty, 
@@ -15039,14 +15033,6 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		auto& gain100 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                  // core::gain<NV>
                         getT(1).getT(0).getT(0).getT(1).getT(2).
                         getT(1);
-		auto& chain574 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                 // osc1_impl::chain574_t<NV>
-                         getT(1).getT(0).getT(0).getT(1).getT(3);
-		auto& receive28 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                // routing::receive<NV, stereo_cable<NV>>
-                          getT(1).getT(0).getT(0).getT(1).getT(3).
-                          getT(0);
-		auto& gain101 = this->getT(2).getT(0).getT(0).getT(0).getT(3).                  // core::gain<NV>
-                        getT(1).getT(0).getT(0).getT(1).getT(3).
-                        getT(1);
 		auto& gain74 = this->getT(2).getT(0).getT(0).getT(0).                           // core::gain<NV>
                        getT(3).getT(1).getT(0).getT(1);
 		auto& xfader = this->getT(2).getT(0).getT(0).getT(0).                           // osc1_impl::xfader_t<NV>
@@ -16719,7 +16705,6 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		sliderbank2_p.getParameterT(0).connectT(0, gain87);  // sliderbank2 -> gain87::Gain
 		sliderbank2_p.getParameterT(1).connectT(0, gain88);  // sliderbank2 -> gain88::Gain
 		sliderbank2_p.getParameterT(2).connectT(0, gain100); // sliderbank2 -> gain100::Gain
-		sliderbank2_p.getParameterT(3).connectT(0, gain101); // sliderbank2 -> gain101::Gain
 		auto& xfader_p = xfader.getWrappedObject().getParameter();
 		xfader_p.getParameterT(0).connectT(0, gain1); // xfader -> gain1::Gain
 		xfader_p.getParameterT(1).connectT(0, gain2); // xfader -> gain2::Gain
@@ -16777,7 +16762,6 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		send7.connect(receive31);
 		send7.connect(receive35);
 		send7.connect(receive39);
-		send9.connect(receive28);
 		send9.connect(receive32);
 		send9.connect(receive36);
 		send9.connect(receive40);
@@ -20030,12 +20014,6 @@ template <int NV> struct instance: public osc1_impl::osc1_t_<NV>
 		;                                // gain100::Gain is automated
 		gain100.setParameterT(1, 20.);   // core::gain::Smoothing
 		gain100.setParameterT(2, -100.); // core::gain::ResetValue
-		
-		receive28.setParameterT(0, 1.); // routing::receive::Feedback
-		
-		;                                // gain101::Gain is automated
-		gain101.setParameterT(1, 20.);   // core::gain::Smoothing
-		gain101.setParameterT(2, -100.); // core::gain::ResetValue
 		
 		;                               // gain74::Gain is automated
 		gain74.setParameterT(1, 0.);    // core::gain::Smoothing

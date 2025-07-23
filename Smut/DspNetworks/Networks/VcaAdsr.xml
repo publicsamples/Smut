@@ -70,7 +70,7 @@
     </Nodes>
     <Parameters>
       <Parameter ID="Attack" MinValue="0.0" MaxValue="40000.0" StepSize="0.1000000014901161"
-                 SkewFactor="0.1976716816425323" Value="0.0" DefaultValue="1.0">
+                 SkewFactor="0.1976716816425323" Value="8146.000121384858" DefaultValue="1.0">
         <Connections>
           <Connection NodeId="ahdsr" ParameterId="Attack"/>
         </Connections>

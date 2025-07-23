@@ -17975,7 +17975,7 @@
                                       <Node ID="sliderbank2" FactoryPath="control.sliderbank" Bypassed="0"
                                             Name="sliderbank1">
                                         <Properties>
-                                          <Property ID="NumParameters" Value="4"/>
+                                          <Property ID="NumParameters" Value="3"/>
                                         </Properties>
                                         <SwitchTargets>
                                           <SwitchTarget>
@@ -17991,11 +17991,6 @@
                                           <SwitchTarget>
                                             <Connections>
                                               <Connection NodeId="gain100" ParameterId="Gain"/>
-                                            </Connections>
-                                          </SwitchTarget>
-                                          <SwitchTarget>
-                                            <Connections>
-                                              <Connection NodeId="gain101" ParameterId="Gain"/>
                                             </Connections>
                                           </SwitchTarget>
                                         </SwitchTargets>
@@ -18060,27 +18055,6 @@
                                                 </Parameters>
                                               </Node>
                                               <Node ID="gain100" FactoryPath="core.gain" Bypassed="0" Name="gain45">
-                                                <Parameters>
-                                                  <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
-                                                             ID="Gain" Automated="1"/>
-                                                  <Parameter MinValue="0.0" MaxValue="1000.0" StepSize="0.1000000014901161"
-                                                             SkewFactor="0.3010300099849701" ID="Smoothing" Value="20.0"/>
-                                                  <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
-                                                             SkewFactor="5.422270774841309" ID="ResetValue" Value="-100.0"
-                                                             DefaultValue="0.0"/>
-                                                </Parameters>
-                                              </Node>
-                                            </Nodes>
-                                            <Parameters/>
-                                          </Node>
-                                          <Node ID="chain574" FactoryPath="container.chain" Bypassed="0" Name="chain193">
-                                            <Nodes>
-                                              <Node ID="receive28" FactoryPath="routing.receive" Bypassed="0" Name="receive">
-                                                <Parameters>
-                                                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Feedback" Value="1.0" DefaultValue="0.0"/>
-                                                </Parameters>
-                                              </Node>
-                                              <Node ID="gain101" FactoryPath="core.gain" Bypassed="0" Name="gain45">
                                                 <Parameters>
                                                   <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
                                                              ID="Gain" Automated="1"/>
@@ -18665,7 +18639,7 @@
                                   </Node>
                                   <Node ID="send9" FactoryPath="routing.send" Bypassed="0" Name="send7">
                                     <Properties>
-                                      <Property ID="Connection" Value="receive28;receive32;receive36;receive40"/>
+                                      <Property ID="Connection" Value="receive32;receive36;receive40"/>
                                     </Properties>
                                     <Parameters/>
                                   </Node>
