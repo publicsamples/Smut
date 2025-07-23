@@ -455,11 +455,12 @@
                      height="110.0" parentComponent="AudioFileLoader" useList="1"
                      items="Loops&#10;Single Cycle&#10;Wavetables" bgColour="16711680"
                      scrollBarThickness="19.0" fontSize="16.0" fontName="mon" itemColour="1069769046"
-                     textColour="4278190080"/>
+                     textColour="4278190080" saveInPreset="0"/>
           <Component type="ScriptedViewport" id="SecondSp" x="150.0" y="78.0" width="120.0"
                      height="110.0" parentComponent="AudioFileLoader" useList="1"
                      items="Drawn&#10;Synths1&#10;Synths2" bgColour="16711680" scrollBarThickness="19.0"
-                     fontSize="16.0" fontName="mon" itemColour="1069769046" textColour="4278190080"/>
+                     fontSize="16.0" fontName="mon" itemColour="1069769046" textColour="4278190080"
+                     saveInPreset="0"/>
           <Component type="ScriptedViewport" id="ThirdSp" x="17.0" y="231.0" width="260.0"
                      height="310.0" parentComponent="AudioFileLoader" useList="1"
                      items="no file" bgColour="16711680" scrollBarThickness="19.0"
@@ -467,10 +468,11 @@
                      alignment="left" saveInPreset="0"/>
           <Component type="ScriptComboBox" id="SecondCB" x="151.0" y="25.0" parentComponent="AudioFileLoader"
                      items="Drawn&#10;Synths1&#10;Synths2" textColour="4278190080"
-                     bgColour="1426063360" visible="0" max="3"/>
+                     bgColour="1426063360" visible="0" max="3" saveInPreset="0"/>
           <Component type="ScriptComboBox" id="FirstCB" x="21.0" y="25.0" parentComponent="AudioFileLoader"
                      items="Loops&#10;Single Cycle&#10;Wavetables" textColour="4278190080"
-                     max="3" width="120.0" height="50.0" bgColour="1426063360" visible="0"/>
+                     max="3" width="120.0" height="50.0" bgColour="1426063360" visible="0"
+                     saveInPreset="0"/>
         </Component>
         <Component type="ScriptLabel" id="ScriptLabel83" x="16.0" y="10.0" width="260.0"
                    height="30.0" parentComponent="File1" text="SLOT 1" bgColour="4283129195"
@@ -484,16 +486,17 @@
                    parentComponent="File2" bgColour="16777215">
           <Component type="ScriptComboBox" id="SecondCB1" x="310.0" y="-8.0" parentComponent="AudioFileLoader1"
                      items="Drawn&#10;Synths1&#10;Synths2" textColour="4278190080"
-                     visible="0" saveInPreset="0" max="3"/>
+                     visible="0" max="3" saveInPreset="0"/>
           <Component type="ScriptedViewport" id="FirstSp1" x="18.0" y="78.0" width="120.0"
                      height="110.0" parentComponent="AudioFileLoader1" useList="1"
                      items="Loops&#10;Single Cycle&#10;Wavetables" bgColour="16711680"
                      scrollBarThickness="19.0" fontSize="16.0" fontName="mon" itemColour="1069769046"
-                     textColour="4278190080"/>
+                     textColour="4278190080" saveInPreset="0"/>
           <Component type="ScriptedViewport" id="SecondSp1" x="153.0" y="78.0" width="120.0"
                      height="110.0" parentComponent="AudioFileLoader1" useList="1"
                      items="Drawn&#10;Synths1&#10;Synths2" bgColour="16711680" scrollBarThickness="19.0"
-                     fontSize="16.0" fontName="mon" itemColour="1069769046" textColour="4278190080"/>
+                     fontSize="16.0" fontName="mon" itemColour="1069769046" textColour="4278190080"
+                     saveInPreset="0"/>
           <Component type="ScriptedViewport" id="ThirdSp1" x="17.0" y="231.0" width="260.0"
                      height="310.0" parentComponent="AudioFileLoader1" useList="1"
                      items="AD-Draw1.wav&#10;AD-Draw2.wav&#10;AD-Draw4.wav&#10;AD_DRAW3.wav&#10;amp1.wav&#10;Cheb1.wav&#10;chirp.wav&#10;Filp1.wav&#10;flip2.wav&#10;flip3.wav&#10;flip4.wav&#10;LowQ.wav&#10;Noisy1.wav&#10;res1.wav&#10;Saw1.wav&#10;Saw2.wav&#10;saw3.wav&#10;Saw4.wav&#10;shSin.wav&#10;Sine1.wav&#10;Square1.wav&#10;square2.wav&#10;square3.wav&#10;square4.wav&#10;square5.wav&#10;square6.wav&#10;Trap1.wav&#10;trap2.wav&#10;WEDITDRAW1.wav"
@@ -502,7 +505,7 @@
                      alignment="left" saveInPreset="0"/>
           <Component type="ScriptComboBox" id="FirstCB1" x="144.0" y="-4.0" parentComponent="AudioFileLoader1"
                      items="Loops&#10;Single Cycle&#10;Wavetables" textColour="4278190080"
-                     visible="0" saveInPreset="0" max="3"/>
+                     visible="0" max="3" saveInPreset="0"/>
         </Component>
         <Component type="ScriptLabel" id="ScriptLabel84" x="16.0" y="10.0" width="260.0"
                    height="30.0" parentComponent="File2" text="SLOT 2" bgColour="4283129195"
@@ -516,16 +519,17 @@
                    parentComponent="File3" bgColour="16777215">
           <Component type="ScriptComboBox" id="SecondCB2" x="310.0" y="-8.0" parentComponent="AudioFileLoader2"
                      items="Drawn&#10;Synths1&#10;Synths2" textColour="4278190080"
-                     visible="0" saveInPreset="0" max="3"/>
+                     visible="0" max="3" saveInPreset="0"/>
           <Component type="ScriptedViewport" id="FirstSp2" x="18.0" y="78.0" width="120.0"
                      height="110.0" parentComponent="AudioFileLoader2" useList="1"
                      items="Loops&#10;Single Cycle&#10;Wavetables" bgColour="16711680"
                      scrollBarThickness="19.0" fontSize="16.0" fontName="mon" itemColour="1069769046"
-                     textColour="4278190080"/>
+                     textColour="4278190080" saveInPreset="0"/>
           <Component type="ScriptedViewport" id="SecondSp2" x="153.0" y="78.0" width="120.0"
                      height="110.0" parentComponent="AudioFileLoader2" useList="1"
                      items="Drawn&#10;Synths1&#10;Synths2" bgColour="16711680" scrollBarThickness="19.0"
-                     fontSize="16.0" fontName="mon" itemColour="1069769046" textColour="4278190080"/>
+                     fontSize="16.0" fontName="mon" itemColour="1069769046" textColour="4278190080"
+                     saveInPreset="0"/>
           <Component type="ScriptedViewport" id="ThirdSp2" x="17.0" y="231.0" width="260.0"
                      height="310.0" parentComponent="AudioFileLoader2" useList="1"
                      items="AD-Draw1.wav&#10;AD-Draw2.wav&#10;AD-Draw4.wav&#10;AD_DRAW3.wav&#10;amp1.wav&#10;Cheb1.wav&#10;chirp.wav&#10;Filp1.wav&#10;flip2.wav&#10;flip3.wav&#10;flip4.wav&#10;LowQ.wav&#10;Noisy1.wav&#10;res1.wav&#10;Saw1.wav&#10;Saw2.wav&#10;saw3.wav&#10;Saw4.wav&#10;shSin.wav&#10;Sine1.wav&#10;Square1.wav&#10;square2.wav&#10;square3.wav&#10;square4.wav&#10;square5.wav&#10;square6.wav&#10;Trap1.wav&#10;trap2.wav&#10;WEDITDRAW1.wav"
@@ -534,7 +538,7 @@
                      alignment="left" saveInPreset="0"/>
           <Component type="ScriptComboBox" id="FirstCB2" x="144.0" y="-4.0" parentComponent="AudioFileLoader2"
                      items="Loops&#10;Single Cycle&#10;Wavetables" textColour="4278190080"
-                     visible="0" saveInPreset="0" max="3"/>
+                     visible="0" max="3" saveInPreset="0"/>
         </Component>
         <Component type="ScriptLabel" id="ScriptLabel85" x="16.0" y="10.0" width="260.0"
                    height="30.0" parentComponent="File3" text="SLOT 3" bgColour="4283129195"
@@ -548,16 +552,17 @@
                    parentComponent="File4" bgColour="16777215">
           <Component type="ScriptComboBox" id="SecondCB3" x="310.0" y="-8.0" parentComponent="AudioFileLoader3"
                      items="Drawn&#10;Synths1&#10;Synths2" textColour="4278190080"
-                     visible="0" saveInPreset="0" max="3"/>
+                     visible="0" max="3" saveInPreset="0"/>
           <Component type="ScriptedViewport" id="FirstSp3" x="18.0" y="78.0" width="120.0"
                      height="110.0" parentComponent="AudioFileLoader3" useList="1"
                      items="Loops&#10;Single Cycle&#10;Wavetables" bgColour="16711680"
                      scrollBarThickness="19.0" fontSize="16.0" fontName="mon" itemColour="1069769046"
-                     textColour="4278190080"/>
+                     textColour="4278190080" saveInPreset="0"/>
           <Component type="ScriptedViewport" id="SecondSp3" x="153.0" y="78.0" width="120.0"
                      height="110.0" parentComponent="AudioFileLoader3" useList="1"
                      items="Drawn&#10;Synths1&#10;Synths2" bgColour="16711680" scrollBarThickness="19.0"
-                     fontSize="16.0" fontName="mon" itemColour="1069769046" textColour="4278190080"/>
+                     fontSize="16.0" fontName="mon" itemColour="1069769046" textColour="4278190080"
+                     saveInPreset="0"/>
           <Component type="ScriptedViewport" id="ThirdSp3" x="17.0" y="231.0" width="260.0"
                      height="310.0" parentComponent="AudioFileLoader3" useList="1"
                      items="Synth1.WAV&#10;Synth10.WAV&#10;Synth11.WAV&#10;Synth12.WAV&#10;Synth13.WAV&#10;Synth14.WAV&#10;Synth15.WAV&#10;Synth16.WAV&#10;Synth17.WAV&#10;Synth18.WAV&#10;Synth19.WAV&#10;Synth2.WAV&#10;Synth20.WAV&#10;Synth21.WAV&#10;Synth22.WAV&#10;Synth23.WAV&#10;Synth3.WAV&#10;Synth4.WAV&#10;Synth5.WAV&#10;Synth6.WAV&#10;Synth7.WAV&#10;Synth8.WAV&#10;Synth9.WAV"
@@ -566,7 +571,7 @@
                      alignment="left" saveInPreset="0"/>
           <Component type="ScriptComboBox" id="FirstCB3" x="144.0" y="-4.0" parentComponent="AudioFileLoader3"
                      items="Loops&#10;Single Cycle&#10;Wavetables" textColour="4278190080"
-                     visible="0" saveInPreset="0" max="3"/>
+                     visible="0" max="3" saveInPreset="0"/>
         </Component>
         <Component type="ScriptLabel" id="ScriptLabel86" x="16.0" y="10.0" width="260.0"
                    height="30.0" parentComponent="File4" text="SLOT 4" bgColour="4283129195"
@@ -999,19 +1004,19 @@
         <Component type="ScriptComboBox" id="ThirdCB" x="0.0" y="0.0" width="110.0"
                    height="40.0" parentComponent="FacLoad" textColour="4279834648"
                    bgColour="1427114249" items="202-1.wav&#10;202-10.wav&#10;202-11.wav&#10;202-12.wav&#10;202-13.wav&#10;202-14.wav&#10;202-2.wav&#10;202-3.wav&#10;202-4.wav&#10;202-5.wav&#10;202-6.wav&#10;202-7.wav&#10;202-8.wav&#10;202-9.wav&#10;AX-1.wav&#10;AX-11.wav&#10;AX-12.wav&#10;AX-13.wav&#10;AX-14.wav&#10;AX-15.wav&#10;AX-16.wav&#10;AX-17.wav&#10;AX-18.wav&#10;AX-2.wav&#10;AX-3.wav&#10;AX-4.wav&#10;AX-5.wav&#10;AX-6.wav&#10;AX-7.wav&#10;AX-8.wav&#10;AX-9.wav&#10;CS-1.wav&#10;CS-11.wav&#10;CS-12.wav&#10;CS-13.wav&#10;CS-14.wav&#10;CS-15.wav&#10;CS-16.wav&#10;CS-17.wav&#10;CS-18.wav&#10;CS-19.wav&#10;CS-2.wav&#10;CS-21.wav&#10;CS-22.wav&#10;CS-23.wav&#10;CS-24.wav&#10;CS-25.wav&#10;CS-26.wav&#10;CS-27.wav&#10;CS-28.wav&#10;CS-29.wav&#10;CS-3.wav&#10;CS-31.wav&#10;CS-32.wav&#10;CS-33.wav&#10;CS-34.wav&#10;CS-35.wav&#10;CS-36.wav&#10;CS-4.wav&#10;CS-5.wav&#10;CS-6.wav&#10;CS-7.wav&#10;CS-8.wav&#10;CS-9.wav&#10;Mb-1.wav&#10;Mb-11.wav&#10;Mb-12.wav&#10;Mb-13.wav&#10;Mb-14.wav&#10;Mb-16.wav&#10;Mb-17.wav&#10;Mb-2.wav&#10;Mb-3.wav&#10;Mb-4.wav&#10;Mb-6.wav&#10;Mb-7.wav&#10;Mb-8.wav&#10;Mb-9.wav&#10;Mg-1.wav&#10;Mg-10.wav&#10;Mg-11.wav&#10;Mg-12.wav&#10;Mg-13.wav&#10;Mg-14.wav&#10;Mg-2.wav&#10;Mg-3.wav&#10;Mg-4.wav&#10;Mg-5.wav&#10;Mg-6.wav&#10;Mg-7.wav&#10;Mg-8.wav&#10;Mg-9.wav&#10;Ms-1.wav&#10;Ms-10.wav&#10;Ms-11.wav&#10;Ms-12.wav&#10;Ms-13.wav&#10;Ms-14.wav&#10;Ms-15.wav&#10;Ms-16.wav&#10;Ms-17.wav&#10;Ms-18.wav&#10;Ms-19.wav&#10;Ms-2.wav&#10;Ms-20.wav&#10;Ms-21.wav&#10;Ms-22.wav&#10;Ms-23.wav&#10;Ms-24.wav&#10;Ms-25.wav&#10;Ms-26.wav&#10;Ms-3.wav&#10;Ms-4.wav&#10;Ms-5.wav&#10;Ms-6.wav&#10;Ms-7.wav&#10;Ms-8.wav&#10;Ms-9.wav&#10;WONK1.wav&#10;WONK10.wav&#10;WONK11.wav&#10;WONK12.wav&#10;WONK13.wav&#10;WONK14.wav&#10;WONK15.wav&#10;WONK16.wav&#10;WONK17.wav&#10;WONK18.wav&#10;WONK2.wav&#10;WONK3.wav&#10;WONK4.wav&#10;WONK5.wav&#10;WONK6.wav&#10;WONK7.wav&#10;WONK8.wav&#10;WONK9.wav&#10;XP-1.wav&#10;XP-10.wav&#10;XP-11.wav&#10;XP-12.wav&#10;XP-13.wav&#10;XP-14.wav&#10;XP-15.wav&#10;XP-16.wav&#10;XP-2.wav&#10;XP-3.wav&#10;XP-4.wav&#10;XP-5.wav&#10;XP-6.wav&#10;XP-7.wav&#10;XP-8.wav&#10;XP-9.wav"
-                   text="LOAD SAMPLE" max="152"/>
+                   text="LOAD SAMPLE" max="152" saveInPreset="0"/>
         <Component type="ScriptComboBox" id="ThirdCB1" x="0.0" y="0.0" width="110.0"
                    height="40.0" max="29" parentComponent="FacLoad" textColour="4279834648"
                    bgColour="1427114249" items="AD-Draw1.wav&#10;AD-Draw2.wav&#10;AD-Draw4.wav&#10;AD_DRAW3.wav&#10;amp1.wav&#10;Cheb1.wav&#10;chirp.wav&#10;Filp1.wav&#10;flip2.wav&#10;flip3.wav&#10;flip4.wav&#10;LowQ.wav&#10;Noisy1.wav&#10;res1.wav&#10;Saw1.wav&#10;Saw2.wav&#10;saw3.wav&#10;Saw4.wav&#10;shSin.wav&#10;Sine1.wav&#10;Square1.wav&#10;square2.wav&#10;square3.wav&#10;square4.wav&#10;square5.wav&#10;square6.wav&#10;Trap1.wav&#10;trap2.wav&#10;WEDITDRAW1.wav"
-                   visible="0"/>
+                   saveInPreset="0" visible="0"/>
         <Component type="ScriptComboBox" id="ThirdCB2" x="0.0" y="0.0" width="110.0"
                    height="40.0" max="29" parentComponent="FacLoad" textColour="4279834648"
                    bgColour="1427114249" items="AD-Draw1.wav&#10;AD-Draw2.wav&#10;AD-Draw4.wav&#10;AD_DRAW3.wav&#10;amp1.wav&#10;Cheb1.wav&#10;chirp.wav&#10;Filp1.wav&#10;flip2.wav&#10;flip3.wav&#10;flip4.wav&#10;LowQ.wav&#10;Noisy1.wav&#10;res1.wav&#10;Saw1.wav&#10;Saw2.wav&#10;saw3.wav&#10;Saw4.wav&#10;shSin.wav&#10;Sine1.wav&#10;Square1.wav&#10;square2.wav&#10;square3.wav&#10;square4.wav&#10;square5.wav&#10;square6.wav&#10;Trap1.wav&#10;trap2.wav&#10;WEDITDRAW1.wav"
-                   visible="0"/>
+                   saveInPreset="0" visible="0"/>
         <Component type="ScriptComboBox" id="ThirdCB3" x="0.0" y="0.0" width="110.0"
                    height="40.0" max="23" parentComponent="FacLoad" textColour="4279834648"
                    bgColour="1427114249" items="Synth1.WAV&#10;Synth10.WAV&#10;Synth11.WAV&#10;Synth12.WAV&#10;Synth13.WAV&#10;Synth14.WAV&#10;Synth15.WAV&#10;Synth16.WAV&#10;Synth17.WAV&#10;Synth18.WAV&#10;Synth19.WAV&#10;Synth2.WAV&#10;Synth20.WAV&#10;Synth21.WAV&#10;Synth22.WAV&#10;Synth23.WAV&#10;Synth3.WAV&#10;Synth4.WAV&#10;Synth5.WAV&#10;Synth6.WAV&#10;Synth7.WAV&#10;Synth8.WAV&#10;Synth9.WAV"
-                   visible="0"/>
+                   saveInPreset="0" visible="0"/>
       </Component>
       <Component type="ScriptButton" id="FolderSel1" x="216.0" y="7.0" width="40.0"
                  height="40.0" filmstripImage="{PROJECT_FOLDER}folder.png" scaleFactor="0.07999999821186066"
@@ -1700,7 +1705,8 @@
                itemColour="16117208" itemColour2="16117208" textColour="16777215"
                parentComponent="MOD">
       <Component type="ScriptPanel" id="lfo1" x="1.0" y="0.0" width="554.0" height="200.0"
-                 parentComponent="LFOs" itemColour="14839920" itemColour2="14839920">
+                 parentComponent="LFOs" itemColour="14839920" itemColour2="14839920"
+                 visible="0">
         <Component type="ScriptLabel" id="SeqLabel45" x="109.0" y="170.0" width="80.0"
                    height="19.0" parentComponent="lfo1" editable="0" fontSize="15.0"
                    text="Divide" fontName="Montserrat" textColour="4278190080"/>
@@ -2271,8 +2277,7 @@
                    text="src" fontName="Montserrat" textColour="4278190080"/>
       </Component>
       <Component type="ScriptPanel" id="lfo6" x="1.0" y="0.0" width="554.0" height="229.0"
-                 itemColour="4294307288" itemColour2="4294307288" parentComponent="LFOs"
-                 visible="0">
+                 itemColour="4294307288" itemColour2="4294307288" parentComponent="LFOs">
         <Component type="ScriptPanel" id="Inputs1" x="49.0" y="10.0" width="140.0"
                    height="90.0" parentComponent="lfo6" bgColour="16777215" textColour="4278190080"
                    itemColour2="4294307288" itemColour="4294307288">
