@@ -33,12 +33,12 @@ Compilation options: -lang cpp -rui -nvi -ct 1 -cn _shfiter -scn ::faust::dsp -e
 
 struct _shfiter final : public ::faust::dsp {
 	
-	int IOTA0;
-	float fVec0[131072];
 	FAUSTFLOAT fHslider0;
 	FAUSTFLOAT fHslider1;
-	float fRec0[2];
 	FAUSTFLOAT fHslider2;
+	float fRec0[2];
+	int IOTA0;
+	float fVec0[131072];
 	float fVec1[131072];
 	int fSampleRate;
 	
@@ -81,18 +81,18 @@ struct _shfiter final : public ::faust::dsp {
 	}
 	
 	void instanceResetUserInterface() {
-		fHslider0 = FAUSTFLOAT(1e+03f);
-		fHslider1 = FAUSTFLOAT(0.0f);
-		fHslider2 = FAUSTFLOAT(1e+01f);
+		fHslider0 = FAUSTFLOAT(1e+01f);
+		fHslider1 = FAUSTFLOAT(1e+03f);
+		fHslider2 = FAUSTFLOAT(0.0f);
 	}
 	
 	void instanceClear() {
-		IOTA0 = 0;
-		for (int l0 = 0; l0 < 131072; l0 = l0 + 1) {
-			fVec0[l0] = 0.0f;
+		for (int l0 = 0; l0 < 2; l0 = l0 + 1) {
+			fRec0[l0] = 0.0f;
 		}
-		for (int l1 = 0; l1 < 2; l1 = l1 + 1) {
-			fRec0[l1] = 0.0f;
+		IOTA0 = 0;
+		for (int l1 = 0; l1 < 131072; l1 = l1 + 1) {
+			fVec0[l1] = 0.0f;
 		}
 		for (int l2 = 0; l2 < 131072; l2 = l2 + 1) {
 			fVec1[l2] = 0.0f;
@@ -120,9 +120,9 @@ struct _shfiter final : public ::faust::dsp {
 	
 	void buildUserInterface(UI* ui_interface) {
 		ui_interface->openVerticalBox("Pitch Shifter");
-		ui_interface->addHorizontalSlider("shift (note)", &fHslider1, FAUSTFLOAT(0.0f), FAUSTFLOAT(-24.0f), FAUSTFLOAT(24.0f), FAUSTFLOAT(0.1f));
-		ui_interface->addHorizontalSlider("window (samples)", &fHslider0, FAUSTFLOAT(1e+03f), FAUSTFLOAT(5e+01f), FAUSTFLOAT(1e+04f), FAUSTFLOAT(1.0f));
-		ui_interface->addHorizontalSlider("xfade (samples)", &fHslider2, FAUSTFLOAT(1e+01f), FAUSTFLOAT(1.0f), FAUSTFLOAT(1e+04f), FAUSTFLOAT(1.0f));
+		ui_interface->addHorizontalSlider("shift (note)", &fHslider2, FAUSTFLOAT(0.0f), FAUSTFLOAT(-24.0f), FAUSTFLOAT(24.0f), FAUSTFLOAT(0.1f));
+		ui_interface->addHorizontalSlider("window (samples)", &fHslider1, FAUSTFLOAT(1e+03f), FAUSTFLOAT(5e+01f), FAUSTFLOAT(1e+04f), FAUSTFLOAT(1.0f));
+		ui_interface->addHorizontalSlider("xfade (samples)", &fHslider0, FAUSTFLOAT(1e+01f), FAUSTFLOAT(1.0f), FAUSTFLOAT(1e+04f), FAUSTFLOAT(1.0f));
 		ui_interface->closeBox();
 	}
 	
@@ -131,35 +131,35 @@ struct _shfiter final : public ::faust::dsp {
 		FAUSTFLOAT* input1 = inputs[1];
 		FAUSTFLOAT* output0 = outputs[0];
 		FAUSTFLOAT* output1 = outputs[1];
-		float fSlow0 = std::max<float>(5e+01f, std::min<float>(1e+04f, float(fHslider0)));
-		float fSlow1 = std::pow(2.0f, 0.083333336f * std::max<float>(-24.0f, std::min<float>(24.0f, float(fHslider1))));
-		float fSlow2 = 1.0f / std::max<float>(1.0f, std::min<float>(1e+04f, float(fHslider2)));
+		float fSlow0 = 1.0f / std::max<float>(1.0f, std::min<float>(1e+04f, float(fHslider0)));
+		float fSlow1 = std::max<float>(5e+01f, std::min<float>(1e+04f, float(fHslider1)));
+		float fSlow2 = std::pow(2.0f, 0.083333336f * std::max<float>(-24.0f, std::min<float>(24.0f, float(fHslider2))));
 		for (int i0 = 0; i0 < count; i0 = i0 + 1) {
-			float fTemp0 = float(input0[i0]);
-			fVec0[IOTA0 & 131071] = fTemp0;
-			fRec0[0] = std::fmod(fSlow0 + (fRec0[1] + 1.0f - fSlow1), fSlow0);
-			float fTemp1 = fSlow0 + fRec0[0];
-			int iTemp2 = int(fTemp1);
-			int iTemp3 = std::min<int>(65537, std::max<int>(0, iTemp2 + 1));
-			float fTemp4 = std::floor(fTemp1);
-			float fTemp5 = fSlow0 + (fRec0[0] - fTemp4);
-			int iTemp6 = std::min<int>(65537, std::max<int>(0, iTemp2));
+			fRec0[0] = std::fmod(fSlow1 + (fRec0[1] + 1.0f - fSlow2), fSlow1);
+			float fTemp0 = std::min<float>(fSlow0 * fRec0[0], 1.0f);
+			float fTemp1 = std::floor(fRec0[0]);
+			float fTemp2 = fRec0[0] - fTemp1;
+			float fTemp3 = float(input0[i0]);
+			fVec0[IOTA0 & 131071] = fTemp3;
+			int iTemp4 = int(fRec0[0]);
+			int iTemp5 = std::min<int>(65537, std::max<int>(0, iTemp4 + 1));
+			int iTemp6 = std::min<int>(65537, std::max<int>(0, iTemp4));
 			float fTemp7 = 1.0f - fRec0[0];
-			float fTemp8 = fTemp4 + fTemp7 - fSlow0;
-			float fTemp9 = std::min<float>(fSlow2 * fRec0[0], 1.0f);
-			float fTemp10 = 1.0f - fTemp9;
-			float fTemp11 = std::floor(fRec0[0]);
-			float fTemp12 = fTemp11 + fTemp7;
-			int iTemp13 = int(fRec0[0]);
-			int iTemp14 = std::min<int>(65537, std::max<int>(0, iTemp13));
-			float fTemp15 = fRec0[0] - fTemp11;
-			int iTemp16 = std::min<int>(65537, std::max<int>(0, iTemp13 + 1));
-			output0[i0] = FAUSTFLOAT((fVec0[(IOTA0 - iTemp3) & 131071] * fTemp5 + fVec0[(IOTA0 - iTemp6) & 131071] * fTemp8) * fTemp10 + (fTemp12 * fVec0[(IOTA0 - iTemp14) & 131071] + fTemp15 * fVec0[(IOTA0 - iTemp16) & 131071]) * fTemp9);
+			float fTemp8 = fTemp1 + fTemp7;
+			float fTemp9 = 1.0f - fTemp0;
+			float fTemp10 = fSlow1 + fRec0[0];
+			int iTemp11 = int(fTemp10);
+			int iTemp12 = std::min<int>(65537, std::max<int>(0, iTemp11 + 1));
+			float fTemp13 = std::floor(fTemp10);
+			float fTemp14 = fSlow1 + (fRec0[0] - fTemp13);
+			int iTemp15 = std::min<int>(65537, std::max<int>(0, iTemp11));
+			float fTemp16 = fTemp13 + fTemp7 - fSlow1;
+			output0[i0] = FAUSTFLOAT(fTemp0 * (fTemp2 * fVec0[(IOTA0 - iTemp5) & 131071] + fVec0[(IOTA0 - iTemp6) & 131071] * fTemp8) + fTemp9 * (fVec0[(IOTA0 - iTemp12) & 131071] * fTemp14 + fVec0[(IOTA0 - iTemp15) & 131071] * fTemp16));
 			float fTemp17 = float(input1[i0]);
 			fVec1[IOTA0 & 131071] = fTemp17;
-			output1[i0] = FAUSTFLOAT((fTemp12 * fVec1[(IOTA0 - iTemp14) & 131071] + fTemp15 * fVec1[(IOTA0 - iTemp16) & 131071]) * fTemp9 + fTemp10 * (fVec1[(IOTA0 - iTemp6) & 131071] * fTemp8 + fVec1[(IOTA0 - iTemp3) & 131071] * fTemp5));
-			IOTA0 = IOTA0 + 1;
+			output1[i0] = FAUSTFLOAT(fTemp0 * (fTemp2 * fVec1[(IOTA0 - iTemp5) & 131071] + fVec1[(IOTA0 - iTemp6) & 131071] * fTemp8) + fTemp9 * (fVec1[(IOTA0 - iTemp12) & 131071] * fTemp14 + fVec1[(IOTA0 - iTemp15) & 131071] * fTemp16));
 			fRec0[1] = fRec0[0];
+			IOTA0 = IOTA0 + 1;
 		}
 	}
 
@@ -175,14 +175,14 @@ struct _shfiter final : public ::faust::dsp {
 	#define FAUST_ACTIVES 3
 	#define FAUST_PASSIVES 0
 
-	FAUST_ADDHORIZONTALSLIDER("Pitch Shifter/shift (note)", fHslider1, 0.0f, -24.0f, 24.0f, 0.1f);
-	FAUST_ADDHORIZONTALSLIDER("Pitch Shifter/window (samples)", fHslider0, 1e+03f, 5e+01f, 1e+04f, 1.0f);
-	FAUST_ADDHORIZONTALSLIDER("Pitch Shifter/xfade (samples)", fHslider2, 1e+01f, 1.0f, 1e+04f, 1.0f);
+	FAUST_ADDHORIZONTALSLIDER("Pitch Shifter/shift (note)", fHslider2, 0.0f, -24.0f, 24.0f, 0.1f);
+	FAUST_ADDHORIZONTALSLIDER("Pitch Shifter/window (samples)", fHslider1, 1e+03f, 5e+01f, 1e+04f, 1.0f);
+	FAUST_ADDHORIZONTALSLIDER("Pitch Shifter/xfade (samples)", fHslider0, 1e+01f, 1.0f, 1e+04f, 1.0f);
 
 	#define FAUST_LIST_ACTIVES(p) \
-		p(HORIZONTALSLIDER, shift_(note), "Pitch Shifter/shift (note)", fHslider1, 0.0f, -24.0f, 24.0f, 0.1f) \
-		p(HORIZONTALSLIDER, window_(samples), "Pitch Shifter/window (samples)", fHslider0, 1e+03f, 5e+01f, 1e+04f, 1.0f) \
-		p(HORIZONTALSLIDER, xfade_(samples), "Pitch Shifter/xfade (samples)", fHslider2, 1e+01f, 1.0f, 1e+04f, 1.0f) \
+		p(HORIZONTALSLIDER, shift_(note), "Pitch Shifter/shift (note)", fHslider2, 0.0f, -24.0f, 24.0f, 0.1f) \
+		p(HORIZONTALSLIDER, window_(samples), "Pitch Shifter/window (samples)", fHslider1, 1e+03f, 5e+01f, 1e+04f, 1.0f) \
+		p(HORIZONTALSLIDER, xfade_(samples), "Pitch Shifter/xfade (samples)", fHslider0, 1e+01f, 1.0f, 1e+04f, 1.0f) \
 
 	#define FAUST_LIST_PASSIVES(p) \
 

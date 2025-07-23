@@ -34,14 +34,14 @@ Compilation options: -lang cpp -rui -nvi -ct 1 -cn _khp2 -scn ::faust::dsp -es 1
 
 struct _khp2 final : public ::faust::dsp {
 	
-	FAUSTFLOAT fHslider0;
 	int fSampleRate;
 	float fConst0;
+	FAUSTFLOAT fHslider0;
 	FAUSTFLOAT fHslider1;
+	float fRec0[2];
 	float fRec1[2];
-	float fRec2[2];
+	float fRec3[2];
 	float fRec4[2];
-	float fRec5[2];
 	
 	_khp2() {
 	}
@@ -87,22 +87,22 @@ struct _khp2 final : public ::faust::dsp {
 	}
 	
 	void instanceResetUserInterface() {
-		fHslider0 = FAUSTFLOAT(1.0f);
-		fHslider1 = FAUSTFLOAT(0.5f);
+		fHslider0 = FAUSTFLOAT(0.5f);
+		fHslider1 = FAUSTFLOAT(1.0f);
 	}
 	
 	void instanceClear() {
 		for (int l0 = 0; l0 < 2; l0 = l0 + 1) {
-			fRec1[l0] = 0.0f;
+			fRec0[l0] = 0.0f;
 		}
 		for (int l1 = 0; l1 < 2; l1 = l1 + 1) {
-			fRec2[l1] = 0.0f;
+			fRec1[l1] = 0.0f;
 		}
 		for (int l2 = 0; l2 < 2; l2 = l2 + 1) {
-			fRec4[l2] = 0.0f;
+			fRec3[l2] = 0.0f;
 		}
 		for (int l3 = 0; l3 < 2; l3 = l3 + 1) {
-			fRec5[l3] = 0.0f;
+			fRec4[l3] = 0.0f;
 		}
 	}
 	
@@ -127,8 +127,8 @@ struct _khp2 final : public ::faust::dsp {
 	
 	void buildUserInterface(UI* ui_interface) {
 		ui_interface->openVerticalBox("khp2");
-		ui_interface->addHorizontalSlider("Q", &fHslider0, FAUSTFLOAT(1.0f), FAUSTFLOAT(0.5f), FAUSTFLOAT(1e+01f), FAUSTFLOAT(0.01f));
-		ui_interface->addHorizontalSlider("freq", &fHslider1, FAUSTFLOAT(0.5f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.001f));
+		ui_interface->addHorizontalSlider("Q", &fHslider1, FAUSTFLOAT(1.0f), FAUSTFLOAT(0.5f), FAUSTFLOAT(1e+01f), FAUSTFLOAT(0.01f));
+		ui_interface->addHorizontalSlider("freq", &fHslider0, FAUSTFLOAT(0.5f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.001f));
 		ui_interface->closeBox();
 	}
 	
@@ -137,32 +137,32 @@ struct _khp2 final : public ::faust::dsp {
 		FAUSTFLOAT* input1 = inputs[1];
 		FAUSTFLOAT* output0 = outputs[0];
 		FAUSTFLOAT* output1 = outputs[1];
-		float fSlow0 = std::tan(fConst0 * std::pow(1e+01f, 3.0f * std::max<float>(0.0f, std::min<float>(1.0f, float(fHslider1))) + 1.0f));
-		float fSlow1 = 1.0f / std::max<float>(0.5f, std::min<float>(1e+01f, float(fHslider0))) + fSlow0;
-		float fSlow2 = fSlow1 * fSlow0 + 1.0f;
-		float fSlow3 = 1.0f / fSlow2;
-		float fSlow4 = 2.0f * fSlow0;
-		float fSlow5 = fSlow0 / fSlow2;
-		float fSlow6 = 2.0f * fSlow5;
+		float fSlow0 = std::tan(fConst0 * std::pow(1e+01f, 3.0f * std::max<float>(0.0f, std::min<float>(1.0f, float(fHslider0))) + 1.0f));
+		float fSlow1 = 2.0f * fSlow0;
+		float fSlow2 = 1.0f / std::max<float>(0.5f, std::min<float>(1e+01f, float(fHslider1))) + fSlow0;
+		float fSlow3 = fSlow0 * fSlow2 + 1.0f;
+		float fSlow4 = fSlow0 / fSlow3;
+		float fSlow5 = 2.0f * fSlow4;
+		float fSlow6 = 1.0f / fSlow3;
 		for (int i0 = 0; i0 < count; i0 = i0 + 1) {
-			float fTemp0 = float(input0[i0]) - (fSlow1 * fRec2[1] + fRec1[1]);
-			float fRec0 = fSlow3 * fTemp0;
-			float fTemp1 = fSlow5 * fTemp0 + fRec2[1];
-			fRec1[0] = fRec1[1] + fSlow4 * fTemp1;
-			float fTemp2 = fSlow6 * fTemp0 + fRec2[1];
-			fRec2[0] = fTemp2;
-			output0[i0] = FAUSTFLOAT(fRec0);
-			float fTemp3 = float(input1[i0]) - (fSlow1 * fRec5[1] + fRec4[1]);
-			float fRec3 = fSlow3 * fTemp3;
-			float fTemp4 = fSlow5 * fTemp3 + fRec5[1];
-			fRec4[0] = fSlow4 * fTemp4 + fRec4[1];
-			float fTemp5 = fSlow6 * fTemp3 + fRec5[1];
-			fRec5[0] = fTemp5;
-			output1[i0] = FAUSTFLOAT(fRec3);
+			float fTemp0 = float(input0[i0]) - (fSlow2 * fRec1[1] + fRec0[1]);
+			float fTemp1 = fSlow4 * fTemp0 + fRec1[1];
+			fRec0[0] = fSlow1 * fTemp1 + fRec0[1];
+			float fTemp2 = fSlow5 * fTemp0 + fRec1[1];
+			fRec1[0] = fTemp2;
+			float fRec2 = fSlow6 * fTemp0;
+			output0[i0] = FAUSTFLOAT(fRec2);
+			float fTemp3 = float(input1[i0]) - (fRec3[1] + fSlow2 * fRec4[1]);
+			float fTemp4 = fRec4[1] + fSlow4 * fTemp3;
+			fRec3[0] = fRec3[1] + fSlow1 * fTemp4;
+			float fTemp5 = fRec4[1] + fSlow5 * fTemp3;
+			fRec4[0] = fTemp5;
+			float fRec5 = fSlow6 * fTemp3;
+			output1[i0] = FAUSTFLOAT(fRec5);
+			fRec0[1] = fRec0[0];
 			fRec1[1] = fRec1[0];
-			fRec2[1] = fRec2[0];
+			fRec3[1] = fRec3[0];
 			fRec4[1] = fRec4[0];
-			fRec5[1] = fRec5[0];
 		}
 	}
 
@@ -178,12 +178,12 @@ struct _khp2 final : public ::faust::dsp {
 	#define FAUST_ACTIVES 2
 	#define FAUST_PASSIVES 0
 
-	FAUST_ADDHORIZONTALSLIDER("Q", fHslider0, 1.0f, 0.5f, 1e+01f, 0.01f);
-	FAUST_ADDHORIZONTALSLIDER("freq", fHslider1, 0.5f, 0.0f, 1.0f, 0.001f);
+	FAUST_ADDHORIZONTALSLIDER("Q", fHslider1, 1.0f, 0.5f, 1e+01f, 0.01f);
+	FAUST_ADDHORIZONTALSLIDER("freq", fHslider0, 0.5f, 0.0f, 1.0f, 0.001f);
 
 	#define FAUST_LIST_ACTIVES(p) \
-		p(HORIZONTALSLIDER, Q, "Q", fHslider0, 1.0f, 0.5f, 1e+01f, 0.01f) \
-		p(HORIZONTALSLIDER, freq, "freq", fHslider1, 0.5f, 0.0f, 1.0f, 0.001f) \
+		p(HORIZONTALSLIDER, Q, "Q", fHslider1, 1.0f, 0.5f, 1e+01f, 0.01f) \
+		p(HORIZONTALSLIDER, freq, "freq", fHslider0, 0.5f, 0.0f, 1.0f, 0.001f) \
 
 	#define FAUST_LIST_PASSIVES(p) \
 

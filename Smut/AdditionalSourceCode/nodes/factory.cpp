@@ -38,12 +38,12 @@ struct Factory: public scriptnode::dll::StaticLibraryHostFactory
 		registerPolyNode<project::gran<1>, scriptnode::wrap::illegal_poly<project::gran<1>>>();
 		registerPolyNode<project::Comb<1>, project::Comb<NUM_POLYPHONIC_VOICES>>();
 		registerPolyNode<project::cbmono<1>, scriptnode::wrap::illegal_poly<project::cbmono<1>>>();
-		registerPolyNode<project::lfo<1>, wrap::illegal_poly<project::lfo<1>>>();
 		registerPolyNode<project::osc1<1>, project::osc1<NUM_POLYPHONIC_VOICES>>();
 		registerPolyNode<project::Revern<1>, wrap::illegal_poly<project::Revern<1>>>();
 		registerDataNode<project::combValueTest_networkdata>();
 		registerDataNode<project::empty_networkdata>();
 		registerDataNode<project::GainMod_networkdata>();
+		registerDataNode<project::lfo_networkdata>();
 		registerDataNode<project::lfo2_networkdata>();
 		registerDataNode<project::lfo3_networkdata>();
 		registerDataNode<project::lfo4_networkdata>();
