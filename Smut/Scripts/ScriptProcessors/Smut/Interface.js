@@ -77,7 +77,7 @@ for (i = 0; i < 4; i++)
 
 
 
-Synth.setUseUniformVoiceHandler("Smut", true);
+//Synth.setUseUniformVoiceHandler("Smut", true);
 
 const var rm = Engine.getGlobalRoutingManager();
 
