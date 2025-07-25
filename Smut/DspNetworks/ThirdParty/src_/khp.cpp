@@ -168,12 +168,12 @@ struct _khp final : public ::faust::dsp {
 			output0[i0] = FAUSTFLOAT(fRec3);
 			float fTemp5 = float(input1[i0]);
 			float fTemp6 = fTemp5 - fRec6[1];
-			float fTemp7 = fTemp5 - (fSlow7 * (fSlow0 * fTemp6 - fRec4[1] + fSlow2 * fRec5[1]) + fRec6[1]);
+			float fTemp7 = fTemp5 - (fRec6[1] + fSlow7 * (fSlow0 * fTemp6 - fRec4[1] + fSlow2 * fRec5[1]));
 			float fTemp8 = fSlow6 * fTemp7;
 			float fTemp9 = fTemp8 - fRec5[1];
 			fRec4[0] = fRec4[1] + fSlow3 * (fTemp8 - (fSlow2 * fTemp9 + fRec4[1] + fRec5[1]));
 			fRec5[0] = fRec5[1] + fSlow3 * fTemp9;
-			fRec6[0] = fSlow3 * fTemp6 + fRec6[1];
+			fRec6[0] = fRec6[1] + fSlow3 * fTemp6;
 			float fRec7 = fSlow8 * fTemp7;
 			output1[i0] = FAUSTFLOAT(fRec7);
 			fRec0[1] = fRec0[0];

@@ -1,19 +1,8 @@
-/Smut/AudioFiles Extra
-/Smut/AudioFiles
-/Smut/DspNetworks/Binaries
-/Smut/DspNetworks/CodeLibrary/examples
-/Smut/PooledResources
 *.ch1
-/Smut/SampleMaps
 *.lib
-/Smut/DspNetworks/CodeLibrary
-/Smut/DspNetworks/ThirdParty
-/Smut/DspNetworks/ThirdParty
-/Smut/DspNetworks/ThirdParty
 /Smut/Binaries
 *.wav
 *.aif
 *.aiff
-AudioFiles Extra/Loops/Misc/
-*.zip
-Smut/Presets/Autosave_2.hip
+Smut/AudioFiles.zip
+/Smut/PooledResources

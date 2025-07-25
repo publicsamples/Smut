@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Network ID="osc1" AllowPolyphonic="1" Version="0.0.0" ModulationBlockSize="9">
+<Network ID="osc1" AllowPolyphonic="1" Version="0.0.0" ModulationBlockSize="9"
+         AllowCompilation="1">
   <Node FactoryPath="container.chain" ID="osc1" Bypassed="0" Name="osc1"
         ShowParameters="1">
     <Nodes>
