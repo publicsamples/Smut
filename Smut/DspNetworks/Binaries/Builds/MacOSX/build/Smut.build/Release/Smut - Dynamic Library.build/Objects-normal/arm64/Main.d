@@ -803,6 +803,7 @@ dependencies: \
   /Users/rick/Documents/GitHub/Smut/Smut/DspNetworks/Binaries/Source/shfiter.h \
   /Users/rick/Documents/GitHub/Smut/Smut/DspNetworks/Binaries/Source/../../ThirdParty/shfiter.h \
   /Users/rick/Documents/GitHub/Smut/Smut/DspNetworks/Binaries/Source/../../ThirdParty/src/shfiter.cpp \
+  /Users/rick/Documents/GitHub/Smut/Smut/DspNetworks/Binaries/Source/lfo.h \
   /Users/rick/Documents/GitHub/Smut/Smut/DspNetworks/Binaries/Source/osc1.h \
   /Users/rick/Documents/GitHub/Smut/Smut/DspNetworks/Binaries/Source/Revern.h \
   /Users/rick/Documents/GitHub/Smut/Smut/DspNetworks/Binaries/JuceLibraryCode/JuceHeader.h \
