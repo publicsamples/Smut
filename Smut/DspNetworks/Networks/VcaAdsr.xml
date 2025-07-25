@@ -70,7 +70,7 @@
     </Nodes>
     <Parameters>
       <Parameter ID="Attack" MinValue="0.0" MaxValue="40000.0" StepSize="0.1000000014901161"
-                 SkewFactor="0.1976716816425323" Value="28.00000041723251" DefaultValue="1.0">
+                 SkewFactor="0.1976716816425323" Value="0.0" DefaultValue="1.0">
         <Connections>
           <Connection NodeId="ahdsr" ParameterId="Attack"/>
         </Connections>
@@ -82,7 +82,7 @@
         </Connections>
       </Parameter>
       <Parameter ID="Decay" MinValue="0.0" MaxValue="40000.0" StepSize="0.1000000014901161"
-                 SkewFactor="0.1976716816425323" Value="40000.0" DefaultValue="1.0">
+                 SkewFactor="0.1976716816425323" Value="20000.00029802322" DefaultValue="1.0">
         <Connections>
           <Connection NodeId="ahdsr" ParameterId="Decay"/>
         </Connections>
@@ -98,7 +98,7 @@
         </Connections>
       </Parameter>
       <Parameter ID="Release" MinValue="0.0" MaxValue="40000.0" StepSize="0.1000000014901161"
-                 SkewFactor="0.1976716816425323" Value="2163.000032231211" DefaultValue="1.0">
+                 SkewFactor="0.1976716816425323" Value="10000.00014901161" DefaultValue="1.0">
         <Connections>
           <Connection NodeId="ahdsr" ParameterId="Release"/>
         </Connections>
