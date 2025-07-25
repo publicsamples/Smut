@@ -143,8 +143,8 @@ struct _ps2 final : public ::faust::dsp {
 			fVec0[IOTA0 & 131071] = fTemp3;
 			int iTemp4 = int(fRec0[0]);
 			int iTemp5 = std::min<int>(65537, std::max<int>(0, iTemp4));
-			int iTemp6 = std::min<int>(65537, std::max<int>(0, iTemp4 + 1));
-			float fTemp7 = fRec0[0] - fTemp0;
+			float fTemp6 = fRec0[0] - fTemp0;
+			int iTemp7 = std::min<int>(65537, std::max<int>(0, iTemp4 + 1));
 			float fTemp8 = std::min<float>(fSlow2 * fRec0[0], 1.0f);
 			float fTemp9 = fSlow0 + fRec0[0];
 			int iTemp10 = int(fTemp9);
@@ -154,10 +154,10 @@ struct _ps2 final : public ::faust::dsp {
 			float fTemp14 = fSlow0 + (fRec0[0] - fTemp12);
 			int iTemp15 = std::min<int>(65537, std::max<int>(0, iTemp10 + 1));
 			float fTemp16 = 1.0f - fTemp8;
-			output0[i0] = FAUSTFLOAT((fTemp2 * fVec0[(IOTA0 - iTemp5) & 131071] + fVec0[(IOTA0 - iTemp6) & 131071] * fTemp7) * fTemp8 + (fVec0[(IOTA0 - iTemp11) & 131071] * fTemp13 + fTemp14 * fVec0[(IOTA0 - iTemp15) & 131071]) * fTemp16);
+			output0[i0] = FAUSTFLOAT((fTemp2 * fVec0[(IOTA0 - iTemp5) & 131071] + fTemp6 * fVec0[(IOTA0 - iTemp7) & 131071]) * fTemp8 + (fVec0[(IOTA0 - iTemp11) & 131071] * fTemp13 + fTemp14 * fVec0[(IOTA0 - iTemp15) & 131071]) * fTemp16);
 			float fTemp17 = float(input1[i0]);
 			fVec1[IOTA0 & 131071] = fTemp17;
-			output1[i0] = FAUSTFLOAT(fTemp8 * (fTemp2 * fVec1[(IOTA0 - iTemp5) & 131071] + fVec1[(IOTA0 - iTemp6) & 131071] * fTemp7) + fTemp16 * (fTemp13 * fVec1[(IOTA0 - iTemp11) & 131071] + fTemp14 * fVec1[(IOTA0 - iTemp15) & 131071]));
+			output1[i0] = FAUSTFLOAT(fTemp8 * (fTemp2 * fVec1[(IOTA0 - iTemp5) & 131071] + fVec1[(IOTA0 - iTemp7) & 131071] * fTemp6) + fTemp16 * (fTemp13 * fVec1[(IOTA0 - iTemp11) & 131071] + fTemp14 * fVec1[(IOTA0 - iTemp15) & 131071]));
 			fRec0[1] = fRec0[0];
 			IOTA0 = IOTA0 + 1;
 		}
