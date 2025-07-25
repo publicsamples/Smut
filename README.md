@@ -103,16 +103,3 @@ Dual combined Filter/VCA module with comprehensive signal routing.
 
 **Spread** -  Enables an 8 stage pitch/pan effect. 
 
-## Modulation
-
-![enter image description here](https://raw.githubusercontent.com/publicsamples/Smut/refs/heads/main/Smut/Documentation/Images/mod.png)
-
-Unlike previous synths I've created (Oi, Grandad! or Quetzalcoatl for instance), Smuts modulation system allows parameters to be controlled concurrently by mixing the levels of the various modulators. The modulator sections for each module are identical and have the following controls.
-
-**Destination menu** - Select the parameter to be modulated 
-
-**Routing sliders** - Increase the modulation from the labeled modulator
-
-**Master Mod Amount** - Sets the amount of modulation from *all* sources. Control is bi-polar. In the middle position there will no modulation, right 
-
-
