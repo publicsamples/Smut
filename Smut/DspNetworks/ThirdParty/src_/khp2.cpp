@@ -146,9 +146,9 @@ struct _khp2 final : public ::faust::dsp {
 		float fSlow6 = 1.0f / fSlow3;
 		for (int i0 = 0; i0 < count; i0 = i0 + 1) {
 			float fTemp0 = float(input0[i0]) - (fRec0[1] + fSlow2 * fRec1[1]);
-			float fTemp1 = fSlow4 * fTemp0 + fRec1[1];
-			fRec0[0] = fSlow1 * fTemp1 + fRec0[1];
-			float fTemp2 = fSlow5 * fTemp0 + fRec1[1];
+			float fTemp1 = fRec1[1] + fSlow4 * fTemp0;
+			fRec0[0] = fRec0[1] + fSlow1 * fTemp1;
+			float fTemp2 = fRec1[1] + fSlow5 * fTemp0;
 			fRec1[0] = fTemp2;
 			float fRec2 = fSlow6 * fTemp0;
 			output0[i0] = FAUSTFLOAT(fRec2);

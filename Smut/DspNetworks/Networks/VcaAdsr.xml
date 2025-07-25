@@ -4,15 +4,28 @@
   <Node FactoryPath="container.chain" ID="VcaAdsr" Bypassed="0" Name="VcaAdsr"
         ShowParameters="1">
     <Nodes>
+      <Node ID="midichain" FactoryPath="container.midichain" Bypassed="0"
+            Name="midichain">
+        <Nodes>
+          <Node ID="oscilloscope" FactoryPath="analyse.oscilloscope" Bypassed="0"
+                Name="oscilloscope">
+            <ComplexData>
+              <DisplayBuffers>
+                <DisplayBuffer Index="0" EmbeddedData=""/>
+              </DisplayBuffers>
+            </ComplexData>
+            <Parameters/>
+          </Node>
+        </Nodes>
+        <Parameters/>
+      </Node>
       <Node ID="ahdsr" FactoryPath="envelope.ahdsr" Bypassed="0" Name="ahdsr">
         <Properties>
           <Property ID="NumParameters" Value="2"/>
         </Properties>
         <SwitchTargets>
           <SwitchTarget>
-            <Connections>
-              <Connection NodeId="add" ParameterId="Value"/>
-            </Connections>
+            <Connections/>
           </SwitchTarget>
           <SwitchTarget>
             <Connections>
@@ -54,11 +67,6 @@
                      DefaultValue="1.0" Automated="1"/>
         </Parameters>
       </Node>
-      <Node ID="add" FactoryPath="math.add" Bypassed="0" Name="add">
-        <Parameters>
-          <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Automated="1"/>
-        </Parameters>
-      </Node>
     </Nodes>
     <Parameters>
       <Parameter ID="Attack" MinValue="0.0" MaxValue="40000.0" StepSize="0.1000000014901161"
@@ -90,7 +98,7 @@
         </Connections>
       </Parameter>
       <Parameter ID="Release" MinValue="0.0" MaxValue="40000.0" StepSize="0.1000000014901161"
-                 SkewFactor="0.1976716816425323" Value="8232.000122666357" DefaultValue="1.0">
+                 SkewFactor="0.1976716816425323" Value="10000.00014901161" DefaultValue="1.0">
         <Connections>
           <Connection NodeId="ahdsr" ParameterId="Release"/>
         </Connections>

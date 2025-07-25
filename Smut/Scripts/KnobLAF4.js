@@ -88,21 +88,6 @@ KnobLaf4.registerFunction("drawRotarySlider", function(g, obj)
 
 
 
-
-const var verbs = [Content.getComponent("ScriptSlider16"),
-                   Content.getComponent("ScriptSlider9"),
-                   Content.getComponent("ScriptSlider10"),
-                   Content.getComponent("ScriptSlider11"),
-                   Content.getComponent("ScriptSlider12"),
-                   Content.getComponent("ScriptSlider13"),
-                   Content.getComponent("ScriptSlider14"),
-                   Content.getComponent("ScriptSlider15"),
-                   Content.getComponent("ScriptSlider18"),
-                   Content.getComponent("ScriptSlider17"),
-                   Content.getComponent("ScriptSlider19")];
-
-for(s in verbs)
-      s.setLocalLookAndFeel(KnobLaf4); 
       
 const var PositionRamps = [Content.getComponent("PosDiv1"),
                            Content.getComponent("PosDiv2"),
@@ -119,7 +104,16 @@ const var PositionRamps = [Content.getComponent("PosDiv1"),
 for(s in PositionRamps)
       s.setLocalLookAndFeel(KnobLaf4);                          
                            
-const var ScriptSlider1 = Content.getComponent("ScriptSlider1").setLocalLookAndFeel(KnobLaf4);
-                           
+
+const var FilePS = [Content.getComponent("FilePitch1"),
+                    Content.getComponent("FileWin1"),
+                    Content.getComponent("FileXf1")];
+                    
+                         
+for(s in FilePS)
+      s.setLocalLookAndFeel(KnobLaf4); 
+      
+                      
+                    
                            
 

@@ -19,9 +19,8 @@ const var AudioList = Engine.loadAudioFilesIntoPool();
 
 const Folder = [];
 
-const var File1 = Synth.getAudioSampleProcessor("File");
+const var File1 = Synth.getAudioSampleProcessor("Osc1");
 
-const var Files = Synth.getEffect("File");
 
 const slot1 = File1.getAudioFile(0);
 const slot2 = File1.getAudioFile(1);
@@ -106,6 +105,8 @@ for (file in AudioList) {
 
 
    FirstCB.set("items", foldersV1.join("\n"));
+   FirstSp.set("items", foldersV1.join("\n"));
+
 }
 
 
@@ -796,7 +797,7 @@ Content.getComponent("ThirdSp3").setControlCallback(onThirdSp3Control);
  
  inline function onUserModeControl(component, value)
  {
- File.setAttribute(File.FileUser, value-1);
+ Osc1.setAttribute(Osc1.FileUser, value-1);
  
  	for(s in FactoryFile1)
  		s.showControl(value);  

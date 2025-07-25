@@ -119,8 +119,6 @@ const var OscKnobs = [Content.getComponent("Bend1"),
                       Content.getComponent("Step2"),
                       Content.getComponent("Div1"),
                       Content.getComponent("Div2"),
-                      Content.getComponent("OscGain1"),
-                      Content.getComponent("OscGain2"),
                       Content.getComponent("Bend2")];
  
  for(s in OscKnobs)
@@ -150,55 +148,59 @@ for(s in LfoMods1)
       s.setLocalLookAndFeel(KnobLaf);  
 
  
-      
-      
-      const var FVCA = [Content.getComponent("FilterQ1"),
-              			Content.getComponent("FilterQ2"),
-            			Content.getComponent("FilterMix1"),
-       					Content.getComponent("FilterMix2"),
-                        Content.getComponent("VcaGain1"),
-                        Content.getComponent("VcaGain2"),
-                        Content.getComponent("VcaMaster1"),
-                        Content.getComponent("VcaMaster2"),
-                        Content.getComponent("VcaPan2"),
-                        Content.getComponent("VcaPan1")];
+ const var FVCA = [Content.getComponent("VcaPan2"),
+                  Content.getComponent("VcaGain2"),
+                  Content.getComponent("VcaPan1"),
+                  Content.getComponent("VcaGain1"),
+                  Content.getComponent("FilterQ1"),
+                  Content.getComponent("FilterMix1"),
+                  Content.getComponent("FilterMix2"),
+                  Content.getComponent("FilterQ2")];
+
 
 for(s in FVCA)
       s.setLocalLookAndFeel(KnobLaf);                       
 
 const var FileKnbs = [Content.getComponent("Input Offset1"),
-                      Content.getComponent("Input Offset"),
-                      
-                      Content.getComponent("FileIn2"),
-                      Content.getComponent("Pos"),
-                      Content.getComponent("FileWin1"),
-                      Content.getComponent("FileXf1"),
-                      Content.getComponent("FilePitch1")];
+                   Content.getComponent("FileIn2"),
+                      Content.getComponent("Pos")];
 
 for(s in FileKnbs)
       s.setLocalLookAndFeel(KnobLaf);      
                       
 const var ModKnobs = [Content.getComponent("MidiSelOsc1"),
                       Content.getComponent("InputMod1"),
-                      Content.getComponent("InputMod2"),
+                      Content.getComponent("ShapeMod1"),
                       Content.getComponent("WidthMod1"),
-                      Content.getComponent("WidthMod2"),
-         			Content.getComponent("FileTempoMod1"),
+                      Content.getComponent("OutMod1"),
+                      Content.getComponent("OutMod2"),
+                      Content.getComponent("FileTempoMod1"),
+                      Content.getComponent("FilePitchMod1"),
                       Content.getComponent("FileInMod1"),
-                      Content.getComponent("WinMod1"),
                       Content.getComponent("PitchMod1"),
-                      Content.getComponent("PitchMod2"),
                       Content.getComponent("WinXfMod1"),
                       Content.getComponent("WinXfMod2"),
                       Content.getComponent("FilterMixMod1"),
                       Content.getComponent("FilterCut1Mod1"),
                       Content.getComponent("FilterMixMod3"),
                       Content.getComponent("FilterVolMod1"),
-                      Content.getComponent("FilterPanMod4"),
-                      Content.getComponent("FilterPanMod3"),
+                      Content.getComponent("FilterPanMod2"),
                       Content.getComponent("FilterPanMod1")];
+                      
+                      
 for(s in ModKnobs)
       s.setLocalLookAndFeel(KnobLaf);  
 
+const var Unison = [Content.getComponent("UnisonDetune1"),
+                    Content.getComponent("ScriptSlider11"),
+                    Content.getComponent("UnisonVoices1"),
+                    Content.getComponent("UnisonDetune3"),
+                    Content.getComponent("ScriptSlider12"),
+                    Content.getComponent("UnisonDetune2"),
+                    Content.getComponent("UnisonVoices2"),
+                    Content.getComponent("ScriptSlider13")];
                     
-          
+for(s in Unison)
+      s.setLocalLookAndFeel(KnobLaf);  
+
+  

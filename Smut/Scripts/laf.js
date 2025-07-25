@@ -136,18 +136,13 @@ const var EnvButtons = [Content.getComponent("EnvMode1"),
 for(s in EnvButtons)
       s.setLocalLookAndFeel(LAF_Button);  
       
-const var MiscButtons = [Content.getComponent("LpHpCt")];
+      const var UniDelSync = Content.getComponent("UniDelSync");
+      
+      
+      
+const var MiscButtons = [Content.getComponent("LpHpCt"),
+						Content.getComponent("UniDelSync")];
 
  
  for(s in MiscButtons)
-       s.setLocalLookAndFeel(LAF_Button);         
-       
-       
-       const var Trackers = [Content.getComponent("RampOS5"),
-                             Content.getComponent("RampOS6"),
-                             Content.getComponent("RampOS7"),
-                             Content.getComponent("RampOS8")];
-       
-for(s in Trackers)
-      s.setLocalLookAndFeel(LAF_Button);          
-                       
+       s.setLocalLookAndFeel(LAF_Button);                         

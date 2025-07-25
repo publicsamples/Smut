@@ -329,7 +329,7 @@ struct expr1
 {
 	static float op(float input, float value)
 	{
-		return input * Math.asin(Math.PI * 1.0 * value * input) * (1 - Math.PI);;
+		return (1.0 - value) * input + value * Math.sin(Math.PI * 4.0 * value * input);;
 	}
 };
 }
@@ -387,6 +387,15 @@ using pma3_mod_5 = parameter::from0To1<core::smoother<NV>,
 
 template <int NV> using pma3_mod_6 = xfader_c0<NV>;
 
+DECLARE_PARAMETER_RANGE_SKEW(pma3_mod_7Range, 
+                             0., 
+                             1000., 
+                             0.30103);
+
+using pma3_mod_7 = parameter::from0To1<core::fix_delay, 
+                                       0, 
+                                       pma3_mod_7Range>;
+
 template <int NV>
 using pma3_mod = parameter::chain<ranges::Identity, 
                                   parameter::plain<pma4_t<NV>, 2>, 
@@ -395,7 +404,8 @@ using pma3_mod = parameter::chain<ranges::Identity,
                                   pma3_mod_3<NV>, 
                                   pma3_mod_4<NV>, 
                                   pma3_mod_5<NV>, 
-                                  pma3_mod_6<NV>>;
+                                  pma3_mod_6<NV>, 
+                                  pma3_mod_7>;
 
 template <int NV>
 using pma3_t = control::pma<NV, pma3_mod<NV>>;
@@ -496,9 +506,12 @@ using chain60_t = container::chain<parameter::empty,
                                    math::add<NV>, 
                                    core::gain<NV>>;
 
+template <int NV> using midi5_t = midi2_t<NV>;
+
 template <int NV>
 using chain61_t = container::chain<parameter::empty, 
-                                   wrap::fix<1, math::add<NV>>, 
+                                   wrap::fix<1, midi5_t<NV>>, 
+                                   math::add<NV>, 
                                    core::gain<NV>>;
 
 template <int NV>
@@ -757,13 +770,10 @@ using peak3_t = wrap::no_data<core::peak>;
 template <int NV>
 using chain25_t = container::chain<parameter::empty, 
                                    wrap::fix<1, math::pi<NV>>, 
-                                   math::sin<NV>, 
-                                   wrap::no_process<math::sig2mod<NV>>>;
+                                   math::sin<NV>>;
 
-template <int NV>
 using chain24_t = container::chain<parameter::empty, 
-                                   wrap::fix<1, wrap::no_process<math::mul<NV>>>, 
-                                   wrap::no_process<math::sig2mod<NV>>>;
+                                   wrap::fix<1, core::empty>>;
 
 template <int NV>
 using chain14_t = container::chain<parameter::empty, 
@@ -779,16 +789,20 @@ using chain18_t = container::chain<parameter::empty,
                                    math::rect<NV>>;
 template <int NV>
 using oscillator_t = wrap::no_data<core::oscillator<NV>>;
+template <int NV>
+using branch6_t = container::branch<parameter::empty, 
+                                    wrap::fix<1, fx::sampleandhold<NV>>, 
+                                    fx::sampleandhold<NV>>;
 
 template <int NV>
 using chain31_t = container::chain<parameter::empty, 
                                    wrap::fix<1, oscillator_t<NV>>, 
+                                   branch6_t<NV>, 
                                    math::sig2mod<NV>>;
 
 template <int NV>
 using chain32_t = container::chain<parameter::empty, 
-                                   wrap::fix<1, wrap::no_process<math::clear<NV>>>, 
-                                   input_toggle_t<NV>, 
+                                   wrap::fix<1, input_toggle_t<NV>>, 
                                    cable_table_t<NV>, 
                                    math::add<NV>>;
 
@@ -801,7 +815,7 @@ using chain33_t = container::chain<parameter::empty,
 template <int NV>
 using branch2_t = container::branch<parameter::empty, 
                                     wrap::fix<1, chain25_t<NV>>, 
-                                    chain24_t<NV>, 
+                                    chain24_t, 
                                     chain14_t<NV>, 
                                     chain18_t<NV>, 
                                     chain31_t<NV>, 
@@ -816,20 +830,16 @@ using chain73_t = container::chain<parameter::empty,
 
 template <int NV>
 using chain74_t = container::chain<parameter::empty, 
-                                   wrap::fix<1, core::smoother<NV>>, 
-                                   wrap::no_process<math::sig2mod<NV>>, 
-                                   wrap::no_process<math::sin<NV>>>;
+                                   wrap::fix<1, core::smoother<NV>>>;
 template <int NV>
-using branch6_t = container::branch<parameter::empty, 
-                                    wrap::fix<1, fx::sampleandhold<NV>>, 
-                                    fx::sampleandhold<NV>>;
+using mono_cable = cable::block<NV, 1>;
 
 template <int NV>
 using chain22_t = container::chain<parameter::empty, 
-                                   wrap::fix<1, branch6_t<NV>>, 
-                                   core::gain<NV>, 
-                                   wrap::no_process<math::sig2mod<NV>>, 
-                                   wrap::no_process<math::sin<NV>>>;
+                                   wrap::fix<1, routing::receive<NV, mono_cable<NV>>>, 
+                                   core::fix_delay, 
+                                   routing::send<NV, mono_cable<NV>>, 
+                                   core::gain<NV>>;
 
 template <int NV>
 using chain26_t = container::chain<parameter::empty, 
@@ -843,8 +853,7 @@ using chain65_t = container::chain<parameter::empty,
 
 template <int NV>
 using chain27_t = container::chain<parameter::empty, 
-                                   wrap::fix<1, wrap::no_process<math::sin<NV>>>, 
-                                   math::expr<NV, custom::expr1>>;
+                                   wrap::fix<1, math::expr<NV, custom::expr1>>>;
 
 template <int NV>
 using chain56_t = container::chain<parameter::empty, 
@@ -862,342 +871,72 @@ using peak11_t = wrap::data<core::peak,
                             data::external::displaybuffer<0>>;
 
 using global_cable_t_index = global_cable9_t_index;
-
-template <int NV>
-using peak1_mod = parameter::chain<ranges::Identity, 
-                                   parameter::plain<routing::global_cable<global_cable_t_index, parameter::empty>, 0>, 
-                                   parameter::plain<math::add<NV>, 0>, 
-                                   parameter::plain<math::add<NV>, 0>>;
-
-template <int NV>
-using peak1_t = wrap::mod<peak1_mod<NV>, 
+using peak1_mod = parameter::plain<routing::global_cable<global_cable_t_index, parameter::empty>, 
+                                   0>;
+using peak1_t = wrap::mod<peak1_mod, 
                           wrap::no_data<core::peak>>;
 
 using chain4_t = container::chain<parameter::empty, 
                                   wrap::fix<1, routing::global_cable<global_cable_t_index, parameter::empty>>>;
 
-using global_cable2_t_index = runtime_target::indexers::fix_hash<-1395393920>;
-using change_mod = parameter::plain<routing::global_cable<global_cable2_t_index, parameter::empty>, 
-                                    0>;
-template <int NV>
-using change_t = control::change<NV, change_mod>;
-template <int NV>
-using peak_t = wrap::mod<parameter::plain<change_t<NV>, 0>, 
-                         wrap::no_data<core::peak>>;
+using split_t = container::split<parameter::empty, wrap::fix<1, chain4_t>>;
 
-template <int NV>
-using chain5_t = container::chain<parameter::empty, 
-                                  wrap::fix<1, math::clear<NV>>, 
-                                  math::add<NV>, 
-                                  math::rect<NV>, 
-                                  peak_t<NV>, 
-                                  change_t<NV>, 
-                                  routing::global_cable<global_cable2_t_index, parameter::empty>>;
-
-using global_cable21_t_index = runtime_target::indexers::fix_hash<1752812596>;
-
-namespace chain170_t_parameters
-{
-DECLARE_PARAMETER_RANGE_STEP(note_InputRange, 
-                             0., 
-                             127., 
-                             1.);
-
-using note = parameter::chain<note_InputRange, 
-                              parameter::plain<routing::global_cable<global_cable21_t_index, parameter::empty>, 0>>;
-
-}
-
-using chain170_t = container::chain<chain170_t_parameters::note, 
-                                    wrap::fix<1, routing::global_cable<global_cable21_t_index, parameter::empty>>>;
-template <int NV>
-using minmax2_t = control::minmax<NV, 
-                                  parameter::plain<chain170_t, 0>>;
-template <int NV>
-using change3_t = control::change<NV, 
-                                  parameter::plain<minmax2_t<NV>, 0>>;
-template <int NV>
-using peak14_t = wrap::mod<parameter::plain<change3_t<NV>, 0>, 
-                           wrap::no_data<core::peak>>;
-
-template <int NV>
-using chain169_t = container::chain<parameter::empty, 
-                                    wrap::fix<1, minmax2_t<NV>>, 
-                                    chain170_t>;
-
-template <int NV>
-using chain112_t = container::chain<parameter::empty, 
-                                    wrap::fix<1, math::clear<NV>>, 
-                                    math::add<NV>, 
-                                    peak14_t<NV>, 
-                                    change3_t<NV>, 
-                                    chain169_t<NV>>;
-
-template <int NV>
-using split_t = container::split<parameter::empty, 
-                                 wrap::fix<1, chain4_t>, 
-                                 chain5_t<NV>, 
-                                 chain112_t<NV>>;
-
-template <int NV>
 using chain_t = container::chain<parameter::empty, 
-                                 wrap::fix<1, peak1_t<NV>>, 
-                                 split_t<NV>>;
+                                 wrap::fix<1, peak1_t>, 
+                                 split_t>;
 
 using global_cable8_t_index = global_cable11_t_index;
-
-template <int NV>
-using peak12_mod = parameter::chain<ranges::Identity, 
-                                    parameter::plain<routing::global_cable<global_cable8_t_index, parameter::empty>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>>;
-
-template <int NV>
-using peak12_t = wrap::mod<peak12_mod<NV>, 
+using peak12_mod = parameter::plain<routing::global_cable<global_cable8_t_index, parameter::empty>, 
+                                    0>;
+using peak12_t = wrap::mod<peak12_mod, 
                            wrap::no_data<core::peak>>;
 
 using chain17_t = container::chain<parameter::empty, 
                                    wrap::fix<1, routing::global_cable<global_cable8_t_index, parameter::empty>>>;
 
-using global_cable29_t_index = runtime_target::indexers::fix_hash<-1395393919>;
-using change8_mod = parameter::plain<routing::global_cable<global_cable29_t_index, parameter::empty>, 
-                                     0>;
-template <int NV>
-using change8_t = control::change<NV, change8_mod>;
-template <int NV>
-using peak13_t = wrap::mod<parameter::plain<change8_t<NV>, 0>, 
-                           wrap::no_data<core::peak>>;
-
-template <int NV>
-using chain19_t = container::chain<parameter::empty, 
-                                   wrap::fix<1, math::clear<NV>>, 
-                                   math::add<NV>, 
-                                   math::rect<NV>, 
-                                   peak13_t<NV>, 
-                                   change8_t<NV>, 
-                                   routing::global_cable<global_cable29_t_index, parameter::empty>>;
-
-using global_cable30_t_index = runtime_target::indexers::fix_hash<1752812597>;
-
-namespace chain178_t_parameters
-{
-DECLARE_PARAMETER_RANGE_STEP(note_InputRange, 
-                             0., 
-                             127., 
-                             1.);
-
-using note = parameter::chain<note_InputRange, 
-                              parameter::plain<routing::global_cable<global_cable30_t_index, parameter::empty>, 0>>;
-
-}
-
-using chain178_t = container::chain<chain178_t_parameters::note, 
-                                    wrap::fix<1, routing::global_cable<global_cable30_t_index, parameter::empty>>>;
-template <int NV>
-using minmax6_t = control::minmax<NV, 
-                                  parameter::plain<chain178_t, 0>>;
-template <int NV>
-using change9_t = control::change<NV, 
-                                  parameter::plain<minmax6_t<NV>, 0>>;
-template <int NV>
-using peak18_t = wrap::mod<parameter::plain<change9_t<NV>, 0>, 
-                           wrap::no_data<core::peak>>;
-
-template <int NV>
-using chain177_t = container::chain<parameter::empty, 
-                                    wrap::fix<1, minmax6_t<NV>>, 
-                                    chain178_t>;
-
-template <int NV>
-using chain116_t = container::chain<parameter::empty, 
-                                    wrap::fix<1, math::clear<NV>>, 
-                                    math::add<NV>, 
-                                    peak18_t<NV>, 
-                                    change9_t<NV>, 
-                                    chain177_t<NV>>;
-
-template <int NV>
 using split6_t = container::split<parameter::empty, 
-                                  wrap::fix<1, chain17_t>, 
-                                  chain19_t<NV>, 
-                                  chain116_t<NV>>;
+                                  wrap::fix<1, chain17_t>>;
 
-template <int NV>
 using chain16_t = container::chain<parameter::empty, 
-                                   wrap::fix<1, peak12_t<NV>>, 
-                                   split6_t<NV>>;
+                                   wrap::fix<1, peak12_t>, 
+                                   split6_t>;
 
 using global_cable31_t_index = global_cable10_t_index;
-
-template <int NV>
-using peak19_mod = parameter::chain<ranges::Identity, 
-                                    parameter::plain<routing::global_cable<global_cable31_t_index, parameter::empty>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>>;
-
-template <int NV>
-using peak19_t = wrap::mod<peak19_mod<NV>, 
+using peak19_mod = parameter::plain<routing::global_cable<global_cable31_t_index, parameter::empty>, 
+                                    0>;
+using peak19_t = wrap::mod<peak19_mod, 
                            wrap::no_data<core::peak>>;
 
 using chain21_t = container::chain<parameter::empty, 
                                    wrap::fix<1, routing::global_cable<global_cable31_t_index, parameter::empty>>>;
 
-using global_cable32_t_index = runtime_target::indexers::fix_hash<-1395393918>;
-using change10_mod = parameter::plain<routing::global_cable<global_cable32_t_index, parameter::empty>, 
-                                      0>;
-template <int NV>
-using change10_t = control::change<NV, change10_mod>;
-template <int NV>
-using peak20_t = wrap::mod<parameter::plain<change10_t<NV>, 0>, 
-                           wrap::no_data<core::peak>>;
-
-template <int NV>
-using chain23_t = container::chain<parameter::empty, 
-                                   wrap::fix<1, math::clear<NV>>, 
-                                   math::add<NV>, 
-                                   math::rect<NV>, 
-                                   peak20_t<NV>, 
-                                   change10_t<NV>, 
-                                   routing::global_cable<global_cable32_t_index, parameter::empty>>;
-
-using global_cable33_t_index = runtime_target::indexers::fix_hash<1752812598>;
-
-namespace chain180_t_parameters
-{
-DECLARE_PARAMETER_RANGE_STEP(note_InputRange, 
-                             0., 
-                             127., 
-                             1.);
-
-using note = parameter::chain<note_InputRange, 
-                              parameter::plain<routing::global_cable<global_cable33_t_index, parameter::empty>, 0>>;
-
-}
-
-using chain180_t = container::chain<chain180_t_parameters::note, 
-                                    wrap::fix<1, routing::global_cable<global_cable33_t_index, parameter::empty>>>;
-template <int NV>
-using minmax7_t = control::minmax<NV, 
-                                  parameter::plain<chain180_t, 0>>;
-template <int NV>
-using change11_t = control::change<NV, 
-                                   parameter::plain<minmax7_t<NV>, 0>>;
-template <int NV>
-using peak21_t = wrap::mod<parameter::plain<change11_t<NV>, 0>, 
-                           wrap::no_data<core::peak>>;
-
-template <int NV>
-using chain179_t = container::chain<parameter::empty, 
-                                    wrap::fix<1, minmax7_t<NV>>, 
-                                    chain180_t>;
-
-template <int NV>
-using chain117_t = container::chain<parameter::empty, 
-                                    wrap::fix<1, math::clear<NV>>, 
-                                    math::add<NV>, 
-                                    peak21_t<NV>, 
-                                    change11_t<NV>, 
-                                    chain179_t<NV>>;
-
-template <int NV>
 using split15_t = container::split<parameter::empty, 
-                                   wrap::fix<1, chain21_t>, 
-                                   chain23_t<NV>, 
-                                   chain117_t<NV>>;
+                                   wrap::fix<1, chain21_t>>;
 
-template <int NV>
 using chain20_t = container::chain<parameter::empty, 
-                                   wrap::fix<1, peak19_t<NV>>, 
-                                   split15_t<NV>>;
+                                   wrap::fix<1, peak19_t>, 
+                                   split15_t>;
 
 using global_cable34_t_index = global_cable12_t_index;
-
-template <int NV>
-using peak22_mod = parameter::chain<ranges::Identity, 
-                                    parameter::plain<routing::global_cable<global_cable34_t_index, parameter::empty>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>>;
-
-template <int NV>
-using peak22_t = wrap::mod<peak22_mod<NV>, 
+using peak22_mod = parameter::plain<routing::global_cable<global_cable34_t_index, parameter::empty>, 
+                                    0>;
+using peak22_t = wrap::mod<peak22_mod, 
                            wrap::no_data<core::peak>>;
 
 using chain34_t = container::chain<parameter::empty, 
                                    wrap::fix<1, routing::global_cable<global_cable34_t_index, parameter::empty>>>;
 
-using global_cable35_t_index = runtime_target::indexers::fix_hash<-1395393917>;
-using change12_mod = parameter::plain<routing::global_cable<global_cable35_t_index, parameter::empty>, 
-                                      0>;
-template <int NV>
-using change12_t = control::change<NV, change12_mod>;
-template <int NV>
-using peak23_t = wrap::mod<parameter::plain<change12_t<NV>, 0>, 
-                           wrap::no_data<core::peak>>;
-
-template <int NV>
-using chain35_t = container::chain<parameter::empty, 
-                                   wrap::fix<1, math::clear<NV>>, 
-                                   math::add<NV>, 
-                                   math::rect<NV>, 
-                                   peak23_t<NV>, 
-                                   change12_t<NV>, 
-                                   routing::global_cable<global_cable35_t_index, parameter::empty>>;
-
-using global_cable36_t_index = runtime_target::indexers::fix_hash<1752812599>;
-
-namespace chain182_t_parameters
-{
-DECLARE_PARAMETER_RANGE_STEP(note_InputRange, 
-                             0., 
-                             127., 
-                             1.);
-
-using note = parameter::chain<note_InputRange, 
-                              parameter::plain<routing::global_cable<global_cable36_t_index, parameter::empty>, 0>>;
-
-}
-
-using chain182_t = container::chain<chain182_t_parameters::note, 
-                                    wrap::fix<1, routing::global_cable<global_cable36_t_index, parameter::empty>>>;
-template <int NV>
-using minmax8_t = control::minmax<NV, 
-                                  parameter::plain<chain182_t, 0>>;
-template <int NV>
-using change13_t = control::change<NV, 
-                                   parameter::plain<minmax8_t<NV>, 0>>;
-template <int NV>
-using peak24_t = wrap::mod<parameter::plain<change13_t<NV>, 0>, 
-                           wrap::no_data<core::peak>>;
-
-template <int NV>
-using chain181_t = container::chain<parameter::empty, 
-                                    wrap::fix<1, minmax8_t<NV>>, 
-                                    chain182_t>;
-
-template <int NV>
-using chain118_t = container::chain<parameter::empty, 
-                                    wrap::fix<1, math::clear<NV>>, 
-                                    math::add<NV>, 
-                                    peak24_t<NV>, 
-                                    change13_t<NV>, 
-                                    chain181_t<NV>>;
-
-template <int NV>
 using split16_t = container::split<parameter::empty, 
-                                   wrap::fix<1, chain34_t>, 
-                                   chain35_t<NV>, 
-                                   chain118_t<NV>>;
+                                   wrap::fix<1, chain34_t>>;
 
-template <int NV>
 using chain28_t = container::chain<parameter::empty, 
-                                   wrap::fix<1, peak22_t<NV>>, 
-                                   split16_t<NV>>;
-template <int NV>
+                                   wrap::fix<1, peak22_t>, 
+                                   split16_t>;
 using branch_t = container::branch<parameter::empty, 
-                                   wrap::fix<1, chain_t<NV>>, 
-                                   chain16_t<NV>, 
-                                   chain20_t<NV>, 
-                                   chain28_t<NV>>;
+                                   wrap::fix<1, chain_t>, 
+                                   chain16_t, 
+                                   chain20_t, 
+                                   chain28_t>;
 
 template <int NV>
 using chain11_t = container::chain<parameter::empty, 
@@ -1205,7 +944,7 @@ using chain11_t = container::chain<parameter::empty,
                                    peak9_t, 
                                    branch4_t<NV>, 
                                    peak11_t, 
-                                   branch_t<NV>>;
+                                   branch_t>;
 
 template <int NV>
 using modchain4_t_ = container::chain<parameter::empty, 
@@ -1303,27 +1042,6 @@ template <int NV>
 using Shape = parameter::chain<Shape_InputRange, Shape_0<NV>>;
 
 template <int NV>
-using Min = parameter::chain<ranges::Identity, 
-                             parameter::plain<lfo_impl::minmax2_t<NV>, 1>, 
-                             parameter::plain<lfo_impl::minmax6_t<NV>, 1>, 
-                             parameter::plain<lfo_impl::minmax7_t<NV>, 1>, 
-                             parameter::plain<lfo_impl::minmax8_t<NV>, 1>>;
-
-template <int NV>
-using Max = parameter::chain<ranges::Identity, 
-                             parameter::plain<lfo_impl::minmax2_t<NV>, 2>, 
-                             parameter::plain<lfo_impl::minmax6_t<NV>, 2>, 
-                             parameter::plain<lfo_impl::minmax7_t<NV>, 2>, 
-                             parameter::plain<lfo_impl::minmax8_t<NV>, 2>>;
-
-template <int NV>
-using Step = parameter::chain<ranges::Identity, 
-                              parameter::plain<lfo_impl::minmax2_t<NV>, 4>, 
-                              parameter::plain<lfo_impl::minmax6_t<NV>, 4>, 
-                              parameter::plain<lfo_impl::minmax7_t<NV>, 4>, 
-                              parameter::plain<lfo_impl::minmax8_t<NV>, 4>>;
-
-template <int NV>
 using GateMod = parameter::chain<ranges::Identity, 
                                  parameter::plain<lfo_impl::cable_table2_t<NV>, 0>, 
                                  parameter::plain<lfo_impl::pma5_t<NV>, 1>>;
@@ -1360,11 +1078,13 @@ template <int NV>
 using Divsrc = parameter::chain<Divsrc_InputRange, 
                                 parameter::plain<lfo_impl::xfader1_t<NV>, 0>>;
 
-template <int NV>
-using Dest = parameter::plain<lfo_impl::branch_t<NV>, 0>;
+using Dest = parameter::plain<lfo_impl::branch_t, 0>;
 using Gate = parameter::empty;
 template <int NV>
 using Adjust = parameter::plain<lfo_impl::pma3_t<NV>, 2>;
+using Min = Gate;
+using Max = Gate;
+using Step = Gate;
 template <int NV>
 using TempoMod = parameter::plain<lfo_impl::pma1_t<NV>, 1>;
 template <int NV>
@@ -1374,16 +1094,16 @@ using DivMod = parameter::plain<control::pma<NV, parameter::empty>,
                                 1>;
 template <int NV>
 using lfo_t_plist = parameter::list<tempo<NV>, 
-                                    Dest<NV>, 
+                                    Dest, 
                                     AjustMode<NV>, 
                                     Clk<NV>, 
                                     Div<NV>, 
                                     Gate, 
                                     Adjust<NV>, 
                                     Shape<NV>, 
-                                    Min<NV>, 
-                                    Max<NV>, 
-                                    Step<NV>, 
+                                    Min, 
+                                    Max, 
+                                    Step, 
                                     TempoMod<NV>, 
                                     AdjMod<NV>, 
                                     GateMod<NV>, 
@@ -1414,46 +1134,53 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 		
 		SNEX_METADATA_ID(lfo);
 		SNEX_METADATA_NUM_CHANNELS(2);
-		SNEX_METADATA_ENCODED_PARAMETERS(300)
+		SNEX_METADATA_ENCODED_PARAMETERS(310)
 		{
-			0x005B, 0x0000, 0x7400, 0x6D65, 0x6F70, 0x0000, 0x0000, 0x0000, 
-            0x9000, 0x0041, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x5B3F, 
-            0x0001, 0x0000, 0x6544, 0x7473, 0x0000, 0x0000, 0x0000, 0x4000, 
-            0x0040, 0x4000, 0x0040, 0x8000, 0x003F, 0x8000, 0x5B3F, 0x0002, 
-            0x0000, 0x6A41, 0x7375, 0x4D74, 0x646F, 0x0065, 0x0000, 0x3F80, 
-            0x0000, 0x40E0, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 
-            0x035B, 0x0000, 0x4300, 0x6B6C, 0x0000, 0x0000, 0x0000, 0x8000, 
-            0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5B00, 0x0004, 
-            0x0000, 0x6944, 0x0076, 0x0000, 0x3F80, 0x0000, 0x4200, 0x0000, 
-            0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x055B, 0x0000, 0x4700, 
-            0x7461, 0x0065, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 
-            0x0000, 0x3F80, 0x0000, 0x3F80, 0x065B, 0x0000, 0x4100, 0x6A64, 
-            0x7375, 0x0074, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F00, 
-            0x0000, 0x3F80, 0x0000, 0x0000, 0x075B, 0x0000, 0x5300, 0x6168, 
-            0x6570, 0x0000, 0x8000, 0x003F, 0xE000, 0x0040, 0x8000, 0x003F, 
-            0x8000, 0x003F, 0x8000, 0x5B3F, 0x0008, 0x0000, 0x694D, 0x006E, 
-            0x0000, 0x41C0, 0x0000, 0x42C0, 0x0000, 0x41C0, 0x0000, 0x3F80, 
-            0x0000, 0x3F80, 0x095B, 0x0000, 0x4D00, 0x7861, 0x0000, 0xC000, 
-            0x0041, 0xC000, 0x0042, 0xC000, 0x0042, 0x8000, 0x003F, 0x0000, 
-            0x5B00, 0x000A, 0x0000, 0x7453, 0x7065, 0x0000, 0x0000, 0x0000, 
-            0x4000, 0x0041, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5B00, 
-            0x000B, 0x0000, 0x6554, 0x706D, 0x4D6F, 0x646F, 0x0000, 0x8000, 
+			0x005C, 0x0000, 0x0000, 0x6574, 0x706D, 0x006F, 0x0000, 0x0000, 
+            0x0000, 0x4190, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x005C, 0x0001, 0x0000, 0x6544, 0x7473, 0x0000, 0x0000, 0x0000, 
+            0x4000, 0x0040, 0x4000, 0x0040, 0x8000, 0x003F, 0x8000, 0x5C3F, 
+            0x0200, 0x0000, 0x4100, 0x756A, 0x7473, 0x6F4D, 0x6564, 0x0000, 
+            0x8000, 0x003F, 0xE000, 0x0040, 0xC000, 0x0040, 0x8000, 0x003F, 
+            0x8000, 0x5C3F, 0x0300, 0x0000, 0x4300, 0x6B6C, 0x0000, 0x0000, 
+            0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 
+            0x5C00, 0x0400, 0x0000, 0x4400, 0x7669, 0x0000, 0x8000, 0x003F, 
+            0x0000, 0x0042, 0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 
+            0x0500, 0x0000, 0x4700, 0x7461, 0x0065, 0x0000, 0x0000, 0x0000, 
+            0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
+            0x0006, 0x0000, 0x6441, 0x756A, 0x7473, 0x0000, 0x0000, 0x0000, 
+            0x8000, 0xEA3F, 0x8C4D, 0x003E, 0x8000, 0x003F, 0x0000, 0x5C00, 
+            0x0700, 0x0000, 0x5300, 0x6168, 0x6570, 0x0000, 0x8000, 0x003F, 
+            0xE000, 0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 
+            0x0800, 0x0000, 0x4D00, 0x6E69, 0x0000, 0xC000, 0x0041, 0xC000, 
+            0x0042, 0xC000, 0x0041, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x0900, 
+            0x0000, 0x4D00, 0x7861, 0x0000, 0xC000, 0x0041, 0xC000, 0x0042, 
+            0xC000, 0x0042, 0x8000, 0x003F, 0x0000, 0x5C00, 0x0A00, 0x0000, 
+            0x5300, 0x6574, 0x0070, 0x0000, 0x0000, 0x0000, 0x4140, 0x0000, 
+            0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x000B, 0x0000, 
+            0x6554, 0x706D, 0x4D6F, 0x646F, 0x0000, 0x8000, 0x00BF, 0x8000, 
+            0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x0C00, 
+            0x0000, 0x4100, 0x6A64, 0x6F4D, 0x0064, 0x0000, 0xBF80, 0x0000, 
+            0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 
+            0x000D, 0x0000, 0x6147, 0x6574, 0x6F4D, 0x0064, 0x0000, 0x0000, 
+            0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x005C, 0x000E, 0x0000, 0x6944, 0x4D76, 0x646F, 0x0000, 0x8000, 
             0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 
-            0x5B00, 0x000C, 0x0000, 0x6441, 0x4D6A, 0x646F, 0x0000, 0x8000, 
-            0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 
-            0x5B00, 0x000D, 0x0000, 0x6147, 0x6574, 0x6F4D, 0x0064, 0x0000, 
-            0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
-            0x3F80, 0x0E5B, 0x0000, 0x4400, 0x7669, 0x6F4D, 0x0064, 0x0000, 
-            0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
-            0x0000, 0x0F5B, 0x0000, 0x7400, 0x6D65, 0x6F70, 0x7253, 0x0063, 
+            0x5C00, 0x0F00, 0x0000, 0x7400, 0x6D65, 0x6F70, 0x7253, 0x0063, 
             0x0000, 0x3F80, 0x0000, 0x40C0, 0x0000, 0x3F80, 0x0000, 0x3F80, 
-            0x0000, 0x0000, 0x105B, 0x0000, 0x4100, 0x6A64, 0x7253, 0x0063, 
-            0x0000, 0x3F80, 0x0000, 0x40C0, 0x0000, 0x3F80, 0x0000, 0x3F80, 
-            0x0000, 0x0000, 0x115B, 0x0000, 0x4700, 0x7461, 0x5365, 0x6372, 
-            0x0000, 0x8000, 0x003F, 0xA000, 0x0040, 0x8000, 0x003F, 0x8000, 
-            0x003F, 0x0000, 0x5B00, 0x0012, 0x0000, 0x6944, 0x7376, 0x6372, 
+            0x0000, 0x0000, 0x005C, 0x0010, 0x0000, 0x6441, 0x536A, 0x6372, 
             0x0000, 0x8000, 0x003F, 0xC000, 0x0040, 0x8000, 0x003F, 0x8000, 
-            0x003F, 0x0000, 0x0000, 0x0000
+            0x003F, 0x0000, 0x5C00, 0x1100, 0x0000, 0x4700, 0x7461, 0x5365, 
+            0x6372, 0x0000, 0x8000, 0x003F, 0xA000, 0x0040, 0x8000, 0x003F, 
+            0x8000, 0x003F, 0x0000, 0x5C00, 0x1200, 0x0000, 0x4400, 0x7669, 
+            0x7273, 0x0063, 0x0000, 0x3F80, 0x0000, 0x40C0, 0x0000, 0x3F80, 
+            0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x0000
+		};
+		SNEX_METADATA_ENCODED_MOD_INFO(17)
+		{
+			0x003A, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+            0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+            0x0000
 		};
 	};
 	
@@ -1673,12 +1400,15 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
                        getT(2);
 		auto& chain61 = this->getT(1).getT(0).getT(0).getT(2).                               // lfo_impl::chain61_t<NV>
                         getT(0).getT(0).getT(1).getT(5);
-		auto& add24 = this->getT(1).getT(0).getT(0).getT(2).                                 // math::add<NV>
+		auto& midi5 = this->getT(1).getT(0).getT(0).getT(2).                                 // lfo_impl::midi5_t<NV>
                       getT(0).getT(0).getT(1).getT(5).
                       getT(0);
+		auto& add24 = this->getT(1).getT(0).getT(0).getT(2).                                 // math::add<NV>
+                      getT(0).getT(0).getT(1).getT(5).
+                      getT(1);
 		auto& gain41 = this->getT(1).getT(0).getT(0).getT(2).                                // core::gain<NV>
                        getT(0).getT(0).getT(1).getT(5).
-                       getT(1);
+                       getT(2);
 		auto& peak6 = this->getT(1).getT(0).getT(0).getT(2).getT(0).getT(0).getT(2);         // lfo_impl::peak6_t<NV>
 		auto& pma2 = this->getT(1).getT(0).getT(0).getT(2).getT(1);                          // control::pma<NV, parameter::empty>
 		auto& modchain3 = this->getT(1).getT(0).getT(0).getT(3);                             // lfo_impl::modchain3_t<NV>
@@ -1756,10 +1486,7 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 		auto& chain25 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(0);               // lfo_impl::chain25_t<NV>
 		auto& pi2 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(0).getT(0);           // math::pi<NV>
 		auto& sin3 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(0).getT(1);          // math::sin<NV>
-		auto& sig2mod4 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(0).getT(2);      // wrap::no_process<math::sig2mod<NV>>
-		auto& chain24 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(1);               // lfo_impl::chain24_t<NV>
-		auto& mul2 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(1).getT(0);          // wrap::no_process<math::mul<NV>>
-		auto& sig2mod3 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(1).getT(1);      // wrap::no_process<math::sig2mod<NV>>
+		auto& chain24 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(1);               // lfo_impl::chain24_t
 		auto& chain14 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(2);               // lfo_impl::chain14_t<NV>
 		auto& add6 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(2).getT(0);          // math::add<NV>
 		auto& fmod3 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(2).getT(1);         // math::fmod<NV>
@@ -1771,12 +1498,16 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 		auto& rect3 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(3).getT(1);         // math::rect<NV>
 		auto& chain31 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(4);               // lfo_impl::chain31_t<NV>
 		auto& oscillator = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(4).getT(0);    // lfo_impl::oscillator_t<NV>
-		auto& sig2mod1 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(4).getT(1);      // math::sig2mod<NV>
+		auto& branch6 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(4).getT(1);       // lfo_impl::branch6_t<NV>
+		auto& sampleandhold = this->getT(1).getT(0).getT(1).getT(2).                         // fx::sampleandhold<NV>
+                              getT(0).getT(4).getT(1).getT(0);
+		auto& sampleandhold2 = this->getT(1).getT(0).getT(1).getT(2).                        // fx::sampleandhold<NV>
+                               getT(0).getT(4).getT(1).getT(1);
+		auto& sig2mod1 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(4).getT(2);      // math::sig2mod<NV>
 		auto& chain32 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(5);               // lfo_impl::chain32_t<NV>
-		auto& clear1 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(5).getT(0);        // wrap::no_process<math::clear<NV>>
-		auto& input_toggle = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(5).getT(1);  // lfo_impl::input_toggle_t<NV>
-		auto& cable_table = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(5).getT(2);   // lfo_impl::cable_table_t<NV>
-		auto& add8 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(5).getT(3);          // math::add<NV>
+		auto& input_toggle = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(5).getT(0);  // lfo_impl::input_toggle_t<NV>
+		auto& cable_table = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(5).getT(1);   // lfo_impl::cable_table_t<NV>
+		auto& add8 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(5).getT(2);          // math::add<NV>
 		auto& chain33 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(6);               // lfo_impl::chain33_t<NV>
 		auto& clear2 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(6).getT(0);        // math::clear<NV>
 		auto& input_toggle1 = this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(6).getT(1); // lfo_impl::input_toggle1_t<NV>
@@ -1789,251 +1520,60 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 		auto& gain57 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(0).getT(1);        // core::gain<NV>
 		auto& chain74 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(1);               // lfo_impl::chain74_t<NV>
 		auto& smoother1 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(1).getT(0);     // core::smoother<NV>
-		auto& sig2mod5 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(1).getT(1);      // wrap::no_process<math::sig2mod<NV>>
-		auto& sin13 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(1).getT(2);         // wrap::no_process<math::sin<NV>>
 		auto& chain22 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(2);               // lfo_impl::chain22_t<NV>
-		auto& branch6 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(2).getT(0);       // lfo_impl::branch6_t<NV>
-		auto& sampleandhold = this->getT(1).getT(0).getT(1).getT(2).                         // fx::sampleandhold<NV>
-                              getT(2).getT(2).getT(0).getT(0);
-		auto& sampleandhold2 = this->getT(1).getT(0).getT(1).getT(2).                   // fx::sampleandhold<NV>
-                               getT(2).getT(2).getT(0).getT(1);
-		auto& gain = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(2).getT(1);     // core::gain<NV>
-		auto& sig2mod2 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(2).getT(2); // wrap::no_process<math::sig2mod<NV>>
-		auto& sin4 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(2).getT(3);     // wrap::no_process<math::sin<NV>>
-		auto& chain26 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(3);          // lfo_impl::chain26_t<NV>
-		auto& gain37 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(3).getT(0);   // core::gain<NV>
-		auto& pi5 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(3).getT(1);      // math::pi<NV>
-		auto& fmod2 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(3).getT(2);    // math::fmod<NV>
-		auto& chain65 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(4);          // lfo_impl::chain65_t<NV>
-		auto& expr4 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(4).getT(0);    // math::expr<NV, custom::expr4>
-		auto& chain27 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(5);          // lfo_impl::chain27_t<NV>
-		auto& sin = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(5).getT(0);      // wrap::no_process<math::sin<NV>>
-		auto& expr1 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(5).getT(1);    // math::expr<NV, custom::expr1>
-		auto& chain56 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(6);          // lfo_impl::chain56_t<NV>
-		auto& expr2 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(6).getT(0);    // math::expr<NV, custom::expr2>
-		auto& peak11 = this->getT(1).getT(0).getT(1).getT(2).getT(3);                   // lfo_impl::peak11_t
-		auto& branch = this->getT(1).getT(0).getT(1).getT(2).getT(4);                   // lfo_impl::branch_t<NV>
-		auto& chain = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(0);            // lfo_impl::chain_t<NV>
-		auto& peak1 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(0).getT(0);    // lfo_impl::peak1_t<NV>
-		auto& split = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(0).getT(1);    // lfo_impl::split_t<NV>
-		auto& chain4 = this->getT(1).getT(0).getT(1).getT(2).                           // lfo_impl::chain4_t
+		auto& receive = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(2).getT(0);       // routing::receive<NV, mono_cable<NV>>
+		auto& fix_delay = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(2).getT(1);     // core::fix_delay
+		auto& send = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(2).getT(2);          // routing::send<NV, mono_cable<NV>>
+		auto& gain = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(2).getT(3);          // core::gain<NV>
+		auto& chain26 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(3);               // lfo_impl::chain26_t<NV>
+		auto& gain37 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(3).getT(0);        // core::gain<NV>
+		auto& pi5 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(3).getT(1);           // math::pi<NV>
+		auto& fmod2 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(3).getT(2);         // math::fmod<NV>
+		auto& chain65 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(4);               // lfo_impl::chain65_t<NV>
+		auto& expr4 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(4).getT(0);         // math::expr<NV, custom::expr4>
+		auto& chain27 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(5);               // lfo_impl::chain27_t<NV>
+		auto& expr1 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(5).getT(0);         // math::expr<NV, custom::expr1>
+		auto& chain56 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(6);               // lfo_impl::chain56_t<NV>
+		auto& expr2 = this->getT(1).getT(0).getT(1).getT(2).getT(2).getT(6).getT(0);         // math::expr<NV, custom::expr2>
+		auto& peak11 = this->getT(1).getT(0).getT(1).getT(2).getT(3);                        // lfo_impl::peak11_t
+		auto& branch = this->getT(1).getT(0).getT(1).getT(2).getT(4);                        // lfo_impl::branch_t
+		auto& chain = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(0);                 // lfo_impl::chain_t
+		auto& peak1 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(0).getT(0);         // lfo_impl::peak1_t
+		auto& split = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(0).getT(1);         // lfo_impl::split_t
+		auto& chain4 = this->getT(1).getT(0).getT(1).getT(2).                                // lfo_impl::chain4_t
                        getT(4).getT(0).getT(1).getT(0);
 		auto& global_cable = this->getT(1).getT(0).getT(1).getT(2).                    // routing::global_cable<global_cable_t_index, parameter::empty>
                              getT(4).getT(0).getT(1).getT(0).
                              getT(0);
-		auto& chain5 = this->getT(1).getT(0).getT(1).getT(2).                          // lfo_impl::chain5_t<NV>
-                       getT(4).getT(0).getT(1).getT(1);
-		auto& clear = this->getT(1).getT(0).getT(1).getT(2).                           // math::clear<NV>
-                      getT(4).getT(0).getT(1).getT(1).
-                      getT(0);
-		auto& add = this->getT(1).getT(0).getT(1).getT(2).                             // math::add<NV>
-                    getT(4).getT(0).getT(1).getT(1).
-                    getT(1);
-		auto& rect = this->getT(1).getT(0).getT(1).getT(2).                            // math::rect<NV>
-                     getT(4).getT(0).getT(1).getT(1).
-                     getT(2);
-		auto& peak = this->getT(1).getT(0).getT(1).getT(2).                            // lfo_impl::peak_t<NV>
-                     getT(4).getT(0).getT(1).getT(1).
-                     getT(3);
-		auto& change = this->getT(1).getT(0).getT(1).getT(2).                          // lfo_impl::change_t<NV>
-                       getT(4).getT(0).getT(1).getT(1).
-                       getT(4);
-		auto& global_cable2 = this->getT(1).getT(0).getT(1).getT(2).                   // routing::global_cable<global_cable2_t_index, parameter::empty>
-                              getT(4).getT(0).getT(1).getT(1).
-                              getT(5);
-		auto& chain112 = this->getT(1).getT(0).getT(1).getT(2).                        // lfo_impl::chain112_t<NV>
-                         getT(4).getT(0).getT(1).getT(2);
-		auto& clear3 = this->getT(1).getT(0).getT(1).getT(2).                          // math::clear<NV>
-                       getT(4).getT(0).getT(1).getT(2).
-                       getT(0);
-		auto& add43 = this->getT(1).getT(0).getT(1).getT(2).                           // math::add<NV>
-                      getT(4).getT(0).getT(1).getT(2).
-                      getT(1);
-		auto& peak14 = this->getT(1).getT(0).getT(1).getT(2).                          // lfo_impl::peak14_t<NV>
-                       getT(4).getT(0).getT(1).getT(2).
-                       getT(2);
-		auto& change3 = this->getT(1).getT(0).getT(1).getT(2).                         // lfo_impl::change3_t<NV>
-                        getT(4).getT(0).getT(1).getT(2).
-                        getT(3);
-		auto& chain169 = this->getT(1).getT(0).getT(1).getT(2).                        // lfo_impl::chain169_t<NV>
-                         getT(4).getT(0).getT(1).getT(2).
-                         getT(4);
-		auto& minmax2 = this->getT(1).getT(0).getT(1).getT(2).getT(4).                 // lfo_impl::minmax2_t<NV>
-                        getT(0).getT(1).getT(2).getT(4).getT(0);
-		auto& chain170 = this->getT(1).getT(0).getT(1).getT(2).getT(4).                // lfo_impl::chain170_t
-                         getT(0).getT(1).getT(2).getT(4).getT(1);
-		auto& global_cable21 = this->getT(1).getT(0).getT(1).getT(2).getT(4).          // routing::global_cable<global_cable21_t_index, parameter::empty>
-                               getT(0).getT(1).getT(2).getT(4).getT(1).
-                               getT(0);
-		auto& chain16 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(1);         // lfo_impl::chain16_t<NV>
-		auto& peak12 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(1).getT(0);  // lfo_impl::peak12_t<NV>
-		auto& split6 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(1).getT(1);  // lfo_impl::split6_t<NV>
+		auto& chain16 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(1);         // lfo_impl::chain16_t
+		auto& peak12 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(1).getT(0);  // lfo_impl::peak12_t
+		auto& split6 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(1).getT(1);  // lfo_impl::split6_t
 		auto& chain17 = this->getT(1).getT(0).getT(1).getT(2).                         // lfo_impl::chain17_t
                         getT(4).getT(1).getT(1).getT(0);
 		auto& global_cable8 = this->getT(1).getT(0).getT(1).getT(2).                   // routing::global_cable<global_cable8_t_index, parameter::empty>
                               getT(4).getT(1).getT(1).getT(0).
                               getT(0);
-		auto& chain19 = this->getT(1).getT(0).getT(1).getT(2).                         // lfo_impl::chain19_t<NV>
-                        getT(4).getT(1).getT(1).getT(1);
-		auto& clear12 = this->getT(1).getT(0).getT(1).getT(2).                         // math::clear<NV>
-                        getT(4).getT(1).getT(1).getT(1).
-                        getT(0);
-		auto& add5 = this->getT(1).getT(0).getT(1).getT(2).                            // math::add<NV>
-                     getT(4).getT(1).getT(1).getT(1).
-                     getT(1);
-		auto& rect5 = this->getT(1).getT(0).getT(1).getT(2).                           // math::rect<NV>
-                      getT(4).getT(1).getT(1).getT(1).
-                      getT(2);
-		auto& peak13 = this->getT(1).getT(0).getT(1).getT(2).                          // lfo_impl::peak13_t<NV>
-                       getT(4).getT(1).getT(1).getT(1).
-                       getT(3);
-		auto& change8 = this->getT(1).getT(0).getT(1).getT(2).                         // lfo_impl::change8_t<NV>
-                        getT(4).getT(1).getT(1).getT(1).
-                        getT(4);
-		auto& global_cable29 = this->getT(1).getT(0).getT(1).getT(2).                  // routing::global_cable<global_cable29_t_index, parameter::empty>
-                               getT(4).getT(1).getT(1).getT(1).
-                               getT(5);
-		auto& chain116 = this->getT(1).getT(0).getT(1).getT(2).                        // lfo_impl::chain116_t<NV>
-                         getT(4).getT(1).getT(1).getT(2);
-		auto& clear13 = this->getT(1).getT(0).getT(1).getT(2).                         // math::clear<NV>
-                        getT(4).getT(1).getT(1).getT(2).
-                        getT(0);
-		auto& add47 = this->getT(1).getT(0).getT(1).getT(2).                           // math::add<NV>
-                      getT(4).getT(1).getT(1).getT(2).
-                      getT(1);
-		auto& peak18 = this->getT(1).getT(0).getT(1).getT(2).                          // lfo_impl::peak18_t<NV>
-                       getT(4).getT(1).getT(1).getT(2).
-                       getT(2);
-		auto& change9 = this->getT(1).getT(0).getT(1).getT(2).                         // lfo_impl::change9_t<NV>
-                        getT(4).getT(1).getT(1).getT(2).
-                        getT(3);
-		auto& chain177 = this->getT(1).getT(0).getT(1).getT(2).                        // lfo_impl::chain177_t<NV>
-                         getT(4).getT(1).getT(1).getT(2).
-                         getT(4);
-		auto& minmax6 = this->getT(1).getT(0).getT(1).getT(2).getT(4).                 // lfo_impl::minmax6_t<NV>
-                        getT(1).getT(1).getT(2).getT(4).getT(0);
-		auto& chain178 = this->getT(1).getT(0).getT(1).getT(2).getT(4).                // lfo_impl::chain178_t
-                         getT(1).getT(1).getT(2).getT(4).getT(1);
-		auto& global_cable30 = this->getT(1).getT(0).getT(1).getT(2).getT(4).          // routing::global_cable<global_cable30_t_index, parameter::empty>
-                               getT(1).getT(1).getT(2).getT(4).getT(1).
-                               getT(0);
-		auto& chain20 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(2);         // lfo_impl::chain20_t<NV>
-		auto& peak19 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(2).getT(0);  // lfo_impl::peak19_t<NV>
-		auto& split15 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(2).getT(1); // lfo_impl::split15_t<NV>
+		auto& chain20 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(2);         // lfo_impl::chain20_t
+		auto& peak19 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(2).getT(0);  // lfo_impl::peak19_t
+		auto& split15 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(2).getT(1); // lfo_impl::split15_t
 		auto& chain21 = this->getT(1).getT(0).getT(1).getT(2).                         // lfo_impl::chain21_t
                         getT(4).getT(2).getT(1).getT(0);
 		auto& global_cable31 = this->getT(1).getT(0).getT(1).getT(2).                  // routing::global_cable<global_cable31_t_index, parameter::empty>
                                getT(4).getT(2).getT(1).getT(0).
                                getT(0);
-		auto& chain23 = this->getT(1).getT(0).getT(1).getT(2).                         // lfo_impl::chain23_t<NV>
-                        getT(4).getT(2).getT(1).getT(1);
-		auto& clear14 = this->getT(1).getT(0).getT(1).getT(2).                         // math::clear<NV>
-                        getT(4).getT(2).getT(1).getT(1).
-                        getT(0);
-		auto& add7 = this->getT(1).getT(0).getT(1).getT(2).                            // math::add<NV>
-                     getT(4).getT(2).getT(1).getT(1).
-                     getT(1);
-		auto& rect6 = this->getT(1).getT(0).getT(1).getT(2).                           // math::rect<NV>
-                      getT(4).getT(2).getT(1).getT(1).
-                      getT(2);
-		auto& peak20 = this->getT(1).getT(0).getT(1).getT(2).                          // lfo_impl::peak20_t<NV>
-                       getT(4).getT(2).getT(1).getT(1).
-                       getT(3);
-		auto& change10 = this->getT(1).getT(0).getT(1).getT(2).                        // lfo_impl::change10_t<NV>
-                         getT(4).getT(2).getT(1).getT(1).
-                         getT(4);
-		auto& global_cable32 = this->getT(1).getT(0).getT(1).getT(2).                  // routing::global_cable<global_cable32_t_index, parameter::empty>
-                               getT(4).getT(2).getT(1).getT(1).
-                               getT(5);
-		auto& chain117 = this->getT(1).getT(0).getT(1).getT(2).                        // lfo_impl::chain117_t<NV>
-                         getT(4).getT(2).getT(1).getT(2);
-		auto& clear15 = this->getT(1).getT(0).getT(1).getT(2).                         // math::clear<NV>
-                        getT(4).getT(2).getT(1).getT(2).
-                        getT(0);
-		auto& add48 = this->getT(1).getT(0).getT(1).getT(2).                           // math::add<NV>
-                      getT(4).getT(2).getT(1).getT(2).
-                      getT(1);
-		auto& peak21 = this->getT(1).getT(0).getT(1).getT(2).                          // lfo_impl::peak21_t<NV>
-                       getT(4).getT(2).getT(1).getT(2).
-                       getT(2);
-		auto& change11 = this->getT(1).getT(0).getT(1).getT(2).                        // lfo_impl::change11_t<NV>
-                         getT(4).getT(2).getT(1).getT(2).
-                         getT(3);
-		auto& chain179 = this->getT(1).getT(0).getT(1).getT(2).                        // lfo_impl::chain179_t<NV>
-                         getT(4).getT(2).getT(1).getT(2).
-                         getT(4);
-		auto& minmax7 = this->getT(1).getT(0).getT(1).getT(2).getT(4).                 // lfo_impl::minmax7_t<NV>
-                        getT(2).getT(1).getT(2).getT(4).getT(0);
-		auto& chain180 = this->getT(1).getT(0).getT(1).getT(2).getT(4).                // lfo_impl::chain180_t
-                         getT(2).getT(1).getT(2).getT(4).getT(1);
-		auto& global_cable33 = this->getT(1).getT(0).getT(1).getT(2).getT(4).          // routing::global_cable<global_cable33_t_index, parameter::empty>
-                               getT(2).getT(1).getT(2).getT(4).getT(1).
-                               getT(0);
-		auto& chain28 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(3);         // lfo_impl::chain28_t<NV>
-		auto& peak22 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(3).getT(0);  // lfo_impl::peak22_t<NV>
-		auto& split16 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(3).getT(1); // lfo_impl::split16_t<NV>
+		auto& chain28 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(3);         // lfo_impl::chain28_t
+		auto& peak22 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(3).getT(0);  // lfo_impl::peak22_t
+		auto& split16 = this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(3).getT(1); // lfo_impl::split16_t
 		auto& chain34 = this->getT(1).getT(0).getT(1).getT(2).                         // lfo_impl::chain34_t
                         getT(4).getT(3).getT(1).getT(0);
-		auto& global_cable34 = this->getT(1).getT(0).getT(1).getT(2).          // routing::global_cable<global_cable34_t_index, parameter::empty>
+		auto& global_cable34 = this->getT(1).getT(0).getT(1).getT(2).  // routing::global_cable<global_cable34_t_index, parameter::empty>
                                getT(4).getT(3).getT(1).getT(0).
-                               getT(0);
-		auto& chain35 = this->getT(1).getT(0).getT(1).getT(2).                 // lfo_impl::chain35_t<NV>
-                        getT(4).getT(3).getT(1).getT(1);
-		auto& clear16 = this->getT(1).getT(0).getT(1).getT(2).                 // math::clear<NV>
-                        getT(4).getT(3).getT(1).getT(1).
-                        getT(0);
-		auto& add10 = this->getT(1).getT(0).getT(1).getT(2).                   // math::add<NV>
-                      getT(4).getT(3).getT(1).getT(1).
-                      getT(1);
-		auto& rect7 = this->getT(1).getT(0).getT(1).getT(2).                   // math::rect<NV>
-                      getT(4).getT(3).getT(1).getT(1).
-                      getT(2);
-		auto& peak23 = this->getT(1).getT(0).getT(1).getT(2).                  // lfo_impl::peak23_t<NV>
-                       getT(4).getT(3).getT(1).getT(1).
-                       getT(3);
-		auto& change12 = this->getT(1).getT(0).getT(1).getT(2).                // lfo_impl::change12_t<NV>
-                         getT(4).getT(3).getT(1).getT(1).
-                         getT(4);
-		auto& global_cable35 = this->getT(1).getT(0).getT(1).getT(2).          // routing::global_cable<global_cable35_t_index, parameter::empty>
-                               getT(4).getT(3).getT(1).getT(1).
-                               getT(5);
-		auto& chain118 = this->getT(1).getT(0).getT(1).getT(2).                // lfo_impl::chain118_t<NV>
-                         getT(4).getT(3).getT(1).getT(2);
-		auto& clear17 = this->getT(1).getT(0).getT(1).getT(2).                 // math::clear<NV>
-                        getT(4).getT(3).getT(1).getT(2).
-                        getT(0);
-		auto& add49 = this->getT(1).getT(0).getT(1).getT(2).                   // math::add<NV>
-                      getT(4).getT(3).getT(1).getT(2).
-                      getT(1);
-		auto& peak24 = this->getT(1).getT(0).getT(1).getT(2).                  // lfo_impl::peak24_t<NV>
-                       getT(4).getT(3).getT(1).getT(2).
-                       getT(2);
-		auto& change13 = this->getT(1).getT(0).getT(1).getT(2).                // lfo_impl::change13_t<NV>
-                         getT(4).getT(3).getT(1).getT(2).
-                         getT(3);
-		auto& chain181 = this->getT(1).getT(0).getT(1).getT(2).                // lfo_impl::chain181_t<NV>
-                         getT(4).getT(3).getT(1).getT(2).
-                         getT(4);
-		auto& minmax8 = this->getT(1).getT(0).getT(1).getT(2).getT(4).         // lfo_impl::minmax8_t<NV>
-                        getT(3).getT(1).getT(2).getT(4).getT(0);
-		auto& chain182 = this->getT(1).getT(0).getT(1).getT(2).getT(4).        // lfo_impl::chain182_t
-                         getT(3).getT(1).getT(2).getT(4).getT(1);
-		auto& global_cable36 = this->getT(1).getT(0).getT(1).getT(2).getT(4).  // routing::global_cable<global_cable36_t_index, parameter::empty>
-                               getT(3).getT(1).getT(2).getT(4).getT(1).
                                getT(0);
 		auto& clear10 = this->getT(1).getT(0).getT(2); // math::clear<NV>
 		
 		// Parameter Connections -------------------------------------------------------------------
 		
-		chain170.getParameterT(0).connectT(0, global_cable21); // note -> global_cable21::Value
-		chain170.getParameterT(0).connectT(0, global_cable21); // note -> global_cable21::Value
-		chain178.getParameterT(0).connectT(0, global_cable30); // note -> global_cable30::Value
-		chain178.getParameterT(0).connectT(0, global_cable30); // note -> global_cable30::Value
-		chain180.getParameterT(0).connectT(0, global_cable33); // note -> global_cable33::Value
-		chain180.getParameterT(0).connectT(0, global_cable33); // note -> global_cable33::Value
-		chain182.getParameterT(0).connectT(0, global_cable36); // note -> global_cable36::Value
-		chain182.getParameterT(0).connectT(0, global_cable36); // note -> global_cable36::Value
-		this->getParameterT(0).connectT(0, pma1);              // tempo -> pma1::Add
+		this->getParameterT(0).connectT(0, pma1); // tempo -> pma1::Add
 		
 		this->getParameterT(1).connectT(0, branch); // Dest -> branch::Index
 		
@@ -2053,24 +1593,6 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 		this->getParameterT(6).connectT(0, pma3); // Adjust -> pma3::Add
 		
 		this->getParameterT(7).connectT(0, branch2); // Shape -> branch2::Index
-		
-		auto& Min_p = this->getParameterT(8);
-		Min_p.connectT(0, minmax2); // Min -> minmax2::Minimum
-		Min_p.connectT(1, minmax6); // Min -> minmax6::Minimum
-		Min_p.connectT(2, minmax7); // Min -> minmax7::Minimum
-		Min_p.connectT(3, minmax8); // Min -> minmax8::Minimum
-		
-		auto& Max_p = this->getParameterT(9);
-		Max_p.connectT(0, minmax2); // Max -> minmax2::Maximum
-		Max_p.connectT(1, minmax6); // Max -> minmax6::Maximum
-		Max_p.connectT(2, minmax7); // Max -> minmax7::Maximum
-		Max_p.connectT(3, minmax8); // Max -> minmax8::Maximum
-		
-		auto& Step_p = this->getParameterT(10);
-		Step_p.connectT(0, minmax2); // Step -> minmax2::Step
-		Step_p.connectT(1, minmax6); // Step -> minmax6::Step
-		Step_p.connectT(2, minmax7); // Step -> minmax7::Step
-		Step_p.connectT(3, minmax8); // Step -> minmax8::Step
 		
 		this->getParameterT(11).connectT(0, pma1); // TempoMod -> pma1::Multiply
 		
@@ -2139,6 +1661,7 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 		pma3.getWrappedObject().getParameter().connectT(4, expr2);           // pma3 -> expr2::Value
 		pma3.getWrappedObject().getParameter().connectT(5, smoother1);       // pma3 -> smoother1::SmoothingTime
 		pma3.getWrappedObject().getParameter().connectT(6, gain);            // pma3 -> gain::Gain
+		pma3.getWrappedObject().getParameter().connectT(7, fix_delay);       // pma3 -> fix_delay::DelayTime
 		peak8.getParameter().connectT(0, pma3);                              // peak8 -> pma3::Value
 		auto& xfader1_p = xfader1.getWrappedObject().getParameter();
 		xfader1_p.getParameterT(0).connectT(0, gain28);                      // xfader1 -> gain28::Gain
@@ -2152,53 +1675,30 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 		global_cable15.getWrappedObject().getParameter().connectT(0, add21); // global_cable15 -> add21::Value
 		global_cable23.getWrappedObject().getParameter().connectT(0, add22); // global_cable23 -> add22::Value
 		midi6.getParameter().connectT(0, add23);                             // midi6 -> add23::Value
+		midi5.getParameter().connectT(0, add24);                             // midi5 -> add24::Value
 		peak6.getParameter().connectT(0, pma2);                              // peak6 -> pma2::Value
 		auto& xfader3_p = xfader3.getWrappedObject().getParameter();
-		xfader3_p.getParameterT(0).connectT(0, gain58);                         // xfader3 -> gain58::Gain
-		xfader3_p.getParameterT(1).connectT(0, gain59);                         // xfader3 -> gain59::Gain
-		xfader3_p.getParameterT(2).connectT(0, gain60);                         // xfader3 -> gain60::Gain
-		xfader3_p.getParameterT(3).connectT(0, gain61);                         // xfader3 -> gain61::Gain
-		xfader3_p.getParameterT(4).connectT(0, gain64);                         // xfader3 -> gain64::Gain
-		global_cable19.getWrappedObject().getParameter().connectT(0, add31);    // global_cable19 -> add31::Value
-		global_cable20.getWrappedObject().getParameter().connectT(0, add32);    // global_cable20 -> add32::Value
-		global_cable24.getWrappedObject().getParameter().connectT(0, add33);    // global_cable24 -> add33::Value
-		global_cable25.getWrappedObject().getParameter().connectT(0, add34);    // global_cable25 -> add34::Value
-		midi.getParameter().connectT(0, add3);                                  // midi -> add3::Value
-		pma5.getWrappedObject().getParameter().connectT(0, ramp);               // pma5 -> ramp::Gate
-		peak10.getParameter().connectT(0, pma5);                                // peak10 -> pma5::Value
-		cable_table2.getWrappedObject().getParameter().connectT(0, pma5);       // cable_table2 -> pma5::Add
-		peak1.getParameter().connectT(0, global_cable);                         // peak1 -> global_cable::Value
-		peak1.getParameter().connectT(1, add);                                  // peak1 -> add::Value
-		peak1.getParameter().connectT(2, add43);                                // peak1 -> add43::Value
-		change.getWrappedObject().getParameter().connectT(0, global_cable2);    // change -> global_cable2::Value
-		peak.getParameter().connectT(0, change);                                // peak -> change::Value
-		minmax2.getWrappedObject().getParameter().connectT(0, chain170);        // minmax2 -> chain170::note
-		change3.getWrappedObject().getParameter().connectT(0, minmax2);         // change3 -> minmax2::Value
-		peak14.getParameter().connectT(0, change3);                             // peak14 -> change3::Value
-		peak12.getParameter().connectT(0, global_cable8);                       // peak12 -> global_cable8::Value
-		peak12.getParameter().connectT(1, add5);                                // peak12 -> add5::Value
-		peak12.getParameter().connectT(2, add47);                               // peak12 -> add47::Value
-		change8.getWrappedObject().getParameter().connectT(0, global_cable29);  // change8 -> global_cable29::Value
-		peak13.getParameter().connectT(0, change8);                             // peak13 -> change8::Value
-		minmax6.getWrappedObject().getParameter().connectT(0, chain178);        // minmax6 -> chain178::note
-		change9.getWrappedObject().getParameter().connectT(0, minmax6);         // change9 -> minmax6::Value
-		peak18.getParameter().connectT(0, change9);                             // peak18 -> change9::Value
-		peak19.getParameter().connectT(0, global_cable31);                      // peak19 -> global_cable31::Value
-		peak19.getParameter().connectT(1, add7);                                // peak19 -> add7::Value
-		peak19.getParameter().connectT(2, add48);                               // peak19 -> add48::Value
-		change10.getWrappedObject().getParameter().connectT(0, global_cable32); // change10 -> global_cable32::Value
-		peak20.getParameter().connectT(0, change10);                            // peak20 -> change10::Value
-		minmax7.getWrappedObject().getParameter().connectT(0, chain180);        // minmax7 -> chain180::note
-		change11.getWrappedObject().getParameter().connectT(0, minmax7);        // change11 -> minmax7::Value
-		peak21.getParameter().connectT(0, change11);                            // peak21 -> change11::Value
-		peak22.getParameter().connectT(0, global_cable34);                      // peak22 -> global_cable34::Value
-		peak22.getParameter().connectT(1, add10);                               // peak22 -> add10::Value
-		peak22.getParameter().connectT(2, add49);                               // peak22 -> add49::Value
-		change12.getWrappedObject().getParameter().connectT(0, global_cable35); // change12 -> global_cable35::Value
-		peak23.getParameter().connectT(0, change12);                            // peak23 -> change12::Value
-		minmax8.getWrappedObject().getParameter().connectT(0, chain182);        // minmax8 -> chain182::note
-		change13.getWrappedObject().getParameter().connectT(0, minmax8);        // change13 -> minmax8::Value
-		peak24.getParameter().connectT(0, change13);                            // peak24 -> change13::Value
+		xfader3_p.getParameterT(0).connectT(0, gain58);                      // xfader3 -> gain58::Gain
+		xfader3_p.getParameterT(1).connectT(0, gain59);                      // xfader3 -> gain59::Gain
+		xfader3_p.getParameterT(2).connectT(0, gain60);                      // xfader3 -> gain60::Gain
+		xfader3_p.getParameterT(3).connectT(0, gain61);                      // xfader3 -> gain61::Gain
+		xfader3_p.getParameterT(4).connectT(0, gain64);                      // xfader3 -> gain64::Gain
+		global_cable19.getWrappedObject().getParameter().connectT(0, add31); // global_cable19 -> add31::Value
+		global_cable20.getWrappedObject().getParameter().connectT(0, add32); // global_cable20 -> add32::Value
+		global_cable24.getWrappedObject().getParameter().connectT(0, add33); // global_cable24 -> add33::Value
+		global_cable25.getWrappedObject().getParameter().connectT(0, add34); // global_cable25 -> add34::Value
+		midi.getParameter().connectT(0, add3);                               // midi -> add3::Value
+		pma5.getWrappedObject().getParameter().connectT(0, ramp);            // pma5 -> ramp::Gate
+		peak10.getParameter().connectT(0, pma5);                             // peak10 -> pma5::Value
+		cable_table2.getWrappedObject().getParameter().connectT(0, pma5);    // cable_table2 -> pma5::Add
+		peak1.getParameter().connectT(0, global_cable);                      // peak1 -> global_cable::Value
+		peak12.getParameter().connectT(0, global_cable8);                    // peak12 -> global_cable8::Value
+		peak19.getParameter().connectT(0, global_cable31);                   // peak19 -> global_cable31::Value
+		peak22.getParameter().connectT(0, global_cable34);                   // peak22 -> global_cable34::Value
+		
+		// Send Connections ------------------------------------------------------------------------
+		
+		send.connect(receive);
 		
 		// Default Values --------------------------------------------------------------------------
 		
@@ -2344,7 +1844,7 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 		gain32.setParameterT(1, 20.); // core::gain::Smoothing
 		gain32.setParameterT(2, 0.);  // core::gain::ResetValue
 		
-		add24.setParameterT(0, 0.); // math::add::Value
+		; // add24::Value is automated
 		
 		;                             // gain41::Gain is automated
 		gain41.setParameterT(1, 20.); // core::gain::Smoothing
@@ -2425,12 +1925,6 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 		
 		sin3.setParameterT(0, 0.); // math::sin::Value
 		
-		sig2mod4.setParameterT(0, 0.); // math::sig2mod::Value
-		
-		mul2.setParameterT(0, 1.); // math::mul::Value
-		
-		sig2mod3.setParameterT(0, 0.); // math::sig2mod::Value
-		
 		add6.setParameterT(0, 0.75); // math::add::Value
 		
 		fmod3.setParameterT(0, 1.); // math::fmod::Value
@@ -2452,9 +1946,13 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 		oscillator.setParameterT(4, 0.);   // core::oscillator::Phase
 		oscillator.setParameterT(5, 1.);   // core::oscillator::Gain
 		
-		sig2mod1.setParameterT(0, 0.); // math::sig2mod::Value
+		; // branch6::Index is automated
 		
-		clear1.setParameterT(0, 0.); // math::clear::Value
+		; // sampleandhold::Counter is automated
+		
+		; // sampleandhold2::Counter is automated
+		
+		sig2mod1.setParameterT(0, 0.); // math::sig2mod::Value
 		
 		; // input_toggle::Input is automated
 		; // input_toggle::Value1 is automated
@@ -2487,23 +1985,14 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 		;                               // smoother1::SmoothingTime is automated
 		smoother1.setParameterT(1, 0.); // core::smoother::DefaultValue
 		
-		sig2mod5.setParameterT(0, 0.); // math::sig2mod::Value
+		receive.setParameterT(0, 0.752863); // routing::receive::Feedback
 		
-		sin13.setParameterT(0, 1.); // math::sin::Value
-		
-		; // branch6::Index is automated
-		
-		; // sampleandhold::Counter is automated
-		
-		; // sampleandhold2::Counter is automated
+		;                                 // fix_delay::DelayTime is automated
+		fix_delay.setParameterT(1, 512.); // core::fix_delay::FadeTime
 		
 		;                           // gain::Gain is automated
 		gain.setParameterT(1, 20.); // core::gain::Smoothing
 		gain.setParameterT(2, 0.);  // core::gain::ResetValue
-		
-		sig2mod2.setParameterT(0, 0.); // math::sig2mod::Value
-		
-		sin4.setParameterT(0, 1.); // math::sin::Value
 		
 		;                             // gain37::Gain is automated
 		gain37.setParameterT(1, 20.); // core::gain::Smoothing
@@ -2515,8 +2004,6 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 		
 		; // expr4::Value is automated
 		
-		sin.setParameterT(0, 1.); // math::sin::Value
-		
 		; // expr1::Value is automated
 		
 		; // expr2::Value is automated
@@ -2525,129 +2012,21 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 		
 		; // global_cable::Value is automated
 		
-		clear.setParameterT(0, 0.); // math::clear::Value
-		
-		; // add::Value is automated
-		
-		rect.setParameterT(0, 0.); // math::rect::Value
-		
-		; // change::Value is automated
-		
-		; // global_cable2::Value is automated
-		
-		clear3.setParameterT(0, 0.); // math::clear::Value
-		
-		; // add43::Value is automated
-		
-		; // change3::Value is automated
-		
-		;                             // minmax2::Value is automated
-		;                             // minmax2::Minimum is automated
-		;                             // minmax2::Maximum is automated
-		minmax2.setParameterT(3, 1.); // control::minmax::Skew
-		;                             // minmax2::Step is automated
-		minmax2.setParameterT(5, 0.); // control::minmax::Polarity
-		
-		; // chain170::note is automated
-		
-		; // global_cable21::Value is automated
-		
 		; // global_cable8::Value is automated
-		
-		clear12.setParameterT(0, 0.); // math::clear::Value
-		
-		; // add5::Value is automated
-		
-		rect5.setParameterT(0, 0.); // math::rect::Value
-		
-		; // change8::Value is automated
-		
-		; // global_cable29::Value is automated
-		
-		clear13.setParameterT(0, 0.); // math::clear::Value
-		
-		; // add47::Value is automated
-		
-		; // change9::Value is automated
-		
-		;                             // minmax6::Value is automated
-		;                             // minmax6::Minimum is automated
-		;                             // minmax6::Maximum is automated
-		minmax6.setParameterT(3, 1.); // control::minmax::Skew
-		;                             // minmax6::Step is automated
-		minmax6.setParameterT(5, 0.); // control::minmax::Polarity
-		
-		; // chain178::note is automated
-		
-		; // global_cable30::Value is automated
 		
 		; // global_cable31::Value is automated
 		
-		clear14.setParameterT(0, 0.); // math::clear::Value
-		
-		; // add7::Value is automated
-		
-		rect6.setParameterT(0, 0.); // math::rect::Value
-		
-		; // change10::Value is automated
-		
-		; // global_cable32::Value is automated
-		
-		clear15.setParameterT(0, 0.); // math::clear::Value
-		
-		; // add48::Value is automated
-		
-		; // change11::Value is automated
-		
-		;                             // minmax7::Value is automated
-		;                             // minmax7::Minimum is automated
-		;                             // minmax7::Maximum is automated
-		minmax7.setParameterT(3, 1.); // control::minmax::Skew
-		;                             // minmax7::Step is automated
-		minmax7.setParameterT(5, 0.); // control::minmax::Polarity
-		
-		; // chain180::note is automated
-		
-		; // global_cable33::Value is automated
-		
 		; // global_cable34::Value is automated
-		
-		clear16.setParameterT(0, 0.); // math::clear::Value
-		
-		; // add10::Value is automated
-		
-		rect7.setParameterT(0, 0.); // math::rect::Value
-		
-		; // change12::Value is automated
-		
-		; // global_cable35::Value is automated
-		
-		clear17.setParameterT(0, 0.); // math::clear::Value
-		
-		; // add49::Value is automated
-		
-		; // change13::Value is automated
-		
-		;                             // minmax8::Value is automated
-		;                             // minmax8::Minimum is automated
-		;                             // minmax8::Maximum is automated
-		minmax8.setParameterT(3, 1.); // control::minmax::Skew
-		;                             // minmax8::Step is automated
-		minmax8.setParameterT(5, 0.); // control::minmax::Polarity
-		
-		; // chain182::note is automated
-		
-		; // global_cable36::Value is automated
 		
 		clear10.setParameterT(0, 0.); // math::clear::Value
 		
 		this->setParameterT(0, 0.);
 		this->setParameterT(1, 3.);
-		this->setParameterT(2, 1.);
+		this->setParameterT(2, 6.);
 		this->setParameterT(3, 0.);
 		this->setParameterT(4, 1.);
 		this->setParameterT(5, 0.);
-		this->setParameterT(6, 0.5);
+		this->setParameterT(6, 0.274032);
 		this->setParameterT(7, 1.);
 		this->setParameterT(8, 24.);
 		this->setParameterT(9, 96.);
@@ -2681,89 +2060,65 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 	{
 		// Runtime target Connections --------------------------------------------------------------
 		
-		this->getT(1).getT(0).getT(0).getT(0).          // lfo_impl::global_cable9_t<NV>
+		this->getT(1).getT(0).getT(0).getT(0).  // lfo_impl::global_cable9_t<NV>
         getT(0).getT(0).getT(1).getT(0).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(0).getT(0).          // lfo_impl::global_cable11_t<NV>
+		this->getT(1).getT(0).getT(0).getT(0).  // lfo_impl::global_cable11_t<NV>
         getT(0).getT(0).getT(1).getT(1).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(0).getT(0).          // lfo_impl::global_cable10_t<NV>
+		this->getT(1).getT(0).getT(0).getT(0).  // lfo_impl::global_cable10_t<NV>
         getT(0).getT(0).getT(1).getT(2).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(0).getT(0).          // lfo_impl::global_cable12_t<NV>
+		this->getT(1).getT(0).getT(0).getT(0).  // lfo_impl::global_cable12_t<NV>
         getT(0).getT(0).getT(1).getT(3).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(0).getT(1).          // lfo_impl::global_cable16_t<NV>
+		this->getT(1).getT(0).getT(0).getT(1).  // lfo_impl::global_cable16_t<NV>
         getT(0).getT(0).getT(1).getT(0).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(0).getT(1).          // lfo_impl::global_cable17_t<NV>
+		this->getT(1).getT(0).getT(0).getT(1).  // lfo_impl::global_cable17_t<NV>
         getT(0).getT(0).getT(1).getT(1).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(0).getT(1).          // lfo_impl::global_cable18_t<NV>
+		this->getT(1).getT(0).getT(0).getT(1).  // lfo_impl::global_cable18_t<NV>
         getT(0).getT(0).getT(1).getT(2).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(0).getT(1).          // lfo_impl::global_cable22_t<NV>
+		this->getT(1).getT(0).getT(0).getT(1).  // lfo_impl::global_cable22_t<NV>
         getT(0).getT(0).getT(1).getT(3).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(0).getT(2).          // lfo_impl::global_cable13_t<NV>
+		this->getT(1).getT(0).getT(0).getT(2).  // lfo_impl::global_cable13_t<NV>
         getT(0).getT(0).getT(1).getT(0).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(0).getT(2).          // lfo_impl::global_cable14_t<NV>
+		this->getT(1).getT(0).getT(0).getT(2).  // lfo_impl::global_cable14_t<NV>
         getT(0).getT(0).getT(1).getT(1).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(0).getT(2).          // lfo_impl::global_cable15_t<NV>
+		this->getT(1).getT(0).getT(0).getT(2).  // lfo_impl::global_cable15_t<NV>
         getT(0).getT(0).getT(1).getT(2).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(0).getT(2).          // lfo_impl::global_cable23_t<NV>
+		this->getT(1).getT(0).getT(0).getT(2).  // lfo_impl::global_cable23_t<NV>
         getT(0).getT(0).getT(1).getT(3).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(0).getT(3).          // lfo_impl::global_cable19_t<NV>
+		this->getT(1).getT(0).getT(0).getT(3).  // lfo_impl::global_cable19_t<NV>
         getT(0).getT(0).getT(1).getT(0).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(0).getT(3).          // lfo_impl::global_cable20_t<NV>
+		this->getT(1).getT(0).getT(0).getT(3).  // lfo_impl::global_cable20_t<NV>
         getT(0).getT(0).getT(1).getT(1).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(0).getT(3).          // lfo_impl::global_cable24_t<NV>
+		this->getT(1).getT(0).getT(0).getT(3).  // lfo_impl::global_cable24_t<NV>
         getT(0).getT(0).getT(1).getT(2).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(0).getT(3).          // lfo_impl::global_cable25_t<NV>
+		this->getT(1).getT(0).getT(0).getT(3).  // lfo_impl::global_cable25_t<NV>
         getT(0).getT(0).getT(1).getT(3).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(1).getT(2).          // routing::global_cable<global_cable_t_index, parameter::empty>
+		this->getT(1).getT(0).getT(1).getT(2).  // routing::global_cable<global_cable_t_index, parameter::empty>
         getT(4).getT(0).getT(1).getT(0).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(1).getT(2).          // routing::global_cable<global_cable2_t_index, parameter::empty>
-        getT(4).getT(0).getT(1).getT(1).
-        getT(5).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(1).getT(2).getT(4).  // routing::global_cable<global_cable21_t_index, parameter::empty>
-        getT(0).getT(1).getT(2).getT(4).getT(1).
-        getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(1).getT(2).          // routing::global_cable<global_cable8_t_index, parameter::empty>
+		this->getT(1).getT(0).getT(1).getT(2).  // routing::global_cable<global_cable8_t_index, parameter::empty>
         getT(4).getT(1).getT(1).getT(0).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(1).getT(2).          // routing::global_cable<global_cable29_t_index, parameter::empty>
-        getT(4).getT(1).getT(1).getT(1).
-        getT(5).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(1).getT(2).getT(4).  // routing::global_cable<global_cable30_t_index, parameter::empty>
-        getT(1).getT(1).getT(2).getT(4).getT(1).
-        getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(1).getT(2).          // routing::global_cable<global_cable31_t_index, parameter::empty>
+		this->getT(1).getT(0).getT(1).getT(2).  // routing::global_cable<global_cable31_t_index, parameter::empty>
         getT(4).getT(2).getT(1).getT(0).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(1).getT(2).          // routing::global_cable<global_cable32_t_index, parameter::empty>
-        getT(4).getT(2).getT(1).getT(1).
-        getT(5).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(1).getT(2).getT(4).  // routing::global_cable<global_cable33_t_index, parameter::empty>
-        getT(2).getT(1).getT(2).getT(4).getT(1).
-        getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(1).getT(2).          // routing::global_cable<global_cable34_t_index, parameter::empty>
+		this->getT(1).getT(0).getT(1).getT(2).  // routing::global_cable<global_cable34_t_index, parameter::empty>
         getT(4).getT(3).getT(1).getT(0).
-        getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(1).getT(2).          // routing::global_cable<global_cable35_t_index, parameter::empty>
-        getT(4).getT(3).getT(1).getT(1).
-        getT(5).connectToRuntimeTarget(addConnection, c);
-		this->getT(1).getT(0).getT(1).getT(2).getT(4).  // routing::global_cable<global_cable36_t_index, parameter::empty>
-        getT(3).getT(1).getT(2).getT(4).getT(1).
         getT(0).connectToRuntimeTarget(addConnection, c);
 	}
 	
@@ -2780,38 +2135,14 @@ template <int NV> struct instance: public lfo_impl::lfo_t_<NV>
 		this->getT(1).getT(0).getT(1).getT(0).getT(1).setExternalData(b, index);                 // lfo_impl::clock_ramp_t<NV>
 		this->getT(1).getT(0).getT(1).getT(1).setExternalData(b, index);                         // lfo_impl::peak3_t
 		this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(4).getT(0).setExternalData(b, index); // lfo_impl::oscillator_t<NV>
-		this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(5).getT(2).setExternalData(b, index); // lfo_impl::cable_table_t<NV>
+		this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(5).getT(1).setExternalData(b, index); // lfo_impl::cable_table_t<NV>
 		this->getT(1).getT(0).getT(1).getT(2).getT(0).getT(6).getT(2).setExternalData(b, index); // lfo_impl::cable_pack_t<NV>
 		this->getT(1).getT(0).getT(1).getT(2).getT(1).setExternalData(b, index);                 // lfo_impl::peak9_t
 		this->getT(1).getT(0).getT(1).getT(2).getT(3).setExternalData(b, index);                 // lfo_impl::peak11_t
-		this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).setExternalData(b, index); // lfo_impl::peak1_t<NV>
-		this->getT(1).getT(0).getT(1).getT(2).                                                   // lfo_impl::peak_t<NV>
-        getT(4).getT(0).getT(1).getT(1).
-        getT(3).setExternalData(b, index);
-		this->getT(1).getT(0).getT(1).getT(2).                                                   // lfo_impl::peak14_t<NV>
-        getT(4).getT(0).getT(1).getT(2).
-        getT(2).setExternalData(b, index);
-		this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(1).getT(0).setExternalData(b, index); // lfo_impl::peak12_t<NV>
-		this->getT(1).getT(0).getT(1).getT(2).                                                   // lfo_impl::peak13_t<NV>
-        getT(4).getT(1).getT(1).getT(1).
-        getT(3).setExternalData(b, index);
-		this->getT(1).getT(0).getT(1).getT(2).                                                   // lfo_impl::peak18_t<NV>
-        getT(4).getT(1).getT(1).getT(2).
-        getT(2).setExternalData(b, index);
-		this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(2).getT(0).setExternalData(b, index); // lfo_impl::peak19_t<NV>
-		this->getT(1).getT(0).getT(1).getT(2).                                                   // lfo_impl::peak20_t<NV>
-        getT(4).getT(2).getT(1).getT(1).
-        getT(3).setExternalData(b, index);
-		this->getT(1).getT(0).getT(1).getT(2).                                                   // lfo_impl::peak21_t<NV>
-        getT(4).getT(2).getT(1).getT(2).
-        getT(2).setExternalData(b, index);
-		this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(3).getT(0).setExternalData(b, index); // lfo_impl::peak22_t<NV>
-		this->getT(1).getT(0).getT(1).getT(2).                                                   // lfo_impl::peak23_t<NV>
-        getT(4).getT(3).getT(1).getT(1).
-        getT(3).setExternalData(b, index);
-		this->getT(1).getT(0).getT(1).getT(2).  // lfo_impl::peak24_t<NV>
-        getT(4).getT(3).getT(1).getT(2).
-        getT(2).setExternalData(b, index);
+		this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).setExternalData(b, index); // lfo_impl::peak1_t
+		this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(1).getT(0).setExternalData(b, index); // lfo_impl::peak12_t
+		this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(2).getT(0).setExternalData(b, index); // lfo_impl::peak19_t
+		this->getT(1).getT(0).getT(1).getT(2).getT(4).getT(3).getT(0).setExternalData(b, index); // lfo_impl::peak22_t
 	}
 };
 }

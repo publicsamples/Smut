@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ContentProperties DeviceType="Desktop">
+  <Component type="ScriptAudioWaveform" id="AudioWaveform1" x="175.0" y="165.0"
+             processorId="Wavetable Synthesiser1" width="320.0" height="230.0"/>
+  <Component type="ScriptSlider" id="Knob1" x="170.0" y="57.0" stepSize="0.009999999776482582"
+             processorId="Wavetable Synthesiser1"/>
+  <Component type="ScriptButton" id="SaveFile" x="180.0" y="410.0"/>
+  <Component type="ScriptButton" id="LoadFile" x="340.0" y="410.0" isMomentary="1"/>
+</ContentProperties>

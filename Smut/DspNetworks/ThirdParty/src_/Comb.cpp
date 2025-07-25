@@ -36,10 +36,10 @@ struct _Comb final : public ::faust::dsp {
 	FAUSTFLOAT fHslider0;
 	FAUSTFLOAT fHslider1;
 	int IOTA0;
-	float fVec0[128];
+	float fVec0[1024];
 	float fRec0[2];
 	float fRec1[2];
-	float fVec1[128];
+	float fVec1[1024];
 	float fRec2[2];
 	float fRec3[2];
 	int fSampleRate;
@@ -93,7 +93,7 @@ struct _Comb final : public ::faust::dsp {
 	
 	void instanceClear() {
 		IOTA0 = 0;
-		for (int l0 = 0; l0 < 128; l0 = l0 + 1) {
+		for (int l0 = 0; l0 < 1024; l0 = l0 + 1) {
 			fVec0[l0] = 0.0f;
 		}
 		for (int l1 = 0; l1 < 2; l1 = l1 + 1) {
@@ -102,7 +102,7 @@ struct _Comb final : public ::faust::dsp {
 		for (int l2 = 0; l2 < 2; l2 = l2 + 1) {
 			fRec1[l2] = 0.0f;
 		}
-		for (int l3 = 0; l3 < 128; l3 = l3 + 1) {
+		for (int l3 = 0; l3 < 1024; l3 = l3 + 1) {
 			fVec1[l3] = 0.0f;
 		}
 		for (int l4 = 0; l4 < 2; l4 = l4 + 1) {
@@ -135,7 +135,7 @@ struct _Comb final : public ::faust::dsp {
 	void buildUserInterface(UI* ui_interface) {
 		ui_interface->openVerticalBox("Comb");
 		ui_interface->addHorizontalSlider("aN", &fHslider1, FAUSTFLOAT(0.0f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
-		ui_interface->addHorizontalSlider("del", &fHslider0, FAUSTFLOAT(0.0f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1e+02f), FAUSTFLOAT(0.01f));
+		ui_interface->addHorizontalSlider("del", &fHslider0, FAUSTFLOAT(0.0f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1e+03f), FAUSTFLOAT(0.01f));
 		ui_interface->closeBox();
 	}
 	
@@ -144,24 +144,24 @@ struct _Comb final : public ::faust::dsp {
 		FAUSTFLOAT* input1 = inputs[1];
 		FAUSTFLOAT* output0 = outputs[0];
 		FAUSTFLOAT* output1 = outputs[1];
-		float fSlow0 = std::max<float>(0.0f, std::min<float>(1e+02f, float(fHslider0)));
+		float fSlow0 = std::max<float>(0.0f, std::min<float>(1e+03f, float(fHslider0)));
 		float fSlow1 = fSlow0 + -1.0f;
 		float fSlow2 = std::floor(fSlow1);
 		float fSlow3 = fSlow0 + (-1.0f - fSlow2);
 		float fSlow4 = std::max<float>(0.0f, std::min<float>(1.0f, float(fHslider1)));
 		int iSlow5 = int(fSlow1);
-		int iSlow6 = std::min<int>(129, std::max<int>(0, iSlow5 + 1));
+		int iSlow6 = std::min<int>(1025, std::max<int>(0, iSlow5 + 1));
 		float fSlow7 = fSlow2 + (2.0f - fSlow0);
-		int iSlow8 = std::min<int>(129, std::max<int>(0, iSlow5));
+		int iSlow8 = std::min<int>(1025, std::max<int>(0, iSlow5));
 		for (int i0 = 0; i0 < count; i0 = i0 + 1) {
 			float fTemp0 = float(input0[i0]) - fSlow4 * fRec0[1];
-			fVec0[IOTA0 & 127] = fTemp0;
-			fRec0[0] = fSlow3 * fVec0[(IOTA0 - iSlow6) & 127] + fSlow7 * fVec0[(IOTA0 - iSlow8) & 127];
+			fVec0[IOTA0 & 1023] = fTemp0;
+			fRec0[0] = fSlow3 * fVec0[(IOTA0 - iSlow6) & 1023] + fSlow7 * fVec0[(IOTA0 - iSlow8) & 1023];
 			fRec1[0] = fTemp0;
 			output0[i0] = FAUSTFLOAT(fRec1[1]);
 			float fTemp1 = float(input1[i0]) - fSlow4 * fRec2[1];
-			fVec1[IOTA0 & 127] = fTemp1;
-			fRec2[0] = fSlow7 * fVec1[(IOTA0 - iSlow8) & 127] + fSlow3 * fVec1[(IOTA0 - iSlow6) & 127];
+			fVec1[IOTA0 & 1023] = fTemp1;
+			fRec2[0] = fSlow7 * fVec1[(IOTA0 - iSlow8) & 1023] + fSlow3 * fVec1[(IOTA0 - iSlow6) & 1023];
 			fRec3[0] = fTemp1;
 			output1[i0] = FAUSTFLOAT(fRec3[1]);
 			IOTA0 = IOTA0 + 1;
@@ -185,11 +185,11 @@ struct _Comb final : public ::faust::dsp {
 	#define FAUST_PASSIVES 0
 
 	FAUST_ADDHORIZONTALSLIDER("aN", fHslider1, 0.0f, 0.0f, 1.0f, 0.01f);
-	FAUST_ADDHORIZONTALSLIDER("del", fHslider0, 0.0f, 0.0f, 1e+02f, 0.01f);
+	FAUST_ADDHORIZONTALSLIDER("del", fHslider0, 0.0f, 0.0f, 1e+03f, 0.01f);
 
 	#define FAUST_LIST_ACTIVES(p) \
 		p(HORIZONTALSLIDER, aN, "aN", fHslider1, 0.0f, 0.0f, 1.0f, 0.01f) \
-		p(HORIZONTALSLIDER, del, "del", fHslider0, 0.0f, 0.0f, 1e+02f, 0.01f) \
+		p(HORIZONTALSLIDER, del, "del", fHslider0, 0.0f, 0.0f, 1e+03f, 0.01f) \
 
 	#define FAUST_LIST_PASSIVES(p) \
 

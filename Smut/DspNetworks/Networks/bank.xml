@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<Network ID="bank" AllowPolyphonic="1" Version="0.0.0">
-  <Node FactoryPath="container.chain" ID="bank" Bypassed="0" Name="bank">
-    <Nodes/>
-    <Parameters/>
-  </Node>
-</Network>

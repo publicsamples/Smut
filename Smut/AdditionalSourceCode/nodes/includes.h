@@ -9,6 +9,7 @@
 
 // Include third party header files ----------------
 
+#include "cbmono.h"
 #include "Comb.h"
 #include "gran.h"
 #include "hole.h"
@@ -22,16 +23,9 @@
 
 // Include compiled network files ------------------
 
-#include "bank_networkdata.h"
+#include "combValueTest_networkdata.h"
 #include "empty_networkdata.h"
-#include "FileIn_networkdata.h"
-#include "Files.h"
-#include "Filter.h"
-#include "Filter2Out_networkdata.h"
-#include "FilterIn_networkdata.h"
-#include "FilterOut_networkdata.h"
 #include "GainMod_networkdata.h"
-#include "gain_networkdata.h"
 #include "lfo.h"
 #include "lfo2_networkdata.h"
 #include "lfo3_networkdata.h"
@@ -39,11 +33,11 @@
 #include "Lfos_networkdata.h"
 #include "ModConnect_networkdata.h"
 #include "osc1.h"
-#include "Osc1In_networkdata.h"
-#include "Osc2In_networkdata.h"
+#include "PitchTempo_networkdata.h"
+#include "Revern.h"
+#include "rp_networkdata.h"
 #include "SuperDetune_networkdata.h"
 #include "VcaAdsr_networkdata.h"
-#include "verb.h"
 
 #if (defined (_WIN32) || defined (_WIN64))
 #pragma warning( pop )
