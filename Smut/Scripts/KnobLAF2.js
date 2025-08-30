@@ -148,55 +148,5 @@ KnobLaf2b.registerFunction("drawRotarySlider", function(g, obj)
 });
 
 
-const var BigKnbs = [Content.getComponent("FilePos1"),
-Content.getComponent("Cut1"),
-Content.getComponent("Xfader"),
-Content.getComponent("MasterVolume1"),
-Content.getComponent("Cut2")];
 
-
-for(s in BigKnbs)
-      s.setLocalLookAndFeel(KnobLaf2);
-      
-const var LfoKnbs1 = [Content.getComponent("Adj1"),
-					  Content.getComponent("Adj2"),
-				   	  Content.getComponent("Adj3"),
-				      Content.getComponent("Adj4"),
-                      Content.getComponent("LfoDiv1"),
-                      Content.getComponent("LfoDiv2"),
-                      Content.getComponent("LfoDiv3"),
-                      Content.getComponent("LfoDiv4"),
-                      Content.getComponent("LfoDiv5"),
-                      Content.getComponent("LfoDiv6"),
-                      Content.getComponent("LfoTempo1"),
-                      Content.getComponent("LfoTempo2"),
-                      Content.getComponent("LfoTempo4"),
-                      Content.getComponent("LfoTempo5"),
-					  Content.getComponent("LfoTempo6"),
-                      Content.getComponent("LfoTempo3")];
-
- 
-      
-  for(s in LfoKnbs1)
-        s.setLocalLookAndFeel(KnobLaf2b);    
-        
-const var Pitches = [Content.getComponent("Pitch1"),
-					Content.getComponent("Tempo1"),
-					Content.getComponent("Tempo2"),
-                     Content.getComponent("Pitch2")];
-  
-  
-    for(s in Pitches)
-    s.setLocalLookAndFeel(KnobLaf2);        
-
-
-const var PosSlders = [Content.getComponent("FilePos1"),
-                       Content.getComponent("FilePos2"),
-                       Content.getComponent("FilePos3"),
-                       Content.getComponent("FilePos4")];
-                       
-for(s in PosSlders)
-    s.setLocalLookAndFeel(KnobLaf2);  
-                       
-   
         

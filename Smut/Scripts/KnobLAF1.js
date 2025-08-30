@@ -106,101 +106,45 @@ KnobLaf.registerFunction("drawTableRuler", function(g, obj)
 
 //const var ShpKnbs = [Content.getComponent("FileSmooth1")];
 
-// for(s in ShpKnbs)
- //      s.setLocalLookAndFeel(KnobLaf);     
- 
-
-const var OscKnobs = [Content.getComponent("Bend1"),
-                      Content.getComponent("FmIn1"),
-                      Content.getComponent("Width1"),
-                      Content.getComponent("Width2"),
-                      Content.getComponent("FmIn2"),
-                      Content.getComponent("Step1"),
-                      Content.getComponent("Step2"),
-                      Content.getComponent("Div1"),
-                      Content.getComponent("Div2"),
-                      Content.getComponent("Bend2")];
- 
- for(s in OscKnobs)
-       s.setLocalLookAndFeel(KnobLaf);   
-     
-      
-const var LfoMods1 = [Content.getComponent("LfoGateMod1"),
-					  Content.getComponent("LfoGateMod2"),
-					  Content.getComponent("LfoGateMod3"),
-					  Content.getComponent("LfoGateMod4"),
-                      Content.getComponent("LfoTempoMod1"),
-                      Content.getComponent("LfoTempoMod2"),
-                      Content.getComponent("LfoTempoMod3"),
-                      Content.getComponent("LfoTempoMod4"),
-                      Content.getComponent("LfoDivMod1"),
-                      Content.getComponent("LfoDivMod2"),
-                      Content.getComponent("LfoDivMod3"),
-                      Content.getComponent("LfoDivMod4"),
-                      Content.getComponent("AdjMod1"),
-                      Content.getComponent("AdjMod2"),
-                      Content.getComponent("AdjMod3"),
-                      Content.getComponent("AdjMod4"),
-                      ];
 
 
-for(s in LfoMods1)
-      s.setLocalLookAndFeel(KnobLaf);  
+const var OscKbs = [Content.getComponent("OscSemiTone1"),
+                    Content.getComponent("OscSemiTone2"),
+                    Content.getComponent("OscCent2"),
+                    Content.getComponent("OscCent1"),
+                    Content.getComponent("OscShape1"),
+                    Content.getComponent("OscShape2"),
+                    Content.getComponent("Osc1into2"),
+                    Content.getComponent("Osc2into1"),
+                    Content.getComponent("Divide")];
 
- 
- const var FVCA = [Content.getComponent("VcaPan2"),
-                  Content.getComponent("VcaGain2"),
-                  Content.getComponent("VcaPan1"),
-                  Content.getComponent("VcaGain1"),
-                  Content.getComponent("FilterQ1"),
-                  Content.getComponent("FilterMix1"),
-                  Content.getComponent("FilterMix2"),
-                  Content.getComponent("FilterQ2")];
+for(s in OscKbs)
+     s.setLocalLookAndFeel(KnobLaf);     
 
-
-for(s in FVCA)
-      s.setLocalLookAndFeel(KnobLaf);                       
-
-const var FileKnbs = [Content.getComponent("Input Offset1"),
-                   Content.getComponent("FileIn2"),
-                      Content.getComponent("Pos")];
+const var FileKnbs = [Content.getComponent("PosDiv"),
+                      Content.getComponent("PosMod"),
+                      Content.getComponent("FileInput"),
+                      Content.getComponent("OscMix1"),
+                      Content.getComponent("FileInput1"),
+                       Content.getComponent("OscMix10"),
+                       Content.getComponent("PosMod1"),
+                        Content.getComponent("PosDiv1")];
 
 for(s in FileKnbs)
-      s.setLocalLookAndFeel(KnobLaf);      
-                      
-const var ModKnobs = [Content.getComponent("MidiSelOsc1"),
-                      Content.getComponent("InputMod1"),
-                      Content.getComponent("ShapeMod1"),
-                      Content.getComponent("WidthMod1"),
-                      Content.getComponent("OutMod1"),
-                      Content.getComponent("OutMod2"),
-                      Content.getComponent("FileTempoMod1"),
-                      Content.getComponent("FilePitchMod1"),
-                      Content.getComponent("FileInMod1"),
-                      Content.getComponent("PitchMod1"),
-                      Content.getComponent("WinXfMod1"),
-                      Content.getComponent("WinXfMod2"),
-                      Content.getComponent("FilterMixMod1"),
-                      Content.getComponent("FilterCut1Mod1"),
-                      Content.getComponent("FilterMixMod3"),
-                      Content.getComponent("FilterVolMod1"),
-                      Content.getComponent("FilterPanMod2"),
-                      Content.getComponent("FilterPanMod1")];
-                      
-                      
-for(s in ModKnobs)
-      s.setLocalLookAndFeel(KnobLaf);  
+     s.setLocalLookAndFeel(KnobLaf); 
+     
+     
+const var FilterKnbs = [Content.getComponent("OscMix2"),
+                        Content.getComponent("OscMix3"),
+                        Content.getComponent("OscMix5"),
+                        Content.getComponent("OscMix4"),
+                        Content.getComponent("OscMix6"),
+                        Content.getComponent("OscMix7"),
+                        Content.getComponent("OscMix9"),
+                        Content.getComponent("OscMix8")];
 
-const var Unison = [Content.getComponent("UnisonDetune1"),
-                    Content.getComponent("ScriptSlider11"),
-                    Content.getComponent("UnisonVoices1"),
-                    Content.getComponent("UnisonDetune3"),
-                    Content.getComponent("ScriptSlider12"),
-                    Content.getComponent("UnisonDetune2"),
-                    Content.getComponent("UnisonVoices2"),
-                    Content.getComponent("ScriptSlider13")];
-                    
-for(s in Unison)
-      s.setLocalLookAndFeel(KnobLaf);  
-
-  
+ for(s in FilterKnbs)
+      s.setLocalLookAndFeel(KnobLaf);
+      
+      
+     

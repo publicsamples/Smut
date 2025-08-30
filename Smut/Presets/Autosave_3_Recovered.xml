@@ -1,0 +1,1467 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Processor Type="SynthChain" ID="Preset" Bypassed="0" Gain="1.0" Balance="0.0"
+           VoiceLimit="64.0" KillFadeTime="20.0" IconColour="0" packageName=""
+           BuildVersion="650">
+  <EditorStates BodyShown="0" Visible="1" Solo="0" Folded="1"/>
+  <ChildProcessors>
+    <Processor Type="MidiProcessorChain" ID="Midi Processor" Bypassed="0">
+      <EditorStates BodyShown="1" Visible="0" Solo="0"/>
+      <ChildProcessors>
+        <Processor Type="ScriptProcessor" ID="Interface" Bypassed="0" Script="Content.makeFrontInterface(795, 645);&#10;&#10;include(&quot;laf.js&quot;);&#10;include(&quot;KnobLAF1.js&quot;);&#10;include(&quot;KnobLAF2.js&quot;);&#10;include(&quot;KnobLAF3.js&quot;);&#10;include(&quot;KnobLAF4.js&quot;);&#10;include(&quot;Rect.js&quot;);&#10;include(&quot;Scopes.js&quot;);&#10;&#10;&#10;const var SMUT = Synth.getChildSynth(&quot;SMUT&quot;);&#10;&#10;Engine.loadFontAs(&quot;{PROJECT_FOLDER}Montserrat-Medium.ttf&quot;, &quot;mon&quot;);&#10;&#10;&#10;//osc1 tempo sync&#10;const var Osc1Tune = [Content.getComponent(&quot;OscSemiTone1&quot;),&#10;                      Content.getComponent(&quot;ScriptLabel17&quot;),&#10;                      Content.getComponent(&quot;OscCent1&quot;),&#10;                      Content.getComponent(&quot;ScriptLabel18&quot;)];&#10;&#10;const var Osc1Tempo = [Content.getComponent(&quot;ScriptLabel52&quot;),&#10;                       Content.getComponent(&quot;Divide&quot;),&#10;                       Content.getComponent(&quot;ScriptLabel51&quot;),&#10;                       Content.getComponent(&quot;TempoSync&quot;)];&#10;&#10;&#10;inline function onSyncControl(component, value)&#10;{&#10;&#9; for(s in Osc1Tune)&#10;      s.showControl(value-1);&#10;      for(s in Osc1Tempo)&#10;            s.showControl(value);&#10;      &#10;      SMUT.setAttribute(SMUT.OscTempoSync1, value);     &#10;            &#10;};&#10;&#10;Content.getComponent(&quot;Sync&quot;).setControlCallback(onSyncControl);&#10;&#10;//osc2 sync&#10;&#10;const var Osc2Tune = [Content.getComponent(&quot;OscSemiTone2&quot;),&#10;                      Content.getComponent(&quot;ScriptLabel22&quot;),&#10;                      Content.getComponent(&quot;OscCent2&quot;),&#10;                      Content.getComponent(&quot;ScriptLabel23&quot;)];&#10;&#10;const var Osc2Tempo = [Content.getComponent(&quot;Divide1&quot;),&#10;                       Content.getComponent(&quot;ScriptLabel59&quot;),&#10;                       Content.getComponent(&quot;ScriptLabel60&quot;),&#10;                       Content.getComponent(&quot;TempoSync1&quot;)];&#10;&#10;&#10;inline function onSync1Control(component, value)&#10;{&#10;&#9;for(s in Osc2Tune)&#10;      s.showControl(value-1);&#10;      for(s in Osc2Tempo)&#10;            s.showControl(value);&#10;      &#10;      SMUT.setAttribute(SMUT.SYNC2, value);     &#10;};&#10;&#10;Content.getComponent(&quot;Sync1&quot;).setControlCallback(onSync1Control);&#10;&#10;//Osc1 Shape Menu&#10;&#10;const var VisPanel1 = Content.getComponent(&quot;VisPanel1&quot;);&#10;const var OscUser1 = Content.getComponent(&quot;OscUser1&quot;);&#10;&#10;&#10;inline function onOscShapeMode1Control(component, value)&#10;{&#10;&#9;SMUT.setAttribute(SMUT.oscShapeMode1, value); &#10;&#9;&#10;&#9;if (value &gt;= 11) {&#10;&#9;&#9;OscUser1.showControl(1);&#10;&#9;&#9;VisPanel1.showControl(0);&#10;&#9;}&#10;&#9;else {&#10;&#9;&#9;&#10;&#9;&#9;OscUser1.showControl(0);&#10;&#9;&#9;VisPanel1.showControl(1);&#10;&#9;&#10;&#9;&#9;&#10;&#9;&#9;}&#10;&#9;&#10;};&#10;&#10;Content.getComponent(&quot;OscShapeMode1&quot;).setControlCallback(onOscShapeMode1Control);&#10;&#10;//Osc2 Shape Menu&#10;&#10;const var VisPanel2 = Content.getComponent(&quot;VisPanel2&quot;);&#10;const var OscUser2 = Content.getComponent(&quot;OscUser2&quot;);&#10;&#10;&#10;inline function onOscShapeMode2Control(component, value)&#10;{&#10;&#9;SMUT.setAttribute(SMUT.oscShapeMode2, value); &#10;&#9;&#10;&#9;if (value &gt;= 11) {&#10;&#9;&#9;OscUser2.showControl(1);&#10;&#9;&#9;VisPanel2.showControl(0);&#10;&#9;}&#10;&#9;else {&#10;&#9;&#9;&#10;&#9;&#9;OscUser2.showControl(0);&#10;&#9;&#9;VisPanel2.showControl(1);&#10;&#9;&#10;&#9;&#9;&#10;&#9;&#9;}&#10;&#9;&#10;};&#10;&#10;Content.getComponent(&quot;OscShapeMode2&quot;).setControlCallback(onOscShapeMode2Control);&#10;&#10;//File User1 &#10;&#10;const var UserWave = [Content.getComponent(&quot;UserWaveform1&quot;),&#10;                      Content.getComponent(&quot;UserInstructions&quot;)];&#10;&#10;const var AudioWaveform1 = Content.getComponent(&quot;AudioWaveform1&quot;);&#10;&#10;&#10;inline function onUserModeControl(component, value)&#10;{&#10;&#9;&#9;for(s in UserWave)&#10;      s.showControl(value-1);&#10;     &#9; AudioWaveform1.showControl(value);&#10;      &#10;      SMUT.setAttribute(SMUT.User1, 1-value);   &#10;};&#10;&#10;Content.getComponent(&quot;UserMode&quot;).setControlCallback(onUserModeControl);&#10;&#10;&#10;&#10;//Samples&#10;&#10;const var foldersV1 = [];        // Top-level Genre foldersV1&#10;const var instrumentsV1 = {};    // Maps Genre to Instruments&#10;const var samplesV1 = {};        // Maps Instrument to .wav files&#10;const var foldersV2 = [];        // Top-level Genre foldersV1&#10;const var instrumentsV2 = {};    // Maps Genre to Instruments&#10;const var samplesV2 = {}; &#10;&#10;const var Cat1 = Content.getComponent(&quot;Cat1&quot;);&#10;const var Bank1 = Content.getComponent(&quot;Bank1&quot;);&#10;const var Sample1 = Content.getComponent(&quot;Sample1&quot;);&#10;&#10;const var Cat2 = Content.getComponent(&quot;Cat2&quot;);&#10;const var Bank2 = Content.getComponent(&quot;Bank2&quot;);&#10;const var Sample2 = Content.getComponent(&quot;Sample2&quot;);&#10;&#10;const var File1 = Synth.getAudioSampleProcessor(&quot;SMUT&quot;);&#10;&#10;&#10;const slot1 = File1.getAudioFile(0);&#10;const slot2 = File1.getAudioFile(1);&#10;&#10;&#10;const var AudioList = Engine.loadAudioFilesIntoPool();&#10;&#10;inline function sortAudioFilesListV1() {&#10;&#9;&#10;&#9;               &#10;for (file in AudioList) {&#10;&#10;        local fullPath = file.split(&quot;}&quot;)[1];&#10;&#10;        local pathParts = fullPath.split(&quot;/&quot;);&#10;    &#10;        local genreFolder = pathParts[0];&#10;        local instrumentFolder = pathParts[1];&#10;        local sampleFile = pathParts[2];&#10;&#10;     &#10;        if (foldersV1.indexOf(genreFolder) == -1) {&#10;            foldersV1.push(genreFolder);&#10;            instrumentsV1[genreFolder] = []; &#10;            instrumentsV2[genreFolder] = []; &#10;        }&#10;&#10;       &#10;        if (instrumentsV1[genreFolder].indexOf(instrumentFolder) == -1) {&#10;            instrumentsV1[genreFolder].push(instrumentFolder);&#10;            samplesV1[instrumentFolder] = []; &#10;            samplesV2[instrumentFolder] = []; &#10;        }&#10;&#10;&#9;&#9;&#10;&#10;        samplesV1[instrumentFolder].push(sampleFile);&#10;        samplesV2[instrumentFolder].push(sampleFile);&#10;  &#10;  &#10;    }&#10;&#10;&#10;   Cat1.set(&quot;items&quot;, foldersV1.join(&quot;\n&quot;));&#10;   Cat2.set(&quot;items&quot;, foldersV1.join(&quot;\n&quot;));&#10;&#10;&#10;}&#10;&#10;sortAudioFilesListV1();&#10;&#10;&#10;inline function onCat1Control(component, value)&#10; {&#10;  if (value &gt;= 0) {&#10;&#10;        local selectedGenre = foldersV1[value-1];&#10;&#10;        if (instrumentsV1[selectedGenre]) {&#10;            Bank1.set(&quot;items&quot;, instrumentsV1[selectedGenre].join(&quot;\n&quot;));&#10;     &#10;        } else {&#10;            Bank1.set(&quot;items&quot;, &quot;no file&quot;);&#10;&#10;&#10;        }&#10;&#10;&#9;&#9;Bank1.setValue(value);&#10;         &#10;    }&#10;}&#10;Content.getComponent(&quot;Cat1&quot;).setControlCallback(onCat1Control);&#10;&#10;&#10;inline function onBank1Control(component, value)&#10;{&#10;&#9;   if (value &gt;= 0) {&#10;&#9;    &#10;        local selectedInstrument = Bank1.getItemText();&#10;&#10;        if (samplesV1[selectedInstrument]) {&#10;&#10;            Sample1.set(&quot;items&quot;, samplesV1[selectedInstrument].join(&quot;\n&quot;))-1;&#10;        } else {&#10; &#9;&#9;&#9;Sample1.set(&quot;items&quot;, &quot;no file&quot;);&#10;        }&#10;      &#10;        &#10;    }&#10;    &#10;    Bank1.setValue(value);&#10;}&#10;&#10;&#10;Content.getComponent(&quot;Bank1&quot;).setControlCallback(onBank1Control);&#10;&#10;&#10;inline function onSample1Control(component, value)&#10;{&#10;&#9;&#10;&#9;if (value &gt;= 0) {&#10;&#10;&#9;&#9;local selectedSample = Sample1.get(&quot;items&quot;).split(&quot;\n&quot;)[value - 1];&#10;&#10;       local selectedGenre = Cat1.getItemText();&#10;       local selectedInstrument = Bank1.getItemText();&#10;       local fullPath = &quot;{PROJECT_FOLDER}&quot; + selectedGenre + &quot;/&quot; + selectedInstrument + &quot;/&quot; + selectedSample;&#10;&#10;&#9;&#10;&#9;SMUT.setBypassed(false);&#10;&#9;reg voc1 = value-1;&#10;&#9;&#10;&#9;Content.callAfterDelay(300, function()&#10;&#9;{&#10;&#9;&#9;Engine.allNotesOff();&#10;&#9;&#10;&#9;&#9;SMUT.setBypassed(true);&#10;&#9;&#9;&#10;&#9;&#9;Content.callAfterDelay(300, function()&#10;&#9;&#9;{&#10;&#9;&#10;&#9;&#10;&#9;&#9;SMUT.setBypassed(false);&#10;&#10;        slot1.loadFile(&quot;{PROJECT_FOLDER}&quot; + Cat1.getItemText() + &quot;/&quot; + Bank1.getItemText()  + &quot;/&quot; + Sample1.getItemText());&#10;    &#10;    }, this);&#10;&#10;&#9;}, SMUT);&#10;}&#10;}&#10;&#10;Content.getComponent(&quot;Sample1&quot;).setControlCallback(onSample1Control);&#10;&#10;&#10;inline function onCat2Control(component, value)&#10;{&#10; if (value &gt;= 0) {&#10;        local selectedGenre = foldersV1[value-1];&#10;&#10;        if (instrumentsV1[selectedGenre]) {&#10;            Bank2.set(&quot;items&quot;, instrumentsV1[selectedGenre].join(&quot;\n&quot;));&#10;     &#10;        } else {&#10;            Bank2.set(&quot;items&quot;, &quot;no file&quot;);&#10;&#10;&#10;        }&#10;&#10;&#9;&#9;Bank2.setValue(value);&#10;         &#10;    }&#10;};&#10;&#10;Content.getComponent(&quot;Cat2&quot;).setControlCallback(onCat2Control);&#10;&#10;&#10;inline function onBank2Control(component, value)&#10;{ if (value &gt;= 0) {&#10;&#9;    &#10;        local selectedInstrument = Bank2.getItemText();&#10;&#10;        if (samplesV2[selectedInstrument]) {&#10;&#10;            Sample2.set(&quot;items&quot;, samplesV1[selectedInstrument].join(&quot;\n&quot;))-1;&#10;        } else {&#10; &#9;&#9;&#9;Sample2.set(&quot;items&quot;, &quot;no file&quot;);&#10;        }&#10;      }&#10;   &#10;};&#10;&#10;Content.getComponent(&quot;Bank2&quot;).setControlCallback(onBank2Control);&#10;&#10;&#10;inline function onSample2Control(component, value)&#10;{&#10;if (value &gt;= 0) {&#10;&#10;&#9;&#9;local selectedSample = Sample2.get(&quot;items&quot;).split(&quot;\n&quot;)[value - 1];&#10;&#10;       local selectedGenre = Cat2.getItemText();&#10;       local selectedInstrument = Bank2.getItemText();&#10;       local fullPath = &quot;{PROJECT_FOLDER}&quot; + selectedGenre + &quot;/&quot; + selectedInstrument + &quot;/&quot; + selectedSample;&#10;&#10;&#9;&#10;&#9;SMUT.setBypassed(false);&#10;&#9;reg voc2 = value-1;&#10;&#9;&#10;&#9;Content.callAfterDelay(300, function()&#10;&#9;{&#10;&#9;&#9;Engine.allNotesOff();&#10;&#9;&#10;&#9;&#9;SMUT.setBypassed(true);&#10;&#9;&#9;&#10;&#9;&#9;Content.callAfterDelay(300, function()&#10;&#9;&#9;{&#10;&#9;&#10;&#9;&#10;&#9;&#9;SMUT.setBypassed(false);&#10;&#10;        slot2.loadFile(&quot;{PROJECT_FOLDER}&quot; + Cat2.getItemText() + &quot;/&quot; + Bank2.getItemText()  + &quot;/&quot; + Sample2.getItemText());&#10;    &#10;    }, this);&#10;&#10;&#9;}, SMUT);&#10;}&#10;}&#10;&#10;Content.getComponent(&quot;Sample2&quot;).setControlCallback(onSample2Control);&#10;function onNoteOn()&#10;{&#10;&#9;&#10;}&#10; function onNoteOff()&#10;{&#10;&#9;&#10;}&#10; function onController()&#10;{&#10;&#9;&#10;}&#10; function onTimer()&#10;{&#10;&#9;&#10;}&#10; function onControl(number, value)&#10;{&#10;&#9;&#10;}&#10; ">
+          <EditorStates BodyShown="1" Visible="1" Solo="0" contentShown="1" onInitOpen="1"/>
+          <ChildProcessors/>
+          <Content>
+            <Control type="ScriptComboBox" id="OscShapeMode4" value="1.0"/>
+            <Control type="ScriptSlider" id="Osc2into1" value="0.0"/>
+            <Control type="ScriptSlider" id="OscSemiTone1" value="-24.0"/>
+            <Control type="ScriptSlider" id="OscCent1" value="0.0"/>
+            <Control type="ScriptComboBox" id="OscShapeMode1" value="11.0"/>
+            <Control type="ScriptSlider" id="OscShape1" value="0.0"/>
+            <Control type="ScriptButton" id="Sync" value="1.0"/>
+            <Control type="ScriptSlider" id="Divide" value="0.0"/>
+            <Control type="ScriptComboBox" id="TempoSync" value="1.0"/>
+            <Control type="ScriptTable" id="OscUser1" value="0.0" data="72...............vOgqGk9XOJb7C...vOw0iB+fv0i1C...vOZlYF+v0iB8C...vOOJbc+fqGE8ipwKsO...f+.........3O"/>
+            <Control type="ScriptTable" id="OscUser2" value="0.0" data=""/>
+            <Control type="ScriptComboBox" id="OscShapeMode5" value="1.0"/>
+            <Control type="ScriptSlider" id="Osc1into2" value="0.5400000214576721"/>
+            <Control type="ScriptSlider" id="OscSemiTone2" value="-1.0"/>
+            <Control type="ScriptSlider" id="OscCent2" value="0.0"/>
+            <Control type="ScriptComboBox" id="OscShapeMode2" value="11.0"/>
+            <Control type="ScriptSlider" id="OscShape2" value="0.0"/>
+            <Control type="ScriptButton" id="Sync1" value="1.0"/>
+            <Control type="ScriptSlider" id="Divide1" value="1.0"/>
+            <Control type="ScriptComboBox" id="TempoSync1" value="0.0"/>
+            <Control type="ScriptSlider" id="OscMix1" value="0.9100000262260437"/>
+            <Control type="ScriptAudioWaveform" id="AudioWaveform1" value="0.0" data="{PROJECT_FOLDER}//"
+                     rangeStart="0" rangeEnd="16384"/>
+            <Control type="ScriptAudioWaveform" id="UserWaveform1" value="0.0" data=""
+                     rangeStart="0" rangeEnd="0"/>
+            <Control type="ScriptSlider" id="FileInput" value="0.5600000023841858"/>
+            <Control type="ScriptComboBox" id="QuantMode" value="1.0"/>
+            <Control type="ScriptComboBox" id="PosModTempo" value="5.0"/>
+            <Control type="ScriptTable" id="Table3" value="0.0" data=""/>
+            <Control type="ScriptTable" id="Table4" value="0.0" data=""/>
+            <Control type="ScriptTable" id="FileModTable1" value="0.0" data=""/>
+            <Control type="ScriptSlider" id="PosDiv" value="12.0"/>
+            <Control type="ScriptSlider" id="PosMod" value="-0.9399999976158142"/>
+            <Control type="ScriptComboBox" id="PosModMode" value="1.0"/>
+            <Control type="ScriptComboBox" id="QuantMode1" value="1.0"/>
+            <Control type="ScriptSlider" id="InputOffset" value="0.8700000047683716"/>
+            <Control type="ScriptComboBox" id="Cat1" value="1.0"/>
+            <Control type="ScriptButton" id="UserMode" value="0.0"/>
+            <Control type="ScriptComboBox" id="Bank1" value="1.0"/>
+            <Control type="ScriptComboBox" id="Sample1" value="14.0"/>
+            <Control type="ScriptSlider" id="FileA1" value="0.0"/>
+            <Control type="ScriptSlider" id="FileH1" value="0.0"/>
+            <Control type="ScriptSlider" id="FileD1" value="0.0"/>
+            <Control type="ScriptSlider" id="FileS1" value="0.0"/>
+            <Control type="ScriptSlider" id="FileR1" value="0.0"/>
+            <Control type="ScriptButton" id="ScriptButton1" value="0.0"/>
+            <Control type="ScriptSlider" id="OscMix10" value="0.5"/>
+            <Control type="ScriptAudioWaveform" id="AudioWaveform2" value="0.0" data="{PROJECT_FOLDER}Loops/Long/No options"
+                     rangeStart="0" rangeEnd="0"/>
+            <Control type="ScriptAudioWaveform" id="UserWaveform2" value="0.0" data="{PROJECT_FOLDER}Loops/Long/No options"
+                     rangeStart="0" rangeEnd="0"/>
+            <Control type="ScriptSlider" id="FileInput1" value="0.300000011920929"/>
+            <Control type="ScriptComboBox" id="QuantMode2" value="1.0"/>
+            <Control type="ScriptComboBox" id="PosModTempo1" value="3.0"/>
+            <Control type="ScriptTable" id="Table5" value="0.0" data=""/>
+            <Control type="ScriptTable" id="Table6" value="0.0" data=""/>
+            <Control type="ScriptTable" id="FileModTable2" value="0.0" data=""/>
+            <Control type="ScriptSlider" id="PosDiv1" value="8.0"/>
+            <Control type="ScriptSlider" id="PosMod1" value="0.5"/>
+            <Control type="ScriptComboBox" id="PosModMode1" value="0.0"/>
+            <Control type="ScriptComboBox" id="QuantMode3" value="1.0"/>
+            <Control type="ScriptSlider" id="InputOffset1" value="0.3400000035762787"/>
+            <Control type="ScriptComboBox" id="Cat2" value="0.0"/>
+            <Control type="ScriptButton" id="UserMode1" value="0.0"/>
+            <Control type="ScriptComboBox" id="Bank2" value="0.0"/>
+            <Control type="ScriptComboBox" id="Sample2" value="0.0"/>
+            <Control type="ScriptSlider" id="OscMix2" value="0.8700000047683716"/>
+            <Control type="ScriptSlider" id="OscMix3" value="0.7099999785423279"/>
+            <Control type="ScriptSlider" id="OscMix4" value="0.0"/>
+            <Control type="ScriptSlider" id="OscMix5" value="0.8899999856948853"/>
+            <Control type="ScriptComboBox" id="FilterMode1" value="1.0"/>
+            <Control type="ScriptSliderPack" id="ScriptSliderPack1" value="0.0" data="16.eT3Z9...............+."/>
+            <Control type="ScriptSliderPack" id="ScriptSliderPack2" value="4.0" data="20............................"/>
+            <Control type="ScriptSlider" id="OscMix6" value="0.5400000214576721"/>
+            <Control type="ScriptSlider" id="OscMix7" value="0.9100000262260437"/>
+            <Control type="ScriptSlider" id="OscMix8" value="0.0"/>
+            <Control type="ScriptSlider" id="OscMix9" value="0.4900000095367432"/>
+            <Control type="ScriptComboBox" id="FilterMode2" value="1.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox1" value="4.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider1" value="1.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox2" value="1.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider2" value="0.05000000074505806"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox3" value="2.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider3" value="1.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox4" value="1.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider4" value="0.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider5" value="0.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox5" value="1.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider6" value="0.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox6" value="1.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider7" value="0.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox7" value="1.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider8" value="0.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox8" value="1.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider9" value="0.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox9" value="1.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider10" value="0.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox10" value="1.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider11" value="0.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox11" value="1.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider12" value="0.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox12" value="1.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider13" value="0.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox13" value="1.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider14" value="0.8999999761581421"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox14" value="4.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider15" value="0.1000000014901161"/>
+            <Control type="ScriptSlider" id="ScriptSlider16" value="0.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox15" value="1.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider21" value="0.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox20" value="1.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider22" value="0.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox21" value="1.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider23" value="0.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider24" value="0.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox22" value="1.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox16" value="5.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox17" value="1.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox23" value="1.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider25" value="0.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox24" value="1.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider26" value="0.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider17" value="0.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox18" value="1.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider18" value="1.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox19" value="1.0"/>
+            <Control type="ScriptSlider" id="Knob1" value="0.0"/>
+            <Control type="ScriptSlider" id="Knob2" value="0.0"/>
+            <Control type="ScriptSlider" id="Knob3" value="10000.0"/>
+            <Control type="ScriptSlider" id="Knob4" value="1.0"/>
+            <Control type="ScriptSlider" id="Knob5" value="8546.0"/>
+            <Control type="ScriptSlider" id="Vol" value="0.4000000059604645"/>
+            <Control type="ScriptTable" id="Table7" value="0.0" data="36...............vOHEt99....9C...vO...f+.........vO"/>
+            <Control type="ScriptComboBox" id="PosModMode2" value="1.0"/>
+            <Control type="ScriptSlider" id="PosDiv2" value="8.0"/>
+            <Control type="ScriptComboBox" id="PosModTempo2" value="1.0"/>
+            <Control type="ScriptComboBox" id="PosModMode3" value="1.0"/>
+            <Control type="ScriptSlider" id="PosDiv3" value="0.0"/>
+            <Control type="ScriptTable" id="Table8" value="0.0" data="36...............vOHEt99....9C...vO...f+.........vO"/>
+            <Control type="ScriptComboBox" id="PosModMode4" value="1.0"/>
+            <Control type="ScriptSlider" id="PosDiv4" value="0.0"/>
+            <Control type="ScriptComboBox" id="PosModTempo3" value="1.0"/>
+            <Control type="ScriptComboBox" id="PosModMode5" value="1.0"/>
+            <Control type="ScriptSlider" id="PosDiv5" value="0.0"/>
+          </Content>
+          <UIData>
+            <ContentProperties DeviceType="Desktop">
+              <Component type="ScriptImage" id="ScriptImage1" x="0.0" y="0.0" width="800.0"
+                         height="890.0" fileName="{PROJECT_FOLDER}MuckBGk3.png" locked="1"/>
+              <Component type="ScriptPanel" id="Osc1" x="232.0" y="5.0" width="275.0"
+                         height="160.0" itemColour="4293583307" itemColour2="4293583307"
+                         textColour="4279702530">
+                <Component type="ScriptLabel" id="ScriptLabel53" x="56.0" y="54.0" width="50.0"
+                           height="20.0" parentComponent="Osc1" text="In Gain" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptComboBox" id="OscShapeMode4" x="64.0" y="83.0" width="40.0"
+                           height="20.0" processorId="SMUT" parameterId="Osc2InSel" items="Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
+                           parentComponent="Osc1" max="5" textColour="4281936900" bgColour="1427967234"/>
+                <Component type="ScriptLabel" id="ScriptLabel54" x="60.0" y="109.0" width="50.0"
+                           height="20.0" parentComponent="Osc1" text="Input" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptSlider" id="Osc2into1" x="62.0" y="8.0" processorId="SMUT"
+                           parameterId="Osc1Input" pluginParameterName="Osc2 - Osc 1 Inout"
+                           middlePosition="0.5" width="40.0" height="40.0" parentComponent="Osc1"
+                           textColour="16777215" bgColour="16777215" text="Osc2Into1" showValuePopup="Below"/>
+                <Component type="ScriptLabel" id="ScriptLabel17" x="8.0" y="52.0" width="50.0"
+                           height="20.0" parentComponent="Osc1" text="Semi" fontName="mon"
+                           editable="0" textColour="4280620804" visible="0"/>
+                <Component type="ScriptSlider" id="OscSemiTone1" x="11.0" y="8.0" min="-24.0"
+                           max="24.0" processorId="SMUT" parameterId="OscSt1" isPluginParameter="1"
+                           pluginParameterName="Osc1 - Semtione" stepSize="1.0" width="40.0"
+                           height="40.0" parentComponent="Osc1" textColour="16777215" bgColour="16777215"
+                           middlePosition="0.0" showValuePopup="Below" visible="0"/>
+                <Component type="ScriptSlider" id="OscCent1" x="13.0" y="72.0" processorId="SMUT"
+                           parameterId="OscCent1" pluginParameterName="Osc1 - Cent" min="-1.0"
+                           middlePosition="0.0" width="40.0" height="40.0" parentComponent="Osc1"
+                           textColour="16777215" bgColour="16777215" stepSize="0.0" showValuePopup="Below"
+                           visible="0"/>
+                <Component type="ScriptComboBox" id="OscShapeMode1" x="171.0" y="130.0"
+                           max="12" width="90.0" height="20.0" items="Sine Width&#10;Sine Sync&#10;Sine fold 1&#10;Sine fold 2&#10;Saw Width&#10;Saw Sync&#10;Square Width&#10;Square Sync&#10;Tri Width&#10;Tri Sync&#10;User Width&#10;User Sync&#10;"
+                           parentComponent="Osc1" textColour="4281936900" bgColour="1427967234"/>
+                <Component type="ScriptSlider" id="OscShape1" x="221.0" y="43.0" processorId="SMUT"
+                           parameterId="OscShape" pluginParameterName="Osc1 - Shape" middlePosition="0.5"
+                           width="40.0" height="40.0" parentComponent="Osc1" textColour="16777215"
+                           bgColour="16777215" showValuePopup="Below"/>
+                <Component type="ScriptLabel" id="ScriptLabel18" x="10.0" y="110.0" width="50.0"
+                           height="20.0" parentComponent="Osc1" text="Detune" fontName="mon"
+                           editable="0" textColour="4280620804" visible="0"/>
+                <Component type="ScriptLabel" id="ScriptLabel21" x="211.0" y="11.0" width="60.0"
+                           height="20.0" parentComponent="Osc1" text="OSC 1" fontSize="20.0"
+                           fontName="mon" editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="Adjust" x="119.0" y="130.0" width="50.0"
+                           height="20.0" parentComponent="Osc1" text="Shape" fontName="mon"
+                           textColour="4280620804" editable="0"/>
+                <Component type="ScriptLabel" id="Adjust1" x="208.0" y="94.0" width="70.0"
+                           height="20.0" parentComponent="Osc1" text="Width" textColour="4280619780"
+                           fontName="mon" editable="0"/>
+                <Component type="ScriptButton" id="Sync" x="16.0" y="129.0" width="55.0"
+                           height="20.0" parentComponent="Osc1" textColour="4281936900"
+                           text="Tempo"/>
+                <Component type="ScriptSlider" id="Divide" x="13.0" y="72.0" processorId="SMUT"
+                           parameterId="OscDiv1" pluginParameterName="Osc1 - Cent" middlePosition="16.0"
+                           width="40.0" height="40.0" parentComponent="Osc1" textColour="16777215"
+                           bgColour="16777215" max="32.0" stepSize="1.0"/>
+                <Component type="ScriptLabel" id="ScriptLabel51" x="8.0" y="52.0" width="50.0"
+                           height="20.0" parentComponent="Osc1" text="Tempo" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel52" x="10.0" y="110.0" width="50.0"
+                           height="20.0" parentComponent="Osc1" text="Divide" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptComboBox" id="TempoSync" x="18.0" y="17.0" max="19"
+                           width="30.0" height="30.0" items="1/1&#10;1/2D&#10;1/2&#10;1/2T&#10;1/4D&#10;1/4&#10;1/4T&#10;1/8D&#10;1/8&#10;1/8T&#10;1/16D&#10;1/16&#10;1/16T&#10;1/32D&#10;1/32&#10;1/32T&#10;1/64D&#10;1/64&#10;1/64T"
+                           parentComponent="Osc1" textColour="4281936900" bgColour="1427967234"
+                           processorId="SMUT" parameterId="OscTempo1" tooltip="Tempo Sync"/>
+                <Component type="ScriptPanel" id="ScriptPanel1" x="108.0" y="5.0" width="100.0"
+                           height="100.0" parentComponent="Osc1" itemColour="0" bgColour="16777215"
+                           textColour="16777215" itemColour2="0">
+                  <Component type="ScriptPanel" id="VisPanel1" x="0.0" y="0.0" width="100.0"
+                             height="200.0" parentComponent="ScriptPanel1" itemColour="16711935"
+                             itemColour2="822018048" visible="0"/>
+                  <Component type="ScriptTable" id="OscUser1" x="0.0" y="0.0" width="100.0"
+                             height="100.0" parentComponent="ScriptPanel1" itemColour2="4279308561"
+                             itemColour="14865424" bgColour="1835263" processorId="SMUT" customColours="1"/>
+                </Component>
+              </Component>
+              <Component type="ScriptPanel" id="Osc2" x="515.0" y="5.0" width="275.0"
+                         height="160.0" itemColour="4293583307" itemColour2="4293583307"
+                         textColour="4284568845">
+                <Component type="ScriptPanel" id="ScriptPanel2" x="111.0" y="5.0" width="100.0"
+                           height="100.0" parentComponent="Osc2" itemColour="0" bgColour="16777215"
+                           itemColour2="0" textColour="4278190080">
+                  <Component type="ScriptPanel" id="VisPanel2" x="0.0" y="0.0" width="100.0"
+                             height="200.0" parentComponent="ScriptPanel2" itemColour="16711935"
+                             itemColour2="822018048" visible="0"/>
+                  <Component type="ScriptTable" id="OscUser2" x="0.0" y="0.0" width="100.0"
+                             height="100.0" parentComponent="ScriptPanel2" itemColour2="4279308561"
+                             itemColour="14865424" bgColour="14654085" customColours="1"/>
+                </Component>
+                <Component type="ScriptLabel" id="ScriptLabel57" x="56.0" y="54.0" width="50.0"
+                           height="20.0" parentComponent="Osc2" text="In Gain" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptComboBox" id="OscShapeMode5" x="64.0" y="83.0" width="40.0"
+                           height="20.0" processorId="SMUT" parameterId="Osc2InSel" items="Osc 1&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
+                           parentComponent="Osc2" max="5" textColour="4281936900" bgColour="1427967234"/>
+                <Component type="ScriptLabel" id="ScriptLabel58" x="60.0" y="107.0" width="50.0"
+                           height="20.0" parentComponent="Osc2" text="Input" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptSlider" id="Osc1into2" x="62.0" y="8.0" processorId="SMUT"
+                           parameterId="Osc2InputGain" pluginParameterName="Osc2 - Osc 1 Inout"
+                           middlePosition="0.5" width="40.0" height="40.0" parentComponent="Osc2"
+                           textColour="16777215" bgColour="16777215" showValuePopup="Below"/>
+                <Component type="ScriptLabel" id="ScriptLabel22" x="9.0" y="52.0" width="50.0"
+                           height="20.0" parentComponent="Osc2" text="Semi" fontName="mon"
+                           editable="0" textColour="4280620804" visible="0"/>
+                <Component type="ScriptSlider" id="OscSemiTone2" x="15.0" y="8.0" min="-24.0"
+                           max="24.0" processorId="SMUT" parameterId="OscSt2" isPluginParameter="1"
+                           pluginParameterName="Osc1 - Semtione" stepSize="1.0" width="40.0"
+                           height="40.0" parentComponent="Osc2" textColour="16777215" bgColour="16777215"
+                           middlePosition="0.0" showValuePopup="Below" visible="0"/>
+                <Component type="ScriptSlider" id="OscCent2" x="15.0" y="72.0" processorId="SMUT"
+                           parameterId="OscCent2" pluginParameterName="Osc1 - Cent" min="-1.0"
+                           middlePosition="0.0" width="40.0" height="40.0" parentComponent="Osc2"
+                           textColour="16777215" bgColour="16777215" stepSize="0.0" showValuePopup="Below"
+                           visible="0"/>
+                <Component type="ScriptComboBox" id="OscShapeMode2" x="171.0" y="130.0"
+                           max="12" width="90.0" height="20.0" items="Sine Width&#10;Sine Sync&#10;Sine fold 1&#10;Sine fold 2&#10;Saw Width&#10;Saw Sync&#10;Square Width&#10;Square Sync&#10;Tri Width&#10;Tri Sync&#10;User Width&#10;User Sync&#10;"
+                           parentComponent="Osc2" textColour="4281936900" bgColour="1427967234"/>
+                <Component type="ScriptSlider" id="OscShape2" x="221.0" y="43.0" processorId="SMUT"
+                           parameterId="shape2" pluginParameterName="Osc1 - Shape" middlePosition="0.5"
+                           width="40.0" height="40.0" parentComponent="Osc2" textColour="16777215"
+                           bgColour="16777215" showValuePopup="Below"/>
+                <Component type="ScriptLabel" id="ScriptLabel23" x="10.0" y="110.0" width="50.0"
+                           height="20.0" parentComponent="Osc2" text="Detune" fontName="mon"
+                           editable="0" textColour="4280620804" visible="0"/>
+                <Component type="ScriptLabel" id="ScriptLabel24" x="211.0" y="11.0" width="60.0"
+                           height="20.0" parentComponent="Osc2" text="OSC 1" fontSize="20.0"
+                           fontName="mon" editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="Adjust2" x="119.0" y="130.0" width="50.0"
+                           height="20.0" parentComponent="Osc2" text="Shape" fontName="mon"
+                           textColour="4280620804" editable="0"/>
+                <Component type="ScriptLabel" id="Adjust3" x="208.0" y="94.0" width="70.0"
+                           height="20.0" parentComponent="Osc2" text="Width" textColour="4280619780"
+                           fontName="mon" editable="0"/>
+                <Component type="ScriptButton" id="Sync1" x="16.0" y="129.0" width="55.0"
+                           height="20.0" parentComponent="Osc2" textColour="4281936900"
+                           text="Tempo"/>
+                <Component type="ScriptSlider" id="Divide1" x="13.0" y="72.0" processorId="SMUT"
+                           parameterId="DIV2" pluginParameterName="Osc1 - Cent" middlePosition="16.0"
+                           width="40.0" height="40.0" parentComponent="Osc2" textColour="16777215"
+                           bgColour="16777215" max="32.0" stepSize="1.0"/>
+                <Component type="ScriptLabel" id="ScriptLabel59" x="8.0" y="52.0" width="50.0"
+                           height="20.0" parentComponent="Osc2" text="Tempo" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel60" x="10.0" y="110.0" width="50.0"
+                           height="20.0" parentComponent="Osc2" text="Divide" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptComboBox" id="TempoSync1" x="18.0" y="17.0" max="19"
+                           width="30.0" height="30.0" items="1/1&#10;1/2D&#10;1/2&#10;1/2T&#10;1/4D&#10;1/4&#10;1/4T&#10;1/8D&#10;1/8&#10;1/8T&#10;1/16D&#10;1/16&#10;1/16T&#10;1/32D&#10;1/32&#10;1/32T&#10;1/64D&#10;1/64&#10;1/64T"
+                           parentComponent="Osc2" textColour="4281936900" bgColour="1427967234"
+                           processorId="SMUT" parameterId="TEMPO2"/>
+              </Component>
+              <Component type="ScriptPanel" id="File1" x="232.0" y="168" width="275.0"
+                         height="190.0" itemColour="4293583307" itemColour2="4293583307"
+                         textColour="4283319303">
+                <Component type="ScriptLabel" id="ScriptLabel25" x="64.0" y="164.0" width="70.0"
+                           height="20.0" parentComponent="File1" text="Position" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptSlider" id="OscMix1" x="78.0" y="122.0" processorId="SMUT"
+                           parameterId="filePos1" pluginParameterName="File - Position"
+                           middlePosition="0.5" text="FilePos" parentComponent="File1" width="40.0"
+                           height="40.0" textColour="16777215" bgColour="16777215" showValuePopup="Below"/>
+                <Component type="ScriptAudioWaveform" id="AudioWaveform1" x="12" y="35"
+                           processorId="SMUT" width="120.0" height="60.0" parentComponent="File1"
+                           bgColour="1994576912" textColour="1979645952" itemColour2="2315190272"
+                           itemColour="2499739648" showFileName="0" itemColour3="1994576912"
+                           enabled="0" visible="0" sampleIndex="1"/>
+                <Component type="ScriptAudioWaveform" id="UserWaveform1" x="12" y="35" processorId="SMUT"
+                           width="120.0" height="60.0" parentComponent="File1" bgColour="2499739648"
+                           textColour="1994576912" itemColour2="1994576912" itemColour="1994576912"
+                           showFileName="0" itemColour3="2499739648" enabled="0" sampleIndex="3"/>
+                <Component type="ScriptSlider" id="FileInput" x="7.0" y="123.0" processorId="SMUT"
+                           parameterId="FileInputGain1" pluginParameterName="File - Osc Input"
+                           middlePosition="0.5" text="Filein" isPluginParameter="1" parentComponent="File1"
+                           width="40.0" height="40.0" textColour="16777215" bgColour="16777215"
+                           showValuePopup="Below"/>
+                <Component type="ScriptComboBox" id="QuantMode" x="147.0" y="98" max="10"
+                           width="30.0" height="15.0" processorId="SMUT" parameterId="FilePosQuant1"
+                           items="Off&#10;4096&#10;2048&#10;1024&#10;512&#10;265&#10;128&#10;64&#10;32&#10;16"
+                           parentComponent="File1" textColour="4281936900" bgColour="1427967234"/>
+                <Component type="ScriptComboBox" id="PosModTempo" x="187.0" y="128.0" max="19"
+                           width="30.0" height="30.0" processorId="SMUT" parameterId="PosTempo"
+                           items="1/1&#10;1/2D&#10;1/2&#10;1/2T&#10;1/4D&#10;1/4&#10;1/4T&#10;1/8D&#10;1/8&#10;1/8T&#10;1/16D&#10;1/16&#10;1/16T&#10;1/32D&#10;1/32&#10;1/32T&#10;1/64D&#10;1/64&#10;1/64T"
+                           isPluginParameter="1" pluginParameterName="File Position - Tempo"
+                           parentComponent="File1" textColour="4281936900" bgColour="1427967234"/>
+                <Component type="ScriptTable" id="Table3" x="11.0" y="35.0" width="120.0"
+                           height="60.0" processorId="SMUT" tableIndex="4" parentComponent="File1"
+                           customColours="1" bgColour="1241495808" itemColour="14865424"
+                           itemColour2="1118481" enabled="0"/>
+                <Component type="ScriptTable" id="Table4" x="12.0" y="35.0" width="120.0"
+                           height="60.0" processorId="SMUT" tableIndex="5" parentComponent="File1"
+                           customColours="1" bgColour="1224775167" itemColour="14865424"
+                           itemColour2="1118481" enabled="0"/>
+                <Component type="ScriptTable" id="FileModTable1" x="143" y="35" width="120.0"
+                           height="60.0" processorId="SMUT" tableIndex="2" parentComponent="File1"
+                           bgColour="14654085" itemColour="14865424" customColours="1" itemColour2="4279308561"/>
+                <Component type="ScriptSlider" id="PosDiv" x="226.0" y="121.0" processorId="SMUT"
+                           parameterId="PosDib" pluginParameterName="File Position - Divide"
+                           middlePosition="16.5" text="Div" isPluginParameter="1" width="40.0"
+                           height="40.0" parentComponent="File1" min="1.0" max="32.0" stepSize="1.0"
+                           textColour="16777215" bgColour="16777215" showValuePopup="Below"/>
+                <Component type="ScriptSlider" id="PosMod" x="133.0" y="121.0" processorId="SMUT"
+                           parameterId="FilePosMod1" pluginParameterName="File - Position Mod"
+                           middlePosition="0.0" isPluginParameter="1" min="-1.0" width="40.0"
+                           height="40.0" parentComponent="File1" textColour="16777215" bgColour="16777215"
+                           showValuePopup="Below"/>
+                <Component type="ScriptLabel" id="ScriptLabel26" x="89.0" y="99.0" width="60.0"
+                           height="15.0" parentComponent="File1" text="Quantise" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel27" x="7.0" y="99.0" width="40.0"
+                           height="15.0" parentComponent="File1" text="Input" fontName="mon"
+                           editable="0" textColour="4280620804" alignment="left"/>
+                <Component type="ScriptLabel" id="ScriptLabel28" x="117.0" y="164.0" width="70.0"
+                           height="20.0" parentComponent="File1" text="Mod" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptComboBox" id="PosModMode" x="223.0" y="98" max="3"
+                           width="40.0" height="15.0" items="Envelope&#10;Table&#10;Step"
+                           isPluginParameter="1" pluginParameterName="File Position - Tempo"
+                           parentComponent="File1" textColour="4281936900" bgColour="1427967234"/>
+                <Component type="ScriptLabel" id="ScriptLabel29" x="178.0" y="99.0" width="45.0"
+                           height="15.0" parentComponent="File1" text="Mode" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel30" x="171.0" y="164.0" width="60.0"
+                           height="20.0" parentComponent="File1" text="Tempo" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel31" x="218.0" y="164.0" width="60.0"
+                           height="20.0" parentComponent="File1" text="Divide" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel47" x="3.0" y="164.0" width="70.0"
+                           height="20.0" parentComponent="File1" text="In Gain" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptComboBox" id="QuantMode1" x="48.0" y="98" max="5"
+                           width="40.0" height="15.0" processorId="SMUT" parameterId="FileInSel"
+                           items="Osc 1&#10;Osc 2&#10;File 2&#10;Filter 1&#10;Filter 2"
+                           parentComponent="File1" textColour="4281936900" bgColour="1427967234"/>
+                <Component type="ScriptLabel" id="ScriptLabel50" x="8.0" y="9.0" width="60.0"
+                           height="20.0" parentComponent="File1" text="FILE 1" fontName="mon"
+                           fontSize="20.0" editable="0" textColour="4280620804"/>
+                <Component type="ScriptSlider" id="InputOffset" x="50.0" y="123.0" processorId="SMUT"
+                           parameterId="FileInOffset" pluginParameterName="File - Osc Input"
+                           middlePosition="0.5" text="Filein" isPluginParameter="1" parentComponent="File1"
+                           width="10.0" height="40.0" showValuePopup="Below" style="Vertical"/>
+                <Component type="ScriptComboBox" id="Cat1" x="76.0" y="7.0" max="3" width="40.0"
+                           height="15.0" items="Loops&#10;Single Cycle&#10;Wavetables" parentComponent="File1"
+                           textColour="4281936900" bgColour="1427967234"/>
+                <Component type="ScriptButton" id="UserMode" x="233.0" y="6.0" width="30.0"
+                           height="30.0" parentComponent="File1" text="SET FOLDER" textColour="4278190080"
+                           filmstripImage="{PROJECT_FOLDER}user.png" scaleFactor="0.05"/>
+                <Component type="ScriptLabel" id="ScriptLabel76" x="71.0" y="22.0" width="50.0"
+                           height="10.0" parentComponent="File1" text="Category" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptComboBox" id="Bank1" x="129.0" y="7.0" max="2" width="40.0"
+                           height="15.0" parentComponent="File1" textColour="4281936900"
+                           bgColour="1427967234" items="Long&#10;Misc"/>
+                <Component type="ScriptLabel" id="ScriptLabel77" x="129.0" y="22.0" width="40.0"
+                           height="10.0" parentComponent="File1" text="Bank" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptComboBox" id="Sample1" x="183.0" y="7.0" max="9"
+                           width="40.0" height="15.0" parentComponent="File1" textColour="4281936900"
+                           bgColour="1427967234" items="1CRD.wav&#10;ABT70.wav&#10;BELLDRON.wav&#10;CLIM.wav&#10;CLUM.wav&#10;MMML.wav&#10;STRG.wav&#10;TT.wav&#10;WTSLOT10.wav"/>
+                <Component type="ScriptLabel" id="ScriptLabel78" x="179.0" y="22.0" width="50.0"
+                           height="10.0" parentComponent="File1" text="Sample" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptPanel" id="UserInstructions" x="70.0" y="2.0" width="160"
+                           height="30" parentComponent="File1" itemColour="4293583307" itemColour2="4293583307"
+                           bgColour="16777215" textColour="16777215">
+                  <Component type="ScriptLabel" id="ScriptLabel97" x="6.0" y="1.0" width="160"
+                             height="30" parentComponent="UserInstructions" editable="0" fontName="mon"
+                             textColour="4278190080" text="Drag &amp; Drop/Right Click"/>
+                  <Component type="ScriptImage" id="ScriptImage3" x="0.0" y="7.0" width="20"
+                             height="30" parentComponent="UserInstructions" fileName="{PROJECT_FOLDER}arrow.png"/>
+                </Component>
+                <Component type="ScriptPanel" id="FileEnv1" x="138.0" y="31.0" width="130"
+                           height="65.0" parentComponent="File1" itemColour="4293583307"
+                           itemColour2="4293583307" textColour="16777215" bgColour="16777215">
+                  <Component type="ScriptSlider" id="FileA1" x="10.0" y="1.0" width="15.0"
+                             height="48.0" parentComponent="FileEnv1" mode="Time" max="20000.0"
+                             stepSize="1.0" suffix=" ms" middlePosition="1000.0" style="Vertical"
+                             dragDirection="Vertical" showTextBox="0" showValuePopup="Below"/>
+                  <Component type="ScriptSlider" id="FileH1" x="28.0" y="1.0" width="15.0"
+                             height="48.0" parentComponent="FileEnv1" mode="Time" max="20000.0"
+                             stepSize="1.0" suffix=" ms" middlePosition="1000.0" style="Vertical"
+                             dragDirection="Vertical" showTextBox="0" showValuePopup="Below"/>
+                  <Component type="ScriptSlider" id="FileD1" x="46.0" y="1.0" width="15.0"
+                             height="48.0" parentComponent="FileEnv1" mode="Time" max="20000.0"
+                             stepSize="1.0" suffix=" ms" middlePosition="1000.0" style="Vertical"
+                             dragDirection="Vertical" showTextBox="0" showValuePopup="Below"/>
+                  <Component type="ScriptSlider" id="FileS1" x="64.0" y="1.0" width="15.0"
+                             height="48.0" parentComponent="FileEnv1" mode="Time" max="20000.0"
+                             stepSize="1.0" suffix=" ms" middlePosition="1000.0" style="Vertical"
+                             dragDirection="Vertical" showTextBox="0" showValuePopup="Below"/>
+                  <Component type="ScriptSlider" id="FileR1" x="83.0" y="1.0" width="15.0"
+                             height="48.0" parentComponent="FileEnv1" mode="Time" max="20000.0"
+                             stepSize="1.0" suffix=" ms" middlePosition="1000.0" style="Vertical"
+                             dragDirection="Vertical" showTextBox="0" showValuePopup="Below"/>
+                  <Component type="ScriptButton" id="ScriptButton1" x="105.0" y="30.0" width="20"
+                             height="20" parentComponent="FileEnv1" textColour="4294901760"
+                             filmstripImage="{PROJECT_FOLDER}oneshot.png" scaleFactor="0.04"/>
+                  <Component type="ScriptLabel" id="ScriptLabel99" x="8.0" y="49" width="20.0"
+                             height="15.0" parentComponent="FileEnv1" text="A" fontName="mon"
+                             editable="0" textColour="4280620804"/>
+                  <Component type="ScriptLabel" id="ScriptLabel100" x="26.0" y="49" width="20.0"
+                             height="15.0" parentComponent="FileEnv1" text="H" fontName="mon"
+                             editable="0" textColour="4280620804"/>
+                  <Component type="ScriptLabel" id="ScriptLabel101" x="44.0" y="49" width="20.0"
+                             height="15.0" parentComponent="FileEnv1" text="D" fontName="mon"
+                             editable="0" textColour="4280620804"/>
+                  <Component type="ScriptLabel" id="ScriptLabel102" x="61.0" y="49" width="20.0"
+                             height="15.0" parentComponent="FileEnv1" text="S" fontName="mon"
+                             editable="0" textColour="4280620804"/>
+                  <Component type="ScriptLabel" id="ScriptLabel103" x="80.0" y="49" width="20.0"
+                             height="15.0" parentComponent="FileEnv1" text="R" fontName="mon"
+                             editable="0" textColour="4280620804"/>
+                  <Component type="ScriptLabel" id="ScriptLabel104" x="100.0" y="51.0" width="30"
+                             height="10" parentComponent="FileEnv1" text="Loop" fontName="mon"
+                             editable="0" textColour="4280620804"/>
+                </Component>
+              </Component>
+              <Component type="ScriptPanel" id="File2" x="520" y="168" width="275.0" height="190.0"
+                         itemColour="4293583307" itemColour2="4293583307" textColour="4283319303">
+                <Component type="ScriptLabel" id="ScriptLabel46" x="64.0" y="164.0" width="70.0"
+                           height="20.0" parentComponent="File2" text="Position" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptSlider" id="OscMix10" x="78.0" y="122.0" processorId="SMUT"
+                           parameterId="File2Pos" pluginParameterName="File - Position"
+                           middlePosition="0.5" text="FilePos" parentComponent="File2" width="40.0"
+                           height="40.0" textColour="16777215" bgColour="16777215" showValuePopup="Below"/>
+                <Component type="ScriptAudioWaveform" id="AudioWaveform2" x="12" y="35"
+                           processorId="SMUT" width="120.0" height="60.0" parentComponent="File2"
+                           bgColour="1994576912" textColour="1979645952" itemColour2="2315190272"
+                           itemColour="2499739648" showFileName="0" itemColour3="1994576912"
+                           enabled="0" visible="0"/>
+                <Component type="ScriptAudioWaveform" id="UserWaveform2" x="12" y="35" processorId="SMUT"
+                           width="120.0" height="60.0" parentComponent="File2" bgColour="2499739648"
+                           textColour="1994576912" itemColour2="1994576912" itemColour="1994576912"
+                           showFileName="0" itemColour3="2499739648" enabled="0"/>
+                <Component type="ScriptSlider" id="FileInput1" x="7.0" y="123.0" processorId="SMUT"
+                           parameterId="File2Gain" pluginParameterName="File - Osc Input"
+                           middlePosition="0.5" text="Filein" isPluginParameter="1" parentComponent="File2"
+                           width="40.0" height="40.0" textColour="16777215" bgColour="16777215"
+                           showValuePopup="Below"/>
+                <Component type="ScriptComboBox" id="QuantMode2" x="147.0" y="98" max="10"
+                           width="30.0" height="15.0" processorId="SMUT" parameterId="File2Quant"
+                           items="Off&#10;4096&#10;2048&#10;1024&#10;512&#10;265&#10;128&#10;64&#10;32&#10;16"
+                           parentComponent="File2" textColour="4281936900" bgColour="1427967234"/>
+                <Component type="ScriptComboBox" id="PosModTempo1" x="187.0" y="128.0" max="19"
+                           width="30.0" height="30.0" processorId="SMUT" parameterId="File2Tempo"
+                           items="1/1&#10;1/2D&#10;1/2&#10;1/2T&#10;1/4D&#10;1/4&#10;1/4T&#10;1/8D&#10;1/8&#10;1/8T&#10;1/16D&#10;1/16&#10;1/16T&#10;1/32D&#10;1/32&#10;1/32T&#10;1/64D&#10;1/64&#10;1/64T"
+                           isPluginParameter="1" pluginParameterName="File Position - Tempo"
+                           parentComponent="File2" textColour="4281936900" bgColour="1427967234"/>
+                <Component type="ScriptTable" id="Table5" x="11.0" y="35.0" width="120.0"
+                           height="60.0" processorId="SMUT" tableIndex="6" parentComponent="File2"
+                           customColours="1" bgColour="1241495808" itemColour="14865424"
+                           itemColour2="1118481" enabled="0"/>
+                <Component type="ScriptTable" id="Table6" x="12.0" y="35.0" width="120.0"
+                           height="60.0" processorId="SMUT" tableIndex="7" parentComponent="File2"
+                           customColours="1" bgColour="1224775167" itemColour="14865424"
+                           itemColour2="1118481" enabled="0"/>
+                <Component type="ScriptTable" id="FileModTable2" x="143.0" y="35.0" width="120.0"
+                           height="60.0" processorId="SMUT" tableIndex="3" parentComponent="File2"
+                           bgColour="14654085" itemColour="14865424" customColours="1" itemColour2="4279308561"/>
+                <Component type="ScriptSlider" id="PosDiv1" x="226.0" y="121.0" processorId="SMUT"
+                           parameterId="FileDiv" pluginParameterName="File Position - Divide"
+                           middlePosition="16.5" text="Div" isPluginParameter="1" width="40.0"
+                           height="40.0" parentComponent="File2" min="1.0" max="32.0" stepSize="1.0"
+                           textColour="16777215" bgColour="16777215" showValuePopup="Below"/>
+                <Component type="ScriptSlider" id="PosMod1" x="133.0" y="121.0" processorId="SMUT"
+                           parameterId="File2PosMod" pluginParameterName="File - Position Mod"
+                           middlePosition="0.0" isPluginParameter="1" min="-1.0" width="40.0"
+                           height="40.0" parentComponent="File2" textColour="16777215" bgColour="16777215"
+                           showValuePopup="Below"/>
+                <Component type="ScriptLabel" id="ScriptLabel48" x="89.0" y="99.0" width="60.0"
+                           height="15.0" parentComponent="File2" text="Quantise" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel49" x="7.0" y="99.0" width="40.0"
+                           height="15.0" parentComponent="File2" text="Input" fontName="mon"
+                           editable="0" textColour="4280620804" alignment="left"/>
+                <Component type="ScriptLabel" id="ScriptLabel61" x="117.0" y="164.0" width="70.0"
+                           height="20.0" parentComponent="File2" text="Mod" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptComboBox" id="PosModMode1" x="223.0" y="98" max="3"
+                           width="40.0" height="15.0" items="Envelope&#10;Table&#10;Step"
+                           isPluginParameter="1" pluginParameterName="File Position - Tempo"
+                           parentComponent="File2" textColour="4281936900" bgColour="1427967234"/>
+                <Component type="ScriptLabel" id="ScriptLabel62" x="178.0" y="99.0" width="45.0"
+                           height="15.0" parentComponent="File2" text="Mode" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel63" x="171.0" y="164.0" width="60.0"
+                           height="20.0" parentComponent="File2" text="Tempo" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel64" x="218.0" y="164.0" width="60.0"
+                           height="20.0" parentComponent="File2" text="Divide" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel65" x="3.0" y="164.0" width="70.0"
+                           height="20.0" parentComponent="File2" text="In Gain" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptComboBox" id="QuantMode3" x="48.0" y="98" max="5"
+                           width="40.0" height="15.0" processorId="SMUT" parameterId="File2InSel"
+                           items="Osc 1&#10;Osc 2&#10;File 2&#10;Filter 1&#10;Filter 2"
+                           parentComponent="File2" textColour="4281936900" bgColour="1427967234"/>
+                <Component type="ScriptLabel" id="ScriptLabel66" x="8.0" y="9.0" width="60.0"
+                           height="20.0" parentComponent="File2" text="FILE 1" fontName="mon"
+                           fontSize="20.0" editable="0" textColour="4280620804"/>
+                <Component type="ScriptSlider" id="InputOffset1" x="50.0" y="123.0" processorId="SMUT"
+                           parameterId="File2GainOffset" pluginParameterName="File - Osc Input"
+                           middlePosition="0.5" text="Filein" isPluginParameter="1" parentComponent="File2"
+                           width="10.0" height="40.0" showValuePopup="Below" style="Vertical"/>
+                <Component type="ScriptComboBox" id="Cat2" x="76.0" y="7.0" max="3" width="40.0"
+                           height="15.0" items="Loops&#10;Single Cycle&#10;Wavetables" parentComponent="File2"
+                           textColour="4281936900" bgColour="1427967234"/>
+                <Component type="ScriptButton" id="UserMode1" x="233.0" y="6.0" width="30.0"
+                           height="30.0" parentComponent="File2" text="SET FOLDER" textColour="4278190080"
+                           filmstripImage="{PROJECT_FOLDER}user.png" scaleFactor="0.05"/>
+                <Component type="ScriptLabel" id="ScriptLabel79" x="71.0" y="22.0" width="50.0"
+                           height="10.0" parentComponent="File2" text="Category" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptComboBox" id="Bank2" x="129.0" y="7.0" width="40.0"
+                           height="15.0" parentComponent="File2" textColour="4281936900"
+                           bgColour="1427967234" items="no file"/>
+                <Component type="ScriptLabel" id="ScriptLabel80" x="129.0" y="22.0" width="40.0"
+                           height="10.0" parentComponent="File2" text="Bank" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptComboBox" id="Sample2" x="183.0" y="7.0" width="40.0"
+                           height="15.0" parentComponent="File2" textColour="4281936900"
+                           bgColour="1427967234" items="no file"/>
+                <Component type="ScriptLabel" id="ScriptLabel81" x="179.0" y="22.0" width="50.0"
+                           height="10.0" parentComponent="File2" text="Sample" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptPanel" id="UserInstructions1" x="70.0" y="2.0" width="160"
+                           height="30" parentComponent="File2" itemColour="4293583307" itemColour2="4293583307"
+                           bgColour="16777215" textColour="16777215">
+                  <Component type="ScriptLabel" id="ScriptLabel98" x="6.0" y="1.0" width="160"
+                             height="30" parentComponent="UserInstructions1" editable="0"
+                             fontName="mon" textColour="4278190080" text="Drag &amp; Drop/Right Click"/>
+                  <Component type="ScriptImage" id="ScriptImage4" x="0.0" y="7.0" width="20"
+                             height="30" parentComponent="UserInstructions1" fileName="{PROJECT_FOLDER}arrow.png"/>
+                </Component>
+              </Component>
+              <Component type="ScriptPanel" id="Fil1" x="232.0" y="362.0" width="275.0"
+                         height="120.0" itemColour="4293583307" itemColour2="4293583307"
+                         textColour="4279702530">
+                <Component type="ScriptLabel" id="ScriptLabel32" x="3.0" y="97.0" width="70.0"
+                           height="20.0" parentComponent="Fil1" text="Cutoff" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptSlider" id="OscMix2" x="16.0" y="59.0" processorId="SMUT"
+                           parameterId="FilterCut1" pluginParameterName="File - Position"
+                           middlePosition="0.5" text="FilePos" parentComponent="Fil1" width="40.0"
+                           height="40.0" textColour="16777215" bgColour="16777215" showValuePopup="Below"/>
+                <Component type="ScriptLabel" id="ScriptLabel33" x="81.0" y="97.0" width="40.0"
+                           height="20.0" parentComponent="Fil1" text="Q" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptSlider" id="OscMix3" x="81.0" y="59.0" processorId="SMUT"
+                           parameterId="Res1" pluginParameterName="File - Position" middlePosition="0.5"
+                           text="FilePos" parentComponent="Fil1" width="40.0" height="40.0"
+                           textColour="16777215" bgColour="16777215" showValuePopup="Below"/>
+                <Component type="ScriptSlider" id="OscMix4" x="212.0" y="59.0" processorId="SMUT"
+                           parameterId="Pan1" pluginParameterName="File - Position" middlePosition="0.0"
+                           text="FilePos" parentComponent="Fil1" width="40.0" height="40.0"
+                           min="-1.0" textColour="16777215" bgColour="16777215" showValuePopup="Below"/>
+                <Component type="ScriptLabel" id="ScriptLabel34" x="212.0" y="97.0" width="40.0"
+                           height="20.0" parentComponent="Fil1" text="Pan" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptSlider" id="OscMix5" x="146.0" y="59.0" processorId="SMUT"
+                           parameterId="VcaGain1" pluginParameterName="File - Position"
+                           middlePosition="0.5" text="FilePos" parentComponent="Fil1" width="40.0"
+                           height="40.0" textColour="16777215" bgColour="16777215" showValuePopup="Below"/>
+                <Component type="ScriptLabel" id="ScriptLabel35" x="146.0" y="97.0" width="40.0"
+                           height="20.0" parentComponent="Fil1" text="Gain" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptComboBox" id="FilterMode1" x="12.0" y="7.0" width="40.0"
+                           height="20.0" processorId="SMUT" parameterId="FilterMode1" items="LP2P&#10;HP2P&#10;BP2P&#10;Notch&#10;ALLPASS&#10;LP1P_Feed_Trk&#10;HP1P_Feed_Trk&#10;LP1P_Feed_Pm&#10;HP1P_Feed_Pm"
+                           parentComponent="Fil1" max="9" textColour="4281936900" bgColour="1562184962"
+                           itemColour2="4279308561"/>
+                <Component type="ScriptLabel" id="ScriptLabel36" x="12.0" y="23.0" width="40.0"
+                           height="20.0" parentComponent="Fil1" text="Mode" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel38" x="195.0" y="1.0" width="70.0"
+                           height="50.0" parentComponent="Fil1" text="FILTER/ VCA 1" fontName="mon"
+                           fontSize="20.0" editable="0" textColour="4280620804"/>
+                <Component type="ScriptSliderPack" id="ScriptSliderPack1" x="69.0" y="6.0"
+                           width="120.0" height="30.0" parentComponent="Fil1" sliderAmount="4.0"
+                           itemColour="1514747661" itemColour2="2008583168" processorId="SMUT"
+                           SliderPackIndex="2"/>
+                <Component type="ScriptLabel" id="ScriptLabel37" x="69.0" y="37.0" width="30.0"
+                           height="10.0" parentComponent="Fil1" text="osc1" fontName="mon"
+                           editable="0" textColour="4280620804" fontSize="11.0"/>
+                <Component type="ScriptLabel" id="ScriptLabel44" x="99.0" y="37.0" width="30.0"
+                           height="10.0" parentComponent="Fil1" text="osc2" fontName="mon"
+                           editable="0" textColour="4280620804" fontSize="11.0"/>
+                <Component type="ScriptLabel" id="ScriptLabel69" x="129.0" y="37.0" width="30.0"
+                           height="10.0" parentComponent="Fil1" text="file1" fontName="mon"
+                           editable="0" textColour="4280620804" fontSize="11.0"/>
+                <Component type="ScriptLabel" id="ScriptLabel70" x="159.0" y="37.0" width="30.0"
+                           height="10.0" parentComponent="Fil1" text="file2" fontName="mon"
+                           editable="0" textColour="4280620804" fontSize="11.0"/>
+              </Component>
+              <Component type="ScriptPanel" id="Fil2" x="515.0" y="362.0" width="275.0"
+                         height="120.0" itemColour="4293583307" itemColour2="4293583307"
+                         textColour="4279702530">
+                <Component type="ScriptLabel" id="ScriptLabel71" x="134.0" y="37.0" width="30.0"
+                           height="10.0" parentComponent="Fil2" text="file2" fontName="mon"
+                           editable="0" textColour="4280620804" fontSize="11.0"/>
+                <Component type="ScriptLabel" id="ScriptLabel72" x="110.0" y="37.0" width="30.0"
+                           height="10.0" parentComponent="Fil2" text="file1" fontName="mon"
+                           editable="0" textColour="4280620804" fontSize="11.0"/>
+                <Component type="ScriptLabel" id="ScriptLabel73" x="87.0" y="37.0" width="30.0"
+                           height="10.0" parentComponent="Fil2" text="osc2" fontName="mon"
+                           editable="0" textColour="4280620804" fontSize="11.0"/>
+                <Component type="ScriptLabel" id="ScriptLabel74" x="65.0" y="37.0" width="30.0"
+                           height="10.0" parentComponent="Fil2" text="osc1" fontName="mon"
+                           editable="0" textColour="4280620804" fontSize="11.0"/>
+                <Component type="ScriptSliderPack" id="ScriptSliderPack2" x="66.0" y="6.0"
+                           width="120.0" height="30.0" parentComponent="Fil2" sliderAmount="4.0"
+                           itemColour="1514747661" itemColour2="2008583168" processorId="SMUT"
+                           SliderPackIndex="3"/>
+                <Component type="ScriptLabel" id="ScriptLabel39" x="3.0" y="97.0" width="70.0"
+                           height="20.0" parentComponent="Fil2" text="Cutoff" fontName="mon"
+                           editable="0" textColour="4280620804" itemColour="15393227" itemColour2="15393227"/>
+                <Component type="ScriptSlider" id="OscMix6" x="16.0" y="59.0" processorId="SMUT"
+                           parameterId="FilterCut2" pluginParameterName="File - Position"
+                           middlePosition="0.5" text="FilePos" parentComponent="Fil2" width="40.0"
+                           height="40.0" textColour="16777215" bgColour="16777215" showValuePopup="Below"/>
+                <Component type="ScriptLabel" id="ScriptLabel40" x="81.0" y="97.0" width="40.0"
+                           height="20.0" parentComponent="Fil2" text="Q" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptSlider" id="OscMix7" x="81.0" y="59.0" processorId="SMUT"
+                           parameterId="Res2" pluginParameterName="File - Position" middlePosition="0.5"
+                           text="FilePos" parentComponent="Fil2" width="40.0" height="40.0"
+                           textColour="16777215" bgColour="16777215" showValuePopup="Below"/>
+                <Component type="ScriptSlider" id="OscMix8" x="212.0" y="59.0" processorId="SMUT"
+                           parameterId="Pan2" pluginParameterName="File - Position" middlePosition="0.0"
+                           text="FilePos" parentComponent="Fil2" width="40.0" height="40.0"
+                           min="-1.0" textColour="16777215" bgColour="16777215" showValuePopup="Below"/>
+                <Component type="ScriptLabel" id="ScriptLabel41" x="212.0" y="97.0" width="40.0"
+                           height="20.0" parentComponent="Fil2" text="Pan" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptSlider" id="OscMix9" x="146.0" y="59.0" processorId="SMUT"
+                           parameterId="VcaGain2" pluginParameterName="File - Position"
+                           middlePosition="0.5" text="FilePos" parentComponent="Fil2" width="40.0"
+                           height="40.0" textColour="16777215" bgColour="16777215" showValuePopup="Below"/>
+                <Component type="ScriptLabel" id="ScriptLabel42" x="146.0" y="97.0" width="40.0"
+                           height="20.0" parentComponent="Fil2" text="Gain" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptComboBox" id="FilterMode2" x="9.0" y="8.0" width="40.0"
+                           height="20.0" processorId="SMUT" parameterId="FilterMode2" items="LP2P&#10;HP2P&#10;BP2P&#10;Notch&#10;ALLPASS&#10;LP1P_Feed_Trk&#10;HP1P_Feed_Trk&#10;LP1P_Feed_Pm&#10;HP1P_Feed_Pm"
+                           parentComponent="Fil2" max="9" textColour="4281936900" bgColour="1427967234"/>
+                <Component type="ScriptLabel" id="ScriptLabel43" x="9.0" y="23.0" width="40.0"
+                           height="20.0" parentComponent="Fil2" text="Mode" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel45" x="195.0" y="1.0" width="70.0"
+                           height="50.0" parentComponent="Fil2" text="FILTER/ VCA 2" fontName="mon"
+                           fontSize="20.0" editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel75" x="159.0" y="37.0" width="30.0"
+                           height="10.0" parentComponent="Fil2" text="filt1" fontName="mon"
+                           editable="0" textColour="4280620804" fontSize="11.0"/>
+              </Component>
+              <Component type="ScriptPanel" id="ModMatrix" x="10.0" y="485.0" width="570.0"
+                         height="155.0" itemColour="4293583307" itemColour2="4293583307"
+                         textColour="4282399248">
+                <Component type="ScriptComboBox" id="ScriptComboBox1" x="135.0" y="33.0"
+                           width="35.0" height="15.0" max="8" parentComponent="ModMatrix"
+                           items="ENV1&#10;ENV2&#10;ENV3&#10;ENV4&#10;LFO1&#10;LFO2&#10;LFO3&#10;LFO4&#10;"
+                           processorId="SMUT" parameterId="OscPitchSrc1" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptSlider" id="ScriptSlider1" x="71.0" y="33.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="OscMod1"
+                           showTextBox="0" showValuePopup="Left" bgColour="2496627791" itemColour="1714621452"/>
+                <Component type="ScriptLabel" id="ScriptLabel1" x="10.0" y="33.0" width="59.0"
+                           height="15.0" parentComponent="ModMatrix" text="PITCH1" fontName="mon"
+                           editable="0" textColour="4280620804" alignment="left"/>
+                <Component type="ScriptLabel" id="ScriptLabel2" x="71.0" y="9.0" width="70.0"
+                           height="20.0" parentComponent="ModMatrix" text="MOD" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel3" x="135.0" y="9.0" width="35.0"
+                           height="20.0" parentComponent="ModMatrix" text="SRC" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel4" x="239.0" y="9.0" width="35.0"
+                           height="20.0" parentComponent="ModMatrix" text="SRC" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox2" x="239.0" y="33.0"
+                           width="35.0" height="15.0" max="6" parentComponent="ModMatrix"
+                           items="Osc 1&#10;Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
+                           processorId="SMUT" parameterId="OscFmSrc1" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptSlider" id="ScriptSlider2" x="174.0" y="33.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="Oscfm1"
+                           showTextBox="0" showValuePopup="Left" bgColour="1441781396" itemColour="1715876103"/>
+                <Component type="ScriptLabel" id="ScriptLabel5" x="174.0" y="9.0" width="60.0"
+                           height="20.0" parentComponent="ModMatrix" text="FOLLOW" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox3" x="523.0" y="33.0"
+                           width="35.0" height="15.0" max="6" parentComponent="ModMatrix"
+                           items="Osc 1&#10;Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
+                           processorId="SMUT" parameterId="FileInFmSrc" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptSlider" id="ScriptSlider3" x="458.0" y="33.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="FileInputGainFm1"
+                           dragDirection="Horizontal" showTextBox="0" bgColour="1441781396"
+                           itemColour="1715876103"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox4" x="419.0" y="33.0"
+                           width="35.0" height="15.0" max="8" parentComponent="ModMatrix"
+                           items="ENV1&#10;ENV2&#10;ENV3&#10;ENV4&#10;LFO1&#10;LFO2&#10;LFO3&#10;LFO4&#10;"
+                           processorId="SMUT" parameterId="FileInputGainSrc1" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptSlider" id="ScriptSlider4" x="355.0" y="33.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="FileInputGainMod"
+                           showValuePopup="Left" dragDirection="Horizontal" showTextBox="0"
+                           bgColour="2496627791" itemColour="1714621452"/>
+                <Component type="ScriptLabel" id="ScriptLabel6" x="284.0" y="33.0" width="70.0"
+                           height="15.0" parentComponent="ModMatrix" text="FILE1 INPUT"
+                           fontName="mon" editable="0" textColour="4280620804" alignment="left"/>
+                <Component type="ScriptLabel" id="ScriptLabel7" x="523.0" y="9.0" width="35.0"
+                           height="20.0" parentComponent="ModMatrix" text="SRC" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel8" x="458.0" y="9.0" width="60.0"
+                           height="20.0" parentComponent="ModMatrix" text="FOLLOW" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel9" x="419.0" y="9.0" width="35.0"
+                           height="20.0" parentComponent="ModMatrix" text="SRC" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel10" x="355.0" y="9.0" width="60.0"
+                           height="20.0" parentComponent="ModMatrix" text="MOD" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel11" x="284.0" y="70.0" width="70.0"
+                           height="15.0" parentComponent="ModMatrix" text="CUTOFF1" fontName="mon"
+                           editable="0" textColour="4280620804" alignment="left"/>
+                <Component type="ScriptSlider" id="ScriptSlider5" x="355.0" y="70.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="FilterCutMod1"
+                           showValuePopup="Left" dragDirection="Horizontal" showTextBox="0"
+                           bgColour="2496627791" itemColour="1714621452"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox5" x="419.0" y="70.0"
+                           width="35.0" height="15.0" max="8" parentComponent="ModMatrix"
+                           items="ENV1&#10;ENV2&#10;ENV3&#10;ENV4&#10;LFO1&#10;LFO2&#10;LFO3&#10;LFO4&#10;"
+                           processorId="SMUT" parameterId="FilterCutSrc1" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptSlider" id="ScriptSlider6" x="458.0" y="70.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="FilterCutFm1"
+                           dragDirection="Horizontal" showTextBox="0" bgColour="1441781396"
+                           itemColour="1715876103"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox6" x="523.0" y="70.0"
+                           width="35.0" height="15.0" max="6" parentComponent="ModMatrix"
+                           items="Osc 1&#10;Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
+                           processorId="SMUT" parameterId="FilterCutSrc1" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptSlider" id="ScriptSlider7" x="174.0" y="51.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="Oscfm2"
+                           showTextBox="0" showValuePopup="Left" bgColour="1441781396" itemColour="1715876103"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox7" x="239.0" y="51.0"
+                           width="35.0" height="15.0" max="6" parentComponent="ModMatrix"
+                           items="Osc 1&#10;Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
+                           processorId="SMUT" parameterId="OscFmSrc2" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptLabel" id="ScriptLabel12" x="10.0" y="51.0" width="59.0"
+                           height="15.0" parentComponent="ModMatrix" text="PITCH2" fontName="mon"
+                           editable="0" textColour="4280620804" alignment="left"/>
+                <Component type="ScriptSlider" id="ScriptSlider8" x="71.0" y="51.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="OscMod2"
+                           showTextBox="0" showValuePopup="Left" bgColour="2496627791" itemColour="1714621452"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox8" x="135.0" y="51.0"
+                           width="35.0" height="15.0" max="8" parentComponent="ModMatrix"
+                           items="ENV1&#10;ENV2&#10;ENV3&#10;ENV4&#10;LFO1&#10;LFO2&#10;LFO3&#10;LFO4&#10;"
+                           processorId="SMUT" parameterId="Osc2Src" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptLabel" id="ScriptLabel13" x="284.0" y="109.0" width="70.0"
+                           height="15.0" parentComponent="ModMatrix" text="GAIN1" fontName="mon"
+                           editable="0" textColour="4280620804" alignment="left"/>
+                <Component type="ScriptSlider" id="ScriptSlider9" x="355.0" y="109.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="VcaGainMod1"
+                           showValuePopup="Left" dragDirection="Horizontal" showTextBox="0"
+                           bgColour="2496627791" itemColour="1714621452"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox9" x="419.0" y="109.0"
+                           width="35.0" height="15.0" max="8" parentComponent="ModMatrix"
+                           items="ENV1&#10;ENV2&#10;ENV3&#10;ENV4&#10;LFO1&#10;LFO2&#10;LFO3&#10;LFO4&#10;"
+                           processorId="SMUT" parameterId="VcaGainSrc1" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptSlider" id="ScriptSlider10" x="458.0" y="109.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="VcaGainFm1"
+                           dragDirection="Horizontal" showTextBox="0" bgColour="1441781396"
+                           itemColour="1715876103"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox10" x="523.0" y="109.0"
+                           width="35.0" height="15.0" max="6" parentComponent="ModMatrix"
+                           items="Osc 1&#10;Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
+                           processorId="SMUT" parameterId="VcaFmSrc1" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptSlider" id="ScriptSlider11" x="174.0" y="90.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="ShapeFm2"
+                           showTextBox="0" showValuePopup="Left" bgColour="1441781396" itemColour="1715876103"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox11" x="239.0" y="90.0"
+                           width="35.0" height="15.0" max="6" parentComponent="ModMatrix"
+                           items="Osc 1&#10;Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
+                           processorId="SMUT" parameterId="ShapeFmSrc2" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptLabel" id="ScriptLabel14" x="10.0" y="90.0" width="59.0"
+                           height="15.0" parentComponent="ModMatrix" text="SHAPE2" fontName="mon"
+                           editable="0" textColour="4280620804" alignment="left"/>
+                <Component type="ScriptSlider" id="ScriptSlider12" x="71.0" y="90.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="ShapeMod1"
+                           showTextBox="0" showValuePopup="Left" bgColour="2496627791" itemColour="1714621452"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox12" x="135.0" y="90.0"
+                           width="35.0" height="15.0" max="8" parentComponent="ModMatrix"
+                           items="ENV1&#10;ENV2&#10;ENV3&#10;ENV4&#10;LFO1&#10;LFO2&#10;LFO3&#10;LFO4&#10;"
+                           processorId="SMUT" parameterId="ShapeSrc2" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptLabel" id="ScriptLabel15" x="10.0" y="70.0" width="59.0"
+                           height="15.0" parentComponent="ModMatrix" text="SHAPE1" fontName="mon"
+                           editable="0" textColour="4280620804" alignment="left"/>
+                <Component type="ScriptSlider" id="ScriptSlider13" x="71.0" y="70.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="OscShapeMod"
+                           showTextBox="0" showValuePopup="Left" bgColour="2496627791" itemColour="1714621452"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox13" x="135.0" y="70.0"
+                           width="35.0" height="15.0" max="8" parentComponent="ModMatrix"
+                           items="ENV1&#10;ENV2&#10;ENV3&#10;ENV4&#10;LFO1&#10;LFO2&#10;LFO3&#10;LFO4&#10;"
+                           processorId="SMUT" parameterId="OscShapeModSrc" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptSlider" id="ScriptSlider14" x="174.0" y="70.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="OscShapeFm"
+                           showTextBox="0" showValuePopup="Left" bgColour="1441781396" itemColour="1715876103"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox14" x="239.0" y="70.0"
+                           width="35.0" height="15.0" max="6" parentComponent="ModMatrix"
+                           items="Osc 1&#10;Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
+                           processorId="SMUT" parameterId="OscShapeFmSrc" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptLabel" id="ScriptLabel16" x="284.0" y="89.0" width="70.0"
+                           height="15.0" parentComponent="ModMatrix" text="CUTOFF2" fontName="mon"
+                           editable="0" textColour="4280620804" alignment="left"/>
+                <Component type="ScriptSlider" id="ScriptSlider15" x="355.0" y="89.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="FilterCutMod2"
+                           showValuePopup="Left" dragDirection="Horizontal" showTextBox="0"
+                           bgColour="2496627791" itemColour="1714621452"/>
+                <Component type="ScriptSlider" id="ScriptSlider16" x="458.0" y="89.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="FilterCutFm2"
+                           dragDirection="Horizontal" showTextBox="0" bgColour="1441781396"
+                           itemColour="1715876103"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox15" x="523.0" y="89.0"
+                           width="35.0" height="15.0" max="6" parentComponent="ModMatrix"
+                           items="Osc 1&#10;Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
+                           processorId="SMUT" parameterId="FilterCutSrc2" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptLabel" id="ScriptLabel19" x="10.0" y="109.0" width="59.0"
+                           height="15.0" parentComponent="ModMatrix" text="OSC1 FM" fontName="mon"
+                           editable="0" textColour="4280620804" alignment="left"/>
+                <Component type="ScriptSlider" id="ScriptSlider21" x="71.0" y="109.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="Osc1InputMod"
+                           showTextBox="0" showValuePopup="Left" bgColour="2496627791" itemColour="1714621452"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox20" x="135.0" y="109.0"
+                           width="35.0" height="15.0" max="8" parentComponent="ModMatrix"
+                           items="ENV1&#10;ENV2&#10;ENV3&#10;ENV4&#10;LFO1&#10;LFO2&#10;LFO3&#10;LFO4&#10;"
+                           processorId="SMUT" parameterId="Osc1InputSrc" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptSlider" id="ScriptSlider22" x="174.0" y="109.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="Osc1FM"
+                           showTextBox="0" showValuePopup="Left" bgColour="1441781396" itemColour="1715876103"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox21" x="239.0" y="109.0"
+                           width="35.0" height="15.0" max="6" parentComponent="ModMatrix"
+                           items="Osc 1&#10;Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
+                           processorId="SMUT" parameterId="OscFmSrc" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptLabel" id="ScriptLabel20" x="284.0" y="128.0" width="70.0"
+                           height="15.0" parentComponent="ModMatrix" text="GAIN2" fontName="mon"
+                           editable="0" textColour="4280620804" alignment="left"/>
+                <Component type="ScriptSlider" id="ScriptSlider23" x="355.0" y="128.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="VcaGainMod2"
+                           showValuePopup="Left" dragDirection="Horizontal" showTextBox="0"
+                           bgColour="2496627791" itemColour="1714621452"/>
+                <Component type="ScriptSlider" id="ScriptSlider24" x="458.0" y="128.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="VcaGainFm2"
+                           dragDirection="Horizontal" showTextBox="0" bgColour="1441781396"
+                           itemColour="1715876103"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox22" x="523.0" y="128.0"
+                           width="35.0" height="15.0" max="6" parentComponent="ModMatrix"
+                           items="Osc 1&#10;Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
+                           processorId="SMUT" parameterId="VcaFmSrc2" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox16" x="419.0" y="89.0"
+                           width="35.0" height="15.0" max="8" parentComponent="ModMatrix"
+                           items="ENV1&#10;ENV2&#10;ENV3&#10;ENV4&#10;LFO1&#10;LFO2&#10;LFO3&#10;LFO4&#10;"
+                           processorId="SMUT" parameterId="FilterCutSrc2" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox17" x="419.0" y="128.0"
+                           width="35.0" height="15.0" max="8" parentComponent="ModMatrix"
+                           items="ENV1&#10;ENV2&#10;ENV3&#10;ENV4&#10;LFO1&#10;LFO2&#10;LFO3&#10;LFO4&#10;"
+                           processorId="SMUT" parameterId="VcaGainSrc2" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox23" x="239.0" y="128.0"
+                           width="35.0" height="15.0" max="6" parentComponent="ModMatrix"
+                           items="Osc 1&#10;Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
+                           processorId="SMUT" parameterId="Osc2InputGainFmSrc" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptSlider" id="ScriptSlider25" x="174.0" y="128.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="Osc2InputGainFm"
+                           showTextBox="0" showValuePopup="Left" bgColour="1441781396" itemColour="1715876103"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox24" x="135.0" y="128.0"
+                           width="35.0" height="15.0" max="8" parentComponent="ModMatrix"
+                           items="ENV1&#10;ENV2&#10;ENV3&#10;ENV4&#10;LFO1&#10;LFO2&#10;LFO3&#10;LFO4&#10;"
+                           processorId="SMUT" parameterId="Osc2InputGainModSrc" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptSlider" id="ScriptSlider26" x="71.0" y="128.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="Osc2InputGainMod"
+                           showTextBox="0" showValuePopup="Left" bgColour="2496627791" itemColour="1714621452"/>
+                <Component type="ScriptLabel" id="ScriptLabel55" x="10.0" y="128.0" width="59.0"
+                           height="15.0" parentComponent="ModMatrix" text="OSC2 FM" fontName="mon"
+                           editable="0" textColour="4280620804" alignment="left"/>
+                <Component type="ScriptLabel" id="ScriptLabel56" x="10.0" y="6.0" width="70.0"
+                           height="20.0" parentComponent="ModMatrix" text="MOD" fontName="mon"
+                           editable="0" textColour="4280620804" fontSize="20.0"/>
+                <Component type="ScriptLabel" id="ScriptLabel67" x="284.0" y="51.0" width="70.0"
+                           height="15.0" parentComponent="ModMatrix" text="FILE2 INPUT"
+                           fontName="mon" editable="0" textColour="4280620804" alignment="left"/>
+                <Component type="ScriptSlider" id="ScriptSlider17" x="355.0" y="51.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="File2Mod"
+                           showValuePopup="Left" dragDirection="Horizontal" showTextBox="0"
+                           bgColour="2496627791" itemColour="1714621452"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox18" x="419.0" y="51.0"
+                           width="35.0" height="15.0" max="8" parentComponent="ModMatrix"
+                           items="ENV1&#10;ENV2&#10;ENV3&#10;ENV4&#10;LFO1&#10;LFO2&#10;LFO3&#10;LFO4&#10;"
+                           processorId="SMUT" parameterId="File2ModSrc" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+                <Component type="ScriptSlider" id="ScriptSlider18" x="458.0" y="51.0" width="60.0"
+                           height="15.0" parentComponent="ModMatrix" style="Horizontal"
+                           min="-1.0" middlePosition="0.0" processorId="SMUT" parameterId="File2Fm"
+                           dragDirection="Horizontal" showTextBox="0" bgColour="1441781396"
+                           itemColour="1715876103"/>
+                <Component type="ScriptComboBox" id="ScriptComboBox19" x="523.0" y="51.0"
+                           width="35.0" height="15.0" max="6" parentComponent="ModMatrix"
+                           items="Osc 1&#10;Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
+                           processorId="SMUT" parameterId="File2FmSrc" bgColour="1562184962"
+                           textColour="4281936900" itemColour2="4279308561"/>
+              </Component>
+              <Component type="ScriptPanel" id="Panel2" x="7.0" y="6.0" width="220.0"
+                         height="60.0" itemColour="15393227" itemColour2="15393227" textColour="0">
+                <Component type="ScriptImage" id="ScriptImage2" x="0.0" y="-70.0" width="220.0"
+                           height="120.0" parentComponent="Panel2" fileName="{PROJECT_FOLDER}MuckBGk3.png"
+                           popupOnRightClick="0" enabled="0"/>
+                <Component type="ScriptLabel" id="Label1" x="0.0" y="-1.0" text="SMUT" editable="0"
+                           fontName="mon" fontSize="30.0" width="220.0" height="50.0" bgColour="16768121"
+                           itemColour2="4212064256" itemColour="4278190080" parentComponent="Panel2"
+                           textColour="4284038975"/>
+              </Component>
+              <Component type="ScriptPanel" id="Fin" x="589.0" y="485.0" width="200.0"
+                         height="155.0" itemColour="4293583307" itemColour2="4293583307"
+                         textColour="4279702530">
+                <Component type="ScriptSlider" id="Knob1" x="16.0" y="32.0" stepSize="1.0"
+                           style="Vertical" width="20.0" height="90.0" processorId="SMUT"
+                           mode="Time" max="10000.0" middlePosition="1000.0" parameterId="a"
+                           parentComponent="Fin" showTextBox="0" showValuePopup="Below"
+                           bgColour="1368003604" itemColour="2380322498"/>
+                <Component type="ScriptSlider" id="Knob2" x="43.0" y="32.0" stepSize="1.0"
+                           style="Vertical" width="20.0" height="90.0" processorId="SMUT"
+                           mode="Time" max="10000.0" middlePosition="1000.0" parameterId="h"
+                           parentComponent="Fin" showTextBox="0" showValuePopup="Below"
+                           bgColour="1368003604" itemColour="2380322498"/>
+                <Component type="ScriptSlider" id="Knob3" x="70.0" y="32.0" stepSize="1.0"
+                           style="Vertical" width="20.0" height="90.0" processorId="SMUT"
+                           mode="Time" max="10000.0" middlePosition="1000.0" parameterId="d"
+                           parentComponent="Fin" showTextBox="0" showValuePopup="Below"
+                           bgColour="1368003604" itemColour="2380322498"/>
+                <Component type="ScriptSlider" id="Knob4" x="97.0" y="32.0" stepSize="0.009999999776482582"
+                           style="Vertical" width="20.0" height="90.0" processorId="SMUT"
+                           parameterId="s" parentComponent="Fin" showTextBox="0" showValuePopup="Below"
+                           bgColour="1368003604" itemColour="2380322498"/>
+                <Component type="ScriptSlider" id="Knob5" x="124.0" y="32.0" stepSize="1.0"
+                           style="Vertical" width="20.0" height="90.0" processorId="SMUT"
+                           mode="Time" max="10000.0" middlePosition="1000.0" parameterId="r"
+                           parentComponent="Fin" showTextBox="0" showValuePopup="Below"
+                           bgColour="1368003604" itemColour="2380322498"/>
+                <Component type="ScriptLabel" id="ScriptLabel68" x="16.0" y="125.0" width="20.0"
+                           height="20.0" parentComponent="Fin" text="A" fontName="mon" editable="0"
+                           textColour="4280620804" alignment="left"/>
+                <Component type="ScriptSlider" id="Vol" x="151.0" y="32.0" middlePosition="0.5"
+                           suffix=" dB" processorId="SMUT" parameterId="Vol" parentComponent="Fin"
+                           width="40.0" height="40.0"/>
+                <Component type="ScriptPanel" id="Panel1" x="-584.0" y="-422.0" width="220.0"
+                           height="170.0" itemColour="4293583307" itemColour2="4293583307"
+                           textColour="4278190080" parentComponent="Fin"/>
+                <Component type="ScriptLabel" id="ScriptLabel82" x="43.0" y="125.0" width="20.0"
+                           height="20.0" parentComponent="Fin" text="H" fontName="mon" editable="0"
+                           textColour="4280620804" alignment="left"/>
+                <Component type="ScriptLabel" id="ScriptLabel83" x="70.0" y="125.0" width="20.0"
+                           height="20.0" parentComponent="Fin" text="D" fontName="mon" editable="0"
+                           textColour="4280620804" alignment="left"/>
+                <Component type="ScriptLabel" id="ScriptLabel84" x="97.0" y="125.0" width="20.0"
+                           height="20.0" parentComponent="Fin" text="S" fontName="mon" editable="0"
+                           textColour="4280620804" alignment="left"/>
+                <Component type="ScriptLabel" id="ScriptLabel85" x="124.0" y="125.0" width="20.0"
+                           height="20.0" parentComponent="Fin" text="R" fontName="mon" editable="0"
+                           textColour="4280620804" alignment="left"/>
+                <Component type="ScriptLabel" id="ScriptLabel86" x="59.0" y="5.0" width="90.0"
+                           height="20.0" parentComponent="Fin" text="MASTER" fontName="mon"
+                           editable="0" textColour="4280620804" alignment="left" fontSize="20.0"/>
+              </Component>
+              <Component type="ScriptPanel" id="Envelope1" x="7.0" y="98.0" width="220.0"
+                         height="190.0" textColour="4279702530" itemColour2="4293583307"
+                         itemColour="4293583307">
+                <Component type="ScriptTable" id="Table7" x="11.0" y="34.0" width="200.0"
+                           height="70.0" processorId="ENV1" parentComponent="Envelope1"
+                           bgColour="14654085" itemColour="14865424" customColours="1" itemColour2="4279308561"/>
+                <Component type="ScriptComboBox" id="PosModMode2" x="10.0" y="120.0" max="3"
+                           width="60.0" height="30.0" items="Envelope&#10;Table&#10;Step"
+                           isPluginParameter="1" pluginParameterName="File Position - Tempo"
+                           parentComponent="Envelope1" textColour="4281936900" bgColour="1427967234"/>
+                <Component type="ScriptSlider" id="PosDiv2" x="118.0" y="112.0" processorId="ENV1"
+                           parameterId="Divide" pluginParameterName="File Position - Divide"
+                           middlePosition="16.5" text="Div" isPluginParameter="1" width="40.0"
+                           height="40.0" parentComponent="Envelope1" min="1.0" max="32.0"
+                           stepSize="1.0" textColour="16777215" bgColour="16777215" showValuePopup="Below"/>
+                <Component type="ScriptComboBox" id="PosModTempo2" x="80.0" y="119.0" max="19"
+                           width="30.0" height="30.0" processorId="ENV1" parameterId="Tempo"
+                           items="1/1&#10;1/2D&#10;1/2&#10;1/2T&#10;1/4D&#10;1/4&#10;1/4T&#10;1/8D&#10;1/8&#10;1/8T&#10;1/16D&#10;1/16&#10;1/16T&#10;1/32D&#10;1/32&#10;1/32T&#10;1/64D&#10;1/64&#10;1/64T"
+                           isPluginParameter="1" pluginParameterName="File Position - Tempo"
+                           parentComponent="Envelope1" textColour="4281936900" bgColour="1427967234"/>
+                <Component type="ScriptLabel" id="ScriptLabel87" x="63.0" y="158.0" width="60.0"
+                           height="20.0" parentComponent="Envelope1" text="Tempo" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel88" x="108.0" y="158.0" width="60.0"
+                           height="20.0" parentComponent="Envelope1" text="Divide" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel89" x="6.0" y="5.0" width="120.0"
+                           height="20.0" parentComponent="Envelope1" text="Envelope" fontName="mon"
+                           editable="0" textColour="4280620804" fontSize="20.0" alignment="left"/>
+                <Component type="ScriptComboBox" id="PosModMode3" x="172.0" y="5.0" max="4"
+                           width="40.0" height="20.0" items="1&#10;2&#10;3&#10;4" isPluginParameter="1"
+                           pluginParameterName="File Position - Tempo" parentComponent="Envelope1"
+                           textColour="4281936900" bgColour="1427967234"/>
+                <Component type="ScriptLabel" id="ScriptLabel90" x="9.0" y="158.0" width="60.0"
+                           height="20.0" parentComponent="Envelope1" text="Mode" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel91" x="159.0" y="158.0" width="60.0"
+                           height="20.0" parentComponent="Envelope1" text="Velocity" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptSlider" id="PosDiv3" x="169.0" y="112.0" processorId="ENV1"
+                           parameterId="Velocity" pluginParameterName="File Position - Divide"
+                           middlePosition="16.5" text="Div" isPluginParameter="1" width="40.0"
+                           height="40.0" parentComponent="Envelope1" min="1.0" max="32.0"
+                           stepSize="1.0" textColour="16777215" bgColour="16777215" showValuePopup="Below"/>
+              </Component>
+              <Component type="ScriptPanel" id="Envelope2" x="8.0" y="292.0" width="220.0"
+                         height="190.0" textColour="4279702530" itemColour2="4293583307"
+                         itemColour="4293583307">
+                <Component type="ScriptTable" id="Table8" x="11.0" y="34.0" width="200.0"
+                           height="70.0" processorId="ENV1" parentComponent="Envelope2"
+                           bgColour="14654085" itemColour="14865424" customColours="1" itemColour2="4279308561"/>
+                <Component type="ScriptComboBox" id="PosModMode4" x="10.0" y="120.0" max="3"
+                           width="60.0" height="30.0" items="Envelope&#10;Table&#10;Step"
+                           isPluginParameter="1" pluginParameterName="File Position - Tempo"
+                           parentComponent="Envelope2" textColour="4281936900" bgColour="1427967234"/>
+                <Component type="ScriptSlider" id="PosDiv4" x="118.0" y="112.0" processorId="ENV1"
+                           parameterId="Divide" pluginParameterName="File Position - Divide"
+                           middlePosition="16.5" text="Div" isPluginParameter="1" width="40.0"
+                           height="40.0" parentComponent="Envelope2" min="1.0" max="32.0"
+                           stepSize="1.0" textColour="16777215" bgColour="16777215" showValuePopup="Below"/>
+                <Component type="ScriptComboBox" id="PosModTempo3" x="80.0" y="119.0" max="19"
+                           width="30.0" height="30.0" processorId="ENV1" parameterId="Tempo"
+                           items="1/1&#10;1/2D&#10;1/2&#10;1/2T&#10;1/4D&#10;1/4&#10;1/4T&#10;1/8D&#10;1/8&#10;1/8T&#10;1/16D&#10;1/16&#10;1/16T&#10;1/32D&#10;1/32&#10;1/32T&#10;1/64D&#10;1/64&#10;1/64T"
+                           isPluginParameter="1" pluginParameterName="File Position - Tempo"
+                           parentComponent="Envelope2" textColour="4281936900" bgColour="1427967234"/>
+                <Component type="ScriptLabel" id="ScriptLabel92" x="63.0" y="158.0" width="60.0"
+                           height="20.0" parentComponent="Envelope2" text="Tempo" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel93" x="108.0" y="158.0" width="60.0"
+                           height="20.0" parentComponent="Envelope2" text="Divide" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel94" x="6.0" y="5.0" width="120.0"
+                           height="20.0" parentComponent="Envelope2" text="LFO" fontName="mon"
+                           editable="0" textColour="4280620804" fontSize="20.0" alignment="left"/>
+                <Component type="ScriptComboBox" id="PosModMode5" x="172.0" y="5.0" max="4"
+                           width="40.0" height="20.0" items="1&#10;2&#10;3&#10;4" isPluginParameter="1"
+                           pluginParameterName="File Position - Tempo" parentComponent="Envelope2"
+                           textColour="4281936900" bgColour="1427967234"/>
+                <Component type="ScriptLabel" id="ScriptLabel95" x="9.0" y="158.0" width="60.0"
+                           height="20.0" parentComponent="Envelope2" text="Mode" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptLabel" id="ScriptLabel96" x="159.0" y="158.0" width="60.0"
+                           height="20.0" parentComponent="Envelope2" text="Velocity" fontName="mon"
+                           editable="0" textColour="4280620804"/>
+                <Component type="ScriptSlider" id="PosDiv5" x="169.0" y="112.0" processorId="ENV1"
+                           parameterId="Velocity" pluginParameterName="File Position - Divide"
+                           middlePosition="16.5" text="Div" isPluginParameter="1" width="40.0"
+                           height="40.0" parentComponent="Envelope2" min="1.0" max="32.0"
+                           stepSize="1.0" textColour="16777215" bgColour="16777215" showValuePopup="Below"/>
+              </Component>
+            </ContentProperties>
+          </UIData>
+        </Processor>
+      </ChildProcessors>
+    </Processor>
+    <Processor Type="ModulatorChain" ID="GainModulation" Bypassed="0" Intensity="1.0">
+      <EditorStates BodyShown="1" Visible="0" Solo="0"/>
+      <ChildProcessors/>
+    </Processor>
+    <Processor Type="ModulatorChain" ID="PitchModulation" Bypassed="1" Intensity="0.0">
+      <EditorStates BodyShown="1" Visible="0" Solo="0"/>
+      <ChildProcessors/>
+    </Processor>
+    <Processor Type="EffectChain" ID="FX" Bypassed="0">
+      <EditorStates BodyShown="1" Visible="0" Solo="0"/>
+      <ChildProcessors>
+        <Processor Type="Dynamics" ID="Dynamics1" Bypassed="1" GateEnabled="0.0"
+                   GateThreshold="0.0" GateAttack="1.0" GateRelease="100.0" CompressorEnabled="0.0"
+                   CompressorThreshold="-13.10000038146973" CompressorRatio="1.0"
+                   CompressorAttack="10.0" CompressorRelease="100.0" LimiterEnabled="0.0"
+                   LimiterThreshold="-17.0" LimiterAttack="11.1899995803833" LimiterRelease="10.11999988555908"
+                   CompressorMakeup="0.0" LimiterMakeup="0.0">
+          <EditorStates BodyShown="1" Visible="1" Solo="0"/>
+          <ChildProcessors/>
+          <RoutingMatrix NumSourceChannels="2" Channel0="0" Send0="-1" Channel1="1" Send1="-1"/>
+        </Processor>
+      </ChildProcessors>
+    </Processor>
+    <Processor Type="GlobalModulatorContainer" ID="Envelopes" Bypassed="0" Gain="0.25"
+               Balance="0.0" VoiceLimit="256.0" KillFadeTime="20.0" IconColour="0">
+      <EditorStates BodyShown="1" Visible="1" Solo="0" Folded="1"/>
+      <ChildProcessors>
+        <Processor Type="MidiProcessorChain" ID="Midi Processor" Bypassed="0">
+          <EditorStates BodyShown="1" Visible="0" Solo="0"/>
+          <ChildProcessors/>
+        </Processor>
+        <Processor Type="ModulatorChain" ID="Global Modulators" Bypassed="0" Intensity="1.0">
+          <EditorStates BodyShown="1" Visible="0" Solo="0"/>
+          <ChildProcessors>
+            <Processor Type="Hardcoded Envelope Modulator" ID="ENV1" Bypassed="0" Monophonic="0.0"
+                       Retrigger="1.0" Bipolar="0" Intensity="1.0" Network="Env" Tempo="1.0"
+                       Divide="0.0" Mode="2.0" EnvTrig="1.0" a="1267.900024414062" h="0.0"
+                       d="0.0" s="0.6105520129203796" r="0.0" Oneshot="0.0" Velocity="0.0">
+              <EditorStates BodyShown="1" Visible="1" Solo="0"/>
+              <ChildProcessors/>
+              <Tables>
+                <Table EmbeddedData="36...............vOHEt99....9C...vO...f+.........vO"/>
+              </Tables>
+              <SliderPacks>
+                <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
+              </SliderPacks>
+            </Processor>
+            <Processor Type="Hardcoded Envelope Modulator" ID="ENV2" Bypassed="0" Monophonic="0.0"
+                       Retrigger="1.0" Bipolar="0" Intensity="1.0" Network="Env" Tempo="1.0"
+                       Divide="1.0" Mode="2.0" EnvTrig="1.0" a="1267.900024414062" h="0.0"
+                       d="0.0" s="0.6105520129203796" r="0.0" Oneshot="1.0" Velocity="1.0">
+              <EditorStates BodyShown="1" Visible="1" Solo="0"/>
+              <ChildProcessors/>
+              <Tables>
+                <Table EmbeddedData=""/>
+              </Tables>
+              <SliderPacks>
+                <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
+              </SliderPacks>
+            </Processor>
+            <Processor Type="Hardcoded Envelope Modulator" ID="ENV3" Bypassed="0" Monophonic="0.0"
+                       Retrigger="1.0" Bipolar="0" Intensity="1.0" Network="Env" Tempo="1.0"
+                       Divide="1.0" Mode="2.0" EnvTrig="1.0" a="1267.900024414062" h="0.0"
+                       d="0.0" s="0.6105520129203796" r="0.0" Oneshot="0.0" Velocity="1.0">
+              <EditorStates BodyShown="1" Visible="1" Solo="0"/>
+              <ChildProcessors/>
+              <Tables>
+                <Table EmbeddedData=""/>
+              </Tables>
+              <SliderPacks>
+                <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
+              </SliderPacks>
+            </Processor>
+            <Processor Type="Hardcoded Timevariant Modulator" ID="LFO1" Bypassed="0"
+                       Intensity="1.0" Bipolar="0" Network="LfoNew" Tempo="3.0" Divide="1.0"
+                       Shape="1.0" Adjust="0.4852399826049805" AdjMode="3.0">
+              <EditorStates BodyShown="1" Visible="1" Solo="0"/>
+              <ChildProcessors/>
+              <Tables>
+                <Table EmbeddedData=""/>
+                <Table EmbeddedData=""/>
+              </Tables>
+            </Processor>
+            <Processor Type="Hardcoded Timevariant Modulator" ID="LFO2" Bypassed="0"
+                       Intensity="1.0" Bipolar="0" Network="LfoNew" Tempo="0.0" Divide="1.0"
+                       Shape="2.0" Adjust="0.460999995470047" AdjMode="1.0">
+              <EditorStates BodyShown="1" Visible="1" Solo="0"/>
+              <ChildProcessors/>
+              <Tables>
+                <Table EmbeddedData=""/>
+                <Table EmbeddedData=""/>
+              </Tables>
+            </Processor>
+            <Processor Type="Hardcoded Timevariant Modulator" ID="LFO3" Bypassed="0"
+                       Intensity="1.0" Bipolar="0" Network="LfoNew" Tempo="8.0" Divide="1.0"
+                       Shape="1.0" Adjust="0.4852399826049805" AdjMode="3.0">
+              <EditorStates BodyShown="1" Visible="1" Solo="0"/>
+              <ChildProcessors/>
+              <Tables>
+                <Table EmbeddedData=""/>
+                <Table EmbeddedData=""/>
+              </Tables>
+            </Processor>
+            <Processor Type="Velocity" ID="Velocity Modulator1" Bypassed="0" Intensity="1.0"
+                       Bipolar="0" UseTable="0.0" Inverted="0.0" DecibelMode="0.0">
+              <EditorStates BodyShown="1" Visible="1" Solo="0"/>
+              <ChildProcessors/>
+            </Processor>
+            <Processor Type="KeyNumber" ID="Notenumber Modulator1" Bypassed="0" Intensity="1.0"
+                       Bipolar="0" MidiTableData="">
+              <EditorStates BodyShown="1" Visible="1" Solo="0"/>
+              <ChildProcessors/>
+            </Processor>
+          </ChildProcessors>
+        </Processor>
+        <Processor Type="ModulatorChain" ID="PitchModulation" Bypassed="0" Intensity="0.0">
+          <EditorStates BodyShown="1" Visible="0" Solo="0"/>
+          <ChildProcessors/>
+        </Processor>
+        <Processor Type="EffectChain" ID="FX" Bypassed="0">
+          <EditorStates BodyShown="1" Visible="0" Solo="0"/>
+          <ChildProcessors/>
+        </Processor>
+      </ChildProcessors>
+      <RoutingMatrix NumSourceChannels="2" Channel0="0" Send0="-1" Channel1="1" Send1="-1"/>
+      <MatrixData/>
+    </Processor>
+    <Processor Type="HardcodedSynth" ID="SMUT" Bypassed="0" Gain="0.25" Balance="0.0"
+               VoiceLimit="256.0" KillFadeTime="20.0" IconColour="0" Network="Sm2"
+               OscSt1="-24.0" OscCent1="0.0" Oscfm1="0.05000000074505806" OscMod1="1.0"
+               OscTempoSync1="1.0" OscTempo1="1.0" OscDiv1="0.0" OscFmSrc1="1.0"
+               OscPitchSrc1="4.0" Osc12Mix="0.5099999904632568" filePos1="0.9100000262260437"
+               FilePosMod1="-0.9399999976158142" FilePosQuant1="1.0" FileInputGain1="0.5600000023841858"
+               FileInputGainMod="0.0" FileInputGainSrc1="1.0" FileInputGainFm1="1.0"
+               FilterMode1="1.0" FilterCut1="0.8700000047683716" FilterCutMod1="0.0"
+               FilterCutFm1="0.0" FilterCutSrc1="1.0" FilterModMode1="0.0" VcaGain1="0.8899999856948853"
+               VcaGainMod1="0.0" VcaGainFm1="0.0" VcaGainSrc1="1.0" Res1="0.7099999785423279"
+               Pan1="0.0" VcaFmSrc1="1.0" OscSt2="-1.0" OscCent2="0.0" Oscfm2="0.0"
+               OscMod2="0.0" OscFmSrc2="1.0" FilterMode2="1.0" FilterCut2="0.5400000214576721"
+               FilterCutMod2="0.1000000014901161" FilterCutFm2="0.0" FilterCutSrc2="5.0"
+               FilterFmdSrc="1.0" VcaGain2="0.4900000095367432" VcaGainMod2="0.0"
+               VcaGainFm2="0.0" VcaGainSrc2="1.0" VcaGainModMode2="0.300000011920929"
+               Res2="0.9100000262260437" Pan2="0.0" VcaFmSrc2="1.0" OscShape="0.0"
+               OscShapeMod="0.0" OscShapeFm="0.8999999761581421" OscShapeModSrc="1.0"
+               OscShapeFmSrc="4.0" Osc2InputGain="0.5400000214576721" Osc2InputGainMod="0.0"
+               Osc2InputGainFm="0.0" Osc2InputGainModSrc="1.0" Osc2InputGainFmSrc="1.0"
+               FileInFmSrc="2.0" FilterInput1="1.0" FilterInput2="1.0" PostModMode="1.0"
+               PosEnvTrig="1.0" PosEnvA="0.0" PosEnvH="2.299999952316284" PosEnvD="0.0"
+               PosEnvS="0.5" PosEnvR="0.0" PosVel="1.0" OscsSubGain="6.099999904632568"
+               PosTempo="5.0" PosDib="12.0" FileInOffset="0.8700000047683716"
+               oscShapeMode1="11.0" oscShapeMode2="11.0" shape2="0.0" ShapeMod1="0.0"
+               ShapeSrc2="1.0" ShapeFm2="0.0" ShapeFmSrc2="1.0" PosSmooth="0.0"
+               Osc2Src="1.0" Osc2InSel="1.0" FileInSel="1.0" Vol="0.4000000059604645"
+               Osc1Input="0.0" Osc1InputMod="0.0" Osc1FM="0.0" OscFmSrc="1.0"
+               Osc1InputSrc="1.0" Osc1InSel="1.0" s="1.0" a="0.0" h="0.0" d="10000.0"
+               r="8546.0" TEMPO2="0.0" DIV2="1.0" SYNC2="1.0" File2InSel="1.0"
+               File2GainOffset="0.3400000035762787" File2Gain="0.300000011920929"
+               File2Mod="0.0" File2Fm="1.0" File2ModSrc="1.0" File2FmSrc="1.0"
+               File2Tempo="3.0" FileDiv="8.0" File2Mode="2.0" File2EnvTrig="0.0"
+               File2A="0.0" File2H="0.0" File2D="10000.0" File2S="1.0" File2R="436.6000061035156"
+               File2Pos="0.5" File2PosMod="0.5" File2Quant="1.0" User1="1.0"
+               User2="0.0">
+      <EditorStates BodyShown="1" Visible="1" Solo="0" Folded="1"/>
+      <ChildProcessors>
+        <Processor Type="MidiProcessorChain" ID="Midi Processor" Bypassed="0">
+          <EditorStates BodyShown="1" Visible="0" Solo="0"/>
+          <ChildProcessors>
+            <Processor Type="Transposer" ID="Transposer1" Bypassed="1" TransposeAmount="-24.0">
+              <EditorStates BodyShown="1" Visible="1" Solo="0"/>
+              <ChildProcessors/>
+            </Processor>
+            <Processor Type="Transposer" ID="Transposer2" Bypassed="1" TransposeAmount="-12.0">
+              <EditorStates BodyShown="1" Visible="1" Solo="0"/>
+              <ChildProcessors/>
+            </Processor>
+          </ChildProcessors>
+        </Processor>
+        <Processor Type="ModulatorChain" ID="GainModulation" Bypassed="0" Intensity="1.0">
+          <EditorStates BodyShown="1" Visible="0" Solo="0"/>
+          <ChildProcessors>
+            <Processor Type="ScriptnodeVoiceKiller" ID="Scriptnode Voice Killer1" Bypassed="0"
+                       Monophonic="0.0" Retrigger="0.0" Intensity="1.0">
+              <EditorStates BodyShown="1" Visible="1" Solo="0"/>
+              <ChildProcessors/>
+            </Processor>
+          </ChildProcessors>
+        </Processor>
+        <Processor Type="ModulatorChain" ID="PitchModulation" Bypassed="0" Intensity="0.0">
+          <EditorStates BodyShown="1" Visible="0" Solo="0" Folded="1"/>
+          <ChildProcessors/>
+        </Processor>
+        <Processor Type="EffectChain" ID="FX" Bypassed="0">
+          <EditorStates BodyShown="1" Visible="0" Solo="0" Folded="1"/>
+          <ChildProcessors/>
+        </Processor>
+        <Processor Type="ModulatorChain" ID="Extra1" Bypassed="1" Intensity="1.0">
+          <EditorStates BodyShown="1" Visible="0" Solo="0" Folded="1"/>
+          <ChildProcessors/>
+        </Processor>
+        <Processor Type="ModulatorChain" ID="Extra2" Bypassed="1" Intensity="1.0">
+          <EditorStates BodyShown="1" Visible="0" Solo="0" Folded="1"/>
+          <ChildProcessors/>
+        </Processor>
+      </ChildProcessors>
+      <RoutingMatrix NumSourceChannels="2" Channel0="0" Send0="-1" Channel1="1" Send1="-1"/>
+      <Tables>
+        <Table EmbeddedData="72...............vOgqGk9XOJb7C...vOw0iB+fv0i1C...vOZlYF+v0iB8C...vOOJbc+fqGE8ipwKsO...f+.........3O"/>
+        <Table EmbeddedData=""/>
+        <Table EmbeddedData=""/>
+        <Table EmbeddedData=""/>
+        <Table EmbeddedData=""/>
+        <Table EmbeddedData=""/>
+        <Table EmbeddedData=""/>
+        <Table EmbeddedData=""/>
+      </Tables>
+      <SliderPacks>
+        <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
+        <SliderPack EmbeddedData="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
+        <SliderPack EmbeddedData="16.eT3Z9...............+."/>
+        <SliderPack EmbeddedData="20............................"/>
+      </SliderPacks>
+      <AudioFiles>
+        <AudioFile EmbeddedData="{PROJECT_FOLDER}Loops/Long/No options" MinValue="0"
+                   MaxValue="0"/>
+        <AudioFile EmbeddedData="{PROJECT_FOLDER}//" MinValue="0" MaxValue="16384"/>
+        <AudioFile EmbeddedData="" MinValue="0" MaxValue="0"/>
+        <AudioFile EmbeddedData="" MinValue="0" MaxValue="0"/>
+      </AudioFiles>
+    </Processor>
+    <Processor Type="ScriptSynth" ID="Scriptnode Synthesiser1" Bypassed="0"
+               Gain="0.25" Balance="0.0" VoiceLimit="256.0" KillFadeTime="20.0"
+               IconColour="0" NumTables="8" NumSliderPacks="4" NumAudioFiles="4"
+               NumDisplayBuffers="3" Script=" function onControl(number, value)&#10;{&#10;&#9;&#10;}&#10; ">
+      <EditorStates BodyShown="1" Visible="1" Solo="0" GainModulationShown="1"/>
+      <ChildProcessors>
+        <Processor Type="MidiProcessorChain" ID="Midi Processor" Bypassed="0">
+          <EditorStates BodyShown="1" Visible="0" Solo="0"/>
+          <ChildProcessors/>
+        </Processor>
+        <Processor Type="ModulatorChain" ID="GainModulation" Bypassed="0" Intensity="1.0">
+          <EditorStates BodyShown="1" Visible="0" Solo="0"/>
+          <ChildProcessors>
+            <Processor Type="SimpleEnvelope" ID="DefaultEnvelope1" Bypassed="0" Monophonic="0.0"
+                       Retrigger="1.0" Intensity="1.0" Attack="5.0" Release="10.0" LinearMode="1.0">
+              <EditorStates BodyShown="1" Visible="1" Solo="0"/>
+              <ChildProcessors>
+                <Processor Type="ModulatorChain" ID="Attack Time Modulation" Bypassed="0"
+                           Intensity="1.0">
+                  <EditorStates BodyShown="1" Visible="0" Solo="0"/>
+                  <ChildProcessors/>
+                </Processor>
+              </ChildProcessors>
+            </Processor>
+          </ChildProcessors>
+        </Processor>
+        <Processor Type="ModulatorChain" ID="PitchModulation" Bypassed="0" Intensity="0.0">
+          <EditorStates BodyShown="1" Visible="0" Solo="0"/>
+          <ChildProcessors/>
+        </Processor>
+        <Processor Type="EffectChain" ID="FX" Bypassed="0">
+          <EditorStates BodyShown="1" Visible="0" Solo="0"/>
+          <ChildProcessors/>
+        </Processor>
+        <Processor Type="ModulatorChain" ID="Extra1" Bypassed="1" Intensity="1.0">
+          <EditorStates BodyShown="1" Visible="0" Solo="0"/>
+          <ChildProcessors/>
+        </Processor>
+        <Processor Type="ModulatorChain" ID="Extra2" Bypassed="1" Intensity="1.0">
+          <EditorStates BodyShown="1" Visible="0" Solo="0"/>
+          <ChildProcessors/>
+        </Processor>
+      </ChildProcessors>
+      <RoutingMatrix NumSourceChannels="2" Channel0="0" Send0="-1" Channel1="1" Send1="-1"/>
+      <Content/>
+      <Networks>
+        <Network ID="Sm2" AllowPolyphonic="1" Version="0.0.0" AllowCompilation="1"/>
+      </Networks>
+      <UIData>
+        <ContentProperties DeviceType="Desktop"/>
+      </UIData>
+    </Processor>
+  </ChildProcessors>
+  <RoutingMatrix NumSourceChannels="2" Channel0="0" Send0="-1" Channel1="1" Send1="-1"/>
+  <macro_controls>
+    <macro name="Macro 1" value="0.0" midi_cc="-1"/>
+    <macro name="Macro 2" value="0.0" midi_cc="-1"/>
+    <macro name="Macro 3" value="0.0" midi_cc="-1"/>
+    <macro name="Macro 4" value="0.0" midi_cc="-1"/>
+    <macro name="Macro 5" value="0.0" midi_cc="-1"/>
+    <macro name="Macro 6" value="0.0" midi_cc="-1"/>
+    <macro name="Macro 7" value="0.0" midi_cc="-1"/>
+    <macro name="Macro 8" value="0.0" midi_cc="-1"/>
+  </macro_controls>
+  <MidiAutomation/>
+  <MPEData Enabled="0"/>
+</Processor>

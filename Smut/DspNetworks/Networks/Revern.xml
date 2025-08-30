@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Network ID="Revern" AllowCompilation="1" Version="0.0.0">
+<Network ID="Revern" Version="0.0.0" AllowPolyphonic="1">
   <Node FactoryPath="container.chain" ID="Revern" Bypassed="0" Name="Revern"
         ShowParameters="1">
     <Nodes>
@@ -105,7 +105,7 @@
         </Connections>
       </Parameter>
       <Parameter MinValue="0.0009999999747378752" MaxValue="1.449999963369919"
-                 StepSize="0.00009999999747378752" ID="Time" Value="0.2861999927699799"
+                 StepSize="0.00009999999747378752" ID="Time" Value="0.2861999927699784"
                  DefaultValue="0.0">
         <Connections>
           <Connection NodeId="faust" ParameterId="delayTime"/>
@@ -118,7 +118,7 @@
         </Connections>
       </Parameter>
       <Parameter MinValue="0.0" MaxValue="0.9900000095367432" StepSize="0.00009999999747378752"
-                 ID="Diffuse" Value="0.4999999873689376" DefaultValue="0.0">
+                 ID="Diffuse" Value="0.499999987368935" DefaultValue="0.0">
         <Connections>
           <Connection NodeId="faust" ParameterId="diffusion"/>
         </Connections>

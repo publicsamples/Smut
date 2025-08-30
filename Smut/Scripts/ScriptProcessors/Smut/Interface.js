@@ -1,8 +1,4 @@
-;Content.makeFrontInterface(880, 880);
-
-Engine.loadFontAs("{PROJECT_FOLDER}Montserrat-Medium.ttf", "mon");
-
-const var Smut = Synth.getChildSynth("Smut");
+Content.makeFrontInterface(795, 645);
 
 include("laf.js");
 include("KnobLAF1.js");
@@ -10,540 +6,366 @@ include("KnobLAF2.js");
 include("KnobLAF3.js");
 include("KnobLAF4.js");
 include("Rect.js");
-
 include("Scopes.js");
-include("Loading.js");
-
-include("V1.js");
 
 
-inline function onHiQControl(component, value)
+const var SMUT = Synth.getChildSynth("SMUT");
+
+Engine.loadFontAs("{PROJECT_FOLDER}Montserrat-Medium.ttf", "mon");
+
+
+//osc1 tempo sync
+const var Osc1Tune = [Content.getComponent("OscSemiTone1"),
+                      Content.getComponent("ScriptLabel17"),
+                      Content.getComponent("OscCent1"),
+                      Content.getComponent("ScriptLabel18")];
+
+const var Osc1Tempo = [Content.getComponent("ScriptLabel52"),
+                       Content.getComponent("Divide"),
+                       Content.getComponent("ScriptLabel51"),
+                       Content.getComponent("TempoSync")];
+
+
+inline function onSyncControl(component, value)
 {
-
-	if (value == 1){
-		
-	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 6);
-
-	}
-	
-	if (value == 2){
-			
-	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 6);
-	
-		}
-	
-	if (value == 3){
-			
-	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 4);
-
-		}
-	
-	if (value == 4){
-			
-	SynthesiserGroup1.setAttribute(SynthesiserGroup1.VoiceLimit, 1);
-
-		}	
-		
-
+	 for(s in Osc1Tune)
+      s.showControl(value-1);
+      for(s in Osc1Tempo)
+            s.showControl(value);
+      
+      SMUT.setAttribute(SMUT.OscTempoSync1, value);     
+            
 };
 
-Content.getComponent("HiQ").setControlCallback(onHiQControl);
+Content.getComponent("Sync").setControlCallback(onSyncControl);
+
+//osc2 sync
+
+const var Osc2Tune = [Content.getComponent("OscSemiTone2"),
+                      Content.getComponent("ScriptLabel22"),
+                      Content.getComponent("OscCent2"),
+                      Content.getComponent("ScriptLabel23")];
+
+const var Osc2Tempo = [Content.getComponent("Divide1"),
+                       Content.getComponent("ScriptLabel59"),
+                       Content.getComponent("ScriptLabel60"),
+                       Content.getComponent("TempoSync1")];
 
 
-
-const var Filter1 = Synth.getEffect("Osc1");
-
-Settings.setZoomLevel(1);
-
-
-//Voice Pages
-
-const var VoiceMode1 = Content.getComponent("VoiceMode1");
-
-const var VoicePages =[];
-
-for (i = 0; i < 4; i++)
+inline function onSync1Control(component, value)
 {
-    VoicePages[i] = Content.getComponent("Voice"+(i+1));
-}
+	for(s in Osc2Tune)
+      s.showControl(value-1);
+      for(s in Osc2Tempo)
+            s.showControl(value);
+      
+      SMUT.setAttribute(SMUT.SYNC2, value);     
+};
 
-const var SeqPages =[];
+Content.getComponent("Sync1").setControlCallback(onSync1Control);
 
-for (i = 0; i < 4; i++)
+//Osc1 Shape Menu
+
+const var VisPanel1 = Content.getComponent("VisPanel1");
+const var OscUser1 = Content.getComponent("OscUser1");
+
+
+inline function onOscShapeMode1Control(component, value)
 {
-    SeqPages[i] = Content.getComponent("Seq"+(i+1));
-}
-
-
-
-
-//Synth.setUseUniformVoiceHandler("Smut", true);
-
-const var rm = Engine.getGlobalRoutingManager();
-
-const var Files = Content.getComponent("Files");
-
-
-//Tabs
-
-const var NUM_BUTTONS = 6;
-const var buttons = [];
-const var panels = [];
-
-for (i = 0; i < NUM_BUTTONS; i++)
-{
-    buttons[i] = Content.getComponent("Button" + (i+1));
-    panels[i] = Content.getComponent("lfo" + (i+1));
-    buttons[i].setControlCallback(onButtonControl);
-}
-
-inline function onButtonControl(component, value)
-{
-	local idx = buttons.indexOf(component);
+	SMUT.setAttribute(SMUT.oscShapeMode1, value); 
+	
+	if (value >= 11) {
+		OscUser1.showControl(1);
+		VisPanel1.showControl(0);
+	}
+	else {
 		
-	for (i = 0; i < panels.length; i++)
-    {
-        panels[i].showControl(idx == i);
-        buttons[i].setValue(i == idx && value);
+		OscUser1.showControl(0);
+		VisPanel1.showControl(1);
+	
+		
+		}
+	
+};
+
+Content.getComponent("OscShapeMode1").setControlCallback(onOscShapeMode1Control);
+
+//Osc2 Shape Menu
+
+const var VisPanel2 = Content.getComponent("VisPanel2");
+const var OscUser2 = Content.getComponent("OscUser2");
+
+
+inline function onOscShapeMode2Control(component, value)
+{
+	SMUT.setAttribute(SMUT.oscShapeMode2, value); 
+	
+	if (value >= 11) {
+		OscUser2.showControl(1);
+		VisPanel2.showControl(0);
+	}
+	else {
+		
+		OscUser2.showControl(0);
+		VisPanel2.showControl(1);
+	
+		
+		}
+	
+};
+
+Content.getComponent("OscShapeMode2").setControlCallback(onOscShapeMode2Control);
+
+//File User1 
+
+const var UserWave = [Content.getComponent("UserWaveform1"),
+                      Content.getComponent("UserInstructions")];
+
+const var AudioWaveform1 = Content.getComponent("AudioWaveform1");
+
+
+inline function onUserModeControl(component, value)
+{
+		for(s in UserWave)
+      s.showControl(value-1);
+     	 AudioWaveform1.showControl(value);
+      
+      SMUT.setAttribute(SMUT.User1, 1-value);   
+};
+
+Content.getComponent("UserMode").setControlCallback(onUserModeControl);
+
+
+
+//Samples
+
+const var foldersV1 = [];        // Top-level Genre foldersV1
+const var instrumentsV1 = {};    // Maps Genre to Instruments
+const var samplesV1 = {};        // Maps Instrument to .wav files
+const var foldersV2 = [];        // Top-level Genre foldersV1
+const var instrumentsV2 = {};    // Maps Genre to Instruments
+const var samplesV2 = {}; 
+
+const var Cat1 = Content.getComponent("Cat1");
+const var Bank1 = Content.getComponent("Bank1");
+const var Sample1 = Content.getComponent("Sample1");
+
+const var Cat2 = Content.getComponent("Cat2");
+const var Bank2 = Content.getComponent("Bank2");
+const var Sample2 = Content.getComponent("Sample2");
+
+const var File1 = Synth.getAudioSampleProcessor("SMUT");
+
+
+const slot1 = File1.getAudioFile(0);
+const slot2 = File1.getAudioFile(1);
+
+
+const var AudioList = Engine.loadAudioFilesIntoPool();
+
+inline function sortAudioFilesListV1() {
+	
+	               
+for (file in AudioList) {
+
+        local fullPath = file.split("}")[1];
+
+        local pathParts = fullPath.split("/");
+    
+        local genreFolder = pathParts[0];
+        local instrumentFolder = pathParts[1];
+        local sampleFile = pathParts[2];
+
+     
+        if (foldersV1.indexOf(genreFolder) == -1) {
+            foldersV1.push(genreFolder);
+            instrumentsV1[genreFolder] = []; 
+            instrumentsV2[genreFolder] = []; 
+        }
+
+       
+        if (instrumentsV1[genreFolder].indexOf(instrumentFolder) == -1) {
+            instrumentsV1[genreFolder].push(instrumentFolder);
+            samplesV1[instrumentFolder] = []; 
+            samplesV2[instrumentFolder] = []; 
+        }
+
+		
+
+        samplesV1[instrumentFolder].push(sampleFile);
+        samplesV2[instrumentFolder].push(sampleFile);
+  
+  
+    }
+
+
+   Cat1.set("items", foldersV1.join("\n"));
+   Cat2.set("items", foldersV1.join("\n"));
+
+
+}
+
+sortAudioFilesListV1();
+
+
+inline function onCat1Control(component, value)
+ {
+  if (value >= 0) {
+
+        local selectedGenre = foldersV1[value-1];
+
+        if (instrumentsV1[selectedGenre]) {
+            Bank1.set("items", instrumentsV1[selectedGenre].join("\n"));
+     
+        } else {
+            Bank1.set("items", "no file");
+
+
+        }
+
+		Bank1.setValue(value);
+         
     }
 }
-
-onButtonControl(buttons[0], true);
-
+Content.getComponent("Cat1").setControlCallback(onCat1Control);
 
 
-//LFO1
-
-const var LFO1 = Synth.getEffect("LFO1");
-
-const var LfoShpPanel1 = Content.getComponent("LfoShapeVis1");
-const var LfoTable1 = Content.getComponent("LfoTable1");
-const var LfoSliderPack1 = Content.getComponent("LfoSliderPack1");
-
-inline function onLfoShape1Control(component, value)
+inline function onBank1Control(component, value)
 {
-	
-	LFO1.setAttribute(LFO1.Shape, value);
+	   if (value >= 0) {
+	    
+        local selectedInstrument = Bank1.getItemText();
 
-	if (value == 1){
-	
-		LfoShpPanel1.showControl(1);
-		LfoTable1.showControl(0);
-		LfoSliderPack1.showControl(0);
+        if (samplesV1[selectedInstrument]) {
 
-
-	}
-	if (value == 2){
-
-		LfoShpPanel1.showControl(1);
-		LfoTable1.showControl(0);
-		LfoSliderPack1.showControl(0);
-
+            Sample1.set("items", samplesV1[selectedInstrument].join("\n"))-1;
+        } else {
+ 			Sample1.set("items", "no file");
         }
+      
         
-      if (value == 3){
-      
-      	LfoShpPanel1.showControl(1);
-      	LfoTable1.showControl(0);
-      	LfoSliderPack1.showControl(0);
-
-              }
+    }
     
-    if (value == 4){
-
-    	LfoShpPanel1.showControl(1);
-    	LfoTable1.showControl(0);
-    	LfoSliderPack1.showControl(0);
-
-            }          
- 
-		if (value == 5){
-		
-
-			LfoShpPanel1.showControl(1);
-			LfoTable1.showControl(0);
-			LfoSliderPack1.showControl(0);
-
-		        }
-		        
-	if (value == 6){
-	
-
-		LfoShpPanel1.showControl(0);
-		LfoTable1.showControl(1);
-		LfoSliderPack1.showControl(0);
-	
-	        }	        
-	 
-	 	if (value == 7){
-
-	 		LfoShpPanel1.showControl(0);
-	 		LfoTable1.showControl(0);
-	 		LfoSliderPack1.showControl(1);
-
-	 	        }	        
-	 	     
-     
-};
-
-Content.getComponent("LfoShape1").setControlCallback(onLfoShape1Control);
-
-//LFO2
-
-const var LFO2 = Synth.getEffect("LFO2");
-
-const var LfoShpPanel2 = Content.getComponent("LfoShapeVis2");
-const var LfoTable2 = Content.getComponent("LfoTable2");
-const var LfoSliderPack2 = Content.getComponent("LfoSliderPack2");
-
-inline function onLfoShape2Control(component, value)
-{
-	
-	LFO2.setAttribute(LFO2.Shape, value);
-
-	if (value == 1){
-	
-		LfoShpPanel2.showControl(1);
-		LfoTable2.showControl(0);
-		LfoSliderPack2.showControl(0);
-	
-
-	}
-	if (value == 2){
-
-		LfoShpPanel2.showControl(1);
-		LfoTable2.showControl(0);
-		LfoSliderPack2.showControl(0);
-
-        }
-        
-      if (value == 3){
-      
-      	LfoShpPanel2.showControl(1);
-      	LfoTable2.showControl(0);
-      	LfoSliderPack2.showControl(0);
-
-              }
-    
-    if (value == 4){
-
-    	LfoShpPanel2.showControl(1);
-    	LfoTable2.showControl(0);
-    	LfoSliderPack2.showControl(0);
-    
-            }          
- 
-		if (value == 5){
-		
-
-			LfoShpPanel2.showControl(1);
-			LfoTable2.showControl(0);
-			LfoSliderPack2.showControl(0);
-	
-		        }
-		        
-	if (value == 6){
-	
-
-		LfoShpPanel2.showControl(0);
-		LfoTable2.showControl(1);
-		LfoSliderPack2.showControl(0);
-	
-	        }	        
-	 
-	 	if (value == 7){
-
-	 		LfoShpPanel2.showControl(0);
-	 		LfoTable2.showControl(0);
-	 		LfoSliderPack2.showControl(1);
-
-	 	        }	        
-	 	     
-     
-};
-
-Content.getComponent("LfoShape2").setControlCallback(onLfoShape2Control);
-
-//LFO3
-
-const var LFO3 = Synth.getEffect("LFO3");
-
-const var LfoShpPanel3 = Content.getComponent("LfoShapeVis3");
-const var LfoTable3 = Content.getComponent("LfoTable3");
-const var LfoSliderPack3 = Content.getComponent("LfoSliderPack3");
-const var MiniVis3 = Content.getComponent("MiniVis3");
-
-
-inline function onLfoShape3Control(component, value)
-{
-	
-	LFO3.setAttribute(LFO3.Shape, value);
-
-	if (value == 1){
-	
-		LfoShpPanel3.showControl(1);
-		LfoTable3.showControl(0);
-		LfoSliderPack3.showControl(0);
-
-
-	}
-	if (value == 2){
-
-		LfoShpPanel3.showControl(1);
-		LfoTable3.showControl(0);
-		LfoSliderPack3.showControl(0);
-
-        }
-        
-      if (value == 3){
-      
-      	LfoShpPanel3.showControl(1);
-      	LfoTable3.showControl(0);
-      	LfoSliderPack3.showControl(0);
-      
-              }
-    
-    if (value == 4){
-
-    	LfoShpPanel3.showControl(1);
-    	LfoTable3.showControl(0);
-    	LfoSliderPack3.showControl(0);
-    
-            }          
- 
-		if (value == 5){
-		
-
-			LfoShpPanel3.showControl(1);
-			LfoTable3.showControl(0);
-			LfoSliderPack3.showControl(0);
-
-		        }
-		        
-	if (value == 6){
-	
-
-		LfoShpPanel3.showControl(0);
-		LfoTable3.showControl(1);
-		LfoSliderPack3.showControl(0);
-
-	        }	        
-	 
-	 	if (value == 7){
-
-	 		LfoShpPanel3.showControl(0);
-	 		LfoTable3.showControl(0);
-	 		LfoSliderPack3.showControl(1);
-
-	 	        }	        
-	 	     
-     
-};
-
-Content.getComponent("LfoShape3").setControlCallback(onLfoShape3Control);
-
-//LFO6
-
-const var LFO4 = Synth.getEffect("LFO4");
-
-const var LfoShpPanel4 = Content.getComponent("LfoShapeVis4");
-const var LfoTable4 = Content.getComponent("LfoTable4");
-const var LfoSliderPack4 = Content.getComponent("LfoSliderPack4");
-
-
-
-inline function onLfoShape4Control(component, value)
-{
-	
-	LFO4.setAttribute(LFO4.Shape, value);
-
-	if (value == 1){
-	
-		LfoShpPanel4.showControl(1);
-		LfoTable4.showControl(0);
-		LfoSliderPack4.showControl(0);
-	
-
-	}
-	if (value == 2){
-
-		LfoShpPanel4.showControl(1);
-		LfoTable4.showControl(0);
-		LfoSliderPack4.showControl(0);
-	
-        }
-        
-      if (value == 3){
-      
-      	LfoShpPanel4.showControl(1);
-      	LfoTable4.showControl(0);
-      	LfoSliderPack4.showControl(0);
-     
-              }
-    
-    if (value == 4){
-
-    	LfoShpPanel4.showControl(1);
-    	LfoTable4.showControl(0);
-    	LfoSliderPack4.showControl(0);
-    
-            }          
- 
-		if (value == 5){
-		
-
-			LfoShpPanel4.showControl(1);
-			LfoTable4.showControl(0);
-			LfoSliderPack4.showControl(0);
-		
-		        }
-		        
-	if (value == 6){
-	
-
-		LfoShpPanel4.showControl(0);
-		LfoTable4.showControl(1);
-		LfoSliderPack4.showControl(0);
-	
-	        }	        
-	 
-	 	if (value == 7){
-
-	 		LfoShpPanel4.showControl(0);
-	 		LfoTable4.showControl(0);
-	 		LfoSliderPack4.showControl(1);
-	 	
-	 	        }	        
-	 	     
-     
-};
-
-Content.getComponent("LfoShape4").setControlCallback(onLfoShape4Control);
-
-
-
-
-//env
-
-const var LfoPanels4 =[];
-
-LfoPanels4[0] = Content.getComponent("LfoShapeVis4");
-LfoPanels4[1] = Content.getComponent("EnvPanel1");
-LfoPanels4[2] = Content.getComponent("LfoTable4");
-LfoPanels4[3] = Content.getComponent("LfoSliderPack4");
-LfoPanels4[4] = Content.getComponent("AdjVis4");
-
-
-const var PresetPanel = Content.getComponent("PresetPanel");
-
-
-inline function onClosePresetControl(component, value)
-{
-   PresetPanel.showControl(0);
-};
-
-Content.getComponent("ClosePreset").setControlCallback(onClosePresetControl);
-
-
-inline function onPresetsControl(component, value)
-{
-	PresetPanel.showControl(1);
-};
-
-Content.getComponent("Presets").setControlCallback(onPresetsControl);
-
-const var cmbPresets = Content.getComponent("cmbPresets");
-cmbPresets.setControlCallback(oncmbPresetsControl);
-
-inline function oncmbPresetsControl(component, value)
-{
-	if (!value)
-		return;
-
-	local itemText = Engine.getUserPresetList()[value - 1];
-
-	Console.print(itemText);
+    Bank1.setValue(value);
 }
 
-populatePresetsMenu();
 
-inline function populatePresetsMenu()
+Content.getComponent("Bank1").setControlCallback(onBank1Control);
+
+
+inline function onSample1Control(component, value)
 {
-	cmbPresets.set("items", "");
+	
+	if (value >= 0) {
 
-	for (x in Engine.getUserPresetList())
+		local selectedSample = Sample1.get("items").split("\n")[value - 1];
+
+       local selectedGenre = Cat1.getItemText();
+       local selectedInstrument = Bank1.getItemText();
+       local fullPath = "{PROJECT_FOLDER}" + selectedGenre + "/" + selectedInstrument + "/" + selectedSample;
+
+	
+	SMUT.setBypassed(false);
+	reg voc1 = value-1;
+	
+	Content.callAfterDelay(300, function()
 	{
-		local arr = x.split("/");			
-		local item = "";
+		Engine.allNotesOff();
+	
+		SMUT.setBypassed(true);
 		
-		for (i = 0; i < arr.length; i++)
+		Content.callAfterDelay(300, function()
 		{
-			item += arr[i];
-			
-			if (i < arr.length - 1)
-				item += "::";
-		}
+	
+	
+		SMUT.setBypassed(false);
 
-		cmbPresets.addItem(item);
-	}
+        slot1.loadFile("{PROJECT_FOLDER}" + Cat1.getItemText() + "/" + Bank1.getItemText()  + "/" + Sample1.getItemText());
+    
+    }, this);
+
+	}, SMUT);
+}
 }
 
+Content.getComponent("Sample1").setControlCallback(onSample1Control);
 
 
-
-const var MixCont = [Content.getComponent("MixLabel"),
-                     Content.getComponent("ScriptSliderPack1")];
-
-const var XfCont = [Content.getComponent("Xfader"),
-                    Content.getComponent("XfLabel")];
-                     
-
-inline function onFadeModeControl(component, value)
+inline function onCat2Control(component, value)
 {
-	Osc1.setAttribute(Osc1.FileXrossFadeMode, value);
+ if (value >= 0) {
+        local selectedGenre = foldersV1[value-1];
+
+        if (instrumentsV1[selectedGenre]) {
+            Bank2.set("items", instrumentsV1[selectedGenre].join("\n"));
+     
+        } else {
+            Bank2.set("items", "no file");
+
+
+        }
+
+		Bank2.setValue(value);
+         
+    }
+};
+
+Content.getComponent("Cat2").setControlCallback(onCat2Control);
+
+
+inline function onBank2Control(component, value)
+{ if (value >= 0) {
+	    
+        local selectedInstrument = Bank2.getItemText();
+
+        if (samplesV2[selectedInstrument]) {
+
+            Sample2.set("items", samplesV1[selectedInstrument].join("\n"))-1;
+        } else {
+ 			Sample2.set("items", "no file");
+        }
+      }
+   
+};
+
+Content.getComponent("Bank2").setControlCallback(onBank2Control);
+
+
+inline function onSample2Control(component, value)
+{
+if (value >= 0) {
+
+		local selectedSample = Sample2.get("items").split("\n")[value - 1];
+
+       local selectedGenre = Cat2.getItemText();
+       local selectedInstrument = Bank2.getItemText();
+       local fullPath = "{PROJECT_FOLDER}" + selectedGenre + "/" + selectedInstrument + "/" + selectedSample;
+
 	
-		if (value == 4){
-			
-			for(s in MixCont)
-			    s.showControl(1); 
+	SMUT.setBypassed(false);
+	reg voc2 = value-1;
+	
+	Content.callAfterDelay(300, function()
+	{
+		Engine.allNotesOff();
+	
+		SMUT.setBypassed(true);
 		
-			for(s in XfCont)
-				s.showControl(0); 
-				}
-				
-		else {
-		for(s in MixCont)
-					    s.showControl(0); 
-				
-					for(s in XfCont)
-						s.showControl(1); 	
-		}
-};
+		Content.callAfterDelay(300, function()
+		{
+	
+	
+		SMUT.setBypassed(false);
 
-Content.getComponent("FadeMode").setControlCallback(onFadeModeControl);
+        slot2.loadFile("{PROJECT_FOLDER}" + Cat2.getItemText() + "/" + Bank2.getItemText()  + "/" + Sample2.getItemText());
+    
+    }, this);
 
-const var EnvTable1 = Content.getComponent("EnvTable1");
+	}, SMUT);
+}
+}
 
-inline function onEnvMode1Control(component, value)
-{
-	Osc1.setAttribute(Osc1.EnvType1, value);
-	EnvTable1.showControl(value);
-};
-
-Content.getComponent("EnvMode1").setControlCallback(onEnvMode1Control);
-
-const var EnvTable2 = Content.getComponent("EnvTable2");
-
-inline function onEnvMode2Control(component, value)
-{
-	Osc1.setAttribute(Osc1.EnvType2, value);
-	EnvTable2.showControl(value);
-};
-
-Content.getComponent("EnvMode2").setControlCallback(onEnvMode2Control);
-
-
-
+Content.getComponent("Sample2").setControlCallback(onSample2Control);
 function onNoteOn()
 {
 	

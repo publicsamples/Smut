@@ -88,30 +88,16 @@ KnobLaf4.registerFunction("drawRotarySlider", function(g, obj)
 
 
 
-      
-const var PositionRamps = [Content.getComponent("PosDiv1"),
-                           Content.getComponent("PosDiv2"),
-                           Content.getComponent("PosDiv3"),
-                           Content.getComponent("PosDiv4"),
-                           Content.getComponent("PostTempo4"),
-                           Content.getComponent("PostTempo3"),
-                           Content.getComponent("PostTempo2"),
-                           Content.getComponent("PostTempo1"),
-                           Content.getComponent("PosMod1"),
-                           Content.getComponent("PosMod2"),
-                           Content.getComponent("PosMod3"),
-                           Content.getComponent("PosMod4")];
-for(s in PositionRamps)
-      s.setLocalLookAndFeel(KnobLaf4);                          
+                               
                            
 
-const var FilePS = [Content.getComponent("FilePitch1"),
-                    Content.getComponent("FileWin1"),
-                    Content.getComponent("FileXf1")];
+///const var FilePS = [Content.getComponent("FilePitch1"),
+                  //  Content.getComponent("FileWin1"),
+                  //  Content.getComponent("FileXf1")];
                     
                          
-for(s in FilePS)
-      s.setLocalLookAndFeel(KnobLaf4); 
+//for(s in FilePS)
+  //    s.setLocalLookAndFeel(KnobLaf4); 
       
                       
                     

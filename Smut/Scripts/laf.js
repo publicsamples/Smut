@@ -1,8 +1,7 @@
-
-
 //Draw Combobox
 
 const var laf = Engine.createGlobalScriptLookAndFeel();
+
 
 
 
@@ -44,17 +43,39 @@ laf.registerFunction("drawPresetBrowserListItem", function(g, obj)
     g.drawAlignedText(obj.text, obj.area, "centred");
 });
 
+//Table Rulers
 
-laf.registerFunction("drawTableRuler", function(g, obj)
+const var TableLaf = Content.createLocalLookAndFeel();
+const var TableLaf2 = Content.createLocalLookAndFeel();
+
+TableLaf.registerFunction("drawTableRuler", function(g, obj)
 {
     g.setColour(Colours.withAlpha(obj.bgColour, 2.1));
     
-    var x = obj.position * obj.area[2];
+    var x = obj.position * obj.area[1];
     
     g.drawLine(x, x, 0, obj.area[3], 10.0);
     g.setColour(obj.bgColour);
     g.drawLine(x, x, 0, obj.area[3], 1);
 });
+
+TableLaf2.registerFunction("drawTableRuler", function(g, obj)
+{
+    g.setColour(Colours.withAlpha(obj.bgColour, 2.1));
+    
+    var x = obj.position * obj.area[0];
+    
+    g.drawLine(x, x, 0, obj.area[0], 0.0);
+    g.setColour(obj.bgColour);
+    g.drawLine(x, x, 0, obj.area[0], 1);
+});
+
+const var OscTables = [Content.getComponent("OscUser1"),
+                       Content.getComponent("OscUser2")];
+
+for(s in OscTables)
+     s.setLocalLookAndFeel(TableLaf2);
+
 
 laf.registerFunction("drawToggleButton", function(g, obj)
 {
@@ -121,28 +142,6 @@ LAF_Button.registerFunction("drawToggleButton", function(g, obj)
 	});
 
 ///////////////// BUTTON DEFINITION ///////////////// 
-
-const var EnvButtons = [Content.getComponent("EnvMode1"),
-                        Content.getComponent("ClkTring1"),
-                        Content.getComponent("ClkTring2"),
-                        Content.getComponent("EnvMode2"),
-                        Content.getComponent("RampOS1"),
-                        Content.getComponent("RampOS2"),
-                        Content.getComponent("RampOS3"),
-                        Content.getComponent("RampOS4"),
-                        Content.getComponent("ClkTring3"),
-                        Content.getComponent("ClkTring4")];
-                        
-for(s in EnvButtons)
-      s.setLocalLookAndFeel(LAF_Button);  
-      
-      const var UniDelSync = Content.getComponent("UniDelSync");
-      
-      
-      
-const var MiscButtons = [Content.getComponent("LpHpCt"),
-						Content.getComponent("UniDelSync")];
-
- 
- for(s in MiscButtons)
-       s.setLocalLookAndFeel(LAF_Button);                         
+                    
+                    
+                    

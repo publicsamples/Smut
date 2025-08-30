@@ -7,35 +7,26 @@
 #pragma clang diagnostic ignored "-Wunused-variable"
 #endif
 
-// Include third party header files ----------------
-
-#include "cbmono.h"
-#include "Comb.h"
-#include "gran.h"
-#include "hole.h"
-#include "khp.h"
-#include "khp2.h"
-#include "klp.h"
-#include "klp2.h"
-#include "ps2.h"
-#include "psfine.h"
-#include "shfiter.h"
-
 // Include compiled network files ------------------
 
 #include "combValueTest_networkdata.h"
 #include "empty_networkdata.h"
+#include "Env.h"
+#include "FoldTests_networkdata.h"
 #include "GainMod_networkdata.h"
-#include "lfo.h"
 #include "lfo2_networkdata.h"
 #include "lfo3_networkdata.h"
 #include "lfo4_networkdata.h"
+#include "LfoNew.h"
 #include "Lfos_networkdata.h"
+#include "lfo_networkdata.h"
 #include "ModConnect_networkdata.h"
-#include "osc1.h"
+#include "mp_networkdata.h"
 #include "PitchTempo_networkdata.h"
-#include "Revern.h"
+#include "pitch_networkdata.h"
+#include "Revern_networkdata.h"
 #include "rp_networkdata.h"
+#include "Sm2.h"
 #include "SuperDetune_networkdata.h"
 #include "VcaAdsr_networkdata.h"
 
