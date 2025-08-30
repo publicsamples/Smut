@@ -11,7 +11,7 @@
                 ShowParameters="1">
             <Nodes>
               <Node ID="modchain1" FactoryPath="container.modchain" Bypassed="0"
-                    Name="PitchMod1" Folded="1">
+                    Name="PitchMod1">
                 <Nodes>
                   <Node ID="chain37" FactoryPath="container.chain" Bypassed="0" Name="chain37">
                     <Nodes>
@@ -261,7 +261,7 @@
                 <Parameters/>
               </Node>
               <Node ID="modchain5" FactoryPath="container.modchain" Bypassed="0"
-                    Name="Osc2Pm" Folded="1">
+                    Name="Osc2Pm">
                 <Nodes>
                   <Node ID="chain77" FactoryPath="container.chain" Bypassed="0" Name="chain37">
                     <Nodes>
@@ -432,20 +432,23 @@
                                           <Parameter MinValue="-1.0" MaxValue="1.0" ID="Intensity" DefaultValue="1.0"
                                                      Automated="1"/>
                                         </Parameters>
+                                        <ModulationTargets>
+                                          <Connection NodeId="minmax1" ParameterId="Value"/>
+                                        </ModulationTargets>
                                       </Node>
                                       <Node ID="minmax1" FactoryPath="control.minmax" Bypassed="0" Name="minmax">
                                         <ModulationTargets>
                                           <Connection NodeId="add90" ParameterId="Value"/>
                                         </ModulationTargets>
                                         <Parameters>
-                                          <Parameter MinValue="0.0" MaxValue="1.0" ID="Value"/>
+                                          <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Automated="1"/>
                                           <Parameter MinValue="-12.0" MaxValue="12.0" SkewFactor="0.6309297535714574"
                                                      ID="Minimum" Value="-12.0" DefaultValue="0.5"/>
                                           <Parameter MinValue="-12.0" MaxValue="12.0" SkewFactor="0.6309297535714574"
                                                      ID="Maximum" Value="12.0" DefaultValue="1.0"/>
                                           <Parameter MinValue="0.1000000014901161" MaxValue="10.0" SkewFactor="0.2890648245811462"
-                                                     ID="Skew" Value="1.0"/>
-                                          <Parameter MinValue="0.0" MaxValue="1.0" ID="Step" Value="0.0"/>
+                                                     ID="Skew" Value="1.007871913748814" DefaultValue="1.0"/>
+                                          <Parameter MinValue="0.0" MaxValue="12.0" ID="Step" Value="0.0"/>
                                           <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Polarity" Value="0.0"/>
                                         </Parameters>
                                       </Node>
@@ -2592,8 +2595,7 @@
                     <Nodes>
                       <Node ID="chain2" FactoryPath="container.chain" Bypassed="0" Name="chain2">
                         <Nodes>
-                          <Node ID="split2" FactoryPath="container.split" Bypassed="0" Name="split2"
-                                Folded="1">
+                          <Node ID="split2" FactoryPath="container.split" Bypassed="0" Name="split2">
                             <Nodes>
                               <Node ID="chain17" FactoryPath="container.chain" Bypassed="0" Name="chain17">
                                 <Nodes>
@@ -3316,7 +3318,7 @@
                                     </Parameters>
                                   </Node>
                                   <Node ID="branch5" FactoryPath="container.branch" Bypassed="0" Name="branch5"
-                                        ShowParameters="1" Folded="1">
+                                        ShowParameters="1">
                                     <Nodes>
                                       <Node ID="chain31" FactoryPath="container.chain" Bypassed="0" Name="chain31">
                                         <Nodes>
@@ -3810,7 +3812,7 @@
                                                   <Node ID="chain46" FactoryPath="container.chain" Bypassed="0" Name="chain46">
                                                     <Nodes>
                                                       <Node ID="oscilloscope1" FactoryPath="analyse.oscilloscope" Bypassed="0"
-                                                            Name="oscilloscope1" Folded="1">
+                                                            Name="oscilloscope1">
                                                         <ComplexData>
                                                           <DisplayBuffers>
                                                             <DisplayBuffer Index="1" EmbeddedData=""/>
@@ -4039,7 +4041,7 @@
                     </Parameters>
                   </Node>
                   <Node ID="frame2_block1" FactoryPath="container.frame2_block" Bypassed="0"
-                        Name="frame2_block1" Folded="1">
+                        Name="frame2_block1">
                     <Nodes>
                       <Node ID="chain7" FactoryPath="container.chain" Bypassed="0" Name="chain7">
                         <Nodes>
@@ -4395,7 +4397,7 @@
                                         <ComplexData>
                                           <AudioFiles>
                                             <AudioFile Index="0" EmbeddedData="{PROJECT_FOLDER}Single Cycle/Synths2/Synth22.WAV"
-                                                       MinValue="0" MaxValue="256"/>
+                                                       MinValue="0" MaxValue="325661"/>
                                           </AudioFiles>
                                         </ComplexData>
                                         <Parameters>
@@ -4413,7 +4415,7 @@
                                         <ComplexData>
                                           <AudioFiles>
                                             <AudioFile Index="2" EmbeddedData="{PROJECT_FOLDER}Single Cycle/Synths2/Synth22.WAV"
-                                                       MinValue="0" MaxValue="4325376"/>
+                                                       MinValue="0" MaxValue="256"/>
                                           </AudioFiles>
                                         </ComplexData>
                                         <Parameters>
@@ -5024,7 +5026,7 @@
                                         <ComplexData>
                                           <AudioFiles>
                                             <AudioFile Index="1" EmbeddedData="{PROJECT_FOLDER}Single Cycle/Synths2/Synth22.WAV"
-                                                       MinValue="0" MaxValue="437"/>
+                                                       MinValue="0" MaxValue="523636"/>
                                           </AudioFiles>
                                         </ComplexData>
                                         <Parameters>
@@ -5042,7 +5044,7 @@
                                         <ComplexData>
                                           <AudioFiles>
                                             <AudioFile Index="3" EmbeddedData="{PROJECT_FOLDER}Single Cycle/Synths2/Synth22.WAV"
-                                                       MinValue="0" MaxValue="0"/>
+                                                       MinValue="0" MaxValue="256"/>
                                           </AudioFiles>
                                         </ComplexData>
                                         <Parameters>
@@ -6475,8 +6477,7 @@
         </Nodes>
         <Parameters/>
       </Node>
-      <Node ID="ahdsr1" FactoryPath="envelope.ahdsr" Bypassed="0" Name="ahdsr1"
-            Folded="1">
+      <Node ID="ahdsr1" FactoryPath="envelope.ahdsr" Bypassed="0" Name="ahdsr1">
         <Properties>
           <Property ID="NumParameters" Value="2"/>
         </Properties>
@@ -6573,7 +6574,7 @@
           <Connection NodeId="global_mod3" ParameterId="Value"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="1.0" MaxValue="32.0" ID="OscDiv1" Value="32.0" DefaultValue="0.0"
+      <Parameter MinValue="1.0" MaxValue="32.0" ID="OscDiv1" Value="1.0" DefaultValue="0.0"
                  StepSize="1.0" TextToValueConverter="">
         <Connections>
           <Connection NodeId="tempo_sync" ParameterId="Multiplier"/>
@@ -6597,27 +6598,27 @@
                  ExternalModulation="Disabled" DefaultValue="0.0">
         <Connections/>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="filePos1" Value="0.7699999809265137"
-                 DefaultValue="0.0">
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="filePos1" Value="0.0">
         <Connections>
           <Connection NodeId="cable_table4" ParameterId="Value"/>
           <Connection NodeId="pma3" ParameterId="Add"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="-1.0" MaxValue="1.0" ID="FilePosMod1" Value="0.05000000074505806"
-                 TextToValueConverter="" DefaultValue="0.0">
+      <Parameter MinValue="-1.0" MaxValue="1.0" ID="FilePosMod1" Value="1.0" TextToValueConverter=""
+                 DefaultValue="0.0">
         <Connections>
           <Connection NodeId="pma3" ParameterId="Multiply"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="1.0" MaxValue="10.0" ID="FilePosQuant1" Value="1.0"
-                 StepSize="1.0" TextToValueConverter="" ExternalModulation="Disabled">
+      <Parameter MinValue="1.0" MaxValue="10.0" ID="FilePosQuant1" Value="5.0"
+                 StepSize="1.0" TextToValueConverter="" ExternalModulation="Disabled"
+                 DefaultValue="1.0">
         <Connections>
           <Connection NodeId="branch1" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="FileInputGain1" Value="0.0"
-                 ExternalModulation="Disabled">
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="FileInputGain1" Value="0.4399999976158142"
+                 ExternalModulation="Disabled" DefaultValue="0.0">
         <Connections>
           <Connection NodeId="global_mod6" ParameterId="Value"/>
         </Connections>
@@ -6628,8 +6629,9 @@
           <Connection NodeId="global_mod6" ParameterId="Intensity"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="1.0" MaxValue="17.0" ID="FileInputGainSrc1" Value="1.0"
-                 StepSize="1.0" TextToValueConverter="" ExternalModulation="Disabled">
+      <Parameter MinValue="1.0" MaxValue="17.0" ID="FileInputGainSrc1" Value="4.0"
+                 StepSize="1.0" TextToValueConverter="" ExternalModulation="Disabled"
+                 DefaultValue="1.0">
         <Connections>
           <Connection NodeId="global_mod6" ParameterId="Index"/>
         </Connections>
@@ -6657,25 +6659,26 @@
           <Connection NodeId="global_mod9" ParameterId="Intensity"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="-1.0" MaxValue="1.0" ID="FilterCutFm1" Value="-0.03999999910593033"
-                 TextToValueConverter="" DefaultValue="0.0">
+      <Parameter MinValue="-1.0" MaxValue="1.0" ID="FilterCutFm1" Value="0.0"
+                 TextToValueConverter="">
         <Connections>
           <Connection NodeId="pma_unscaled9" ParameterId="Multiply"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="1.0" MaxValue="17.0" ID="FilterCutSrc1" Value="1.0"
-                 StepSize="1.0" TextToValueConverter="" ExternalModulation="Disabled">
+      <Parameter MinValue="1.0" MaxValue="17.0" ID="FilterCutSrc1" Value="4.0"
+                 StepSize="1.0" TextToValueConverter="" ExternalModulation="Disabled"
+                 DefaultValue="1.0">
         <Connections>
           <Connection NodeId="global_mod9" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="1.0" MaxValue="6.0" ID="FilterModMode1" Value="2.0"
+      <Parameter MinValue="1.0" MaxValue="6.0" ID="FilterModMode1" Value="4.0"
                  StepSize="1.0" TextToValueConverter="" DefaultValue="1.0" ExternalModulation="Disabled">
         <Connections>
           <Connection NodeId="branch21" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="VcaGain1" Value="0.6899999976158142"
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="VcaGain1" Value="0.7200000286102295"
                  DefaultValue="0.0">
         <Connections>
           <Connection NodeId="global_mod10" ParameterId="Value"/>
@@ -6698,9 +6701,8 @@
           <Connection NodeId="global_mod10" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="Res1" Value="0.9599999785423279"
-                 SkewFactor="0.2647178173065186" TextToValueConverter="" ExternalModulation="Disabled"
-                 DefaultValue="0.300000011920929">
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="Res1" Value="0.0" SkewFactor="0.2647178173065186"
+                 TextToValueConverter="" ExternalModulation="Disabled" DefaultValue="0.300000011920929">
         <Connections>
           <Connection NodeId="one_pole2" ParameterId="Q"/>
           <Connection NodeId="one_pole3" ParameterId="Q"/>
@@ -6715,25 +6717,24 @@
           <Connection NodeId="receive3" ParameterId="Feedback"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="-1.0" MaxValue="1.0" ID="Pan1" Value="-0.03999999910593033"
-                 TextToValueConverter="" DefaultValue="0.0">
+      <Parameter MinValue="-1.0" MaxValue="1.0" ID="Pan1" Value="0.0" TextToValueConverter="">
         <Connections>
           <Connection NodeId="jpanner" ParameterId="Pan"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="1.0" MaxValue="6.0" ID="VcaFmSrc1" Value="2.0" StepSize="1.0"
+      <Parameter MinValue="1.0" MaxValue="6.0" ID="VcaFmSrc1" Value="4.0" StepSize="1.0"
                  TextToValueConverter="" ExternalModulation="Disabled" DefaultValue="1.0">
         <Connections>
           <Connection NodeId="branch22" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="-24.0" MaxValue="24.0" ID="OscSt2" Value="-23.0" ExternalModulation="Disabled"
+      <Parameter MinValue="-24.0" MaxValue="24.0" ID="OscSt2" Value="-1.0" ExternalModulation="Disabled"
                  StepSize="1.0" TextToValueConverter="" DefaultValue="0.0">
         <Connections>
           <Connection NodeId="minmax2" ParameterId="Value"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="-1.0" MaxValue="1.0" ID="OscCent2" Value="-0.2441250085830688"
+      <Parameter MinValue="-1.0" MaxValue="1.0" ID="OscCent2" Value="-0.09000000357627869"
                  ExternalModulation="Disabled" TextToValueConverter="" DefaultValue="0.0">
         <Connections>
           <Connection NodeId="add35" ParameterId="Value"/>
@@ -6745,7 +6746,8 @@
           <Connection NodeId="pma1" ParameterId="Multiply"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="-1.0" MaxValue="1.0" ID="OscMod2" Value="0.0" TextToValueConverter="">
+      <Parameter MinValue="-1.0" MaxValue="1.0" ID="OscMod2" Value="1.0" TextToValueConverter=""
+                 DefaultValue="0.0">
         <Connections>
           <Connection NodeId="global_mod" ParameterId="Intensity"/>
           <Connection NodeId="global_mod13" ParameterId="Intensity"/>
@@ -6758,14 +6760,13 @@
           <Connection NodeId="branch11" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="1.0" MaxValue="9.0" ID="FilterMode2" Value="1.0" StepSize="1.0"
-                 TextToValueConverter="" ExternalModulation="Disabled">
+      <Parameter MinValue="1.0" MaxValue="9.0" ID="FilterMode2" Value="3.0" StepSize="1.0"
+                 TextToValueConverter="" ExternalModulation="Disabled" DefaultValue="1.0">
         <Connections>
           <Connection NodeId="branch13" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="FilterCut2" Value="0.9900000095367432"
-                 DefaultValue="0.0">
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="FilterCut2" Value="1.0" DefaultValue="0.0">
         <Connections>
           <Connection NodeId="global_mod11" ParameterId="Value"/>
         </Connections>
@@ -6788,13 +6789,13 @@
           <Connection NodeId="global_mod11" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="1.0" MaxValue="6.0" ID="FilterFmdSrc" Value="1.0" StepSize="1.0"
-                 TextToValueConverter="" ExternalModulation="Disabled">
+      <Parameter MinValue="1.0" MaxValue="6.0" ID="FilterFmdSrc" Value="3.0" StepSize="1.0"
+                 TextToValueConverter="" ExternalModulation="Disabled" DefaultValue="1.0">
         <Connections>
           <Connection NodeId="branch23" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="VcaGain2" Value="1.0" DefaultValue="0.0">
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="VcaGain2" Value="0.0">
         <Connections>
           <Connection NodeId="global_mod12" ParameterId="Value"/>
         </Connections>
@@ -6819,7 +6820,7 @@
                  ExternalModulation="Disabled" DefaultValue="0.0">
         <Connections/>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="Res2" Value="0.0" DefaultValue="0.300000011920929"
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="Res2" Value="1.0" DefaultValue="0.300000011920929"
                  SkewFactor="0.2647178173065186" TextToValueConverter="" ExternalModulation="Disabled">
         <Connections>
           <Connection NodeId="one_pole12" ParameterId="Q"/>
@@ -6856,8 +6857,7 @@
           <Connection NodeId="global_mod4" ParameterId="Intensity"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="-1.0" MaxValue="1.0" ID="OscShapeFm" Value="0.7799999713897705"
-                 TextToValueConverter="" DefaultValue="0.0">
+      <Parameter MinValue="-1.0" MaxValue="1.0" ID="OscShapeFm" Value="0.0" TextToValueConverter="">
         <Connections>
           <Connection NodeId="pma_unscaled6" ParameterId="Multiply"/>
         </Connections>
@@ -6904,8 +6904,8 @@
           <Connection NodeId="branch17" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="1.0" MaxValue="6.0" ID="FileInFmSrc" Value="1.0" StepSize="1.0"
-                 TextToValueConverter="" ExternalModulation="Disabled">
+      <Parameter MinValue="1.0" MaxValue="6.0" ID="FileInFmSrc" Value="3.0" StepSize="1.0"
+                 TextToValueConverter="" ExternalModulation="Disabled" DefaultValue="1.0">
         <Connections>
           <Connection NodeId="branch20" ParameterId="Index"/>
         </Connections>
@@ -6918,8 +6918,8 @@
                  TextToValueConverter="" ExternalModulation="Disabled">
         <Connections/>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="2.0" ID="PostModMode" Value="1.0" StepSize="1.0"
-                 TextToValueConverter="" ExternalModulation="Disabled">
+      <Parameter MinValue="0.0" MaxValue="2.0" ID="PostModMode" Value="0.0" StepSize="1.0"
+                 TextToValueConverter="" ExternalModulation="Disabled" DefaultValue="1.0">
         <Connections>
           <Connection NodeId="branch3" ParameterId="Index"/>
         </Connections>
@@ -6930,9 +6930,8 @@
           <Connection NodeId="input_toggle" ParameterId="Input"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="10000.0" ID="PosEnvA" Value="3715.000055357813"
-                 StepSize="0.1000000014901161" SkewFactor="0.1976716816425323"
-                 TextToValueConverter="" ExternalModulation="Disabled" DefaultValue="0.0">
+      <Parameter MinValue="0.0" MaxValue="10000.0" ID="PosEnvA" Value="0.0" StepSize="0.1000000014901161"
+                 SkewFactor="0.1976716816425323" TextToValueConverter="" ExternalModulation="Disabled">
         <Connections>
           <Connection NodeId="ahdsr" ParameterId="Attack"/>
         </Connections>
@@ -6943,7 +6942,7 @@
           <Connection NodeId="ahdsr" ParameterId="Hold"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="10000.0" ID="PosEnvD" Value="10000.0"
+      <Parameter MinValue="0.0" MaxValue="10000.0" ID="PosEnvD" Value="10.00000014901161"
                  StepSize="0.1000000014901161" SkewFactor="0.1976716816425323"
                  TextToValueConverter="" DefaultValue="0.0">
         <Connections>
@@ -6955,7 +6954,7 @@
           <Connection NodeId="ahdsr" ParameterId="Sustain"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="10000.0" ID="PosEnvR" Value="1908.000028431415"
+      <Parameter MinValue="0.0" MaxValue="10000.0" ID="PosEnvR" Value="155.00000230968"
                  StepSize="0.1000000014901161" SkewFactor="0.1976716816425323"
                  TextToValueConverter="" DefaultValue="0.0">
         <Connections>
@@ -6969,25 +6968,27 @@
                  StepSize="0.1000000014901161" TextToValueConverter="" DefaultValue="0.0">
         <Connections/>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="18.0" StepSize="1.0" ID="PosTempo" Value="7.0"
+      <Parameter MinValue="0.0" MaxValue="18.0" StepSize="1.0" ID="PosTempo" Value="1.0"
                  TextToValueConverter="" DefaultValue="0.0">
         <Connections>
           <Connection NodeId="tempo_sync4" ParameterId="Tempo"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="1.0" MaxValue="32.0" StepSize="1.0" ID="PosDib" Value="5.0"
+      <Parameter MinValue="1.0" MaxValue="32.0" StepSize="1.0" ID="PosDib" Value="1.0"
                  DefaultValue="0.0" TextToValueConverter="">
         <Connections>
           <Connection NodeId="tempo_sync4" ParameterId="Multiplier"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="FileInOffset" Value="1.0" DefaultValue="0.0">
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="FileInOffset" Value="0.300000011920929"
+                 DefaultValue="0.0">
         <Connections>
           <Connection NodeId="gain21" ParameterId="Gain"/>
         </Connections>
       </Parameter>
       <Parameter MinValue="1.0" MaxValue="12.0" StepSize="1.0" ID="oscShapeMode1"
-                 Value="1.0" TextToValueConverter="" ExternalModulation="Disabled">
+                 Value="4.0" TextToValueConverter="" ExternalModulation="Disabled"
+                 DefaultValue="1.0">
         <Connections>
           <Connection NodeId="branch" ParameterId="Index"/>
         </Connections>
@@ -7028,25 +7029,26 @@
       <Parameter MinValue="0.0" MaxValue="1.0" ID="PosSmooth" Value="0.0">
         <Connections/>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="Osc2Src" Value="1.0" DefaultValue="0.0">
+      <Parameter MinValue="1.0" MaxValue="17.0" ID="Osc2Src" Value="4.0" StepSize="1.0"
+                 TextToValueConverter="" ExternalModulation="Disabled" DefaultValue="1.0">
         <Connections>
           <Connection NodeId="global_mod" ParameterId="Index"/>
           <Connection NodeId="global_mod13" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="1.0" MaxValue="5.0" StepSize="1.0" ID="Osc2InSel" Value="1.0"
-                 TextToValueConverter="" ExternalModulation="Disabled">
+      <Parameter MinValue="1.0" MaxValue="5.0" StepSize="1.0" ID="Osc2InSel" Value="2.0"
+                 TextToValueConverter="" ExternalModulation="Disabled" DefaultValue="1.0">
         <Connections>
           <Connection NodeId="branch27" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="1.0" MaxValue="5.0" StepSize="1" ID="FileInSel" Value="1.0"
-                 ExternalModulation="Disabled">
+      <Parameter MinValue="1.0" MaxValue="5.0" StepSize="1" ID="FileInSel" Value="2.0"
+                 ExternalModulation="Disabled" DefaultValue="1.0">
         <Connections>
           <Connection NodeId="branch26" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="Vol" Value="0.5" DefaultValue="0.0">
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="Vol" Value="1.0" DefaultValue="0.0">
         <Connections>
           <Connection NodeId="gain" ParameterId="Gain"/>
         </Connections>
@@ -7086,7 +7088,7 @@
           <Connection NodeId="branch28" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="s" Value="1.0" DefaultValue="0.0">
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="s" Value="0.0">
         <Connections>
           <Connection NodeId="ahdsr1" ParameterId="Sustain"/>
         </Connections>
@@ -7104,13 +7106,15 @@
         </Connections>
       </Parameter>
       <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
-                 SkewFactor="0.1976716816425323" ID="d" Value="10000.0" DefaultValue="0.0">
+                 SkewFactor="0.1976716816425323" ID="d" Value="1147.000017091632"
+                 DefaultValue="0.0">
         <Connections>
           <Connection NodeId="ahdsr1" ParameterId="Decay"/>
         </Connections>
       </Parameter>
       <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
-                 SkewFactor="0.1976716816425323" ID="r" Value="0.0">
+                 SkewFactor="0.1976716816425323" ID="r" Value="8.000000119209288"
+                 DefaultValue="0.0">
         <Connections>
           <Connection NodeId="ahdsr1" ParameterId="Release"/>
         </Connections>
@@ -7121,21 +7125,20 @@
           <Connection NodeId="global_mod13" ParameterId="Value"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="1.0" MaxValue="32.0" StepSize="1.0" ID="DIV2" Value="14.0"
+      <Parameter MinValue="1.0" MaxValue="32.0" StepSize="1.0" ID="DIV2" Value="17.0"
                  DefaultValue="0.0">
         <Connections>
           <Connection NodeId="tempo_sync2" ParameterId="Multiplier"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="SYNC2" Value="1.0" StepSize="1.0"
-                 TextToValueConverter="" DefaultValue="0.0">
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="SYNC2" Value="0.0" StepSize="1.0"
+                 TextToValueConverter="">
         <Connections>
           <Connection NodeId="branch5" ParameterId="Index"/>
         </Connections>
       </Parameter>
       <Parameter MinValue="1.0" MaxValue="5.0" StepSize="1.0" ID="File2InSel"
-                 Value="2.0" TextToValueConverter="" ExternalModulation="Disabled"
-                 DefaultValue="1.0">
+                 Value="1.0" TextToValueConverter="" ExternalModulation="Disabled">
         <Connections>
           <Connection NodeId="branch30" ParameterId="Index"/>
         </Connections>
@@ -7146,7 +7149,7 @@
           <Connection NodeId="gain23" ParameterId="Gain"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="File2Gain" Value="0.6100000143051147"
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="File2Gain" Value="0.5699999928474426"
                  DefaultValue="0.0">
         <Connections>
           <Connection NodeId="global_mod15" ParameterId="Value"/>
@@ -7180,13 +7183,13 @@
           <Connection NodeId="tempo_sync3" ParameterId="Tempo"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="1.0" MaxValue="32.0" StepSize="1.0" ID="FileDiv" Value="1.0"
+      <Parameter MinValue="1.0" MaxValue="32.0" StepSize="1.0" ID="FileDiv" Value="8.0"
                  DefaultValue="0.0" TextToValueConverter="" ExternalModulation="Disabled">
         <Connections>
           <Connection NodeId="tempo_sync3" ParameterId="Multiplier"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="1.0" MaxValue="3.0" StepSize="1.0" ID="File2Mode" Value="3.0"
+      <Parameter MinValue="1.0" MaxValue="3.0" StepSize="1.0" ID="File2Mode" Value="2.0"
                  TextToValueConverter="" ExternalModulation="Disabled" DefaultValue="1.0">
         <Connections>
           <Connection NodeId="branch7" ParameterId="Index"/>
@@ -7230,7 +7233,8 @@
           <Connection NodeId="ahdsr2" ParameterId="Release"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="File2Pos" Value="0.0">
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="File2Pos" Value="0.1800000071525574"
+                 DefaultValue="0.0">
         <Connections>
           <Connection NodeId="pma2" ParameterId="Add"/>
           <Connection NodeId="cable_table5" ParameterId="Value"/>

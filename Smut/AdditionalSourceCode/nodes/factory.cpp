@@ -29,7 +29,6 @@ struct Factory: public scriptnode::dll::StaticLibraryHostFactory
 		
 		registerPolyNode<project::Env<1>, project::Env<NUM_POLYPHONIC_VOICES>>();
 		registerPolyNode<project::LfoNew<1>, wrap::illegal_poly<project::LfoNew<1>>>();
-		registerPolyNode<project::pitch<1>, project::pitch<NUM_POLYPHONIC_VOICES>>();
 		registerPolyNode<project::Sm2<1>, project::Sm2<NUM_POLYPHONIC_VOICES>>();
 		registerDataNode<project::combValueTest_networkdata>();
 		registerDataNode<project::empty_networkdata>();
@@ -42,6 +41,7 @@ struct Factory: public scriptnode::dll::StaticLibraryHostFactory
 		registerDataNode<project::Lfos_networkdata>();
 		registerDataNode<project::ModConnect_networkdata>();
 		registerDataNode<project::mp_networkdata>();
+		registerDataNode<project::pitch_networkdata>();
 		registerDataNode<project::PitchTempo_networkdata>();
 		registerDataNode<project::ptichCorrect_networkdata>();
 		registerDataNode<project::Revern_networkdata>();

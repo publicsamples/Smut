@@ -53,6 +53,46 @@ lVis1.setPaintRoutine(function(g)
 	g.fillPath(this.data.buffer, this.getLocalBounds(0));
 });
 
+lVis2.setTimerCallback(function()
+{
+
+	this.data.buffer = ldp2.createPath(this.getLocalBounds(0), 
+									 [0, BUFFER_LENGTH2, 0, 5.0], 
+									 0.0 
+									 );
+	this.repaint();
+});
+
+lVis2.startTimer(30);
+
+lVis2.setPaintRoutine(function(g)
+{
+	g.fillAll(0xFFF5EDD8);
+	g.setColour(0xFFE27070);
+	g.fillPath(this.data.buffer, this.getLocalBounds(0));
+});
+
+
+lVis3.setTimerCallback(function()
+{
+
+	this.data.buffer = ldp3.createPath(this.getLocalBounds(0), 
+									 [0, BUFFER_LENGTH2, 0, 5.0], 
+									 0.0 
+									 );
+	this.repaint();
+});
+
+lVis3.startTimer(30);
+
+lVis3.setPaintRoutine(function(g)
+{
+	g.fillAll(0xFFF5EDD8);
+	g.setColour(0xFFE27070);
+	g.fillPath(this.data.buffer, this.getLocalBounds(0));
+});
+
+
 
 P2.setTimerCallback(function()
 {
