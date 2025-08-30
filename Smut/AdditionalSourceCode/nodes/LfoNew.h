@@ -104,8 +104,7 @@ template <int NV>
 using chain11_t = container::chain<parameter::empty, 
                                    wrap::fix<1, oscillator3_t<NV>>, 
                                    converter4_t<NV>, 
-                                   fx::sampleandhold<NV>, 
-                                   control::input_toggle<NV, parameter::empty>>;
+                                   fx::sampleandhold<NV>>;
 template <int NV>
 using branch3_t = container::branch<parameter::empty, 
                                     wrap::fix<1, chain24_t<NV>>, 
@@ -568,7 +567,6 @@ using chain15_t = container::chain<parameter::empty,
                                    wrap::fix<1, oscillator5_t<NV>>, 
                                    converter6_t<NV>, 
                                    fx::sampleandhold<NV>, 
-                                   control::input_toggle<NV, parameter::empty>, 
                                    core::smoother<NV>, 
                                    table13_t>;
 
@@ -779,6 +777,16 @@ using AdjMode_5 = parameter::from0To1<LfoNew_impl::branch9_t<NV>,
                                       0, 
                                       AdjMode_0Range>;
 
+DECLARE_PARAMETER_RANGE_SKEW(AdjMode_6Range, 
+                             0., 
+                             1., 
+                             0.707107);
+
+template <int NV>
+using AdjMode_6 = parameter::from0To1<LfoNew_impl::input_toggle_t<NV>, 
+                                      0, 
+                                      AdjMode_6Range>;
+
 template <int NV>
 using AdjMode = parameter::chain<AdjMode_InputRange, 
                                  AdjMode_0<NV>, 
@@ -786,7 +794,8 @@ using AdjMode = parameter::chain<AdjMode_InputRange,
                                  AdjMode_2<NV>, 
                                  AdjMode_3<NV>, 
                                  AdjMode_4<NV>, 
-                                 AdjMode_5<NV>>;
+                                 AdjMode_5<NV>, 
+                                 AdjMode_6<NV>>;
 
 template <int NV>
 using Tempo = parameter::plain<LfoNew_impl::tempo_sync2_t<NV>, 
@@ -833,7 +842,7 @@ template <int NV> struct instance: public LfoNew_impl::LfoNew_t_<NV>
             0x5C3F, 0x0300, 0x0000, 0x4100, 0x6A64, 0x7375, 0x0074, 0x0000, 
             0x0000, 0x0000, 0x3F80, 0x7160, 0x3EF8, 0x0000, 0x3F80, 0x0000, 
             0x0000, 0x005C, 0x0004, 0x0000, 0x6441, 0x4D6A, 0x646F, 0x0065, 
-            0x0000, 0x3F80, 0x0000, 0x4040, 0x0000, 0x4040, 0x0000, 0x3F80, 
+            0x0000, 0x3F80, 0x0000, 0x4040, 0x0000, 0x3F80, 0x0000, 0x3F80, 
             0x0000, 0x3F80, 0x0000, 0x0000
 		};
 		SNEX_METADATA_ENCODED_MOD_INFO(17)
@@ -881,7 +890,6 @@ template <int NV> struct instance: public LfoNew_impl::LfoNew_t_<NV>
 		auto& oscillator3 = this->getT(0).getT(1).getT(1).getT(0).getT(2).getT(0);            // LfoNew_impl::oscillator3_t<NV>
 		auto& converter4 = this->getT(0).getT(1).getT(1).getT(0).getT(2).getT(1);             // LfoNew_impl::converter4_t<NV>
 		auto& sampleandhold3 = this->getT(0).getT(1).getT(1).getT(0).getT(2).getT(2);         // fx::sampleandhold<NV>
-		auto& input_toggle3 = this->getT(0).getT(1).getT(1).getT(0).getT(2).getT(3);          // control::input_toggle<NV, parameter::empty>
 		auto& table11 = this->getT(0).getT(1).getT(1).getT(1);                                // LfoNew_impl::table11_t
 		auto& chain36 = this->getT(0).getT(1).getT(2);                                        // LfoNew_impl::chain36_t<NV>
 		auto& branch6 = this->getT(0).getT(1).getT(2).getT(0);                                // LfoNew_impl::branch6_t<NV>
@@ -926,9 +934,8 @@ template <int NV> struct instance: public LfoNew_impl::LfoNew_t_<NV>
 		auto& oscillator5 = this->getT(0).getT(1).getT(4).getT(0).getT(2).getT(0).getT(0);    // LfoNew_impl::oscillator5_t<NV>
 		auto& converter6 = this->getT(0).getT(1).getT(4).getT(0).getT(2).getT(0).getT(1);     // LfoNew_impl::converter6_t<NV>
 		auto& sampleandhold5 = this->getT(0).getT(1).getT(4).getT(0).getT(2).getT(0).getT(2); // fx::sampleandhold<NV>
-		auto& input_toggle5 = this->getT(0).getT(1).getT(4).getT(0).getT(2).getT(0).getT(3);  // control::input_toggle<NV, parameter::empty>
-		auto& smoother = this->getT(0).getT(1).getT(4).getT(0).getT(2).getT(0).getT(4);       // core::smoother<NV>
-		auto& table13 = this->getT(0).getT(1).getT(4).getT(0).getT(2).getT(0).getT(5);        // LfoNew_impl::table13_t
+		auto& smoother = this->getT(0).getT(1).getT(4).getT(0).getT(2).getT(0).getT(3);       // core::smoother<NV>
+		auto& table13 = this->getT(0).getT(1).getT(4).getT(0).getT(2).getT(0).getT(4);        // LfoNew_impl::table13_t
 		auto& chain42 = this->getT(0).getT(1).getT(5);                                        // LfoNew_impl::chain42_t<NV>
 		auto& branch9 = this->getT(0).getT(1).getT(5).getT(0);                                // LfoNew_impl::branch9_t<NV>
 		auto& chain43 = this->getT(0).getT(1).getT(5).getT(0).getT(0);                        // LfoNew_impl::chain43_t<NV>
@@ -977,12 +984,13 @@ template <int NV> struct instance: public LfoNew_impl::LfoNew_t_<NV>
 		Adjust_p.connectT(17, one_pole);    // Adjust -> one_pole::Frequency
 		
 		auto& AdjMode_p = this->getParameterT(4);
-		AdjMode_p.connectT(0, branch);  // AdjMode -> branch::Index
-		AdjMode_p.connectT(1, branch3); // AdjMode -> branch3::Index
-		AdjMode_p.connectT(2, branch6); // AdjMode -> branch6::Index
-		AdjMode_p.connectT(3, branch7); // AdjMode -> branch7::Index
-		AdjMode_p.connectT(4, branch8); // AdjMode -> branch8::Index
-		AdjMode_p.connectT(5, branch9); // AdjMode -> branch9::Index
+		AdjMode_p.connectT(0, branch);       // AdjMode -> branch::Index
+		AdjMode_p.connectT(1, branch3);      // AdjMode -> branch3::Index
+		AdjMode_p.connectT(2, branch6);      // AdjMode -> branch6::Index
+		AdjMode_p.connectT(3, branch7);      // AdjMode -> branch7::Index
+		AdjMode_p.connectT(4, branch8);      // AdjMode -> branch8::Index
+		AdjMode_p.connectT(5, branch9);      // AdjMode -> branch9::Index
+		AdjMode_p.connectT(6, input_toggle); // AdjMode -> input_toggle::Input
 		
 		// Modulation Connections ------------------------------------------------------------------
 		
@@ -1033,7 +1041,7 @@ template <int NV> struct instance: public LfoNew_impl::LfoNew_t_<NV>
 		
 		; // sampleandhold::Counter is automated
 		
-		input_toggle.setParameterT(0, 1.); // control::input_toggle::Input
+		;                                  // input_toggle::Input is automated
 		input_toggle.setParameterT(1, 1.); // control::input_toggle::Value1
 		;                                  // input_toggle::Value2 is automated
 		
@@ -1067,10 +1075,6 @@ template <int NV> struct instance: public LfoNew_impl::LfoNew_t_<NV>
 		; // converter4::Value is automated
 		
 		; // sampleandhold3::Counter is automated
-		
-		input_toggle3.setParameterT(0, 1.);   // control::input_toggle::Input
-		input_toggle3.setParameterT(1, 1.);   // control::input_toggle::Value1
-		input_toggle3.setParameterT(2, 18.9); // control::input_toggle::Value2
 		
 		; // branch6::Index is automated
 		
@@ -1155,10 +1159,6 @@ template <int NV> struct instance: public LfoNew_impl::LfoNew_t_<NV>
 		
 		; // sampleandhold5::Counter is automated
 		
-		input_toggle5.setParameterT(0, 1.);   // control::input_toggle::Input
-		input_toggle5.setParameterT(1, 1.);   // control::input_toggle::Value1
-		input_toggle5.setParameterT(2, 18.9); // control::input_toggle::Value2
-		
 		;                              // smoother::SmoothingTime is automated
 		smoother.setParameterT(1, 0.); // core::smoother::DefaultValue
 		
@@ -1198,7 +1198,7 @@ template <int NV> struct instance: public LfoNew_impl::LfoNew_t_<NV>
 		this->setParameterT(1, 1.);
 		this->setParameterT(2, 1.);
 		this->setParameterT(3, 0.48524);
-		this->setParameterT(4, 3.);
+		this->setParameterT(4, 1.);
 		this->setExternalData({}, -1);
 	}
 	~instance() override
@@ -1229,7 +1229,7 @@ template <int NV> struct instance: public LfoNew_impl::LfoNew_t_<NV>
 		this->getT(0).getT(1).getT(4).getT(0).getT(0).getT(3).setExternalData(b, index);         // LfoNew_impl::table6_t
 		this->getT(0).getT(1).getT(4).getT(0).getT(1).getT(3).setExternalData(b, index);         // LfoNew_impl::table10_t
 		this->getT(0).getT(1).getT(4).getT(0).getT(2).getT(0).getT(0).setExternalData(b, index); // LfoNew_impl::oscillator5_t<NV>
-		this->getT(0).getT(1).getT(4).getT(0).getT(2).getT(0).getT(5).setExternalData(b, index); // LfoNew_impl::table13_t
+		this->getT(0).getT(1).getT(4).getT(0).getT(2).getT(0).getT(4).setExternalData(b, index); // LfoNew_impl::table13_t
 		this->getT(0).getT(1).getT(5).getT(0).getT(0).getT(3).setExternalData(b, index);         // LfoNew_impl::table14_t
 		this->getT(0).getT(1).getT(5).getT(0).getT(1).getT(3).setExternalData(b, index);         // LfoNew_impl::table15_t
 		this->getT(0).getT(1).getT(5).getT(0).getT(2).getT(0).getT(0).setExternalData(b, index); // LfoNew_impl::oscillator4_t<NV>

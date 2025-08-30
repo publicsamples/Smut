@@ -141,8 +141,8 @@
                               <Connection NodeId="expr1" ParameterId="Value"/>
                             </ModulationTargets>
                             <Parameters>
-                              <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Input" Value="1.0"
-                                         DefaultValue="0.0"/>
+                              <Parameter MinValue="0.0" MaxValue="1.0" StepSize="0.4" ID="Input" DefaultValue="0.0"
+                                         SkewFactor="0.7071067690849304" Automated="1"/>
                               <Parameter MinValue="0.0" MaxValue="1.0" ID="Value1" Value="1.0" DefaultValue="0.0"/>
                               <Parameter MinValue="0.0" MaxValue="1.0" ID="Value2" Automated="1"/>
                             </Parameters>
@@ -265,16 +265,6 @@
                             <Parameters>
                               <Parameter MinValue="1.0" MaxValue="64.0" StepSize="1.0" ID="Counter" DefaultValue="1.0"
                                          Automated="1"/>
-                            </Parameters>
-                          </Node>
-                          <Node ID="input_toggle3" FactoryPath="control.input_toggle" Bypassed="0"
-                                Name="input_toggle">
-                            <Parameters>
-                              <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Input" Value="1.0"
-                                         DefaultValue="0.0"/>
-                              <Parameter MinValue="0.0" MaxValue="1.0" ID="Value1" Value="1.0" DefaultValue="0.0"/>
-                              <Parameter MinValue="0.0" MaxValue="24.0" StepSize="0.1" SkewFactor="5.422270979580217"
-                                         ID="Value2" Value="18.9" DefaultValue="0.0"/>
                             </Parameters>
                           </Node>
                         </Nodes>
@@ -608,16 +598,6 @@
                                              Automated="1"/>
                                 </Parameters>
                               </Node>
-                              <Node ID="input_toggle5" FactoryPath="control.input_toggle" Bypassed="0"
-                                    Name="input_toggle">
-                                <Parameters>
-                                  <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Input" Value="1.0"
-                                             DefaultValue="0.0"/>
-                                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Value1" Value="1.0" DefaultValue="0.0"/>
-                                  <Parameter MinValue="0.0" MaxValue="24.0" StepSize="0.1" SkewFactor="5.422270979580217"
-                                             ID="Value2" Value="18.9" DefaultValue="0.0"/>
-                                </Parameters>
-                              </Node>
                               <Node ID="smoother" FactoryPath="core.smoother" Bypassed="0" Name="smoother">
                                 <Parameters>
                                   <Parameter MinValue="0.0" MaxValue="2000.0" StepSize="0.1000000014901161"
@@ -848,8 +828,8 @@
           <Connection NodeId="one_pole" ParameterId="Frequency"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="1.0" MaxValue="3.0" StepSize="1.0" ID="AdjMode" Value="3.0"
-                 DefaultValue="1.0" ExternalModulation="Disabled">
+      <Parameter MinValue="1.0" MaxValue="3.0" StepSize="1.0" ID="AdjMode" Value="1.0"
+                 ExternalModulation="Disabled">
         <Connections>
           <Connection NodeId="branch" ParameterId="Index"/>
           <Connection NodeId="branch3" ParameterId="Index"/>
@@ -857,6 +837,7 @@
           <Connection NodeId="branch7" ParameterId="Index"/>
           <Connection NodeId="branch8" ParameterId="Index"/>
           <Connection NodeId="branch9" ParameterId="Index"/>
+          <Connection NodeId="input_toggle" ParameterId="Input"/>
         </Connections>
       </Parameter>
     </Parameters>

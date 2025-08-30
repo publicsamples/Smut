@@ -1984,7 +1984,6 @@ using peak15_t = wrap::mod<peak15_mod<NV>,
 template <int NV>
 using chain36_t = container::chain<parameter::empty, 
                                    wrap::fix<2, math::sig2mod<NV>>, 
-                                   math::sig2mod<NV>, 
                                    oscilloscope_t, 
                                    peak15_t<NV>, 
                                    math::clear<NV>>;
@@ -2694,8 +2693,8 @@ using chain48_t = container::chain<parameter::empty,
                                    wrap::fix<1, math::add<NV>>, 
                                    math::rect<NV>, 
                                    peak1_t<NV>, 
-                                   math::clear<NV>, 
                                    input_toggle_t<NV>, 
+                                   math::clear<NV>, 
                                    ahdsr_t<NV>, 
                                    math::add<NV>>;
 using cable_table4_t = wrap::data<control::cable_table<parameter::empty>, 
@@ -5540,18 +5539,15 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		auto& sig2mod = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).             // math::sig2mod<NV>
                         getT(0).getT(5).getT(0).getT(1).getT(0).getT(1).
                         getT(0);
-		auto& sig2mod1 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).            // math::sig2mod<NV>
-                         getT(0).getT(5).getT(0).getT(1).getT(0).getT(1).
-                         getT(1);
 		auto& oscilloscope = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).        // Sm2_impl::oscilloscope_t
                              getT(0).getT(5).getT(0).getT(1).getT(0).getT(1).
-                             getT(2);
+                             getT(1);
 		auto& peak15 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).              // Sm2_impl::peak15_t<NV>
                        getT(0).getT(5).getT(0).getT(1).getT(0).getT(1).
-                       getT(3);
+                       getT(2);
 		auto& clear9 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).              // math::clear<NV>
                        getT(0).getT(5).getT(0).getT(1).getT(0).getT(1).
-                       getT(4);
+                       getT(3);
 		auto& clear7 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // math::clear<NV>
                        getT(0).getT(0).getT(5).getT(0).getT(1).
                        getT(1);
@@ -5796,12 +5792,12 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		auto& peak1 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).               // Sm2_impl::peak1_t<NV>
                       getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
                       getT(2);
-		auto& clear = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).               // math::clear<NV>
-                      getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
-                      getT(3);
 		auto& input_toggle = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).        // Sm2_impl::input_toggle_t<NV>
                              getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
-                             getT(4);
+                             getT(3);
+		auto& clear = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).               // math::clear<NV>
+                      getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
+                      getT(4);
 		auto& ahdsr = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).               // Sm2_impl::ahdsr_t<NV>
                       getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
                       getT(5);
@@ -7374,8 +7370,6 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		sig2mod.setParameterT(0, 0.); // math::sig2mod::Value
 		
-		sig2mod1.setParameterT(0, 0.); // math::sig2mod::Value
-		
 		clear9.setParameterT(0, 0.); // math::clear::Value
 		
 		clear7.setParameterT(0, 0.); // math::clear::Value
@@ -7560,11 +7554,11 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		rect6.setParameterT(0, 0.); // math::rect::Value
 		
-		clear.setParameterT(0, 0.); // math::clear::Value
-		
 		;                                  // input_toggle::Input is automated
 		input_toggle.setParameterT(1, 0.); // control::input_toggle::Value1
 		;                                  // input_toggle::Value2 is automated
+		
+		clear.setParameterT(0, 0.); // math::clear::Value
 		
 		;                                 // ahdsr::Attack is automated
 		ahdsr.setParameterT(1, 1.);       // envelope::ahdsr::AttackLevel
@@ -8304,10 +8298,10 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
         getT(0).getT(0).getT(4).getT(11).getT(2).setExternalData(b, index);
 		this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).           // Sm2_impl::oscilloscope_t
         getT(0).getT(5).getT(0).getT(1).getT(0).getT(1).
-        getT(2).setExternalData(b, index);
+        getT(1).setExternalData(b, index);
 		this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).           // Sm2_impl::peak15_t<NV>
         getT(0).getT(5).getT(0).getT(1).getT(0).getT(1).
-        getT(3).setExternalData(b, index);
+        getT(2).setExternalData(b, index);
 		this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // Sm2_impl::table5_t
         getT(0).getT(1).getT(4).getT(4).getT(3).setExternalData(b, index);
 		this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // Sm2_impl::table11_t

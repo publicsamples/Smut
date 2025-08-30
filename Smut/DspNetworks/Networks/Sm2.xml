@@ -8,7 +8,7 @@
             Name="fix8_block">
         <Nodes>
           <Node ID="split8" FactoryPath="container.split" Bypassed="0" Name="split8"
-                ShowParameters="1">
+                ShowParameters="1" Folded="1">
             <Nodes>
               <Node ID="modchain1" FactoryPath="container.modchain" Bypassed="0"
                     Name="PitchMod1">
@@ -3098,11 +3098,6 @@
                                                           <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.0"/>
                                                         </Parameters>
                                                       </Node>
-                                                      <Node ID="sig2mod1" FactoryPath="math.sig2mod" Bypassed="0" Name="sig2mod">
-                                                        <Parameters>
-                                                          <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.0"/>
-                                                        </Parameters>
-                                                      </Node>
                                                       <Node ID="oscilloscope" FactoryPath="analyse.oscilloscope" Bypassed="0"
                                                             Name="oscilloscope">
                                                         <ComplexData>
@@ -3832,8 +3827,7 @@
                 </Nodes>
                 <Parameters/>
               </Node>
-              <Node ID="chain180" FactoryPath="container.chain" Bypassed="0" Name="chain180"
-                    Folded="1">
+              <Node ID="chain180" FactoryPath="container.chain" Bypassed="0" Name="chain180">
                 <Nodes>
                   <Node ID="branch26" FactoryPath="container.branch" Bypassed="0" Name="branch19"
                         ShowParameters="1">
@@ -4038,11 +4032,6 @@
                                                         </ComplexData>
                                                         <Parameters/>
                                                       </Node>
-                                                      <Node ID="clear" FactoryPath="math.clear" Bypassed="0" Name="clear">
-                                                        <Parameters>
-                                                          <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.0"/>
-                                                        </Parameters>
-                                                      </Node>
                                                       <Node ID="input_toggle" FactoryPath="control.input_toggle" Bypassed="0"
                                                             Name="input_toggle">
                                                         <ModulationTargets>
@@ -4053,6 +4042,11 @@
                                                                      Automated="1"/>
                                                           <Parameter MinValue="0.0" MaxValue="1.0" ID="Value1" Value="0.0"/>
                                                           <Parameter MinValue="0.0" MaxValue="1.0" ID="Value2" Automated="1"/>
+                                                        </Parameters>
+                                                      </Node>
+                                                      <Node ID="clear" FactoryPath="math.clear" Bypassed="0" Name="clear">
+                                                        <Parameters>
+                                                          <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.0"/>
                                                         </Parameters>
                                                       </Node>
                                                       <Node ID="ahdsr" FactoryPath="envelope.ahdsr" Bypassed="0" Name="ahdsr">

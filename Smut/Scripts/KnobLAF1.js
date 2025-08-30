@@ -145,6 +145,15 @@ const var FilterKnbs = [Content.getComponent("OscMix2"),
 
  for(s in FilterKnbs)
       s.setLocalLookAndFeel(KnobLaf);
-      
+
+const var EnvKnbs = [Content.getComponent("PosDiv9"),
+                     Content.getComponent("PosDiv8"),
+                     Content.getComponent("PosDiv6"),
+                     Content.getComponent("PosDiv7"),
+                     Content.getComponent("PosDiv3"),
+                     Content.getComponent("PosDiv2")];
+
+for(s in EnvKnbs)
+     s.setLocalLookAndFeel(KnobLaf);
       
      
