@@ -4655,7 +4655,7 @@
                     </Parameters>
                   </Node>
                   <Node ID="frame2_block2" FactoryPath="container.frame2_block" Bypassed="0"
-                        Name="frame2_block1" Folded="1">
+                        Name="frame2_block1">
                     <Nodes>
                       <Node ID="chain33" FactoryPath="container.chain" Bypassed="0" Name="chain7">
                         <Nodes>
@@ -4675,7 +4675,7 @@
                                         ShowParameters="1">
                                     <Nodes>
                                       <Node ID="modchain14" FactoryPath="container.modchain" Bypassed="0"
-                                            Name="modchain" Folded="1">
+                                            Name="modchain">
                                         <Nodes>
                                           <Node ID="chain49" FactoryPath="container.chain" Bypassed="0" Name="chain47">
                                             <Nodes>
@@ -7262,6 +7262,12 @@
           <Connection NodeId="sub21" ParameterId="Value"/>
           <Connection NodeId="sub3" ParameterId="Value"/>
         </Connections>
+      </Parameter>
+      <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Track1" Value="0.0">
+        <Connections/>
+      </Parameter>
+      <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Track2" Value="0.0">
+        <Connections/>
       </Parameter>
     </Parameters>
   </Node>

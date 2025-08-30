@@ -1,38 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Network ID="pitch" AllowPolyphonic="1" Version="0.0.0">
-  <Node FactoryPath="container.chain" ID="pitch" Bypassed="0" Name="pitch">
+<Network ID="pitch" AllowPolyphonic="1" Version="0.0.0" AllowCompilation="1">
+  <Node FactoryPath="container.chain" ID="pitch" Bypassed="0" Name="pitch"
+        ShowParameters="1">
     <Nodes>
-      <Node ID="midi" FactoryPath="control.midi" Bypassed="0" Name="midi">
-        <Properties>
-          <Property ID="Mode" Value="NoteNumber"/>
-        </Properties>
-        <ModulationTargets>
-          <Connection NodeId="cable_table" ParameterId="Value"/>
-        </ModulationTargets>
-        <Parameters/>
-      </Node>
-      <Node ID="cable_table" FactoryPath="control.cable_table" Bypassed="0"
-            Name="cable_table">
-        <ModulationTargets>
-          <Connection NodeId="pitch_shift" ParameterId="FreqRatio"/>
-        </ModulationTargets>
-        <ComplexData>
-          <Tables>
-            <Table Index="-1" EmbeddedData="96...............vO..vj9.vE31C...vO..Pv9HBEg5C...vO..P79P5G86C...vO..XD+LvE37C...vO...J+....9i5x1uO..PP+....9C...vO...f+....9S8OkwO"/>
-          </Tables>
-        </ComplexData>
+      <Node ID="branch" FactoryPath="container.branch" Bypassed="0" Name="branch"
+            ShowParameters="1">
+        <Nodes>
+          <Node ID="chain1" FactoryPath="container.chain" Bypassed="0" Name="chain1">
+            <Nodes/>
+            <Parameters/>
+          </Node>
+          <Node ID="chain" FactoryPath="container.chain" Bypassed="0" Name="chain">
+            <Nodes>
+              <Node ID="midi" FactoryPath="control.midi" Bypassed="0" Name="midi">
+                <Properties>
+                  <Property ID="Mode" Value="NoteNumber"/>
+                </Properties>
+                <ModulationTargets>
+                  <Connection NodeId="cable_table" ParameterId="Value"/>
+                </ModulationTargets>
+                <Parameters/>
+              </Node>
+              <Node ID="cable_table" FactoryPath="control.cable_table" Bypassed="0"
+                    Name="cable_table">
+                <ModulationTargets>
+                  <Connection NodeId="pitch_shift" ParameterId="FreqRatio"/>
+                </ModulationTargets>
+                <ComplexData>
+                  <Tables>
+                    <Table Index="-1" EmbeddedData="120...............vO..............vO..fE9.........vO...j9.TDJ1C...vO..ft9nezO5C...vO..f79P5G86C...vO..HD+bpM07C...vO..fJ+....9C...vO..XP+....9C...vO...f+....9iQmavO"/>
+                  </Tables>
+                </ComplexData>
+                <Parameters>
+                  <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Automated="1"/>
+                </Parameters>
+              </Node>
+              <Node ID="pitch_shift" FactoryPath="fx.pitch_shift" Bypassed="0" Name="pitch_shift">
+                <Parameters>
+                  <Parameter MinValue="0.25" MaxValue="4.0" SkewFactor="0.4306765496730804"
+                             ID="FreqRatio" DefaultValue="1.0" Automated="1"/>
+                </Parameters>
+              </Node>
+            </Nodes>
+            <Parameters/>
+          </Node>
+        </Nodes>
         <Parameters>
-          <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Automated="1"/>
-        </Parameters>
-      </Node>
-      <Node ID="pitch_shift" FactoryPath="fx.pitch_shift" Bypassed="0" Name="pitch_shift">
-        <Parameters>
-          <Parameter MinValue="0.25" MaxValue="4.0" SkewFactor="0.4306765496730804"
-                     ID="FreqRatio" DefaultValue="1.0" Automated="1"/>
+          <Parameter MinValue="0.0" MaxValue="1" StepSize="1.0" ID="Index" Automated="1"/>
         </Parameters>
       </Node>
     </Nodes>
-    <Parameters/>
+    <Parameters>
+      <Parameter ID="Mode" MinValue="0.0" MaxValue="1.0" StepSize="1.0" ExternalModulation="Disabled"
+                 DefaultValue="1.0" Value="0.0">
+        <Connections>
+          <Connection NodeId="branch" ParameterId="Index"/>
+        </Connections>
+      </Parameter>
+      <Parameter ID="Spread" MinValue="0.0" MaxValue="1.0" ExternalModulation="Disabled"
+                 DefaultValue="" Value="0.4892388916015625">
+        <Connections/>
+      </Parameter>
+    </Parameters>
   </Node>
 </Network>

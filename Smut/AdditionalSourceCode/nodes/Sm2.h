@@ -4457,6 +4457,8 @@ using User1 = parameter::plain<Sm2_impl::branch14_t<NV>,
 template <int NV>
 using User2 = parameter::plain<Sm2_impl::branch15_t<NV>, 
                                0>;
+using Track1 = Osc12Mix;
+using Track2 = Osc12Mix;
 template <int NV>
 using Sm2_t_plist = parameter::list<OscSt1<NV>, 
                                     OscCent1<NV>, 
@@ -4579,7 +4581,9 @@ using Sm2_t_plist = parameter::list<OscSt1<NV>,
                                     File2Quant<NV>, 
                                     User1<NV>, 
                                     User2<NV>, 
-                                    tune<NV>>;
+                                    tune<NV>, 
+                                    Track1, 
+                                    Track2>;
 }
 
 template <int NV>
@@ -4604,7 +4608,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		SNEX_METADATA_ID(Sm2);
 		SNEX_METADATA_NUM_CHANNELS(2);
-		SNEX_METADATA_ENCODED_PARAMETERS(2210)
+		SNEX_METADATA_ENCODED_PARAMETERS(2242)
 		{
 			0x005C, 0x0000, 0x0000, 0x734F, 0x5363, 0x3174, 0x0000, 0xC000, 
             0x00C1, 0xC000, 0x0041, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 
@@ -4882,7 +4886,11 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
             0x3F80, 0x005C, 0x0079, 0x0000, 0x7574, 0x656E, 0x0000, 0x0000, 
             0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 
-            0x0000, 0x0000
+            0x5C00, 0x7A00, 0x0000, 0x5400, 0x6172, 0x6B63, 0x0031, 0x0000, 
+            0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
+            0x3F80, 0x005C, 0x007B, 0x0000, 0x7254, 0x6361, 0x326B, 0x0000, 
+            0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 
+            0x8000, 0x003F
 		};
 		SNEX_METADATA_ENCODED_MOD_INFO(17)
 		{
@@ -8203,6 +8211,8 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->setParameterT(119, 0.);
 		this->setParameterT(120, 0.);
 		this->setParameterT(121, 0.);
+		this->setParameterT(122, 0.);
+		this->setParameterT(123, 0.);
 		this->setExternalData({}, -1);
 	}
 	~instance() override
