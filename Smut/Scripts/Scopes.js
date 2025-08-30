@@ -1,6 +1,13 @@
 //osc1
 
 const var OsdDp1 = Synth.getDisplayBufferSource("SMUT");
+const var LfoDp1 = Synth.getDisplayBufferSource("LFO1");
+const var LfoDp2 = Synth.getDisplayBufferSource("LFO2");
+const var LfoDp3 = Synth.getDisplayBufferSource("LFO3");
+
+const var ldp1 = LfoDp1.getDisplayBuffer(0);
+const var ldp2 = LfoDp2.getDisplayBuffer(0);
+const var ldp3 = LfoDp3.getDisplayBuffer(0);
 
 const var rb2 = OsdDp1.getDisplayBuffer(1);
 
@@ -8,10 +15,10 @@ const var rb2 = OsdDp1.getDisplayBuffer(1);
 const var BUFFER_LENGTH1 = 512;
 const var BUFFER_LENGTH2 = 512;
 const var P2 = Content.getComponent("VisPanel2");
+const var lVis1 = Content.getComponent("LfoVis1");
+const var lVis2 = Content.getComponent("LfoVis2");
+const var lVis3 = Content.getComponent("LfoVis3");
 
-
-// These are the properties that you can give the peak meter
-// NumChannels must be 1, but you can set another buffer length for the display
 const var properties = {
   "BufferLength": BUFFER_LENGTH1,
   "NumChannels": 1
@@ -20,23 +27,44 @@ const var properties2 = {
   "BufferLength": BUFFER_LENGTH2,
   "NumChannels": 1
 };
-// This will override the default properties of the node. You can use the same
-// procedure to customize the FFT properties too (like Window type, etc).
-rb2.setRingBufferProperties(properties2);
 
-// We need to periodically query the ring buffer to create a signal path
-// so we use the panel's timers for this.
-P2.setTimerCallback(function()
+rb2.setRingBufferProperties(properties2);
+ldp1.setRingBufferProperties(properties2);
+ldp2.setRingBufferProperties(properties2);
+ldp3.setRingBufferProperties(properties2);
+
+
+lVis1.setTimerCallback(function()
 {
-	// The autocomplete fails somehow with supplying you the methods,
-	// but you can look in the API Browser under ScriptRingBuffer
-	// This method creates a path object to mirror the peak display.
-	this.data.buffer = rb2.createPath(this.getLocalBounds(0), // area
-									 [0, BUFFER_LENGTH2, 0, 5.0], // [x_start, x_end, y_min, y_max]
-									 0.0 // start value (the initial value at position 0)
+
+	this.data.buffer = ldp1.createPath(this.getLocalBounds(0), 
+									 [0, BUFFER_LENGTH2, 0, 5.0], 
+									 0.0 
 									 );
 	this.repaint();
 });
+
+lVis1.startTimer(30);
+
+lVis1.setPaintRoutine(function(g)
+{
+	g.fillAll(0xFFF5EDD8);
+	g.setColour(0xFFE27070);
+	g.fillPath(this.data.buffer, this.getLocalBounds(0));
+});
+
+
+P2.setTimerCallback(function()
+{
+
+	this.data.buffer = rb2.createPath(this.getLocalBounds(0), 
+									 [0, BUFFER_LENGTH2, 0, 5.0], 
+									 0.0 
+									 );
+	this.repaint();
+});
+
+
 
 P2.startTimer(30);
 

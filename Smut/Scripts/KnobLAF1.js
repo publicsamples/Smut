@@ -116,6 +116,7 @@ const var OscKbs = [Content.getComponent("OscSemiTone1"),
                     Content.getComponent("OscShape2"),
                     Content.getComponent("Osc1into2"),
                     Content.getComponent("Osc2into1"),
+                    Content.getComponent("Divide1"),
                     Content.getComponent("Divide")];
 
 for(s in OscKbs)
@@ -155,5 +156,22 @@ const var EnvKnbs = [Content.getComponent("PosDiv9"),
 
 for(s in EnvKnbs)
      s.setLocalLookAndFeel(KnobLaf);
+     
+     
+     const var LfoKnbs = [Content.getComponent("PosDiv4"),
+                          Content.getComponent("PosDiv5"),
+                          Content.getComponent("PosDiv10"),
+                          Content.getComponent("PosDiv11"),
+                          Content.getComponent("PosDiv12"),
+                          Content.getComponent("PosDiv13")];
+     
+for(s in LfoKnbs)
+     s.setLocalLookAndFeel(KnobLaf);    
+     
+const var MasterKnbs = [Content.getComponent("Vol1"),
+                        Content.getComponent("Vol")];
+for(s in MasterKnbs)
+     s.setLocalLookAndFeel(KnobLaf);                   
+
       
      

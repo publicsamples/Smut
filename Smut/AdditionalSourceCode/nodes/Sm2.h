@@ -36,7 +36,22 @@ using branch9_t = container::branch<parameter::empty,
                                     chain38_t<NV>, 
                                     chain69_t<NV>, 
                                     chain72_t<NV>>;
-using peak5_t = wrap::no_data<core::peak>;
+
+template <int NV>
+using pma_t = control::pma<NV, 
+                           parameter::plain<math::add<NV>, 0>>;
+DECLARE_PARAMETER_RANGE(peak5_modRange, 
+                        -12., 
+                        12.);
+
+template <int NV>
+using peak5_mod = parameter::from0To1<pma_t<NV>, 
+                                      0, 
+                                      peak5_modRange>;
+
+template <int NV>
+using peak5_t = wrap::mod<peak5_mod<NV>, 
+                          wrap::no_data<core::peak>>;
 
 template <int NV>
 using minmax_t = control::minmax<NV, 
@@ -48,16 +63,23 @@ using chain59_t = container::chain<parameter::empty,
                                    math::add<NV>>;
 
 template <int NV> using chain182_t = chain58_t<NV>;
+
+template <int NV>
+using chain258_t = container::chain<parameter::empty, 
+                                    wrap::fix<1, pma_t<NV>>, 
+                                    math::add<NV>>;
 using global_mod1_t_index = runtime_target::indexers::fix_hash<1>;
 using global_mod1_t_config = modulation::config::dynamic;
 
+template <int NV> using minmax3_t = minmax_t<NV>;
 template <int NV>
-using global_mod1_t = wrap::mod<parameter::plain<math::add<NV>, 0>, 
+using global_mod1_t = wrap::mod<parameter::plain<minmax3_t<NV>, 0>, 
                                 wrap::no_data<core::global_mod<NV, global_mod1_t_index, global_mod1_t_config>>>;
 
 template <int NV>
 using chain119_t = container::chain<parameter::empty, 
                                     wrap::fix<1, global_mod1_t<NV>>, 
+                                    minmax3_t<NV>, 
                                     math::add<NV>>;
 
 template <int NV>
@@ -68,6 +90,7 @@ template <int NV>
 using split6_t = container::split<parameter::empty, 
                                   wrap::fix<1, chain59_t<NV>>, 
                                   chain182_t<NV>, 
+                                  chain258_t<NV>, 
                                   chain60_t<NV>>;
 using peak16_t = wrap::no_data<wrap::no_process<core::peak>>;
 
@@ -93,7 +116,7 @@ using split7_t = container::split<parameter::empty,
 template <int NV>
 using chain37_t = container::chain<parameter::empty, 
                                    wrap::fix<1, branch9_t<NV>>, 
-                                   peak5_t, 
+                                   peak5_t<NV>, 
                                    math::clear<NV>, 
                                    split7_t<NV>>;
 
@@ -123,72 +146,60 @@ using branch12_t = container::branch<parameter::empty,
                                      chain78_t<NV>, 
                                      chain86_t<NV>, 
                                      chain87_t<NV>>;
-using peak13_t = peak5_t;
+
+template <int NV> using pma1_t = pma_t<NV>;
+template <int NV>
+using peak13_mod = parameter::from0To1<pma1_t<NV>, 
+                                       0, 
+                                       peak5_modRange>;
+
+template <int NV>
+using peak13_t = wrap::mod<peak13_mod<NV>, 
+                           wrap::no_data<core::peak>>;
+
+template <int NV> using minmax2_t = minmax_t<NV>;
 
 template <int NV>
 using chain83_t = container::chain<parameter::empty, 
-                                   wrap::fix<1, control::minmax<NV, parameter::empty>>, 
+                                   wrap::fix<1, minmax2_t<NV>>, 
                                    math::add<NV>>;
 
 template <int NV> using chain181_t = chain58_t<NV>;
-using global_mod_t_index = global_mod1_t_index;
-using global_mod_t_config = global_mod1_t_config;
 
 template <int NV>
-using global_mod_t = wrap::mod<parameter::plain<math::add<NV>, 0>, 
-                               wrap::no_data<core::global_mod<NV, global_mod_t_index, global_mod_t_config>>>;
+using chain260_t = container::chain<parameter::empty, 
+                                    wrap::fix<1, pma1_t<NV>>, 
+                                    math::add<NV>>;
+using global_mod_t_index = global_mod1_t_index;
+using global_mod_t_config = global_mod1_t_config;
+template <int NV>
+using global_mod_t = wrap::no_data<core::global_mod<NV, global_mod_t_index, global_mod_t_config>>;
+
+template <int NV> using minmax1_t = minmax_t<NV>;
 
 template <int NV>
 using chain120_t = container::chain<parameter::empty, 
                                     wrap::fix<1, global_mod_t<NV>>, 
+                                    minmax1_t<NV>, 
                                     math::add<NV>>;
 
 template <int NV>
 using split11_t = container::split<parameter::empty, 
                                    wrap::fix<1, chain83_t<NV>>, 
                                    chain181_t<NV>, 
+                                   chain260_t<NV>, 
                                    chain120_t<NV>>;
 
+template <int NV> using converter3_t = converter2_t<NV>;
 template <int NV>
-using converter19_t = control::converter<parameter::plain<jdsp::jdelay<NV>, 1>, 
-                                         conversion_logic::freq2ms>;
-template <int NV>
-using converter18_t = control::converter<parameter::plain<converter19_t<NV>, 0>, 
-                                         conversion_logic::midi2freq>;
-
-template <int NV> using converter21_t = converter19_t<NV>;
-template <int NV>
-using converter20_t = control::converter<parameter::plain<converter21_t<NV>, 0>, 
-                                         conversion_logic::midi2freq>;
-
-template <int NV> using converter23_t = converter19_t<NV>;
-template <int NV>
-using converter22_t = control::converter<parameter::plain<converter23_t<NV>, 0>, 
-                                         conversion_logic::midi2freq>;
-DECLARE_PARAMETER_RANGE(peak_unscaled2_mod_0Range, 
-                        1., 
-                        16.);
-
-template <int NV>
-using peak_unscaled2_mod_0 = parameter::from0To1<core::phasor_fm<NV>, 
-                                                 2, 
-                                                 peak_unscaled2_mod_0Range>;
-
-template <int NV>
-using peak_unscaled2_mod = parameter::chain<ranges::Identity, 
-                                            peak_unscaled2_mod_0<NV>, 
-                                            parameter::plain<converter18_t<NV>, 0>, 
-                                            parameter::plain<converter20_t<NV>, 0>, 
-                                            parameter::plain<converter22_t<NV>, 0>>;
-
-template <int NV>
-using peak_unscaled2_t = wrap::mod<peak_unscaled2_mod<NV>, 
+using peak_unscaled2_t = wrap::mod<parameter::plain<converter3_t<NV>, 0>, 
                                    wrap::no_data<core::peak_unscaled>>;
 
 template <int NV>
 using chain82_t = container::chain<parameter::empty, 
                                    wrap::fix<1, split11_t<NV>>, 
                                    math::sub<NV>, 
+                                   math::mod2sig<NV>, 
                                    peak_unscaled2_t<NV>>;
 
 template <int NV>
@@ -198,7 +209,7 @@ using split10_t = container::split<parameter::empty,
 template <int NV>
 using chain77_t = container::chain<parameter::empty, 
                                    wrap::fix<1, branch12_t<NV>>, 
-                                   peak13_t, 
+                                   peak13_t<NV>, 
                                    math::clear<NV>, 
                                    split10_t<NV>>;
 
@@ -342,30 +353,30 @@ using split16_t = container::split<parameter::empty,
                                    wrap::fix<1, chain99_t<NV>>, 
                                    chain247_t<NV>>;
 
+template <int NV>
+using chain98_t = container::chain<parameter::empty, 
+                                   wrap::fix<1, split16_t<NV>>>;
+
 template <int NV> using converter1_t = converter_t<NV>;
 template <int NV>
 using tempo_sync2_t = wrap::mod<parameter::plain<converter1_t<NV>, 0>, 
                                 control::tempo_sync<NV>>;
 template <int NV>
-using peak_unscaled3_mod = parameter::from0To1<tempo_sync2_t<NV>, 
-                                               0, 
-                                               peak35_modRange>;
+using peak36_mod = parameter::from0To1<tempo_sync2_t<NV>, 
+                                       0, 
+                                       peak35_modRange>;
 
 template <int NV>
-using peak_unscaled3_t = wrap::mod<peak_unscaled3_mod<NV>, 
-                                   wrap::no_data<core::peak_unscaled>>;
-
-template <int NV>
-using chain98_t = container::chain<parameter::empty, 
-                                   wrap::fix<1, split16_t<NV>>, 
-                                   peak_unscaled3_t<NV>>;
+using peak36_t = wrap::mod<peak36_mod<NV>, 
+                           wrap::no_data<core::peak>>;
 
 template <int NV>
 using chain74_t = container::chain<parameter::empty, 
                                    wrap::fix<1, branch11_t<NV>>, 
                                    peak9_t<NV>, 
                                    math::clear<NV>, 
-                                   chain98_t<NV>>;
+                                   chain98_t<NV>, 
+                                   peak36_t<NV>>;
 
 template <int NV>
 using modchain3_t_ = container::chain<parameter::empty, 
@@ -713,7 +724,7 @@ using branch29_t = container::branch<parameter::empty,
                                      chain227_t<NV>, 
                                      chain242_t<NV>, 
                                      chain243_t<NV>>;
-using peak21_t = peak5_t;
+using peak21_t = wrap::no_data<core::peak>;
 
 template <int NV> using pma_unscaled14_t = pma_unscaled3_t<NV>;
 
@@ -790,7 +801,7 @@ using branch17_t = container::branch<parameter::empty,
                                      chain113_t<NV>, 
                                      chain195_t<NV>, 
                                      chain198_t<NV>>;
-using peak18_t = peak5_t;
+using peak18_t = peak21_t;
 
 template <int NV> using pma_unscaled7_t = pma_unscaled3_t<NV>;
 
@@ -859,7 +870,7 @@ using branch20_t = container::branch<parameter::empty,
                                      chain128_t<NV>, 
                                      chain196_t<NV>, 
                                      chain199_t<NV>>;
-using peak20_t = peak5_t;
+using peak20_t = peak21_t;
 
 template <int NV> using pma_unscaled8_t = pma_unscaled3_t<NV>;
 
@@ -936,7 +947,7 @@ using branch32_t = container::branch<parameter::empty,
                                      chain275_t<NV>, 
                                      chain276_t<NV>, 
                                      chain277_t<NV>>;
-using peak38_t = peak5_t;
+using peak38_t = peak21_t;
 
 template <int NV> using pma_unscaled17_t = pma_unscaled3_t<NV>;
 
@@ -1932,8 +1943,7 @@ template <int NV>
 using chain13_t = container::chain<parameter::empty, 
                                    wrap::fix<2, core::gain<NV>>, 
                                    table3_t>;
-using table4_t = wrap::data<math::table, 
-                            data::external::table<1>>;
+using table4_t = table3_t;
 
 template <int NV>
 using chain14_t = container::chain<parameter::empty, 
@@ -2035,7 +2045,8 @@ using branch27_t = container::branch<parameter::empty,
 
 template <int NV>
 using chain31_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, core::phasor_fm<NV>>>;
+                                   wrap::fix<2, converter3_t<NV>>, 
+                                   core::phasor_fm<NV>>;
 
 template <int NV>
 using chain32_t = container::chain<parameter::empty, 
@@ -2545,13 +2556,14 @@ using chain28_t = container::chain<parameter::empty,
                                    wrap::fix<2, core::gain<NV>>, 
                                    math::fmod<NV>, 
                                    table7_t>;
-using table8_t = table3_t;
+using table8_t = wrap::data<math::table, 
+                            data::external::table<1>>;
 
 template <int NV>
 using chain29_t = container::chain<parameter::empty, 
                                    wrap::fix<2, core::gain<NV>>, 
                                    table8_t>;
-using table9_t = table4_t;
+using table9_t = table8_t;
 
 template <int NV>
 using chain30_t = container::chain<parameter::empty, 
@@ -2673,7 +2685,7 @@ using ramp_t = wrap::mod<ramp_mod<NV>,
 template <int NV>
 using tempo_sync4_t = wrap::mod<parameter::plain<ramp_t<NV>, 0>, 
                                 control::tempo_sync<NV>>;
-using peak4_t = peak5_t;
+using peak4_t = peak21_t;
 
 template <int NV>
 using ahdsr_multimod = parameter::list<parameter::plain<math::add<NV>, 0>, 
@@ -2907,10 +2919,7 @@ using frame2_block1_t = wrap::frame<2, frame2_block1_t_<NV>>;
 
 using chain255_t = chain90_t;
 
-template <int NV>
-using peak31_mod = parameter::chain<ranges::Identity, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>>;
+template <int NV> using peak31_mod = peak15_mod<NV>;
 
 template <int NV>
 using peak31_t = wrap::mod<peak31_mod<NV>, 
@@ -2965,7 +2974,7 @@ using branch30_t = container::branch<parameter::empty,
                                      chain252_t<NV>, 
                                      chain253_t<NV>, 
                                      chain270_t<NV>>;
-using peak10_t = peak5_t;
+using peak10_t = peak21_t;
 
 template <int NV>
 using cable_table2_t = wrap::data<control::cable_table<parameter::plain<math::add<NV>, 0>>, 
@@ -3116,9 +3125,7 @@ using branch15_t = container::branch<parameter::empty,
                                      wrap::fix<2, file_player1_t<NV>>, 
                                      file_player3_t<NV>>;
 
-template <int NV>
-using chain35_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, filters::one_pole<NV>>>;
+template <int NV> using chain35_t = chain19_t<NV>;
 
 template <int NV>
 using chain34_t = container::chain<parameter::empty, 
@@ -3147,34 +3154,7 @@ using frame2_block2_t = wrap::frame<2, frame2_block2_t_<NV>>;
 
 using chain100_t = chain90_t;
 
-template <int NV>
-using peak19_mod = parameter::chain<ranges::Identity, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>>;
+template <int NV> using peak19_mod = peak15_mod<NV>;
 
 template <int NV>
 using peak19_t = wrap::mod<peak19_mod<NV>, 
@@ -3252,7 +3232,9 @@ using chain45_t = container::chain<parameter::empty,
 template <int NV>
 using stereo_frame_cable = cable::frame<NV, 2>;
 
-template <int NV> using converter6_t = converter19_t<NV>;
+template <int NV>
+using converter6_t = control::converter<parameter::plain<jdsp::jdelay<NV>, 1>, 
+                                        conversion_logic::freq2ms>;
 template <int NV>
 using converter7_t = control::converter<parameter::plain<converter6_t<NV>, 0>, 
                                         conversion_logic::midi2freq>;
@@ -3281,7 +3263,7 @@ using frame2_block_t_ = container::chain<parameter::empty,
 template <int NV>
 using frame2_block_t = wrap::frame<2, frame2_block_t_<NV>>;
 
-template <int NV> using converter9_t = converter19_t<NV>;
+template <int NV> using converter9_t = converter6_t<NV>;
 template <int NV>
 using converter8_t = control::converter<parameter::plain<converter9_t<NV>, 0>, 
                                         conversion_logic::midi2freq>;
@@ -3303,7 +3285,7 @@ using chain40_t = container::chain<parameter::empty,
                                    filters::one_pole<NV>, 
                                    routing::send<NV, stereo_cable<NV>>>;
 
-template <int NV> using converter17_t = converter19_t<NV>;
+template <int NV> using converter17_t = converter6_t<NV>;
 template <int NV>
 using converter16_t = control::converter<parameter::plain<converter17_t<NV>, 0>, 
                                          conversion_logic::midi2freq>;
@@ -3320,6 +3302,11 @@ using chain123_t = container::chain<parameter::empty,
                                     chain125_t<NV>, 
                                     filters::one_pole<NV>, 
                                     routing::send<NV, stereo_cable<NV>>>;
+
+template <int NV> using converter19_t = converter6_t<NV>;
+template <int NV>
+using converter18_t = control::converter<parameter::plain<converter19_t<NV>, 0>, 
+                                         conversion_logic::midi2freq>;
 
 template <int NV>
 using chain155_t = container::chain<parameter::empty, 
@@ -3405,22 +3392,6 @@ using split40_t = container::split<parameter::empty,
                                    routing::receive<NV, stereo_cable<NV>>, 
                                    routing::receive<NV, stereo_cable<NV>>>;
 
-using chain162_t = chain90_t;
-
-using chain163_t = container::chain<parameter::empty, 
-                                    wrap::fix<2, chain162_t>>;
-
-using chain164_t = chain90_t;
-
-using chain161_t = chain90_t;
-
-using chain165_t = chain90_t;
-using branch24_t = container::branch<parameter::empty, 
-                                     wrap::fix<2, chain163_t>, 
-                                     chain164_t, 
-                                     chain161_t, 
-                                     chain165_t>;
-
 template <int NV> using chain168_t = chain41_t<NV>;
 
 template <int NV> using chain169_t = chain41_t<NV>;
@@ -3433,7 +3404,7 @@ template <int NV>
 using chain172_t = container::chain<parameter::empty, 
                                     wrap::fix<2, filters::allpass<NV>>>;
 
-template <int NV> using converter11_t = converter19_t<NV>;
+template <int NV> using converter11_t = converter6_t<NV>;
 template <int NV>
 using converter10_t = control::converter<parameter::plain<converter11_t<NV>, 0>, 
                                          conversion_logic::midi2freq>;
@@ -3448,7 +3419,7 @@ using chain61_t = container::chain<parameter::empty,
                                    converter11_t<NV>, 
                                    jdsp::jdelay<NV>>;
 
-template <int NV> using converter13_t = converter19_t<NV>;
+template <int NV> using converter13_t = converter6_t<NV>;
 template <int NV>
 using converter12_t = control::converter<parameter::plain<converter13_t<NV>, 0>, 
                                          conversion_logic::midi2freq>;
@@ -3471,7 +3442,7 @@ using chain166_t = container::chain<parameter::empty,
                                     filters::one_pole<NV>, 
                                     routing::send<NV, stereo_cable<NV>>>;
 
-template <int NV> using converter15_t = converter19_t<NV>;
+template <int NV> using converter15_t = converter6_t<NV>;
 template <int NV>
 using converter14_t = control::converter<parameter::plain<converter15_t<NV>, 0>, 
                                          conversion_logic::midi2freq>;
@@ -3493,6 +3464,11 @@ using chain167_t = container::chain<parameter::empty,
                                     filters::one_pole<NV>, 
                                     routing::send<NV, stereo_cable<NV>>>;
 
+template <int NV> using converter21_t = converter6_t<NV>;
+template <int NV>
+using converter20_t = control::converter<parameter::plain<converter21_t<NV>, 0>, 
+                                         conversion_logic::midi2freq>;
+
 template <int NV>
 using chain156_t = container::chain<parameter::empty, 
                                     wrap::fix<2, converter20_t<NV>>, 
@@ -3505,6 +3481,11 @@ using chain232_t = container::chain<parameter::empty,
                                     chain156_t<NV>, 
                                     filters::one_pole<NV>, 
                                     routing::send<NV, stereo_cable<NV>>>;
+
+template <int NV> using converter23_t = converter6_t<NV>;
+template <int NV>
+using converter22_t = control::converter<parameter::plain<converter23_t<NV>, 0>, 
+                                         conversion_logic::midi2freq>;
 
 template <int NV>
 using chain234_t = container::chain<parameter::empty, 
@@ -3566,7 +3547,6 @@ template <int NV>
 using chain160_t = container::chain<parameter::empty, 
                                     wrap::fix<2, sliderbank1_t<NV>>, 
                                     split40_t<NV>, 
-                                    branch24_t, 
                                     branch13_t<NV>, 
                                     chain173_t<NV>, 
                                     core::gain<NV>, 
@@ -3613,6 +3593,11 @@ DECLARE_PARAMETER_RANGE(OscCent1_InputRange,
 template <int NV>
 using OscCent1 = parameter::chain<OscCent1_InputRange, 
                                   parameter::plain<math::add<NV>, 0>>;
+
+template <int NV>
+using Oscfm1 = parameter::chain<ranges::Identity, 
+                                parameter::plain<Sm2_impl::pma_unscaled3_t<NV>, 1>, 
+                                parameter::plain<Sm2_impl::pma_t<NV>, 1>>;
 
 template <int NV>
 using OscMod1 = parameter::chain<ranges::Identity, 
@@ -3742,6 +3727,19 @@ template <int NV>
 using FilterCutSrc1 = parameter::chain<FilterCutSrc1_InputRange, 
                                        FilterCutSrc1_0<NV>>;
 
+DECLARE_PARAMETER_RANGE_STEP(FilterModMode1_InputRange, 
+                             1., 
+                             6., 
+                             1.);
+template <int NV>
+using FilterModMode1_0 = parameter::from0To1<Sm2_impl::branch21_t<NV>, 
+                                             0, 
+                                             OscFmSrc1_0Range>;
+
+template <int NV>
+using FilterModMode1 = parameter::chain<FilterModMode1_InputRange, 
+                                        FilterModMode1_0<NV>>;
+
 DECLARE_PARAMETER_RANGE_STEP(VcaGainSrc1_InputRange, 
                              1., 
                              17., 
@@ -3837,7 +3835,7 @@ DECLARE_PARAMETER_RANGE_STEP(OscSt2_InputRange,
 
 template <int NV>
 using OscSt2 = parameter::chain<OscSt2_InputRange, 
-                                parameter::plain<control::minmax<NV, parameter::empty>, 0>>;
+                                parameter::plain<Sm2_impl::minmax2_t<NV>, 0>>;
 
 DECLARE_PARAMETER_RANGE(OscCent2_InputRange, 
                         -1., 
@@ -3846,6 +3844,11 @@ DECLARE_PARAMETER_RANGE(OscCent2_InputRange,
 template <int NV>
 using OscCent2 = parameter::chain<OscCent2_InputRange, 
                                   parameter::plain<math::add<NV>, 0>>;
+
+template <int NV>
+using Oscfm2 = parameter::chain<ranges::Identity, 
+                                parameter::plain<Sm2_impl::pma_unscaled15_t<NV>, 1>, 
+                                parameter::plain<Sm2_impl::pma1_t<NV>, 1>>;
 
 template <int NV>
 using OscMod2 = parameter::chain<ranges::Identity, 
@@ -4024,22 +4027,6 @@ using FileInFmSrc_0 = parameter::from0To1<Sm2_impl::branch20_t<NV>,
 template <int NV>
 using FileInFmSrc = parameter::chain<FileInFmSrc_InputRange, FileInFmSrc_0<NV>>;
 
-DECLARE_PARAMETER_RANGE_STEP(FilterInput2_InputRange, 
-                             1., 
-                             5., 
-                             1.);
-DECLARE_PARAMETER_RANGE_STEP(FilterInput2_0Range, 
-                             0., 
-                             3., 
-                             1.);
-
-using FilterInput2_0 = parameter::from0To1<Sm2_impl::branch24_t, 
-                                           0, 
-                                           FilterInput2_0Range>;
-
-using FilterInput2 = parameter::chain<FilterInput2_InputRange, 
-                                      FilterInput2_0>;
-
 template <int NV>
 using FileInOffset = parameter::from0To1<core::gain<NV>, 
                                          0, 
@@ -4186,6 +4173,15 @@ using Osc1InSel_0 = parameter::from0To1<Sm2_impl::branch28_t<NV>,
 template <int NV>
 using Osc1InSel = parameter::chain<Osc1InSel_InputRange, Osc1InSel_0<NV>>;
 
+DECLARE_PARAMETER_RANGE_STEP(TEMPO2_InputRange, 
+                             0., 
+                             18., 
+                             1.);
+
+template <int NV>
+using TEMPO2 = parameter::chain<TEMPO2_InputRange, 
+                                parameter::plain<Sm2_impl::global_mod13_t<NV>, 1>>;
+
 DECLARE_PARAMETER_RANGE_STEP(File2InSel_InputRange, 
                              1., 
                              5., 
@@ -4286,9 +4282,6 @@ using tune = parameter::chain<ranges::Identity,
                               tune_1<NV>>;
 
 template <int NV>
-using Oscfm1 = parameter::plain<Sm2_impl::pma_unscaled3_t<NV>, 
-                                1>;
-template <int NV>
 using OscTempoSync1 = parameter::plain<Sm2_impl::branch2_t<NV>, 
                                        0>;
 template <int NV>
@@ -4316,9 +4309,6 @@ template <int NV>
 using FilterCutFm1 = parameter::plain<Sm2_impl::pma_unscaled9_t<NV>, 
                                       1>;
 template <int NV>
-using FilterModMode1 = parameter::plain<Sm2_impl::branch21_t<NV>, 
-                                        0>;
-template <int NV>
 using VcaGain1 = parameter::plain<Sm2_impl::global_mod10_t<NV>, 
                                   1>;
 template <int NV>
@@ -4329,9 +4319,6 @@ using VcaGainFm1 = parameter::plain<Sm2_impl::pma_unscaled10_t<NV>,
                                     1>;
 template <int NV>
 using Pan1 = parameter::plain<jdsp::jpanner<NV>, 0>;
-template <int NV>
-using Oscfm2 = parameter::plain<Sm2_impl::pma_unscaled15_t<NV>, 
-                                1>;
 template <int NV>
 using FilterCut2 = parameter::plain<Sm2_impl::global_mod11_t<NV>, 
                                     1>;
@@ -4374,6 +4361,7 @@ template <int NV>
 using Osc2InputGainModSrc = parameter::plain<Sm2_impl::global_mod5_t<NV>, 
                                              0>;
 using FilterInput1 = Osc12Mix;
+using FilterInput2 = Osc12Mix;
 template <int NV>
 using PostModMode = parameter::plain<Sm2_impl::branch3_t<NV>, 
                                      0>;
@@ -4427,9 +4415,6 @@ template <int NV>
 using d = parameter::plain<Sm2_impl::ahdsr1_t<NV>, 3>;
 template <int NV>
 using r = parameter::plain<Sm2_impl::ahdsr1_t<NV>, 5>;
-template <int NV>
-using TEMPO2 = parameter::plain<Sm2_impl::global_mod13_t<NV>, 
-                                1>;
 template <int NV>
 using DIV2 = parameter::plain<Sm2_impl::tempo_sync2_t<NV>, 
                               1>;
@@ -4622,7 +4607,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		SNEX_METADATA_ENCODED_PARAMETERS(2210)
 		{
 			0x005C, 0x0000, 0x0000, 0x734F, 0x5363, 0x3174, 0x0000, 0xC000, 
-            0x00C1, 0xC000, 0x0041, 0x3000, 0x0041, 0x8000, 0x003F, 0x8000, 
+            0x00C1, 0xC000, 0x0041, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 
             0x5C3F, 0x0100, 0x0000, 0x4F00, 0x6373, 0x6543, 0x746E, 0x0031, 
             0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 
             0x0000, 0x0000, 0x005C, 0x0002, 0x0000, 0x734F, 0x6663, 0x316D, 
@@ -4635,19 +4620,19 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x0500, 0x0000, 0x4F00, 0x6373, 0x6554, 0x706D, 0x316F, 0x0000, 
             0x0000, 0x0000, 0x9000, 0x0041, 0x8000, 0x003F, 0x8000, 0x003F, 
             0x8000, 0x5C3F, 0x0600, 0x0000, 0x4F00, 0x6373, 0x6944, 0x3176, 
-            0x0000, 0x8000, 0x003F, 0x0000, 0x0042, 0x8000, 0x003F, 0x8000, 
+            0x0000, 0x8000, 0x003F, 0x0000, 0x0042, 0x0000, 0x0042, 0x8000, 
             0x003F, 0x8000, 0x5C3F, 0x0700, 0x0000, 0x4F00, 0x6373, 0x6D46, 
-            0x7253, 0x3163, 0x0000, 0x8000, 0x003F, 0xC000, 0x0040, 0x8000, 
-            0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x0800, 0x0000, 0x4F00, 
+            0x7253, 0x3163, 0x0000, 0x8000, 0x003F, 0xC000, 0x0040, 0x0000, 
+            0x0040, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x0800, 0x0000, 0x4F00, 
             0x6373, 0x6950, 0x6374, 0x5368, 0x6372, 0x0031, 0x0000, 0x3F80, 
             0x0000, 0x4188, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 
             0x005C, 0x0009, 0x0000, 0x734F, 0x3163, 0x4D32, 0x7869, 0x0000, 
             0x0000, 0x0000, 0x8000, 0x5C3F, 0x028F, 0x003F, 0x8000, 0x003F, 
             0x0000, 0x5C00, 0x0A00, 0x0000, 0x6600, 0x6C69, 0x5065, 0x736F, 
-            0x0031, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 
+            0x0031, 0x0000, 0x0000, 0x0000, 0x3F80, 0x1EB8, 0x3F45, 0x0000, 
             0x3F80, 0x0000, 0x0000, 0x005C, 0x000B, 0x0000, 0x6946, 0x656C, 
             0x6F50, 0x4D73, 0x646F, 0x0031, 0x0000, 0xBF80, 0x0000, 0x3F80, 
-            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x000C, 
+            0xCCCD, 0x3D4C, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x000C, 
             0x0000, 0x6946, 0x656C, 0x6F50, 0x5173, 0x6175, 0x746E, 0x0031, 
             0x0000, 0x3F80, 0x0000, 0x4120, 0x0000, 0x3F80, 0x0000, 0x3F80, 
             0x0000, 0x3F80, 0x005C, 0x000D, 0x0000, 0x6946, 0x656C, 0x6E49, 
@@ -4664,20 +4649,20 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x1100, 0x0000, 0x4600, 0x6C69, 0x6574, 0x4D72, 0x646F, 0x3165, 
             0x0000, 0x8000, 0x003F, 0x1000, 0x0041, 0x8000, 0x003F, 0x8000, 
             0x003F, 0x8000, 0x5C3F, 0x1200, 0x0000, 0x4600, 0x6C69, 0x6574, 
-            0x4372, 0x7475, 0x0031, 0x0000, 0x0000, 0x0000, 0x3F80, 0x851F, 
-            0x3F6B, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0013, 0x0000, 
+            0x4372, 0x7475, 0x0031, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
+            0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0013, 0x0000, 
             0x6946, 0x746C, 0x7265, 0x7543, 0x4D74, 0x646F, 0x0031, 0x0000, 
             0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
             0x0000, 0x005C, 0x0014, 0x0000, 0x6946, 0x746C, 0x7265, 0x7543, 
-            0x4674, 0x316D, 0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 
-            0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x1500, 0x0000, 0x4600, 
+            0x4674, 0x316D, 0x0000, 0x8000, 0x00BF, 0x8000, 0x0A3F, 0x23D7, 
+            0x00BD, 0x8000, 0x003F, 0x0000, 0x5C00, 0x1500, 0x0000, 0x4600, 
             0x6C69, 0x6574, 0x4372, 0x7475, 0x7253, 0x3163, 0x0000, 0x8000, 
             0x003F, 0x8800, 0x0041, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 
             0x5C3F, 0x1600, 0x0000, 0x4600, 0x6C69, 0x6574, 0x4D72, 0x646F, 
-            0x6F4D, 0x6564, 0x0031, 0x0000, 0x0000, 0x0000, 0x40A0, 0x0000, 
-            0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0017, 0x0000, 
+            0x6F4D, 0x6564, 0x0031, 0x0000, 0x3F80, 0x0000, 0x40C0, 0x0000, 
+            0x4000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0017, 0x0000, 
             0x6356, 0x4761, 0x6961, 0x316E, 0x0000, 0x0000, 0x0000, 0x8000, 
-            0x7B3F, 0x6E14, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 0x1800, 
+            0xD73F, 0x30A3, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 0x1800, 
             0x0000, 0x5600, 0x6163, 0x6147, 0x6E69, 0x6F4D, 0x3164, 0x0000, 
             0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 
             0x0000, 0x5C00, 0x1900, 0x0000, 0x5600, 0x6163, 0x6147, 0x6E69, 
@@ -4686,15 +4671,15 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x4761, 0x6961, 0x536E, 0x6372, 0x0031, 0x0000, 0x3F80, 0x0000, 
             0x4188, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
             0x001B, 0x0000, 0x6552, 0x3173, 0x0000, 0x0000, 0x0000, 0x8000, 
-            0x003F, 0x0000, 0x1800, 0x8789, 0x003E, 0x0000, 0x5C00, 0x1C00, 
+            0x8F3F, 0x75C2, 0x183F, 0x8789, 0x003E, 0x0000, 0x5C00, 0x1C00, 
             0x0000, 0x5000, 0x6E61, 0x0031, 0x0000, 0xBF80, 0x0000, 0x3F80, 
-            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x001D, 
+            0xD70A, 0xBD23, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x001D, 
             0x0000, 0x6356, 0x4661, 0x536D, 0x6372, 0x0031, 0x0000, 0x3F80, 
-            0x0000, 0x40C0, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x0000, 0x40C0, 0x0000, 0x4000, 0x0000, 0x3F80, 0x0000, 0x3F80, 
             0x005C, 0x001E, 0x0000, 0x734F, 0x5363, 0x3274, 0x0000, 0xC000, 
-            0x00C1, 0xC000, 0x0041, 0xC000, 0x00C1, 0x8000, 0x003F, 0x8000, 
+            0x00C1, 0xC000, 0x0041, 0xB800, 0x00C1, 0x8000, 0x003F, 0x8000, 
             0x5C3F, 0x1F00, 0x0000, 0x4F00, 0x6373, 0x6543, 0x746E, 0x0032, 
-            0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 
+            0x0000, 0xBF80, 0x0000, 0x3F80, 0xFBE8, 0xBE79, 0x0000, 0x3F80, 
             0x0000, 0x0000, 0x005C, 0x0020, 0x0000, 0x734F, 0x6663, 0x326D, 
             0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 
             0x003F, 0x0000, 0x5C00, 0x2100, 0x0000, 0x4F00, 0x6373, 0x6F4D, 
@@ -4705,7 +4690,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x4600, 0x6C69, 0x6574, 0x4D72, 0x646F, 0x3265, 0x0000, 0x8000, 
             0x003F, 0x1000, 0x0041, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 
             0x5C3F, 0x2400, 0x0000, 0x4600, 0x6C69, 0x6574, 0x4372, 0x7475, 
-            0x0032, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 
+            0x0032, 0x0000, 0x0000, 0x0000, 0x3F80, 0x70A4, 0x3F7D, 0x0000, 
             0x3F80, 0x0000, 0x0000, 0x005C, 0x0025, 0x0000, 0x6946, 0x746C, 
             0x7265, 0x7543, 0x4D74, 0x646F, 0x0032, 0x0000, 0xBF80, 0x0000, 
             0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 
@@ -4717,7 +4702,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x0000, 0x4600, 0x6C69, 0x6574, 0x4672, 0x646D, 0x7253, 0x0063, 
             0x0000, 0x3F80, 0x0000, 0x40C0, 0x0000, 0x3F80, 0x0000, 0x3F80, 
             0x0000, 0x3F80, 0x005C, 0x0029, 0x0000, 0x6356, 0x4761, 0x6961, 
-            0x326E, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 
+            0x326E, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x003F, 
             0x8000, 0x003F, 0x0000, 0x5C00, 0x2A00, 0x0000, 0x5600, 0x6163, 
             0x6147, 0x6E69, 0x6F4D, 0x3264, 0x0000, 0x8000, 0x00BF, 0x8000, 
             0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x2B00, 
@@ -4740,12 +4725,12 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x6853, 0x7061, 0x4D65, 0x646F, 0x0000, 0x8000, 0x00BF, 0x8000, 
             0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x3300, 
             0x0000, 0x4F00, 0x6373, 0x6853, 0x7061, 0x4665, 0x006D, 0x0000, 
-            0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
+            0xBF80, 0x0000, 0x3F80, 0xAE14, 0x3F47, 0x0000, 0x3F80, 0x0000, 
             0x0000, 0x005C, 0x0034, 0x0000, 0x734F, 0x5363, 0x6168, 0x6570, 
             0x6F4D, 0x5364, 0x6372, 0x0000, 0x8000, 0x003F, 0x8800, 0x0041, 
             0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x3500, 0x0000, 
             0x4F00, 0x6373, 0x6853, 0x7061, 0x4665, 0x536D, 0x6372, 0x0000, 
-            0x8000, 0x003F, 0xC000, 0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 
+            0x8000, 0x003F, 0xC000, 0x0040, 0x4000, 0x0040, 0x8000, 0x003F, 
             0x8000, 0x5C3F, 0x3600, 0x0000, 0x4F00, 0x6373, 0x4932, 0x706E, 
             0x7475, 0x6147, 0x6E69, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 
             0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x3700, 0x0000, 
@@ -4768,31 +4753,31 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x746C, 0x7265, 0x6E49, 0x7570, 0x3274, 0x0000, 0x8000, 0x003F, 
             0xA000, 0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 
             0x3E00, 0x0000, 0x5000, 0x736F, 0x4D74, 0x646F, 0x6F4D, 0x6564, 
-            0x0000, 0x0000, 0x0000, 0x0000, 0x0040, 0x0000, 0x0000, 0x8000, 
+            0x0000, 0x0000, 0x0000, 0x0000, 0x0040, 0x8000, 0x003F, 0x8000, 
             0x003F, 0x8000, 0x5C3F, 0x3F00, 0x0000, 0x5000, 0x736F, 0x6E45, 
             0x5476, 0x6972, 0x0067, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
-            0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0040, 0x0000, 
+            0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0040, 0x0000, 
             0x6F50, 0x4573, 0x766E, 0x0041, 0x0000, 0x0000, 0x4000, 0x461C, 
-            0x0000, 0x0000, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 0x005C, 0x0041, 
+            0x3000, 0x4568, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 0x005C, 0x0041, 
             0x0000, 0x6F50, 0x4573, 0x766E, 0x0048, 0x0000, 0x0000, 0x4000, 
-            0x461C, 0x3333, 0x4013, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 0x005C, 
+            0x461C, 0x0000, 0x0000, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 0x005C, 
             0x0042, 0x0000, 0x6F50, 0x4573, 0x766E, 0x0044, 0x0000, 0x0000, 
-            0x4000, 0x461C, 0x0000, 0x0000, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 
+            0x4000, 0x461C, 0x4000, 0x461C, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 
             0x005C, 0x0043, 0x0000, 0x6F50, 0x4573, 0x766E, 0x0053, 0x0000, 
-            0x0000, 0x0000, 0x3F80, 0x0000, 0x3F00, 0x0000, 0x3F80, 0x0000, 
+            0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
             0x0000, 0x005C, 0x0044, 0x0000, 0x6F50, 0x4573, 0x766E, 0x0052, 
-            0x0000, 0x0000, 0x4000, 0x461C, 0x0000, 0x0000, 0x6A72, 0x3E4A, 
+            0x0000, 0x0000, 0x4000, 0x461C, 0x8000, 0x44EE, 0x6A72, 0x3E4A, 
             0xCCCD, 0x3DCC, 0x005C, 0x0045, 0x0000, 0x6F50, 0x5673, 0x6C65, 
             0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 
             0x003F, 0x0000, 0x5C00, 0x4600, 0x0000, 0x4F00, 0x6373, 0x5373, 
             0x6275, 0x6147, 0x6E69, 0x0000, 0x0000, 0x0000, 0x3800, 0x3342, 
             0xC333, 0x0040, 0x8000, 0xCD3F, 0xCCCC, 0x5C3D, 0x4700, 0x0000, 
             0x5000, 0x736F, 0x6554, 0x706D, 0x006F, 0x0000, 0x0000, 0x0000, 
-            0x4190, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
+            0x4190, 0x0000, 0x40E0, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
             0x0048, 0x0000, 0x6F50, 0x4473, 0x6269, 0x0000, 0x8000, 0x003F, 
-            0x0000, 0x0042, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 
+            0x0000, 0x0042, 0xA000, 0x0040, 0x8000, 0x003F, 0x8000, 0x5C3F, 
             0x4900, 0x0000, 0x4600, 0x6C69, 0x4965, 0x4F6E, 0x6666, 0x6573, 
-            0x0074, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 
+            0x0074, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
             0x3F80, 0x0000, 0x0000, 0x005C, 0x004A, 0x0000, 0x736F, 0x5363, 
             0x6168, 0x6570, 0x6F4D, 0x6564, 0x0031, 0x0000, 0x3F80, 0x0000, 
             0x4140, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
@@ -4819,7 +4804,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x3F80, 0x005C, 0x0054, 0x0000, 0x6946, 0x656C, 0x6E49, 0x6553, 
             0x006C, 0x0000, 0x3F80, 0x0000, 0x40A0, 0x0000, 0x3F80, 0x0000, 
             0x3F80, 0x0000, 0x3F80, 0x005C, 0x0055, 0x0000, 0x6F56, 0x006C, 
-            0x0000, 0x0000, 0x0000, 0x3F80, 0x0A3D, 0x3F57, 0x0000, 0x3F80, 
+            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F00, 0x0000, 0x3F80, 
             0x0000, 0x0000, 0x005C, 0x0056, 0x0000, 0x734F, 0x3163, 0x6E49, 
             0x7570, 0x0074, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 
             0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0057, 0x0000, 0x734F, 
@@ -4846,16 +4831,16 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x4554, 0x504D, 0x324F, 0x0000, 0x0000, 0x0000, 0x9000, 0x0041, 
             0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x6200, 0x0000, 
             0x4400, 0x5649, 0x0032, 0x0000, 0x3F80, 0x0000, 0x4200, 0x0000, 
-            0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0063, 0x0000, 
+            0x4160, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0063, 0x0000, 
             0x5953, 0x434E, 0x0032, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
-            0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0064, 0x0000, 
+            0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0064, 0x0000, 
             0x6946, 0x656C, 0x4932, 0x536E, 0x6C65, 0x0000, 0x8000, 0x003F, 
-            0xA000, 0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 
+            0xA000, 0x0040, 0x0000, 0x0040, 0x8000, 0x003F, 0x8000, 0x5C3F, 
             0x6500, 0x0000, 0x4600, 0x6C69, 0x3265, 0x6147, 0x6E69, 0x664F, 
             0x7366, 0x7465, 0x0000, 0xC800, 0x00C2, 0x0000, 0x0000, 0x0000, 
             0x0000, 0x8000, 0xCD3F, 0xCCCC, 0x5C3D, 0x6600, 0x0000, 0x4600, 
             0x6C69, 0x3265, 0x6147, 0x6E69, 0x0000, 0x0000, 0x0000, 0x8000, 
-            0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x6700, 
+            0xF63F, 0x1C28, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 0x6700, 
             0x0000, 0x4600, 0x6C69, 0x3265, 0x6F4D, 0x0064, 0x0000, 0xBF80, 
             0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 
             0x005C, 0x0068, 0x0000, 0x6946, 0x656C, 0x4632, 0x006D, 0x0000, 
@@ -4870,20 +4855,20 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x3F80, 0x005C, 0x006C, 0x0000, 0x6946, 0x656C, 0x6944, 0x0076, 
             0x0000, 0x3F80, 0x0000, 0x4200, 0x0000, 0x3F80, 0x0000, 0x3F80, 
             0x0000, 0x3F80, 0x005C, 0x006D, 0x0000, 0x6946, 0x656C, 0x4D32, 
-            0x646F, 0x0065, 0x0000, 0x3F80, 0x0000, 0x4040, 0x0000, 0x3F80, 
+            0x646F, 0x0065, 0x0000, 0x3F80, 0x0000, 0x4040, 0x0000, 0x4040, 
             0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x006E, 0x0000, 0x6946, 
             0x656C, 0x4532, 0x766E, 0x7254, 0x6769, 0x0000, 0x0000, 0x0000, 
-            0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x5C3F, 
+            0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 
             0x6F00, 0x0000, 0x4600, 0x6C69, 0x3265, 0x0041, 0x0000, 0x0000, 
-            0x4000, 0x461C, 0x0000, 0x0000, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 
+            0x4000, 0x461C, 0x0000, 0x435E, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 
             0x005C, 0x0070, 0x0000, 0x6946, 0x656C, 0x4832, 0x0000, 0x0000, 
             0x0000, 0x1C40, 0x0046, 0x0000, 0x7200, 0x4A6A, 0xCD3E, 0xCCCC, 
             0x5C3D, 0x7100, 0x0000, 0x4600, 0x6C69, 0x3265, 0x0044, 0x0000, 
-            0x0000, 0x4000, 0x461C, 0x4000, 0x461C, 0x6A72, 0x3E4A, 0xCCCD, 
+            0x0000, 0x4000, 0x461C, 0x0000, 0x4000, 0x6A72, 0x3E4A, 0xCCCD, 
             0x3DCC, 0x005C, 0x0072, 0x0000, 0x6946, 0x656C, 0x5332, 0x0000, 
             0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x003F, 
             0x0000, 0x5C00, 0x7300, 0x0000, 0x4600, 0x6C69, 0x3265, 0x0052, 
-            0x0000, 0x0000, 0x4000, 0x461C, 0x4CCD, 0x43DA, 0x6A72, 0x3E4A, 
+            0x0000, 0x0000, 0x4000, 0x461C, 0x0000, 0x4040, 0x6A72, 0x3E4A, 
             0xCCCD, 0x3DCC, 0x005C, 0x0074, 0x0000, 0x6946, 0x656C, 0x5032, 
             0x736F, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 
             0x8000, 0x003F, 0x0000, 0x5C00, 0x7500, 0x0000, 0x4600, 0x6C69, 
@@ -4892,7 +4877,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x0000, 0x4600, 0x6C69, 0x3265, 0x7551, 0x6E61, 0x0074, 0x0000, 
             0x3F80, 0x0000, 0x4120, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
             0x3F80, 0x005C, 0x0077, 0x0000, 0x7355, 0x7265, 0x0031, 0x0000, 
-            0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
+            0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
             0x3F80, 0x005C, 0x0078, 0x0000, 0x7355, 0x7265, 0x0032, 0x0000, 
             0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
             0x3F80, 0x005C, 0x0079, 0x0000, 0x7574, 0x656E, 0x0000, 0x0000, 
@@ -4928,7 +4913,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		auto& add33 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(4).getT(0);           // math::add<NV>
 		auto& chain72 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(5);                 // Sm2_impl::chain72_t<NV>
 		auto& add51 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(5).getT(0);           // math::add<NV>
-		auto& peak5 = this->getT(0).getT(0).getT(0).getT(0).getT(1);                           // Sm2_impl::peak5_t
+		auto& peak5 = this->getT(0).getT(0).getT(0).getT(0).getT(1);                           // Sm2_impl::peak5_t<NV>
 		auto& clear15 = this->getT(0).getT(0).getT(0).getT(0).getT(2);                         // math::clear<NV>
 		auto& split7 = this->getT(0).getT(0).getT(0).getT(0).getT(3);                          // Sm2_impl::split7_t<NV>
 		auto& chain62 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0);                 // Sm2_impl::chain62_t<NV>
@@ -4946,18 +4931,28 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		auto& add36 = this->getT(0).getT(0).getT(0).getT(0).                                   // math::add<NV>
                       getT(3).getT(0).getT(0).getT(1).
                       getT(0);
+		auto& chain258 = this->getT(0).getT(0).getT(0).getT(0).                                // Sm2_impl::chain258_t<NV>
+                         getT(3).getT(0).getT(0).getT(2);
+		auto& pma = this->getT(0).getT(0).getT(0).getT(0).                                     // Sm2_impl::pma_t<NV>
+                    getT(3).getT(0).getT(0).getT(2).
+                    getT(0);
+		auto& add27 = this->getT(0).getT(0).getT(0).getT(0).                                   // math::add<NV>
+                      getT(3).getT(0).getT(0).getT(2).
+                      getT(1);
 		auto& chain60 = this->getT(0).getT(0).getT(0).getT(0).                                 // Sm2_impl::chain60_t<NV>
-                        getT(3).getT(0).getT(0).getT(2);
+                        getT(3).getT(0).getT(0).getT(3);
 		auto& chain119 = this->getT(0).getT(0).getT(0).getT(0).                                // Sm2_impl::chain119_t<NV>
-                         getT(3).getT(0).getT(0).getT(2).
+                         getT(3).getT(0).getT(0).getT(3).
                          getT(0);
 		auto& global_mod1 = this->getT(0).getT(0).getT(0).getT(0).getT(3).                     // Sm2_impl::global_mod1_t<NV>
-                            getT(0).getT(0).getT(2).getT(0).getT(0);
+                            getT(0).getT(0).getT(3).getT(0).getT(0);
+		auto& minmax3 = this->getT(0).getT(0).getT(0).getT(0).getT(3).                         // Sm2_impl::minmax3_t<NV>
+                        getT(0).getT(0).getT(3).getT(0).getT(1);
 		auto& add89 = this->getT(0).getT(0).getT(0).getT(0).getT(3).                           // math::add<NV>
-                      getT(0).getT(0).getT(2).getT(0).getT(1);
+                      getT(0).getT(0).getT(3).getT(0).getT(2);
 		auto& sub21 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(1);           // math::sub<NV>
 		auto& peak16 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(2);          // Sm2_impl::peak16_t
-		auto& mod2sig = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(3);         // math::mod2sig<NV>
+		auto& mod2sig1 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(3);        // math::mod2sig<NV>
 		auto& peak_unscaled = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(4);   // Sm2_impl::peak_unscaled_t<NV>
 		auto& modchain5 = this->getT(0).getT(0).getT(1);                                       // Sm2_impl::modchain5_t<NV>
 		auto& chain77 = this->getT(0).getT(0).getT(1).getT(0);                                 // Sm2_impl::chain77_t<NV>
@@ -4974,14 +4969,14 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		auto& add49 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(4).getT(0);           // math::add<NV>
 		auto& chain87 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(5);                 // Sm2_impl::chain87_t<NV>
 		auto& add52 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(5).getT(0);           // math::add<NV>
-		auto& peak13 = this->getT(0).getT(0).getT(1).getT(0).getT(1);                          // Sm2_impl::peak13_t
+		auto& peak13 = this->getT(0).getT(0).getT(1).getT(0).getT(1);                          // Sm2_impl::peak13_t<NV>
 		auto& clear18 = this->getT(0).getT(0).getT(1).getT(0).getT(2);                         // math::clear<NV>
 		auto& split10 = this->getT(0).getT(0).getT(1).getT(0).getT(3);                         // Sm2_impl::split10_t<NV>
 		auto& chain82 = this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0);                 // Sm2_impl::chain82_t<NV>
 		auto& split11 = this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0).getT(0);         // Sm2_impl::split11_t<NV>
 		auto& chain83 = this->getT(0).getT(0).getT(1).getT(0).                                 // Sm2_impl::chain83_t<NV>
                         getT(3).getT(0).getT(0).getT(0);
-		auto& minmax2 = this->getT(0).getT(0).getT(1).getT(0).                                 // control::minmax<NV, parameter::empty>
+		auto& minmax2 = this->getT(0).getT(0).getT(1).getT(0).                                 // Sm2_impl::minmax2_t<NV>
                         getT(3).getT(0).getT(0).getT(0).
                         getT(0);
 		auto& add42 = this->getT(0).getT(0).getT(1).getT(0).                                   // math::add<NV>
@@ -4992,16 +4987,28 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		auto& add35 = this->getT(0).getT(0).getT(1).getT(0).                                   // math::add<NV>
                       getT(3).getT(0).getT(0).getT(1).
                       getT(0);
-		auto& chain120 = this->getT(0).getT(0).getT(1).getT(0).                                // Sm2_impl::chain120_t<NV>
+		auto& chain260 = this->getT(0).getT(0).getT(1).getT(0).                                // Sm2_impl::chain260_t<NV>
                          getT(3).getT(0).getT(0).getT(2);
-		auto& global_mod = this->getT(0).getT(0).getT(1).getT(0).                              // Sm2_impl::global_mod_t<NV>
-                           getT(3).getT(0).getT(0).getT(2).
-                           getT(0);
-		auto& add90 = this->getT(0).getT(0).getT(1).getT(0).                                   // math::add<NV>
+		auto& pma1 = this->getT(0).getT(0).getT(1).getT(0).                                    // Sm2_impl::pma1_t<NV>
+                     getT(3).getT(0).getT(0).getT(2).
+                     getT(0);
+		auto& add43 = this->getT(0).getT(0).getT(1).getT(0).                                   // math::add<NV>
                       getT(3).getT(0).getT(0).getT(2).
                       getT(1);
+		auto& chain120 = this->getT(0).getT(0).getT(1).getT(0).                                // Sm2_impl::chain120_t<NV>
+                         getT(3).getT(0).getT(0).getT(3);
+		auto& global_mod = this->getT(0).getT(0).getT(1).getT(0).                              // Sm2_impl::global_mod_t<NV>
+                           getT(3).getT(0).getT(0).getT(3).
+                           getT(0);
+		auto& minmax1 = this->getT(0).getT(0).getT(1).getT(0).                                 // Sm2_impl::minmax1_t<NV>
+                        getT(3).getT(0).getT(0).getT(3).
+                        getT(1);
+		auto& add90 = this->getT(0).getT(0).getT(1).getT(0).                                   // math::add<NV>
+                      getT(3).getT(0).getT(0).getT(3).
+                      getT(2);
 		auto& sub3 = this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0).getT(1);            // math::sub<NV>
-		auto& peak_unscaled2 = this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0).getT(2);  // Sm2_impl::peak_unscaled2_t<NV>
+		auto& mod2sig = this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0).getT(2);         // math::mod2sig<NV>
+		auto& peak_unscaled2 = this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0).getT(3);  // Sm2_impl::peak_unscaled2_t<NV>
 		auto& modchain2 = this->getT(0).getT(0).getT(2);                                       // Sm2_impl::modchain2_t<NV>
 		auto& chain63 = this->getT(0).getT(0).getT(2).getT(0);                                 // Sm2_impl::chain63_t<NV>
 		auto& branch10 = this->getT(0).getT(0).getT(2).getT(0).getT(0);                        // Sm2_impl::branch10_t<NV>
@@ -5061,7 +5068,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
                              getT(3).getT(0).getT(1).getT(0);
 		auto& add130 = this->getT(0).getT(0).getT(3).getT(0).                                  // math::add<NV>
                        getT(3).getT(0).getT(1).getT(1);
-		auto& peak_unscaled3 = this->getT(0).getT(0).getT(3).getT(0).getT(3).getT(1);          // Sm2_impl::peak_unscaled3_t<NV>
+		auto& peak36 = this->getT(0).getT(0).getT(3).getT(0).getT(4);                          // Sm2_impl::peak36_t<NV>
 		auto& modchain4 = this->getT(0).getT(0).getT(4);                                       // Sm2_impl::modchain4_t<NV>
 		auto& chain102 = this->getT(0).getT(0).getT(4).getT(0);                                // Sm2_impl::chain102_t<NV>
 		auto& branch16 = this->getT(0).getT(0).getT(4).getT(0).getT(0);                        // Sm2_impl::branch16_t<NV>
@@ -5586,8 +5593,10 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		auto& chain31 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain31_t<NV>
                         getT(0).getT(0).getT(1).getT(2).
                         getT(0);
+		auto& converter3 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                  // Sm2_impl::converter3_t<NV>
+                           getT(0).getT(1).getT(2).getT(0).getT(0);
 		auto& phasor_fm = this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // core::phasor_fm<NV>
-                          getT(0).getT(1).getT(2).getT(0).getT(0);
+                          getT(0).getT(1).getT(2).getT(0).getT(1);
 		auto& chain32 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain32_t<NV>
                         getT(0).getT(0).getT(1).getT(2).
                         getT(1);
@@ -6036,7 +6045,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
                              getT(1);
 		auto& chain35 = this->getT(0).getT(1).getT(2).getT(4).                             // Sm2_impl::chain35_t<NV>
                         getT(0).getT(0).getT(0).getT(6);
-		auto& one_pole1 = this->getT(0).getT(1).getT(2).getT(4).                           // filters::one_pole<NV>
+		auto& one_pole1 = this->getT(0).getT(1).getT(2).getT(4).                           // wrap::no_process<filters::one_pole<NV>>
                           getT(0).getT(0).getT(0).getT(6).
                           getT(0);
 		auto& chain95 = this->getT(0).getT(1).getT(2).getT(5);                             // Sm2_impl::chain95_t<NV>
@@ -6140,80 +6149,74 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		auto& receive17 = this->getT(0).getT(3).getT(1).getT(1).getT(2);                   // routing::receive<NV, stereo_cable<NV>>
 		auto& receive14 = this->getT(0).getT(3).getT(1).getT(1).getT(3);                   // routing::receive<NV, stereo_cable<NV>>
 		auto& receive18 = this->getT(0).getT(3).getT(1).getT(1).getT(4);                   // routing::receive<NV, stereo_cable<NV>>
-		auto& branch24 = this->getT(0).getT(3).getT(1).getT(2);                            // Sm2_impl::branch24_t
-		auto& chain163 = this->getT(0).getT(3).getT(1).getT(2).getT(0);                    // Sm2_impl::chain163_t
-		auto& chain162 = this->getT(0).getT(3).getT(1).getT(2).getT(0).getT(0);            // Sm2_impl::chain162_t
-		auto& chain164 = this->getT(0).getT(3).getT(1).getT(2).getT(1);                    // Sm2_impl::chain164_t
-		auto& chain161 = this->getT(0).getT(3).getT(1).getT(2).getT(2);                    // Sm2_impl::chain161_t
-		auto& chain165 = this->getT(0).getT(3).getT(1).getT(2).getT(3);                    // Sm2_impl::chain165_t
-		auto& branch13 = this->getT(0).getT(3).getT(1).getT(3);                            // Sm2_impl::branch13_t<NV>
-		auto& chain168 = this->getT(0).getT(3).getT(1).getT(3).getT(0);                    // Sm2_impl::chain168_t<NV>
-		auto& svf8 = this->getT(0).getT(3).getT(1).getT(3).getT(0).getT(0);                // filters::svf<NV>
-		auto& chain169 = this->getT(0).getT(3).getT(1).getT(3).getT(1);                    // Sm2_impl::chain169_t<NV>
-		auto& svf9 = this->getT(0).getT(3).getT(1).getT(3).getT(1).getT(0);                // filters::svf<NV>
-		auto& chain170 = this->getT(0).getT(3).getT(1).getT(3).getT(2);                    // Sm2_impl::chain170_t<NV>
-		auto& svf10 = this->getT(0).getT(3).getT(1).getT(3).getT(2).getT(0);               // filters::svf<NV>
-		auto& chain171 = this->getT(0).getT(3).getT(1).getT(3).getT(3);                    // Sm2_impl::chain171_t<NV>
-		auto& svf11 = this->getT(0).getT(3).getT(1).getT(3).getT(3).getT(0);               // filters::svf<NV>
-		auto& chain172 = this->getT(0).getT(3).getT(1).getT(3).getT(4);                    // Sm2_impl::chain172_t<NV>
-		auto& allpass2 = this->getT(0).getT(3).getT(1).getT(3).getT(4).getT(0);            // filters::allpass<NV>
-		auto& chain166 = this->getT(0).getT(3).getT(1).getT(3).getT(5);                    // Sm2_impl::chain166_t<NV>
-		auto& receive19 = this->getT(0).getT(3).getT(1).getT(3).getT(5).getT(0);           // routing::receive<NV, stereo_cable<NV>>
-		auto& chain61 = this->getT(0).getT(3).getT(1).getT(3).getT(5).getT(1);             // Sm2_impl::chain61_t<NV>
-		auto& midi2 = this->getT(0).getT(3).getT(1).getT(3).getT(5).getT(1).getT(0);       // Sm2_impl::midi2_t<NV>
-		auto& converter10 = this->getT(0).getT(3).getT(1).getT(3).getT(5).getT(1).getT(1); // Sm2_impl::converter10_t<NV>
-		auto& converter11 = this->getT(0).getT(3).getT(1).getT(3).getT(5).getT(1).getT(2); // Sm2_impl::converter11_t<NV>
-		auto& jdelay2 = this->getT(0).getT(3).getT(1).getT(3).getT(5).getT(1).getT(3);     // jdsp::jdelay<NV>
-		auto& chain92 = this->getT(0).getT(3).getT(1).getT(3).getT(5).getT(2);             // Sm2_impl::chain92_t<NV>
-		auto& midi3 = this->getT(0).getT(3).getT(1).getT(3).getT(5).getT(2).getT(0);       // Sm2_impl::midi3_t<NV>
-		auto& converter12 = this->getT(0).getT(3).getT(1).getT(3).getT(5).getT(2).getT(1); // Sm2_impl::converter12_t<NV>
-		auto& converter13 = this->getT(0).getT(3).getT(1).getT(3).getT(5).getT(2).getT(2); // Sm2_impl::converter13_t<NV>
-		auto& jdelay3 = this->getT(0).getT(3).getT(1).getT(3).getT(5).getT(2).getT(3);     // jdsp::jdelay<NV>
-		auto& one_pole12 = this->getT(0).getT(3).getT(1).getT(3).getT(5).getT(3);          // filters::one_pole<NV>
-		auto& send13 = this->getT(0).getT(3).getT(1).getT(3).getT(5).getT(4);              // routing::send<NV, stereo_cable<NV>>
-		auto& chain167 = this->getT(0).getT(3).getT(1).getT(3).getT(6);                    // Sm2_impl::chain167_t<NV>
-		auto& receive20 = this->getT(0).getT(3).getT(1).getT(3).getT(6).getT(0);           // routing::receive<NV, stereo_cable<NV>>
-		auto& chain94 = this->getT(0).getT(3).getT(1).getT(3).getT(6).getT(1);             // Sm2_impl::chain94_t<NV>
-		auto& midi4 = this->getT(0).getT(3).getT(1).getT(3).getT(6).getT(1).getT(0);       // Sm2_impl::midi4_t<NV>
-		auto& converter14 = this->getT(0).getT(3).getT(1).getT(3).getT(6).getT(1).getT(1); // Sm2_impl::converter14_t<NV>
-		auto& converter15 = this->getT(0).getT(3).getT(1).getT(3).getT(6).getT(1).getT(2); // Sm2_impl::converter15_t<NV>
-		auto& jdelay4 = this->getT(0).getT(3).getT(1).getT(3).getT(6).getT(1).getT(3);     // jdsp::jdelay<NV>
-		auto& one_pole13 = this->getT(0).getT(3).getT(1).getT(3).getT(6).getT(2);          // filters::one_pole<NV>
-		auto& send14 = this->getT(0).getT(3).getT(1).getT(3).getT(6).getT(3);              // routing::send<NV, stereo_cable<NV>>
-		auto& chain232 = this->getT(0).getT(3).getT(1).getT(3).getT(7);                    // Sm2_impl::chain232_t<NV>
-		auto& receive27 = this->getT(0).getT(3).getT(1).getT(3).getT(7).getT(0);           // routing::receive<NV, stereo_cable<NV>>
-		auto& chain156 = this->getT(0).getT(3).getT(1).getT(3).getT(7).getT(1);            // Sm2_impl::chain156_t<NV>
-		auto& converter20 = this->getT(0).getT(3).getT(1).getT(3).getT(7).getT(1).getT(0); // Sm2_impl::converter20_t<NV>
-		auto& converter21 = this->getT(0).getT(3).getT(1).getT(3).getT(7).getT(1).getT(1); // Sm2_impl::converter21_t<NV>
-		auto& jdelay7 = this->getT(0).getT(3).getT(1).getT(3).getT(7).getT(1).getT(2);     // jdsp::jdelay<NV>
-		auto& one_pole14 = this->getT(0).getT(3).getT(1).getT(3).getT(7).getT(2);          // filters::one_pole<NV>
-		auto& send18 = this->getT(0).getT(3).getT(1).getT(3).getT(7).getT(3);              // routing::send<NV, stereo_cable<NV>>
-		auto& chain233 = this->getT(0).getT(3).getT(1).getT(3).getT(8);                    // Sm2_impl::chain233_t<NV>
-		auto& receive28 = this->getT(0).getT(3).getT(1).getT(3).getT(8).getT(0);           // routing::receive<NV, stereo_cable<NV>>
-		auto& chain234 = this->getT(0).getT(3).getT(1).getT(3).getT(8).getT(1);            // Sm2_impl::chain234_t<NV>
-		auto& converter22 = this->getT(0).getT(3).getT(1).getT(3).getT(8).getT(1).getT(0); // Sm2_impl::converter22_t<NV>
-		auto& converter23 = this->getT(0).getT(3).getT(1).getT(3).getT(8).getT(1).getT(1); // Sm2_impl::converter23_t<NV>
-		auto& jdelay8 = this->getT(0).getT(3).getT(1).getT(3).getT(8).getT(1).getT(2);     // jdsp::jdelay<NV>
-		auto& one_pole15 = this->getT(0).getT(3).getT(1).getT(3).getT(8).getT(2);          // filters::one_pole<NV>
-		auto& send19 = this->getT(0).getT(3).getT(1).getT(3).getT(8).getT(3);              // routing::send<NV, stereo_cable<NV>>
-		auto& chain173 = this->getT(0).getT(3).getT(1).getT(4);                            // Sm2_impl::chain173_t<NV>
-		auto& split29 = this->getT(0).getT(3).getT(1).getT(4).getT(0);                     // Sm2_impl::split29_t<NV>
-		auto& chain174 = this->getT(0).getT(3).getT(1).getT(4).getT(0).getT(0);            // Sm2_impl::chain174_t
-		auto& chain175 = this->getT(0).getT(3).getT(1).getT(4).getT(0).getT(1);            // Sm2_impl::chain175_t<NV>
-		auto& split30 = this->getT(0).getT(3).getT(1).getT(4).getT(0).getT(1).getT(0);     // Sm2_impl::split30_t<NV>
-		auto& send15 = this->getT(0).getT(3).getT(1).getT(4).                              // routing::send<NV, stereo_cable<NV>>
+		auto& branch13 = this->getT(0).getT(3).getT(1).getT(2);                            // Sm2_impl::branch13_t<NV>
+		auto& chain168 = this->getT(0).getT(3).getT(1).getT(2).getT(0);                    // Sm2_impl::chain168_t<NV>
+		auto& svf8 = this->getT(0).getT(3).getT(1).getT(2).getT(0).getT(0);                // filters::svf<NV>
+		auto& chain169 = this->getT(0).getT(3).getT(1).getT(2).getT(1);                    // Sm2_impl::chain169_t<NV>
+		auto& svf9 = this->getT(0).getT(3).getT(1).getT(2).getT(1).getT(0);                // filters::svf<NV>
+		auto& chain170 = this->getT(0).getT(3).getT(1).getT(2).getT(2);                    // Sm2_impl::chain170_t<NV>
+		auto& svf10 = this->getT(0).getT(3).getT(1).getT(2).getT(2).getT(0);               // filters::svf<NV>
+		auto& chain171 = this->getT(0).getT(3).getT(1).getT(2).getT(3);                    // Sm2_impl::chain171_t<NV>
+		auto& svf11 = this->getT(0).getT(3).getT(1).getT(2).getT(3).getT(0);               // filters::svf<NV>
+		auto& chain172 = this->getT(0).getT(3).getT(1).getT(2).getT(4);                    // Sm2_impl::chain172_t<NV>
+		auto& allpass2 = this->getT(0).getT(3).getT(1).getT(2).getT(4).getT(0);            // filters::allpass<NV>
+		auto& chain166 = this->getT(0).getT(3).getT(1).getT(2).getT(5);                    // Sm2_impl::chain166_t<NV>
+		auto& receive19 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(0);           // routing::receive<NV, stereo_cable<NV>>
+		auto& chain61 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(1);             // Sm2_impl::chain61_t<NV>
+		auto& midi2 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(1).getT(0);       // Sm2_impl::midi2_t<NV>
+		auto& converter10 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(1).getT(1); // Sm2_impl::converter10_t<NV>
+		auto& converter11 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(1).getT(2); // Sm2_impl::converter11_t<NV>
+		auto& jdelay2 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(1).getT(3);     // jdsp::jdelay<NV>
+		auto& chain92 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(2);             // Sm2_impl::chain92_t<NV>
+		auto& midi3 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(2).getT(0);       // Sm2_impl::midi3_t<NV>
+		auto& converter12 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(2).getT(1); // Sm2_impl::converter12_t<NV>
+		auto& converter13 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(2).getT(2); // Sm2_impl::converter13_t<NV>
+		auto& jdelay3 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(2).getT(3);     // jdsp::jdelay<NV>
+		auto& one_pole12 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(3);          // filters::one_pole<NV>
+		auto& send13 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(4);              // routing::send<NV, stereo_cable<NV>>
+		auto& chain167 = this->getT(0).getT(3).getT(1).getT(2).getT(6);                    // Sm2_impl::chain167_t<NV>
+		auto& receive20 = this->getT(0).getT(3).getT(1).getT(2).getT(6).getT(0);           // routing::receive<NV, stereo_cable<NV>>
+		auto& chain94 = this->getT(0).getT(3).getT(1).getT(2).getT(6).getT(1);             // Sm2_impl::chain94_t<NV>
+		auto& midi4 = this->getT(0).getT(3).getT(1).getT(2).getT(6).getT(1).getT(0);       // Sm2_impl::midi4_t<NV>
+		auto& converter14 = this->getT(0).getT(3).getT(1).getT(2).getT(6).getT(1).getT(1); // Sm2_impl::converter14_t<NV>
+		auto& converter15 = this->getT(0).getT(3).getT(1).getT(2).getT(6).getT(1).getT(2); // Sm2_impl::converter15_t<NV>
+		auto& jdelay4 = this->getT(0).getT(3).getT(1).getT(2).getT(6).getT(1).getT(3);     // jdsp::jdelay<NV>
+		auto& one_pole13 = this->getT(0).getT(3).getT(1).getT(2).getT(6).getT(2);          // filters::one_pole<NV>
+		auto& send14 = this->getT(0).getT(3).getT(1).getT(2).getT(6).getT(3);              // routing::send<NV, stereo_cable<NV>>
+		auto& chain232 = this->getT(0).getT(3).getT(1).getT(2).getT(7);                    // Sm2_impl::chain232_t<NV>
+		auto& receive27 = this->getT(0).getT(3).getT(1).getT(2).getT(7).getT(0);           // routing::receive<NV, stereo_cable<NV>>
+		auto& chain156 = this->getT(0).getT(3).getT(1).getT(2).getT(7).getT(1);            // Sm2_impl::chain156_t<NV>
+		auto& converter20 = this->getT(0).getT(3).getT(1).getT(2).getT(7).getT(1).getT(0); // Sm2_impl::converter20_t<NV>
+		auto& converter21 = this->getT(0).getT(3).getT(1).getT(2).getT(7).getT(1).getT(1); // Sm2_impl::converter21_t<NV>
+		auto& jdelay7 = this->getT(0).getT(3).getT(1).getT(2).getT(7).getT(1).getT(2);     // jdsp::jdelay<NV>
+		auto& one_pole14 = this->getT(0).getT(3).getT(1).getT(2).getT(7).getT(2);          // filters::one_pole<NV>
+		auto& send18 = this->getT(0).getT(3).getT(1).getT(2).getT(7).getT(3);              // routing::send<NV, stereo_cable<NV>>
+		auto& chain233 = this->getT(0).getT(3).getT(1).getT(2).getT(8);                    // Sm2_impl::chain233_t<NV>
+		auto& receive28 = this->getT(0).getT(3).getT(1).getT(2).getT(8).getT(0);           // routing::receive<NV, stereo_cable<NV>>
+		auto& chain234 = this->getT(0).getT(3).getT(1).getT(2).getT(8).getT(1);            // Sm2_impl::chain234_t<NV>
+		auto& converter22 = this->getT(0).getT(3).getT(1).getT(2).getT(8).getT(1).getT(0); // Sm2_impl::converter22_t<NV>
+		auto& converter23 = this->getT(0).getT(3).getT(1).getT(2).getT(8).getT(1).getT(1); // Sm2_impl::converter23_t<NV>
+		auto& jdelay8 = this->getT(0).getT(3).getT(1).getT(2).getT(8).getT(1).getT(2);     // jdsp::jdelay<NV>
+		auto& one_pole15 = this->getT(0).getT(3).getT(1).getT(2).getT(8).getT(2);          // filters::one_pole<NV>
+		auto& send19 = this->getT(0).getT(3).getT(1).getT(2).getT(8).getT(3);              // routing::send<NV, stereo_cable<NV>>
+		auto& chain173 = this->getT(0).getT(3).getT(1).getT(3);                            // Sm2_impl::chain173_t<NV>
+		auto& split29 = this->getT(0).getT(3).getT(1).getT(3).getT(0);                     // Sm2_impl::split29_t<NV>
+		auto& chain174 = this->getT(0).getT(3).getT(1).getT(3).getT(0).getT(0);            // Sm2_impl::chain174_t
+		auto& chain175 = this->getT(0).getT(3).getT(1).getT(3).getT(0).getT(1);            // Sm2_impl::chain175_t<NV>
+		auto& split30 = this->getT(0).getT(3).getT(1).getT(3).getT(0).getT(1).getT(0);     // Sm2_impl::split30_t<NV>
+		auto& send15 = this->getT(0).getT(3).getT(1).getT(3).                              // routing::send<NV, stereo_cable<NV>>
                        getT(0).getT(1).getT(0).getT(0);
-		auto& chain257 = this->getT(0).getT(3).getT(1).getT(4).                        // Sm2_impl::chain257_t<NV>
+		auto& chain257 = this->getT(0).getT(3).getT(1).getT(3).                        // Sm2_impl::chain257_t<NV>
                          getT(0).getT(1).getT(0).getT(1);
-		auto& sig2mod6 = this->getT(0).getT(3).getT(1).getT(4).                        // math::sig2mod<NV>
+		auto& sig2mod6 = this->getT(0).getT(3).getT(1).getT(3).                        // math::sig2mod<NV>
                          getT(0).getT(1).getT(0).getT(1).
                          getT(0);
-		auto& peak33 = this->getT(0).getT(3).getT(1).getT(4).                          // Sm2_impl::peak33_t<NV>
+		auto& peak33 = this->getT(0).getT(3).getT(1).getT(3).                          // Sm2_impl::peak33_t<NV>
                        getT(0).getT(1).getT(0).getT(1).
                        getT(1);
-		auto& clear11 = this->getT(0).getT(3).getT(1).getT(4).getT(0).getT(1).getT(1); // math::clear<NV>
-		auto& gain41 = this->getT(0).getT(3).getT(1).getT(5);                          // core::gain<NV>
-		auto& jpanner2 = this->getT(0).getT(3).getT(1).getT(6);                        // jdsp::jpanner<NV>
+		auto& clear11 = this->getT(0).getT(3).getT(1).getT(3).getT(0).getT(1).getT(1); // math::clear<NV>
+		auto& gain41 = this->getT(0).getT(3).getT(1).getT(4);                          // core::gain<NV>
+		auto& jpanner2 = this->getT(0).getT(3).getT(1).getT(5);                        // jdsp::jpanner<NV>
 		auto& ahdsr1 = this->getT(1);                                                  // Sm2_impl::ahdsr1_t<NV>
 		auto& voice_manager = this->getT(2);                                           // envelope::voice_manager
 		auto& gain = this->getT(3);                                                    // core::gain<NV>
@@ -6224,7 +6227,9 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		this->getParameterT(1).connectT(0, add36); // OscCent1 -> add36::Value
 		
-		this->getParameterT(2).connectT(0, pma_unscaled3); // Oscfm1 -> pma_unscaled3::Multiply
+		auto& Oscfm1_p = this->getParameterT(2);
+		Oscfm1_p.connectT(0, pma_unscaled3); // Oscfm1 -> pma_unscaled3::Multiply
+		Oscfm1_p.connectT(1, pma);           // Oscfm1 -> pma::Multiply
 		
 		auto& OscMod1_p = this->getParameterT(3);
 		OscMod1_p.connectT(0, global_mod1); // OscMod1 -> global_mod1::Intensity
@@ -6301,7 +6306,9 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		this->getParameterT(31).connectT(0, add35); // OscCent2 -> add35::Value
 		
-		this->getParameterT(32).connectT(0, pma_unscaled15); // Oscfm2 -> pma_unscaled15::Multiply
+		auto& Oscfm2_p = this->getParameterT(32);
+		Oscfm2_p.connectT(0, pma_unscaled15); // Oscfm2 -> pma_unscaled15::Multiply
+		Oscfm2_p.connectT(1, pma1);           // Oscfm2 -> pma1::Multiply
 		
 		auto& OscMod2_p = this->getParameterT(33);
 		OscMod2_p.connectT(0, global_mod);   // OscMod2 -> global_mod::Intensity
@@ -6369,8 +6376,6 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->getParameterT(58).connectT(0, branch17); // Osc2InputGainFmSrc -> branch17::Index
 		
 		this->getParameterT(59).connectT(0, branch20); // FileInFmSrc -> branch20::Index
-		
-		this->getParameterT(61).connectT(0, branch24); // FilterInput2 -> branch24::Index
 		
 		this->getParameterT(62).connectT(0, branch3); // PostModMode -> branch3::Index
 		
@@ -6494,146 +6499,144 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		// Modulation Connections ------------------------------------------------------------------
 		
-		minmax.getWrappedObject().getParameter().connectT(0, add26);            // minmax -> add26::Value
-		global_mod1.getParameter().connectT(0, add89);                          // global_mod1 -> add89::Value
-		converter2.getWrappedObject().getParameter().connectT(0, phasor_fm1);   // converter2 -> phasor_fm1::FreqRatio
-		peak_unscaled.getParameter().connectT(0, converter2);                   // peak_unscaled -> converter2::Value
-		global_mod.getParameter().connectT(0, add90);                           // global_mod -> add90::Value
-		converter19.getWrappedObject().getParameter().connectT(0, jdelay6);     // converter19 -> jdelay6::DelayTime
-		converter18.getWrappedObject().getParameter().connectT(0, converter19); // converter18 -> converter19::Value
-		converter21.getWrappedObject().getParameter().connectT(0, jdelay7);     // converter21 -> jdelay7::DelayTime
-		converter20.getWrappedObject().getParameter().connectT(0, converter21); // converter20 -> converter21::Value
-		converter23.getWrappedObject().getParameter().connectT(0, jdelay8);     // converter23 -> jdelay8::DelayTime
-		converter22.getWrappedObject().getParameter().connectT(0, converter23); // converter22 -> converter23::Value
-		peak_unscaled2.getParameter().connectT(0, phasor_fm);                   // peak_unscaled2 -> phasor_fm::FreqRatio
-		peak_unscaled2.getParameter().connectT(1, converter18);                 // peak_unscaled2 -> converter18::Value
-		peak_unscaled2.getParameter().connectT(2, converter20);                 // peak_unscaled2 -> converter20::Value
-		peak_unscaled2.getParameter().connectT(3, converter22);                 // peak_unscaled2 -> converter22::Value
-		pma_unscaled3.getWrappedObject().getParameter().connectT(0, add34);     // pma_unscaled3 -> add34::Value
-		peak7.getParameter().connectT(0, pma_unscaled3);                        // peak7 -> pma_unscaled3::Value
-		global_mod3.getParameter().connectT(0, add91);                          // global_mod3 -> add91::Value
-		converter.getWrappedObject().getParameter().connectT(0, phasor_fm2);    // converter -> phasor_fm2::FreqRatio
-		tempo_sync.getParameter().connectT(0, converter);                       // tempo_sync -> converter::Value
-		peak35.getParameter().connectT(0, tempo_sync);                          // peak35 -> tempo_sync::Tempo
-		pma_unscaled15.getWrappedObject().getParameter().connectT(0, add129);   // pma_unscaled15 -> add129::Value
-		peak9.getParameter().connectT(0, pma_unscaled15);                       // peak9 -> pma_unscaled15::Value
-		global_mod13.getParameter().connectT(0, add130);                        // global_mod13 -> add130::Value
-		converter1.getWrappedObject().getParameter().connectT(0, phasor_fm3);   // converter1 -> phasor_fm3::FreqRatio
-		tempo_sync2.getParameter().connectT(0, converter1);                     // tempo_sync2 -> converter1::Value
-		peak_unscaled3.getParameter().connectT(0, tempo_sync2);                 // peak_unscaled3 -> tempo_sync2::Tempo
-		pma_unscaled6.getWrappedObject().getParameter().connectT(0, add37);     // pma_unscaled6 -> add37::Value
-		peak17.getParameter().connectT(0, pma_unscaled6);                       // peak17 -> pma_unscaled6::Value
-		global_mod4.getParameter().connectT(0, add92);                          // global_mod4 -> add92::Value
-		smoothed_parameter1.getParameter().connectT(0, expr4);                  // smoothed_parameter1 -> expr4::Value
-		smoothed_parameter4.getParameter().connectT(0, expr3);                  // smoothed_parameter4 -> expr3::Value
-		peak6.getParameter().connectT(0, gain9);                                // peak6 -> gain9::Gain
-		peak6.getParameter().connectT(1, smoothed_parameter1);                  // peak6 -> smoothed_parameter1::Value
-		peak6.getParameter().connectT(2, smoothed_parameter4);                  // peak6 -> smoothed_parameter4::Value
-		peak6.getParameter().connectT(3, gain3);                                // peak6 -> gain3::Gain
-		peak6.getParameter().connectT(4, gain35);                               // peak6 -> gain35::Gain
-		peak6.getParameter().connectT(5, gain6);                                // peak6 -> gain6::Gain
-		peak6.getParameter().connectT(6, gain4);                                // peak6 -> gain4::Gain
-		peak6.getParameter().connectT(7, gain13);                               // peak6 -> gain13::Gain
-		peak6.getParameter().connectT(8, gain7);                                // peak6 -> gain7::Gain
-		peak6.getParameter().connectT(9, gain14);                               // peak6 -> gain14::Gain
-		peak6.getParameter().connectT(10, gain15);                              // peak6 -> gain15::Gain
-		peak6.getParameter().connectT(11, gain37);                              // peak6 -> gain37::Gain
-		pma_unscaled13.getWrappedObject().getParameter().connectT(0, add44);    // pma_unscaled13 -> add44::Value
-		peak30.getParameter().connectT(0, pma_unscaled13);                      // peak30 -> pma_unscaled13::Value
-		global_mod7.getParameter().connectT(0, add96);                          // global_mod7 -> add96::Value
-		smoothed_parameter5.getParameter().connectT(0, expr7);                  // smoothed_parameter5 -> expr7::Value
-		smoothed_parameter2.getParameter().connectT(0, expr10);                 // smoothed_parameter2 -> expr10::Value
-		peak8.getParameter().connectT(0, gain10);                               // peak8 -> gain10::Gain
-		peak8.getParameter().connectT(1, gain39);                               // peak8 -> gain39::Gain
-		peak8.getParameter().connectT(2, smoothed_parameter5);                  // peak8 -> smoothed_parameter5::Value
-		peak8.getParameter().connectT(3, smoothed_parameter2);                  // peak8 -> smoothed_parameter2::Value
-		peak8.getParameter().connectT(4, gain5);                                // peak8 -> gain5::Gain
-		peak8.getParameter().connectT(5, gain36);                               // peak8 -> gain36::Gain
-		peak8.getParameter().connectT(6, gain11);                               // peak8 -> gain11::Gain
-		peak8.getParameter().connectT(7, gain12);                               // peak8 -> gain12::Gain
-		peak8.getParameter().connectT(8, gain16);                               // peak8 -> gain16::Gain
-		peak8.getParameter().connectT(9, gain17);                               // peak8 -> gain17::Gain
-		peak8.getParameter().connectT(10, gain18);                              // peak8 -> gain18::Gain
-		peak8.getParameter().connectT(11, gain19);                              // peak8 -> gain19::Gain
-		pma_unscaled14.getWrappedObject().getParameter().connectT(0, add55);    // pma_unscaled14 -> add55::Value
-		global_mod8.getParameter().connectT(0, add128);                         // global_mod8 -> add128::Value
-		peak3.getParameter().connectT(0, gain1);                                // peak3 -> gain1::Gain
-		pma_unscaled7.getWrappedObject().getParameter().connectT(0, add45);     // pma_unscaled7 -> add45::Value
-		global_mod5.getParameter().connectT(0, add93);                          // global_mod5 -> add93::Value
-		peak14.getParameter().connectT(0, gain32);                              // peak14 -> gain32::Gain
-		pma_unscaled8.getWrappedObject().getParameter().connectT(0, add46);     // pma_unscaled8 -> add46::Value
-		global_mod6.getParameter().connectT(0, add94);                          // global_mod6 -> add94::Value
-		peak.getParameter().connectT(0, gain20);                                // peak -> gain20::Gain
-		pma_unscaled17.getWrappedObject().getParameter().connectT(0, add153);   // pma_unscaled17 -> add153::Value
-		global_mod15.getParameter().connectT(0, add154);                        // global_mod15 -> add154::Value
-		peak39.getParameter().connectT(0, gain22);                              // peak39 -> gain22::Gain
-		pma_unscaled9.getWrappedObject().getParameter().connectT(0, add47);     // pma_unscaled9 -> add47::Value
-		peak22.getParameter().connectT(0, pma_unscaled9);                       // peak22 -> pma_unscaled9::Value
-		global_mod9.getParameter().connectT(0, add97);                          // global_mod9 -> add97::Value
-		peak23.getParameter().connectT(0, one_pole2);                           // peak23 -> one_pole2::Frequency
-		peak23.getParameter().connectT(1, one_pole3);                           // peak23 -> one_pole3::Frequency
-		peak23.getParameter().connectT(2, svf);                                 // peak23 -> svf::Frequency
-		peak23.getParameter().connectT(3, svf2);                                // peak23 -> svf2::Frequency
-		peak23.getParameter().connectT(4, svf1);                                // peak23 -> svf1::Frequency
-		peak23.getParameter().connectT(5, svf3);                                // peak23 -> svf3::Frequency
-		peak23.getParameter().connectT(6, allpass);                             // peak23 -> allpass::Frequency
-		peak23.getParameter().connectT(7, one_pole4);                           // peak23 -> one_pole4::Frequency
-		peak23.getParameter().connectT(8, one_pole5);                           // peak23 -> one_pole5::Frequency
-		pma_unscaled11.getWrappedObject().getParameter().connectT(0, add54);    // pma_unscaled11 -> add54::Value
-		peak26.getParameter().connectT(0, pma_unscaled11);                      // peak26 -> pma_unscaled11::Value
-		global_mod11.getParameter().connectT(0, add115);                        // global_mod11 -> add115::Value
-		peak27.getParameter().connectT(0, allpass2);                            // peak27 -> allpass2::Frequency
-		peak27.getParameter().connectT(1, svf11);                               // peak27 -> svf11::Frequency
-		peak27.getParameter().connectT(2, svf10);                               // peak27 -> svf10::Frequency
-		peak27.getParameter().connectT(3, svf9);                                // peak27 -> svf9::Frequency
-		peak27.getParameter().connectT(4, svf8);                                // peak27 -> svf8::Frequency
-		peak27.getParameter().connectT(5, one_pole13);                          // peak27 -> one_pole13::Frequency
-		peak27.getParameter().connectT(6, one_pole12);                          // peak27 -> one_pole12::Frequency
-		peak27.getParameter().connectT(7, add15);                               // peak27 -> add15::Value
-		peak27.getParameter().connectT(8, one_pole14);                          // peak27 -> one_pole14::Frequency
-		peak27.getParameter().connectT(9, one_pole15);                          // peak27 -> one_pole15::Frequency
-		pma_unscaled10.getWrappedObject().getParameter().connectT(0, add48);    // pma_unscaled10 -> add48::Value
-		peak24.getParameter().connectT(0, pma_unscaled10);                      // peak24 -> pma_unscaled10::Value
-		global_mod10.getParameter().connectT(0, add98);                         // global_mod10 -> add98::Value
-		peak25.getParameter().connectT(0, gain38);                              // peak25 -> gain38::Gain
-		pma_unscaled12.getWrappedObject().getParameter().connectT(0, add58);    // pma_unscaled12 -> add58::Value
-		peak28.getParameter().connectT(0, pma_unscaled12);                      // peak28 -> pma_unscaled12::Value
-		global_mod12.getParameter().connectT(0, add122);                        // global_mod12 -> add122::Value
-		peak29.getParameter().connectT(0, gain41);                              // peak29 -> gain41::Gain
-		peak15.getParameter().connectT(0, add24);                               // peak15 -> add24::Value
-		peak15.getParameter().connectT(1, add39);                               // peak15 -> add39::Value
-		peak15.getParameter().connectT(2, add30);                               // peak15 -> add30::Value
-		peak15.getParameter().connectT(3, add60);                               // peak15 -> add60::Value
-		peak15.getParameter().connectT(4, add65);                               // peak15 -> add65::Value
-		peak15.getParameter().connectT(5, add70);                               // peak15 -> add70::Value
-		peak15.getParameter().connectT(6, add75);                               // peak15 -> add75::Value
-		peak15.getParameter().connectT(7, add80);                               // peak15 -> add80::Value
-		peak15.getParameter().connectT(8, add117);                              // peak15 -> add117::Value
-		peak15.getParameter().connectT(9, add110);                              // peak15 -> add110::Value
-		peak15.getParameter().connectT(10, add63);                              // peak15 -> add63::Value
-		peak15.getParameter().connectT(11, add73);                              // peak15 -> add73::Value
-		peak15.getParameter().connectT(12, add57);                              // peak15 -> add57::Value
-		peak15.getParameter().connectT(13, add147);                             // peak15 -> add147::Value
-		peak34.getParameter().connectT(0, add23);                               // peak34 -> add23::Value
-		peak34.getParameter().connectT(1, add40);                               // peak34 -> add40::Value
-		peak34.getParameter().connectT(2, add31);                               // peak34 -> add31::Value
-		peak34.getParameter().connectT(3, add61);                               // peak34 -> add61::Value
-		peak34.getParameter().connectT(4, add66);                               // peak34 -> add66::Value
-		peak34.getParameter().connectT(5, add71);                               // peak34 -> add71::Value
-		peak34.getParameter().connectT(6, add76);                               // peak34 -> add76::Value
-		peak34.getParameter().connectT(7, add81);                               // peak34 -> add81::Value
-		peak34.getParameter().connectT(8, add111);                              // peak34 -> add111::Value
-		peak34.getParameter().connectT(9, add118);                              // peak34 -> add118::Value
-		peak34.getParameter().connectT(10, add67);                              // peak34 -> add67::Value
-		peak34.getParameter().connectT(11, add77);                              // peak34 -> add77::Value
-		peak34.getParameter().connectT(12, add68);                              // peak34 -> add68::Value
-		peak34.getParameter().connectT(13, add148);                             // peak34 -> add148::Value
-		cable_table1.getWrappedObject().getParameter().connectT(0, add9);       // cable_table1 -> add9::Value
-		cable_pack.getWrappedObject().getParameter().connectT(0, add10);        // cable_pack -> add10::Value
-		ramp.getParameter().connectT(0, cable_table1);                          // ramp -> cable_table1::Value
-		ramp.getParameter().connectT(1, add7);                                  // ramp -> add7::Value
-		ramp.getParameter().connectT(2, cable_pack);                            // ramp -> cable_pack::Value
-		tempo_sync4.getParameter().connectT(0, ramp);                           // tempo_sync4 -> ramp::PeriodTime
+		pma.getWrappedObject().getParameter().connectT(0, add27);             // pma -> add27::Value
+		peak5.getParameter().connectT(0, pma);                                // peak5 -> pma::Value
+		minmax.getWrappedObject().getParameter().connectT(0, add26);          // minmax -> add26::Value
+		minmax3.getWrappedObject().getParameter().connectT(0, add89);         // minmax3 -> add89::Value
+		global_mod1.getParameter().connectT(0, minmax3);                      // global_mod1 -> minmax3::Value
+		converter2.getWrappedObject().getParameter().connectT(0, phasor_fm1); // converter2 -> phasor_fm1::FreqRatio
+		peak_unscaled.getParameter().connectT(0, converter2);                 // peak_unscaled -> converter2::Value
+		pma1.getWrappedObject().getParameter().connectT(0, add43);            // pma1 -> add43::Value
+		peak13.getParameter().connectT(0, pma1);                              // peak13 -> pma1::Value
+		minmax2.getWrappedObject().getParameter().connectT(0, add42);         // minmax2 -> add42::Value
+		minmax1.getWrappedObject().getParameter().connectT(0, add90);         // minmax1 -> add90::Value
+		converter3.getWrappedObject().getParameter().connectT(0, phasor_fm);  // converter3 -> phasor_fm::FreqRatio
+		peak_unscaled2.getParameter().connectT(0, converter3);                // peak_unscaled2 -> converter3::Value
+		pma_unscaled3.getWrappedObject().getParameter().connectT(0, add34);   // pma_unscaled3 -> add34::Value
+		peak7.getParameter().connectT(0, pma_unscaled3);                      // peak7 -> pma_unscaled3::Value
+		global_mod3.getParameter().connectT(0, add91);                        // global_mod3 -> add91::Value
+		converter.getWrappedObject().getParameter().connectT(0, phasor_fm2);  // converter -> phasor_fm2::FreqRatio
+		tempo_sync.getParameter().connectT(0, converter);                     // tempo_sync -> converter::Value
+		peak35.getParameter().connectT(0, tempo_sync);                        // peak35 -> tempo_sync::Tempo
+		pma_unscaled15.getWrappedObject().getParameter().connectT(0, add129); // pma_unscaled15 -> add129::Value
+		peak9.getParameter().connectT(0, pma_unscaled15);                     // peak9 -> pma_unscaled15::Value
+		global_mod13.getParameter().connectT(0, add130);                      // global_mod13 -> add130::Value
+		converter1.getWrappedObject().getParameter().connectT(0, phasor_fm3); // converter1 -> phasor_fm3::FreqRatio
+		tempo_sync2.getParameter().connectT(0, converter1);                   // tempo_sync2 -> converter1::Value
+		peak36.getParameter().connectT(0, tempo_sync2);                       // peak36 -> tempo_sync2::Tempo
+		pma_unscaled6.getWrappedObject().getParameter().connectT(0, add37);   // pma_unscaled6 -> add37::Value
+		peak17.getParameter().connectT(0, pma_unscaled6);                     // peak17 -> pma_unscaled6::Value
+		global_mod4.getParameter().connectT(0, add92);                        // global_mod4 -> add92::Value
+		smoothed_parameter1.getParameter().connectT(0, expr4);                // smoothed_parameter1 -> expr4::Value
+		smoothed_parameter4.getParameter().connectT(0, expr3);                // smoothed_parameter4 -> expr3::Value
+		peak6.getParameter().connectT(0, gain9);                              // peak6 -> gain9::Gain
+		peak6.getParameter().connectT(1, smoothed_parameter1);                // peak6 -> smoothed_parameter1::Value
+		peak6.getParameter().connectT(2, smoothed_parameter4);                // peak6 -> smoothed_parameter4::Value
+		peak6.getParameter().connectT(3, gain3);                              // peak6 -> gain3::Gain
+		peak6.getParameter().connectT(4, gain35);                             // peak6 -> gain35::Gain
+		peak6.getParameter().connectT(5, gain6);                              // peak6 -> gain6::Gain
+		peak6.getParameter().connectT(6, gain4);                              // peak6 -> gain4::Gain
+		peak6.getParameter().connectT(7, gain13);                             // peak6 -> gain13::Gain
+		peak6.getParameter().connectT(8, gain7);                              // peak6 -> gain7::Gain
+		peak6.getParameter().connectT(9, gain14);                             // peak6 -> gain14::Gain
+		peak6.getParameter().connectT(10, gain15);                            // peak6 -> gain15::Gain
+		peak6.getParameter().connectT(11, gain37);                            // peak6 -> gain37::Gain
+		pma_unscaled13.getWrappedObject().getParameter().connectT(0, add44);  // pma_unscaled13 -> add44::Value
+		peak30.getParameter().connectT(0, pma_unscaled13);                    // peak30 -> pma_unscaled13::Value
+		global_mod7.getParameter().connectT(0, add96);                        // global_mod7 -> add96::Value
+		smoothed_parameter5.getParameter().connectT(0, expr7);                // smoothed_parameter5 -> expr7::Value
+		smoothed_parameter2.getParameter().connectT(0, expr10);               // smoothed_parameter2 -> expr10::Value
+		peak8.getParameter().connectT(0, gain10);                             // peak8 -> gain10::Gain
+		peak8.getParameter().connectT(1, gain39);                             // peak8 -> gain39::Gain
+		peak8.getParameter().connectT(2, smoothed_parameter5);                // peak8 -> smoothed_parameter5::Value
+		peak8.getParameter().connectT(3, smoothed_parameter2);                // peak8 -> smoothed_parameter2::Value
+		peak8.getParameter().connectT(4, gain5);                              // peak8 -> gain5::Gain
+		peak8.getParameter().connectT(5, gain36);                             // peak8 -> gain36::Gain
+		peak8.getParameter().connectT(6, gain11);                             // peak8 -> gain11::Gain
+		peak8.getParameter().connectT(7, gain12);                             // peak8 -> gain12::Gain
+		peak8.getParameter().connectT(8, gain16);                             // peak8 -> gain16::Gain
+		peak8.getParameter().connectT(9, gain17);                             // peak8 -> gain17::Gain
+		peak8.getParameter().connectT(10, gain18);                            // peak8 -> gain18::Gain
+		peak8.getParameter().connectT(11, gain19);                            // peak8 -> gain19::Gain
+		pma_unscaled14.getWrappedObject().getParameter().connectT(0, add55);  // pma_unscaled14 -> add55::Value
+		global_mod8.getParameter().connectT(0, add128);                       // global_mod8 -> add128::Value
+		peak3.getParameter().connectT(0, gain1);                              // peak3 -> gain1::Gain
+		pma_unscaled7.getWrappedObject().getParameter().connectT(0, add45);   // pma_unscaled7 -> add45::Value
+		global_mod5.getParameter().connectT(0, add93);                        // global_mod5 -> add93::Value
+		peak14.getParameter().connectT(0, gain32);                            // peak14 -> gain32::Gain
+		pma_unscaled8.getWrappedObject().getParameter().connectT(0, add46);   // pma_unscaled8 -> add46::Value
+		global_mod6.getParameter().connectT(0, add94);                        // global_mod6 -> add94::Value
+		peak.getParameter().connectT(0, gain20);                              // peak -> gain20::Gain
+		pma_unscaled17.getWrappedObject().getParameter().connectT(0, add153); // pma_unscaled17 -> add153::Value
+		global_mod15.getParameter().connectT(0, add154);                      // global_mod15 -> add154::Value
+		peak39.getParameter().connectT(0, gain22);                            // peak39 -> gain22::Gain
+		pma_unscaled9.getWrappedObject().getParameter().connectT(0, add47);   // pma_unscaled9 -> add47::Value
+		peak22.getParameter().connectT(0, pma_unscaled9);                     // peak22 -> pma_unscaled9::Value
+		global_mod9.getParameter().connectT(0, add97);                        // global_mod9 -> add97::Value
+		peak23.getParameter().connectT(0, one_pole2);                         // peak23 -> one_pole2::Frequency
+		peak23.getParameter().connectT(1, one_pole3);                         // peak23 -> one_pole3::Frequency
+		peak23.getParameter().connectT(2, svf);                               // peak23 -> svf::Frequency
+		peak23.getParameter().connectT(3, svf2);                              // peak23 -> svf2::Frequency
+		peak23.getParameter().connectT(4, svf1);                              // peak23 -> svf1::Frequency
+		peak23.getParameter().connectT(5, svf3);                              // peak23 -> svf3::Frequency
+		peak23.getParameter().connectT(6, allpass);                           // peak23 -> allpass::Frequency
+		peak23.getParameter().connectT(7, one_pole4);                         // peak23 -> one_pole4::Frequency
+		peak23.getParameter().connectT(8, one_pole5);                         // peak23 -> one_pole5::Frequency
+		pma_unscaled11.getWrappedObject().getParameter().connectT(0, add54);  // pma_unscaled11 -> add54::Value
+		peak26.getParameter().connectT(0, pma_unscaled11);                    // peak26 -> pma_unscaled11::Value
+		global_mod11.getParameter().connectT(0, add115);                      // global_mod11 -> add115::Value
+		peak27.getParameter().connectT(0, allpass2);                          // peak27 -> allpass2::Frequency
+		peak27.getParameter().connectT(1, svf11);                             // peak27 -> svf11::Frequency
+		peak27.getParameter().connectT(2, svf10);                             // peak27 -> svf10::Frequency
+		peak27.getParameter().connectT(3, svf9);                              // peak27 -> svf9::Frequency
+		peak27.getParameter().connectT(4, svf8);                              // peak27 -> svf8::Frequency
+		peak27.getParameter().connectT(5, one_pole13);                        // peak27 -> one_pole13::Frequency
+		peak27.getParameter().connectT(6, one_pole12);                        // peak27 -> one_pole12::Frequency
+		peak27.getParameter().connectT(7, add15);                             // peak27 -> add15::Value
+		peak27.getParameter().connectT(8, one_pole14);                        // peak27 -> one_pole14::Frequency
+		peak27.getParameter().connectT(9, one_pole15);                        // peak27 -> one_pole15::Frequency
+		pma_unscaled10.getWrappedObject().getParameter().connectT(0, add48);  // pma_unscaled10 -> add48::Value
+		peak24.getParameter().connectT(0, pma_unscaled10);                    // peak24 -> pma_unscaled10::Value
+		global_mod10.getParameter().connectT(0, add98);                       // global_mod10 -> add98::Value
+		peak25.getParameter().connectT(0, gain38);                            // peak25 -> gain38::Gain
+		pma_unscaled12.getWrappedObject().getParameter().connectT(0, add58);  // pma_unscaled12 -> add58::Value
+		peak28.getParameter().connectT(0, pma_unscaled12);                    // peak28 -> pma_unscaled12::Value
+		global_mod12.getParameter().connectT(0, add122);                      // global_mod12 -> add122::Value
+		peak29.getParameter().connectT(0, gain41);                            // peak29 -> gain41::Gain
+		peak15.getParameter().connectT(0, add24);                             // peak15 -> add24::Value
+		peak15.getParameter().connectT(1, add39);                             // peak15 -> add39::Value
+		peak15.getParameter().connectT(2, add30);                             // peak15 -> add30::Value
+		peak15.getParameter().connectT(3, add60);                             // peak15 -> add60::Value
+		peak15.getParameter().connectT(4, add65);                             // peak15 -> add65::Value
+		peak15.getParameter().connectT(5, add70);                             // peak15 -> add70::Value
+		peak15.getParameter().connectT(6, add75);                             // peak15 -> add75::Value
+		peak15.getParameter().connectT(7, add80);                             // peak15 -> add80::Value
+		peak15.getParameter().connectT(8, add117);                            // peak15 -> add117::Value
+		peak15.getParameter().connectT(9, add110);                            // peak15 -> add110::Value
+		peak15.getParameter().connectT(10, add63);                            // peak15 -> add63::Value
+		peak15.getParameter().connectT(11, add73);                            // peak15 -> add73::Value
+		peak15.getParameter().connectT(12, add57);                            // peak15 -> add57::Value
+		peak15.getParameter().connectT(13, add147);                           // peak15 -> add147::Value
+		peak34.getParameter().connectT(0, add23);                             // peak34 -> add23::Value
+		peak34.getParameter().connectT(1, add40);                             // peak34 -> add40::Value
+		peak34.getParameter().connectT(2, add31);                             // peak34 -> add31::Value
+		peak34.getParameter().connectT(3, add61);                             // peak34 -> add61::Value
+		peak34.getParameter().connectT(4, add66);                             // peak34 -> add66::Value
+		peak34.getParameter().connectT(5, add71);                             // peak34 -> add71::Value
+		peak34.getParameter().connectT(6, add76);                             // peak34 -> add76::Value
+		peak34.getParameter().connectT(7, add81);                             // peak34 -> add81::Value
+		peak34.getParameter().connectT(8, add111);                            // peak34 -> add111::Value
+		peak34.getParameter().connectT(9, add118);                            // peak34 -> add118::Value
+		peak34.getParameter().connectT(10, add67);                            // peak34 -> add67::Value
+		peak34.getParameter().connectT(11, add77);                            // peak34 -> add77::Value
+		peak34.getParameter().connectT(12, add68);                            // peak34 -> add68::Value
+		peak34.getParameter().connectT(13, add148);                           // peak34 -> add148::Value
+		cable_table1.getWrappedObject().getParameter().connectT(0, add9);     // cable_table1 -> add9::Value
+		cable_pack.getWrappedObject().getParameter().connectT(0, add10);      // cable_pack -> add10::Value
+		ramp.getParameter().connectT(0, cable_table1);                        // ramp -> cable_table1::Value
+		ramp.getParameter().connectT(1, add7);                                // ramp -> add7::Value
+		ramp.getParameter().connectT(2, cable_pack);                          // ramp -> cable_pack::Value
+		tempo_sync4.getParameter().connectT(0, ramp);                         // tempo_sync4 -> ramp::PeriodTime
 		auto& ahdsr_p = ahdsr.getWrappedObject().getParameter();
 		ahdsr_p.getParameterT(0).connectT(0, add8);                             // ahdsr -> add8::Value
 		input_toggle.getWrappedObject().getParameter().connectT(0, ahdsr);      // input_toggle -> ahdsr::Gate
@@ -6653,6 +6656,18 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		peak2.getParameter().connectT(0, pma3);                                 // peak2 -> pma3::Value
 		peak31.getParameter().connectT(0, add78);                               // peak31 -> add78::Value
 		peak31.getParameter().connectT(1, add149);                              // peak31 -> add149::Value
+		peak31.getParameter().connectT(2, add25);                               // peak31 -> add25::Value
+		peak31.getParameter().connectT(3, add41);                               // peak31 -> add41::Value
+		peak31.getParameter().connectT(4, add32);                               // peak31 -> add32::Value
+		peak31.getParameter().connectT(5, add84);                               // peak31 -> add84::Value
+		peak31.getParameter().connectT(6, add95);                               // peak31 -> add95::Value
+		peak31.getParameter().connectT(7, add125);                              // peak31 -> add125::Value
+		peak31.getParameter().connectT(8, add88);                               // peak31 -> add88::Value
+		peak31.getParameter().connectT(9, add85);                               // peak31 -> add85::Value
+		peak31.getParameter().connectT(10, add119);                             // peak31 -> add119::Value
+		peak31.getParameter().connectT(11, add87);                              // peak31 -> add87::Value
+		peak31.getParameter().connectT(12, add112);                             // peak31 -> add112::Value
+		peak31.getParameter().connectT(13, add86);                              // peak31 -> add86::Value
 		cable_table2.getWrappedObject().getParameter().connectT(0, add18);      // cable_table2 -> add18::Value
 		cable_pack1.getWrappedObject().getParameter().connectT(0, add19);       // cable_pack1 -> add19::Value
 		ramp1.getParameter().connectT(0, add16);                                // ramp1 -> add16::Value
@@ -6676,32 +6691,20 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		pma2.getWrappedObject().getParameter().connectT(0, smoothed_parameter3); // pma2 -> smoothed_parameter3::Value
 		pma2.getWrappedObject().getParameter().connectT(1, cable_table6);        // pma2 -> cable_table6::Value
 		peak12.getParameter().connectT(0, pma2);                                 // peak12 -> pma2::Value
-		peak19.getParameter().connectT(0, add25);                                // peak19 -> add25::Value
-		peak19.getParameter().connectT(1, add41);                                // peak19 -> add41::Value
-		peak19.getParameter().connectT(2, add32);                                // peak19 -> add32::Value
-		peak19.getParameter().connectT(3, add84);                                // peak19 -> add84::Value
-		peak19.getParameter().connectT(4, add88);                                // peak19 -> add88::Value
-		peak19.getParameter().connectT(5, add85);                                // peak19 -> add85::Value
-		peak19.getParameter().connectT(6, add86);                                // peak19 -> add86::Value
-		peak19.getParameter().connectT(7, add87);                                // peak19 -> add87::Value
-		peak19.getParameter().connectT(8, add119);                               // peak19 -> add119::Value
-		peak19.getParameter().connectT(9, add112);                               // peak19 -> add112::Value
-		peak19.getParameter().connectT(10, add95);                               // peak19 -> add95::Value
-		peak19.getParameter().connectT(11, add125);                              // peak19 -> add125::Value
-		peak19.getParameter().connectT(12, add38);                               // peak19 -> add38::Value
-		peak19.getParameter().connectT(13, add64);                               // peak19 -> add64::Value
-		peak19.getParameter().connectT(14, add62);                               // peak19 -> add62::Value
-		peak19.getParameter().connectT(15, add72);                               // peak19 -> add72::Value
-		peak19.getParameter().connectT(16, add69);                               // peak19 -> add69::Value
-		peak19.getParameter().connectT(17, add150);                              // peak19 -> add150::Value
-		peak19.getParameter().connectT(18, add56);                               // peak19 -> add56::Value
-		peak19.getParameter().connectT(19, add59);                               // peak19 -> add59::Value
-		peak19.getParameter().connectT(20, add74);                               // peak19 -> add74::Value
-		peak19.getParameter().connectT(21, add109);                              // peak19 -> add109::Value
-		peak19.getParameter().connectT(22, add79);                               // peak19 -> add79::Value
-		peak19.getParameter().connectT(23, add116);                              // peak19 -> add116::Value
-		peak19.getParameter().connectT(24, add29);                               // peak19 -> add29::Value
-		peak19.getParameter().connectT(25, add1);                                // peak19 -> add1::Value
+		peak19.getParameter().connectT(0, add38);                                // peak19 -> add38::Value
+		peak19.getParameter().connectT(1, add64);                                // peak19 -> add64::Value
+		peak19.getParameter().connectT(2, add62);                                // peak19 -> add62::Value
+		peak19.getParameter().connectT(3, add72);                                // peak19 -> add72::Value
+		peak19.getParameter().connectT(4, add69);                                // peak19 -> add69::Value
+		peak19.getParameter().connectT(5, add150);                               // peak19 -> add150::Value
+		peak19.getParameter().connectT(6, add56);                                // peak19 -> add56::Value
+		peak19.getParameter().connectT(7, add59);                                // peak19 -> add59::Value
+		peak19.getParameter().connectT(8, add74);                                // peak19 -> add74::Value
+		peak19.getParameter().connectT(9, add109);                               // peak19 -> add109::Value
+		peak19.getParameter().connectT(10, add79);                               // peak19 -> add79::Value
+		peak19.getParameter().connectT(11, add116);                              // peak19 -> add116::Value
+		peak19.getParameter().connectT(12, add29);                               // peak19 -> add29::Value
+		peak19.getParameter().connectT(13, add1);                                // peak19 -> add1::Value
 		auto& sliderbank_p = sliderbank.getWrappedObject().getParameter();
 		sliderbank_p.getParameterT(0).connectT(0, receive7);                    // sliderbank -> receive7::Feedback
 		sliderbank_p.getParameterT(1).connectT(0, receive6);                    // sliderbank -> receive6::Feedback
@@ -6715,6 +6718,8 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		midi1.getParameter().connectT(0, converter8);                           // midi1 -> converter8::Value
 		converter17.getWrappedObject().getParameter().connectT(0, jdelay5);     // converter17 -> jdelay5::DelayTime
 		converter16.getWrappedObject().getParameter().connectT(0, converter17); // converter16 -> converter17::Value
+		converter19.getWrappedObject().getParameter().connectT(0, jdelay6);     // converter19 -> jdelay6::DelayTime
+		converter18.getWrappedObject().getParameter().connectT(0, converter19); // converter18 -> converter19::Value
 		peak32.getParameter().connectT(0, add33);                               // peak32 -> add33::Value
 		peak32.getParameter().connectT(1, add49);                               // peak32 -> add49::Value
 		peak32.getParameter().connectT(2, add50);                               // peak32 -> add50::Value
@@ -6744,6 +6749,10 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		converter15.getWrappedObject().getParameter().connectT(0, jdelay4);     // converter15 -> jdelay4::DelayTime
 		converter14.getWrappedObject().getParameter().connectT(0, converter15); // converter14 -> converter15::Value
 		midi4.getParameter().connectT(0, converter14);                          // midi4 -> converter14::Value
+		converter21.getWrappedObject().getParameter().connectT(0, jdelay7);     // converter21 -> jdelay7::DelayTime
+		converter20.getWrappedObject().getParameter().connectT(0, converter21); // converter20 -> converter21::Value
+		converter23.getWrappedObject().getParameter().connectT(0, jdelay8);     // converter23 -> jdelay8::DelayTime
+		converter22.getWrappedObject().getParameter().connectT(0, converter23); // converter22 -> converter23::Value
 		peak33.getParameter().connectT(0, add108);                              // peak33 -> add108::Value
 		peak33.getParameter().connectT(1, add107);                              // peak33 -> add107::Value
 		peak33.getParameter().connectT(2, add106);                              // peak33 -> add106::Value
@@ -6779,8 +6788,6 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		send17.connect(receive30);
 		send17.connect(receive35);
 		send11.connect(receive14);
-		send11.connect(receive25);
-		send11.connect(receive30);
 		send11.connect(receive37);
 		send11.connect(receive38);
 		send11.connect(receive39);
@@ -6832,17 +6839,30 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		; // add36::Value is automated
 		
+		;                                 // pma::Value is automated
+		;                                 // pma::Multiply is automated
+		pma.setParameterT(2, -0.0297686); // control::pma::Add
+		
+		; // add27::Value is automated
+		
 		;                                 // global_mod1::Index is automated
 		global_mod1.setParameterT(1, 0.); // core::global_mod::Value
 		global_mod1.setParameterT(2, 0.); // core::global_mod::ProcessSignal
 		global_mod1.setParameterT(3, 1.); // core::global_mod::Mode
 		;                                 // global_mod1::Intensity is automated
 		
+		;                               // minmax3::Value is automated
+		minmax3.setParameterT(1, -12.); // control::minmax::Minimum
+		minmax3.setParameterT(2, 12.);  // control::minmax::Maximum
+		minmax3.setParameterT(3, 1.);   // control::minmax::Skew
+		minmax3.setParameterT(4, 0.);   // control::minmax::Step
+		minmax3.setParameterT(5, 0.);   // control::minmax::Polarity
+		
 		; // add89::Value is automated
 		
 		; // sub21::Value is automated
 		
-		mod2sig.setParameterT(0, 0.); // math::mod2sig::Value
+		mod2sig1.setParameterT(0, 0.); // math::mod2sig::Value
 		
 		; // branch12::Index is automated
 		
@@ -6867,19 +6887,34 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		minmax2.setParameterT(4, 0.);   // control::minmax::Step
 		minmax2.setParameterT(5, 0.);   // control::minmax::Polarity
 		
-		add42.setParameterT(0, 0.); // math::add::Value
+		; // add42::Value is automated
 		
 		; // add35::Value is automated
+		
+		;                                  // pma1::Value is automated
+		;                                  // pma1::Multiply is automated
+		pma1.setParameterT(2, -0.0297686); // control::pma::Add
+		
+		; // add43::Value is automated
 		
 		;                                // global_mod::Index is automated
 		global_mod.setParameterT(1, 0.); // core::global_mod::Value
 		global_mod.setParameterT(2, 0.); // core::global_mod::ProcessSignal
-		global_mod.setParameterT(3, 0.); // core::global_mod::Mode
+		global_mod.setParameterT(3, 1.); // core::global_mod::Mode
 		;                                // global_mod::Intensity is automated
+		
+		minmax1.setParameterT(0, 0.);   // control::minmax::Value
+		minmax1.setParameterT(1, -12.); // control::minmax::Minimum
+		minmax1.setParameterT(2, 12.);  // control::minmax::Maximum
+		minmax1.setParameterT(3, 1.);   // control::minmax::Skew
+		minmax1.setParameterT(4, 0.);   // control::minmax::Step
+		minmax1.setParameterT(5, 0.);   // control::minmax::Polarity
 		
 		; // add90::Value is automated
 		
 		; // sub3::Value is automated
+		
+		mod2sig.setParameterT(0, 0.); // math::mod2sig::Value
 		
 		; // branch10::Index is automated
 		
@@ -7255,9 +7290,9 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		receive32.setParameterT(0, 1.); // routing::receive::Feedback
 		
-		;                            // gain1::Gain is automated
-		gain1.setParameterT(1, 20.); // core::gain::Smoothing
-		gain1.setParameterT(2, 0.);  // core::gain::ResetValue
+		;                              // gain1::Gain is automated
+		gain1.setParameterT(1, 0.);    // core::gain::Smoothing
+		gain1.setParameterT(2, -100.); // core::gain::ResetValue
 		
 		; // branch2::Index is automated
 		
@@ -7283,7 +7318,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		; // branch::Index is automated
 		
 		;                              // gain9::Gain is automated
-		gain9.setParameterT(1, 232.9); // core::gain::Smoothing
+		gain9.setParameterT(1, 0.);    // core::gain::Smoothing
 		gain9.setParameterT(2, -100.); // core::gain::ResetValue
 		
 		pi1.setParameterT(0, 0.650239); // math::pi::Value
@@ -7291,7 +7326,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		expr.setParameterT(0, 1.); // math::expr::Value
 		
 		;                               // gain37::Gain is automated
-		gain37.setParameterT(1, 232.9); // core::gain::Smoothing
+		gain37.setParameterT(1, 0.);    // core::gain::Smoothing
 		gain37.setParameterT(2, -100.); // core::gain::ResetValue
 		
 		fmod12.setParameterT(0, 1.); // math::fmod::Value
@@ -7320,27 +7355,27 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		pi.setParameterT(0, 0.648856); // math::pi::Value
 		
-		;                              // gain3::Gain is automated
-		gain3.setParameterT(1, 107.2); // core::gain::Smoothing
-		gain3.setParameterT(2, 0.);    // core::gain::ResetValue
+		;                           // gain3::Gain is automated
+		gain3.setParameterT(1, 0.); // core::gain::Smoothing
+		gain3.setParameterT(2, 0.); // core::gain::ResetValue
 		
 		pi6.setParameterT(0, 0.648856); // math::pi::Value
 		
-		;                               // gain35::Gain is automated
-		gain35.setParameterT(1, 107.2); // core::gain::Smoothing
-		gain35.setParameterT(2, 0.);    // core::gain::ResetValue
+		;                            // gain35::Gain is automated
+		gain35.setParameterT(1, 0.); // core::gain::Smoothing
+		gain35.setParameterT(2, 0.); // core::gain::ResetValue
 		
 		fmod10.setParameterT(0, 1.); // math::fmod::Value
 		
-		;                              // gain6::Gain is automated
-		gain6.setParameterT(1, 107.2); // core::gain::Smoothing
-		gain6.setParameterT(2, 0.);    // core::gain::ResetValue
+		;                           // gain6::Gain is automated
+		gain6.setParameterT(1, 0.); // core::gain::Smoothing
+		gain6.setParameterT(2, 0.); // core::gain::ResetValue
 		
 		rect.setParameterT(0, 1.); // math::rect::Value
 		
-		;                              // gain4::Gain is automated
-		gain4.setParameterT(1, 107.2); // core::gain::Smoothing
-		gain4.setParameterT(2, 0.);    // core::gain::ResetValue
+		;                           // gain4::Gain is automated
+		gain4.setParameterT(1, 0.); // core::gain::Smoothing
+		gain4.setParameterT(2, 0.); // core::gain::ResetValue
 		
 		fmod2.setParameterT(0, 1.); // math::fmod::Value
 		
@@ -7348,23 +7383,23 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		rect1.setParameterT(0, 1.); // math::rect::Value
 		
-		;                               // gain13::Gain is automated
-		gain13.setParameterT(1, 107.2); // core::gain::Smoothing
-		gain13.setParameterT(2, 0.);    // core::gain::ResetValue
+		;                            // gain13::Gain is automated
+		gain13.setParameterT(1, 0.); // core::gain::Smoothing
+		gain13.setParameterT(2, 0.); // core::gain::ResetValue
 		
-		;                              // gain7::Gain is automated
-		gain7.setParameterT(1, 107.2); // core::gain::Smoothing
-		gain7.setParameterT(2, 0.);    // core::gain::ResetValue
+		;                           // gain7::Gain is automated
+		gain7.setParameterT(1, 0.); // core::gain::Smoothing
+		gain7.setParameterT(2, 0.); // core::gain::ResetValue
 		
 		fmod4.setParameterT(0, 1.); // math::fmod::Value
 		
-		;                               // gain14::Gain is automated
-		gain14.setParameterT(1, 107.2); // core::gain::Smoothing
-		gain14.setParameterT(2, 0.);    // core::gain::ResetValue
+		;                            // gain14::Gain is automated
+		gain14.setParameterT(1, 0.); // core::gain::Smoothing
+		gain14.setParameterT(2, 0.); // core::gain::ResetValue
 		
-		;                               // gain15::Gain is automated
-		gain15.setParameterT(1, 107.2); // core::gain::Smoothing
-		gain15.setParameterT(2, 0.);    // core::gain::ResetValue
+		;                            // gain15::Gain is automated
+		gain15.setParameterT(1, 0.); // core::gain::Smoothing
+		gain15.setParameterT(2, 0.); // core::gain::ResetValue
 		
 		fmod6.setParameterT(0, 1.); // math::fmod::Value
 		
@@ -7387,10 +7422,12 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		receive26.setParameterT(0, 1.); // routing::receive::Feedback
 		
 		;                               // gain32::Gain is automated
-		gain32.setParameterT(1, 28.5);  // core::gain::Smoothing
+		gain32.setParameterT(1, 0.);    // core::gain::Smoothing
 		gain32.setParameterT(2, -100.); // core::gain::ResetValue
 		
 		; // branch5::Index is automated
+		
+		; // converter3::Value is automated
 		
 		phasor_fm.setParameterT(0, 1.);   // core::phasor_fm::Gate
 		phasor_fm.setParameterT(1, 110.); // core::phasor_fm::Frequency
@@ -7412,7 +7449,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		; // branch4::Index is automated
 		
 		;                               // gain10::Gain is automated
-		gain10.setParameterT(1, 232.9); // core::gain::Smoothing
+		gain10.setParameterT(1, 0.);    // core::gain::Smoothing
 		gain10.setParameterT(2, -100.); // core::gain::ResetValue
 		
 		pi3.setParameterT(0, 0.650239); // math::pi::Value
@@ -7420,7 +7457,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		expr1.setParameterT(0, 1.); // math::expr::Value
 		
 		;                               // gain39::Gain is automated
-		gain39.setParameterT(1, 232.9); // core::gain::Smoothing
+		gain39.setParameterT(1, 0.);    // core::gain::Smoothing
 		gain39.setParameterT(2, -100.); // core::gain::ResetValue
 		
 		fmod13.setParameterT(0, 1.); // math::fmod::Value
@@ -7449,27 +7486,27 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		pi4.setParameterT(0, 0.648856); // math::pi::Value
 		
-		;                              // gain5::Gain is automated
-		gain5.setParameterT(1, 107.2); // core::gain::Smoothing
-		gain5.setParameterT(2, 0.);    // core::gain::ResetValue
+		;                           // gain5::Gain is automated
+		gain5.setParameterT(1, 0.); // core::gain::Smoothing
+		gain5.setParameterT(2, 0.); // core::gain::ResetValue
 		
 		pi7.setParameterT(0, 0.648856); // math::pi::Value
 		
-		;                               // gain36::Gain is automated
-		gain36.setParameterT(1, 107.2); // core::gain::Smoothing
-		gain36.setParameterT(2, 0.);    // core::gain::ResetValue
+		;                            // gain36::Gain is automated
+		gain36.setParameterT(1, 0.); // core::gain::Smoothing
+		gain36.setParameterT(2, 0.); // core::gain::ResetValue
 		
 		fmod11.setParameterT(0, 1.); // math::fmod::Value
 		
-		;                               // gain11::Gain is automated
-		gain11.setParameterT(1, 107.2); // core::gain::Smoothing
-		gain11.setParameterT(2, 0.);    // core::gain::ResetValue
+		;                            // gain11::Gain is automated
+		gain11.setParameterT(1, 0.); // core::gain::Smoothing
+		gain11.setParameterT(2, 0.); // core::gain::ResetValue
 		
 		rect2.setParameterT(0, 1.); // math::rect::Value
 		
-		;                               // gain12::Gain is automated
-		gain12.setParameterT(1, 107.2); // core::gain::Smoothing
-		gain12.setParameterT(2, 0.);    // core::gain::ResetValue
+		;                            // gain12::Gain is automated
+		gain12.setParameterT(1, 0.); // core::gain::Smoothing
+		gain12.setParameterT(2, 0.); // core::gain::ResetValue
 		
 		fmod3.setParameterT(0, 1.); // math::fmod::Value
 		
@@ -7477,23 +7514,23 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		rect3.setParameterT(0, 1.); // math::rect::Value
 		
-		;                               // gain16::Gain is automated
-		gain16.setParameterT(1, 107.2); // core::gain::Smoothing
-		gain16.setParameterT(2, 0.);    // core::gain::ResetValue
+		;                            // gain16::Gain is automated
+		gain16.setParameterT(1, 0.); // core::gain::Smoothing
+		gain16.setParameterT(2, 0.); // core::gain::ResetValue
 		
-		;                               // gain17::Gain is automated
-		gain17.setParameterT(1, 107.2); // core::gain::Smoothing
-		gain17.setParameterT(2, 0.);    // core::gain::ResetValue
+		;                            // gain17::Gain is automated
+		gain17.setParameterT(1, 0.); // core::gain::Smoothing
+		gain17.setParameterT(2, 0.); // core::gain::ResetValue
 		
 		fmod5.setParameterT(0, 1.); // math::fmod::Value
 		
-		;                               // gain18::Gain is automated
-		gain18.setParameterT(1, 107.2); // core::gain::Smoothing
-		gain18.setParameterT(2, 0.);    // core::gain::ResetValue
+		;                            // gain18::Gain is automated
+		gain18.setParameterT(1, 0.); // core::gain::Smoothing
+		gain18.setParameterT(2, 0.); // core::gain::ResetValue
 		
-		;                               // gain19::Gain is automated
-		gain19.setParameterT(1, 107.2); // core::gain::Smoothing
-		gain19.setParameterT(2, 0.);    // core::gain::ResetValue
+		;                            // gain19::Gain is automated
+		gain19.setParameterT(1, 0.); // core::gain::Smoothing
+		gain19.setParameterT(2, 0.); // core::gain::ResetValue
 		
 		fmod7.setParameterT(0, 1.); // math::fmod::Value
 		
@@ -7658,12 +7695,12 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		one_pole8.setParameterT(4, 1.);      // filters::one_pole::Mode
 		one_pole8.setParameterT(5, 1.);      // filters::one_pole::Enabled
 		
-		;                             // gain22::Gain is automated
-		gain22.setParameterT(1, 20.); // core::gain::Smoothing
-		gain22.setParameterT(2, 0.);  // core::gain::ResetValue
+		;                            // gain22::Gain is automated
+		gain22.setParameterT(1, 0.); // core::gain::Smoothing
+		gain22.setParameterT(2, 0.); // core::gain::ResetValue
 		
 		;                             // gain23::Gain is automated
-		gain23.setParameterT(1, 20.); // core::gain::Smoothing
+		gain23.setParameterT(1, 0.8); // core::gain::Smoothing
 		gain23.setParameterT(2, 0.);  // core::gain::ResetValue
 		
 		;                                   // tempo_sync3::Tempo is automated
@@ -7872,7 +7909,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		; // receive3::Feedback is automated
 		
-		; // converter18::Value is automated
+		converter18.setParameterT(0, 0.); // control::converter::Value
 		
 		; // converter19::Value is automated
 		
@@ -7908,8 +7945,6 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		; // receive14::Feedback is automated
 		
 		; // receive18::Feedback is automated
-		
-		; // branch24::Index is automated
 		
 		; // branch13::Index is automated
 		
@@ -7989,7 +8024,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		; // receive27::Feedback is automated
 		
-		; // converter20::Value is automated
+		converter20.setParameterT(0, 0.); // control::converter::Value
 		
 		; // converter21::Value is automated
 		
@@ -8005,7 +8040,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		; // receive28::Feedback is automated
 		
-		; // converter22::Value is automated
+		converter22.setParameterT(0, 0.); // control::converter::Value
 		
 		; // converter23::Value is automated
 		
@@ -8044,50 +8079,50 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		;                            // gain::Gain is automated
 		gain.setParameterT(1, 20.);  // core::gain::Smoothing
-		gain.setParameterT(2, -34.); // core::gain::ResetValue
+		gain.setParameterT(2, -18.); // core::gain::ResetValue
 		
-		this->setParameterT(0, 11.);
+		this->setParameterT(0, 0.);
 		this->setParameterT(1, 0.);
 		this->setParameterT(2, 0.);
 		this->setParameterT(3, 0.);
 		this->setParameterT(4, 0.);
 		this->setParameterT(5, 1.);
-		this->setParameterT(6, 1.);
-		this->setParameterT(7, 1.);
+		this->setParameterT(6, 32.);
+		this->setParameterT(7, 2.);
 		this->setParameterT(8, 1.);
 		this->setParameterT(9, 0.51);
-		this->setParameterT(10, 0.);
-		this->setParameterT(11, 0.);
+		this->setParameterT(10, 0.77);
+		this->setParameterT(11, 0.05);
 		this->setParameterT(12, 1.);
 		this->setParameterT(13, 0.);
 		this->setParameterT(14, 0.);
 		this->setParameterT(15, 1.);
 		this->setParameterT(16, 0.);
 		this->setParameterT(17, 1.);
-		this->setParameterT(18, 0.92);
+		this->setParameterT(18, 1.);
 		this->setParameterT(19, 0.);
-		this->setParameterT(20, 0.);
+		this->setParameterT(20, -0.04);
 		this->setParameterT(21, 1.);
-		this->setParameterT(22, 0.);
-		this->setParameterT(23, 0.93);
+		this->setParameterT(22, 2.);
+		this->setParameterT(23, 0.69);
 		this->setParameterT(24, 0.);
 		this->setParameterT(25, 0.);
 		this->setParameterT(26, 1.);
-		this->setParameterT(27, 0.);
-		this->setParameterT(28, 0.);
-		this->setParameterT(29, 1.);
-		this->setParameterT(30, -24.);
-		this->setParameterT(31, 0.);
+		this->setParameterT(27, 0.96);
+		this->setParameterT(28, -0.04);
+		this->setParameterT(29, 2.);
+		this->setParameterT(30, -23.);
+		this->setParameterT(31, -0.244125);
 		this->setParameterT(32, 0.);
 		this->setParameterT(33, 0.);
 		this->setParameterT(34, 1.);
 		this->setParameterT(35, 1.);
-		this->setParameterT(36, 0.);
+		this->setParameterT(36, 0.99);
 		this->setParameterT(37, 0.);
 		this->setParameterT(38, 0.);
 		this->setParameterT(39, 1.);
 		this->setParameterT(40, 1.);
-		this->setParameterT(41, 0.);
+		this->setParameterT(41, 1.);
 		this->setParameterT(42, 0.);
 		this->setParameterT(43, 0.);
 		this->setParameterT(44, 1.);
@@ -8097,9 +8132,9 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->setParameterT(48, 1.);
 		this->setParameterT(49, 0.);
 		this->setParameterT(50, 0.);
-		this->setParameterT(51, 0.);
+		this->setParameterT(51, 0.78);
 		this->setParameterT(52, 1.);
-		this->setParameterT(53, 1.);
+		this->setParameterT(53, 3.);
 		this->setParameterT(54, 0.);
 		this->setParameterT(55, 0.);
 		this->setParameterT(56, 0.);
@@ -8108,18 +8143,18 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->setParameterT(59, 1.);
 		this->setParameterT(60, 1.);
 		this->setParameterT(61, 1.);
-		this->setParameterT(62, 0.);
-		this->setParameterT(63, 1.);
-		this->setParameterT(64, 0.);
-		this->setParameterT(65, 2.3);
-		this->setParameterT(66, 0.);
-		this->setParameterT(67, 0.5);
-		this->setParameterT(68, 0.);
+		this->setParameterT(62, 1.);
+		this->setParameterT(63, 0.);
+		this->setParameterT(64, 3715.);
+		this->setParameterT(65, 0.);
+		this->setParameterT(66, 10000.);
+		this->setParameterT(67, 0.);
+		this->setParameterT(68, 1908.);
 		this->setParameterT(69, 1.);
 		this->setParameterT(70, 6.1);
-		this->setParameterT(71, 1.);
-		this->setParameterT(72, 1.);
-		this->setParameterT(73, 0.);
+		this->setParameterT(71, 7.);
+		this->setParameterT(72, 5.);
+		this->setParameterT(73, 1.);
 		this->setParameterT(74, 1.);
 		this->setParameterT(75, 1.);
 		this->setParameterT(76, 0.);
@@ -8131,7 +8166,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->setParameterT(82, 1.);
 		this->setParameterT(83, 1.);
 		this->setParameterT(84, 1.);
-		this->setParameterT(85, 0.84);
+		this->setParameterT(85, 0.5);
 		this->setParameterT(86, 0.);
 		this->setParameterT(87, 0.);
 		this->setParameterT(88, 0.);
@@ -8144,28 +8179,28 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->setParameterT(95, 10000.);
 		this->setParameterT(96, 0.);
 		this->setParameterT(97, 1.);
-		this->setParameterT(98, 1.);
-		this->setParameterT(99, 0.);
-		this->setParameterT(100, 1.);
+		this->setParameterT(98, 14.);
+		this->setParameterT(99, 1.);
+		this->setParameterT(100, 2.);
 		this->setParameterT(101, 0.);
-		this->setParameterT(102, 0.);
+		this->setParameterT(102, 0.61);
 		this->setParameterT(103, 0.);
 		this->setParameterT(104, 0.);
 		this->setParameterT(105, 1.);
 		this->setParameterT(106, 1.);
 		this->setParameterT(107, 1.);
 		this->setParameterT(108, 1.);
-		this->setParameterT(109, 1.);
-		this->setParameterT(110, 0.);
-		this->setParameterT(111, 0.);
+		this->setParameterT(109, 3.);
+		this->setParameterT(110, 1.);
+		this->setParameterT(111, 222.);
 		this->setParameterT(112, 0.);
-		this->setParameterT(113, 10000.);
+		this->setParameterT(113, 2);
 		this->setParameterT(114, 1.);
-		this->setParameterT(115, 436.6);
+		this->setParameterT(115, 3);
 		this->setParameterT(116, 0.);
 		this->setParameterT(117, 0.);
 		this->setParameterT(118, 1.);
-		this->setParameterT(119, 1.);
+		this->setParameterT(119, 0.);
 		this->setParameterT(120, 0.);
 		this->setParameterT(121, 0.);
 		this->setExternalData({}, -1);
@@ -8190,9 +8225,9 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		// Runtime target Connections --------------------------------------------------------------
 		
 		this->getT(0).getT(0).getT(0).getT(0).getT(3).                                                          // Sm2_impl::global_mod1_t<NV>
-        getT(0).getT(0).getT(2).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
+        getT(0).getT(0).getT(3).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
 		this->getT(0).getT(0).getT(1).getT(0).                                                                  // Sm2_impl::global_mod_t<NV>
-        getT(3).getT(0).getT(0).getT(2).
+        getT(3).getT(0).getT(0).getT(3).
         getT(0).connectToRuntimeTarget(addConnection, c);
 		this->getT(0).getT(0).getT(2).getT(0).                                                                  // Sm2_impl::global_mod3_t<NV>
         getT(3).getT(0).getT(1).getT(0).connectToRuntimeTarget(addConnection, c);
@@ -8225,16 +8260,16 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 	{
 		// External Data Connections ---------------------------------------------------------------
 		
-		this->getT(0).getT(0).getT(0).getT(0).getT(1).setExternalData(b, index);                 // Sm2_impl::peak5_t
+		this->getT(0).getT(0).getT(0).getT(0).getT(1).setExternalData(b, index);                 // Sm2_impl::peak5_t<NV>
 		this->getT(0).getT(0).getT(0).getT(0).getT(3).                                           // Sm2_impl::global_mod1_t<NV>
-        getT(0).getT(0).getT(2).getT(0).getT(0).setExternalData(b, index);
+        getT(0).getT(0).getT(3).getT(0).getT(0).setExternalData(b, index);
 		this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(2).setExternalData(b, index); // Sm2_impl::peak16_t
 		this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(4).setExternalData(b, index); // Sm2_impl::peak_unscaled_t<NV>
-		this->getT(0).getT(0).getT(1).getT(0).getT(1).setExternalData(b, index);                 // Sm2_impl::peak13_t
+		this->getT(0).getT(0).getT(1).getT(0).getT(1).setExternalData(b, index);                 // Sm2_impl::peak13_t<NV>
 		this->getT(0).getT(0).getT(1).getT(0).                                                   // Sm2_impl::global_mod_t<NV>
-        getT(3).getT(0).getT(0).getT(2).
+        getT(3).getT(0).getT(0).getT(3).
         getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0).getT(2).setExternalData(b, index); // Sm2_impl::peak_unscaled2_t<NV>
+		this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0).getT(3).setExternalData(b, index); // Sm2_impl::peak_unscaled2_t<NV>
 		this->getT(0).getT(0).getT(2).getT(0).getT(1).setExternalData(b, index);                 // Sm2_impl::peak7_t<NV>
 		this->getT(0).getT(0).getT(2).getT(0).                                                   // Sm2_impl::global_mod3_t<NV>
         getT(3).getT(0).getT(1).getT(0).setExternalData(b, index);
@@ -8242,7 +8277,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->getT(0).getT(0).getT(3).getT(0).getT(1).setExternalData(b, index);                 // Sm2_impl::peak9_t<NV>
 		this->getT(0).getT(0).getT(3).getT(0).                                                   // Sm2_impl::global_mod13_t<NV>
         getT(3).getT(0).getT(1).getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(3).getT(0).getT(3).getT(1).setExternalData(b, index);         // Sm2_impl::peak_unscaled3_t<NV>
+		this->getT(0).getT(0).getT(3).getT(0).getT(4).setExternalData(b, index);                 // Sm2_impl::peak36_t<NV>
 		this->getT(0).getT(0).getT(4).getT(0).getT(1).setExternalData(b, index);                 // Sm2_impl::peak17_t<NV>
 		this->getT(0).getT(0).getT(4).getT(0).                                                   // Sm2_impl::global_mod4_t<NV>
         getT(3).getT(1).getT(0).getT(0).setExternalData(b, index);
@@ -8395,7 +8430,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
         getT(0).getT(1).getT(0).getT(1).
         getT(1).setExternalData(b, index);
 		this->getT(0).getT(3).getT(1).getT(0).setExternalData(b, index); // Sm2_impl::sliderbank1_t<NV>
-		this->getT(0).getT(3).getT(1).getT(4).                           // Sm2_impl::peak33_t<NV>
+		this->getT(0).getT(3).getT(1).getT(3).                           // Sm2_impl::peak33_t<NV>
         getT(0).getT(1).getT(0).getT(1).
         getT(1).setExternalData(b, index);
 		this->getT(1).setExternalData(b, index); // Sm2_impl::ahdsr1_t<NV>
