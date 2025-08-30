@@ -43,6 +43,7 @@ struct Factory: public scriptnode::dll::StaticLibraryHostFactory
 		registerDataNode<project::mp_networkdata>();
 		registerDataNode<project::pitch_networkdata>();
 		registerDataNode<project::PitchTempo_networkdata>();
+		registerDataNode<project::ptichCorrect_networkdata>();
 		registerDataNode<project::Revern_networkdata>();
 		registerDataNode<project::rp_networkdata>();
 		registerDataNode<project::SuperDetune_networkdata>();

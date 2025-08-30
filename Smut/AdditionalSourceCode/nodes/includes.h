@@ -24,6 +24,7 @@
 #include "mp_networkdata.h"
 #include "PitchTempo_networkdata.h"
 #include "pitch_networkdata.h"
+#include "ptichCorrect_networkdata.h"
 #include "Revern_networkdata.h"
 #include "rp_networkdata.h"
 #include "Sm2.h"

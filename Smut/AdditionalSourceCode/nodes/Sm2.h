@@ -36,28 +36,18 @@ using branch9_t = container::branch<parameter::empty,
                                     chain38_t<NV>, 
                                     chain69_t<NV>, 
                                     chain72_t<NV>>;
+using peak5_t = wrap::no_data<core::peak>;
 
 template <int NV>
-using pma_unscaled5_t = control::pma_unscaled<NV, 
-                                              parameter::plain<math::add<NV>, 0>>;
-template <int NV>
-using peak5_t = wrap::mod<parameter::plain<pma_unscaled5_t<NV>, 0>, 
-                          wrap::no_data<core::peak>>;
-using pitch_mod_t_index = runtime_target::indexers::fix_hash<90001>;
-
-template <int NV>
-using pitch_mod_t = wrap::mod<parameter::plain<math::add<NV>, 0>, 
-                              wrap::no_data<core::pitch_mod<NV, pitch_mod_t_index>>>;
+using minmax_t = control::minmax<NV, 
+                                 parameter::plain<math::add<NV>, 0>>;
 
 template <int NV>
 using chain59_t = container::chain<parameter::empty, 
-                                   wrap::fix<1, pitch_mod_t<NV>>, 
+                                   wrap::fix<1, minmax_t<NV>>, 
                                    math::add<NV>>;
 
-template <int NV>
-using chain182_t = container::chain<parameter::empty, 
-                                    wrap::fix<1, pma_unscaled5_t<NV>>, 
-                                    math::add<NV>>;
+template <int NV> using chain182_t = chain58_t<NV>;
 using global_mod1_t_index = runtime_target::indexers::fix_hash<1>;
 using global_mod1_t_config = modulation::config::dynamic;
 
@@ -79,23 +69,21 @@ using split6_t = container::split<parameter::empty,
                                   wrap::fix<1, chain59_t<NV>>, 
                                   chain182_t<NV>, 
                                   chain60_t<NV>>;
-
-DECLARE_PARAMETER_RANGE(peak_unscaled_modRange, 
-                        1., 
-                        16.);
+using peak16_t = wrap::no_data<wrap::no_process<core::peak>>;
 
 template <int NV>
-using peak_unscaled_mod = parameter::from0To1<core::phasor_fm<NV>, 
-                                              2, 
-                                              peak_unscaled_modRange>;
-
+using converter2_t = control::converter<parameter::plain<core::phasor_fm<NV>, 2>, 
+                                        conversion_logic::st2pitch>;
 template <int NV>
-using peak_unscaled_t = wrap::mod<peak_unscaled_mod<NV>, 
+using peak_unscaled_t = wrap::mod<parameter::plain<converter2_t<NV>, 0>, 
                                   wrap::no_data<core::peak_unscaled>>;
 
 template <int NV>
 using chain62_t = container::chain<parameter::empty, 
                                    wrap::fix<1, split6_t<NV>>, 
+                                   math::sub<NV>, 
+                                   peak16_t, 
+                                   math::mod2sig<NV>, 
                                    peak_unscaled_t<NV>>;
 
 template <int NV>
@@ -105,7 +93,7 @@ using split7_t = container::split<parameter::empty,
 template <int NV>
 using chain37_t = container::chain<parameter::empty, 
                                    wrap::fix<1, branch9_t<NV>>, 
-                                   peak5_t<NV>, 
+                                   peak5_t, 
                                    math::clear<NV>, 
                                    split7_t<NV>>;
 
@@ -135,30 +123,14 @@ using branch12_t = container::branch<parameter::empty,
                                      chain78_t<NV>, 
                                      chain86_t<NV>, 
                                      chain87_t<NV>>;
-
-template <int NV> using pma_unscaled4_t = pma_unscaled5_t<NV>;
-template <int NV>
-using peak13_t = wrap::mod<parameter::plain<pma_unscaled4_t<NV>, 0>, 
-                           wrap::no_data<core::peak>>;
-using pitch_mod1_t_index = pitch_mod_t_index;
-
-template <int NV>
-using converter3_t = control::converter<parameter::plain<math::add<NV>, 0>, 
-                                        conversion_logic::st2pitch>;
-template <int NV>
-using pitch_mod1_t = wrap::mod<parameter::plain<converter3_t<NV>, 0>, 
-                               wrap::no_data<core::pitch_mod<NV, pitch_mod1_t_index>>>;
+using peak13_t = peak5_t;
 
 template <int NV>
 using chain83_t = container::chain<parameter::empty, 
-                                   wrap::fix<1, pitch_mod1_t<NV>>, 
-                                   converter3_t<NV>, 
+                                   wrap::fix<1, control::minmax<NV, parameter::empty>>, 
                                    math::add<NV>>;
 
-template <int NV>
-using chain181_t = container::chain<parameter::empty, 
-                                    wrap::fix<1, pma_unscaled4_t<NV>>, 
-                                    math::add<NV>>;
+template <int NV> using chain181_t = chain58_t<NV>;
 using global_mod_t_index = global_mod1_t_index;
 using global_mod_t_config = global_mod1_t_config;
 
@@ -193,7 +165,14 @@ template <int NV> using converter23_t = converter19_t<NV>;
 template <int NV>
 using converter22_t = control::converter<parameter::plain<converter23_t<NV>, 0>, 
                                          conversion_logic::midi2freq>;
-template <int NV> using peak_unscaled2_mod_0 = peak_unscaled_mod<NV>;
+DECLARE_PARAMETER_RANGE(peak_unscaled2_mod_0Range, 
+                        1., 
+                        16.);
+
+template <int NV>
+using peak_unscaled2_mod_0 = parameter::from0To1<core::phasor_fm<NV>, 
+                                                 2, 
+                                                 peak_unscaled2_mod_0Range>;
 
 template <int NV>
 using peak_unscaled2_mod = parameter::chain<ranges::Identity, 
@@ -209,6 +188,7 @@ using peak_unscaled2_t = wrap::mod<peak_unscaled2_mod<NV>,
 template <int NV>
 using chain82_t = container::chain<parameter::empty, 
                                    wrap::fix<1, split11_t<NV>>, 
+                                   math::sub<NV>, 
                                    peak_unscaled2_t<NV>>;
 
 template <int NV>
@@ -218,7 +198,7 @@ using split10_t = container::split<parameter::empty,
 template <int NV>
 using chain77_t = container::chain<parameter::empty, 
                                    wrap::fix<1, branch12_t<NV>>, 
-                                   peak13_t<NV>, 
+                                   peak13_t, 
                                    math::clear<NV>, 
                                    split10_t<NV>>;
 
@@ -249,7 +229,9 @@ using branch10_t = container::branch<parameter::empty,
                                      chain71_t<NV>, 
                                      chain73_t<NV>>;
 
-template <int NV> using pma_unscaled3_t = pma_unscaled5_t<NV>;
+template <int NV>
+using pma_unscaled3_t = control::pma_unscaled<NV, 
+                                              parameter::plain<math::add<NV>, 0>>;
 template <int NV>
 using peak7_t = wrap::mod<parameter::plain<pma_unscaled3_t<NV>, 0>, 
                           wrap::no_data<core::peak>>;
@@ -334,7 +316,7 @@ using branch11_t = container::branch<parameter::empty,
                                      chain93_t<NV>, 
                                      chain96_t<NV>>;
 
-template <int NV> using pma_unscaled15_t = pma_unscaled5_t<NV>;
+template <int NV> using pma_unscaled15_t = pma_unscaled3_t<NV>;
 template <int NV>
 using peak9_t = wrap::mod<parameter::plain<pma_unscaled15_t<NV>, 0>, 
                           wrap::no_data<core::peak>>;
@@ -412,7 +394,7 @@ using branch16_t = container::branch<parameter::empty,
                                      chain194_t<NV>, 
                                      chain197_t<NV>>;
 
-template <int NV> using pma_unscaled6_t = pma_unscaled5_t<NV>;
+template <int NV> using pma_unscaled6_t = pma_unscaled3_t<NV>;
 template <int NV>
 using peak17_t = wrap::mod<parameter::plain<pma_unscaled6_t<NV>, 0>, 
                            wrap::no_data<core::peak>>;
@@ -590,7 +572,7 @@ using branch18_t = container::branch<parameter::empty,
                                      chain223_t<NV>, 
                                      chain224_t<NV>>;
 
-template <int NV> using pma_unscaled13_t = pma_unscaled5_t<NV>;
+template <int NV> using pma_unscaled13_t = pma_unscaled3_t<NV>;
 template <int NV>
 using peak30_t = wrap::mod<parameter::plain<pma_unscaled13_t<NV>, 0>, 
                            wrap::no_data<core::peak>>;
@@ -731,9 +713,9 @@ using branch29_t = container::branch<parameter::empty,
                                      chain227_t<NV>, 
                                      chain242_t<NV>, 
                                      chain243_t<NV>>;
-using peak21_t = wrap::no_data<core::peak>;
+using peak21_t = peak5_t;
 
-template <int NV> using pma_unscaled14_t = pma_unscaled5_t<NV>;
+template <int NV> using pma_unscaled14_t = pma_unscaled3_t<NV>;
 
 template <int NV>
 using chain244_t = container::chain<parameter::empty, 
@@ -808,9 +790,9 @@ using branch17_t = container::branch<parameter::empty,
                                      chain113_t<NV>, 
                                      chain195_t<NV>, 
                                      chain198_t<NV>>;
-using peak18_t = peak21_t;
+using peak18_t = peak5_t;
 
-template <int NV> using pma_unscaled7_t = pma_unscaled5_t<NV>;
+template <int NV> using pma_unscaled7_t = pma_unscaled3_t<NV>;
 
 template <int NV>
 using chain184_t = container::chain<parameter::empty, 
@@ -877,9 +859,9 @@ using branch20_t = container::branch<parameter::empty,
                                      chain128_t<NV>, 
                                      chain196_t<NV>, 
                                      chain199_t<NV>>;
-using peak20_t = peak21_t;
+using peak20_t = peak5_t;
 
-template <int NV> using pma_unscaled8_t = pma_unscaled5_t<NV>;
+template <int NV> using pma_unscaled8_t = pma_unscaled3_t<NV>;
 
 template <int NV>
 using chain185_t = container::chain<parameter::empty, 
@@ -954,9 +936,9 @@ using branch32_t = container::branch<parameter::empty,
                                      chain275_t<NV>, 
                                      chain276_t<NV>, 
                                      chain277_t<NV>>;
-using peak38_t = peak21_t;
+using peak38_t = peak5_t;
 
-template <int NV> using pma_unscaled17_t = pma_unscaled5_t<NV>;
+template <int NV> using pma_unscaled17_t = pma_unscaled3_t<NV>;
 
 template <int NV>
 using chain278_t = container::chain<parameter::empty, 
@@ -1032,7 +1014,7 @@ using branch21_t = container::branch<parameter::empty,
                                      chain193_t<NV>, 
                                      chain200_t<NV>>;
 
-template <int NV> using pma_unscaled9_t = pma_unscaled5_t<NV>;
+template <int NV> using pma_unscaled9_t = pma_unscaled3_t<NV>;
 template <int NV>
 using peak22_t = wrap::mod<parameter::plain<pma_unscaled9_t<NV>, 0>, 
                            wrap::no_data<core::peak>>;
@@ -1149,7 +1131,7 @@ using branch23_t = container::branch<parameter::empty,
                                      chain207_t<NV>, 
                                      chain208_t<NV>>;
 
-template <int NV> using pma_unscaled11_t = pma_unscaled5_t<NV>;
+template <int NV> using pma_unscaled11_t = pma_unscaled3_t<NV>;
 template <int NV>
 using peak26_t = wrap::mod<parameter::plain<pma_unscaled11_t<NV>, 0>, 
                            wrap::no_data<core::peak>>;
@@ -1254,7 +1236,7 @@ using branch22_t = container::branch<parameter::empty,
                                      chain192_t<NV>, 
                                      chain201_t<NV>>;
 
-template <int NV> using pma_unscaled10_t = pma_unscaled5_t<NV>;
+template <int NV> using pma_unscaled10_t = pma_unscaled3_t<NV>;
 template <int NV>
 using peak24_t = wrap::mod<parameter::plain<pma_unscaled10_t<NV>, 0>, 
                            wrap::no_data<core::peak>>;
@@ -1333,7 +1315,7 @@ using branch25_t = container::branch<parameter::empty,
                                      chain218_t<NV>, 
                                      chain219_t<NV>>;
 
-template <int NV> using pma_unscaled12_t = pma_unscaled5_t<NV>;
+template <int NV> using pma_unscaled12_t = pma_unscaled3_t<NV>;
 template <int NV>
 using peak28_t = wrap::mod<parameter::plain<pma_unscaled12_t<NV>, 0>, 
                            wrap::no_data<core::peak>>;
@@ -1424,7 +1406,8 @@ using branch28_t = container::branch<parameter::empty,
 
 template <int NV>
 using chain15_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, core::phasor_fm<NV>>>;
+                                   wrap::fix<2, converter2_t<NV>>, 
+                                   core::phasor_fm<NV>>;
 
 template <int NV>
 using chain16_t = container::chain<parameter::empty, 
@@ -2051,7 +2034,9 @@ using branch27_t = container::branch<parameter::empty,
                                      chain229_t<NV>, 
                                      chain231_t<NV>>;
 
-template <int NV> using chain31_t = chain15_t<NV>;
+template <int NV>
+using chain31_t = container::chain<parameter::empty, 
+                                   wrap::fix<2, core::phasor_fm<NV>>>;
 
 template <int NV>
 using chain32_t = container::chain<parameter::empty, 
@@ -2689,7 +2674,7 @@ using ramp_t = wrap::mod<ramp_mod<NV>,
 template <int NV>
 using tempo_sync4_t = wrap::mod<parameter::plain<ramp_t<NV>, 0>, 
                                 control::tempo_sync<NV>>;
-using peak4_t = peak21_t;
+using peak4_t = peak5_t;
 
 template <int NV>
 using ahdsr_multimod = parameter::list<parameter::plain<math::add<NV>, 0>, 
@@ -2981,7 +2966,7 @@ using branch30_t = container::branch<parameter::empty,
                                      chain252_t<NV>, 
                                      chain253_t<NV>, 
                                      chain270_t<NV>>;
-using peak10_t = peak21_t;
+using peak10_t = peak5_t;
 
 template <int NV>
 using cable_table2_t = wrap::data<control::cable_table<parameter::plain<math::add<NV>, 0>>, 
@@ -3613,10 +3598,22 @@ namespace Sm2_t_parameters
 {
 // Parameter list for Sm2_impl::Sm2_t --------------------------------------------------------------
 
+DECLARE_PARAMETER_RANGE_STEP(OscSt1_InputRange, 
+                             -24., 
+                             24., 
+                             1.);
+
 template <int NV>
-using Oscfm1 = parameter::chain<ranges::Identity, 
-                                parameter::plain<Sm2_impl::pma_unscaled5_t<NV>, 1>, 
-                                parameter::plain<Sm2_impl::pma_unscaled3_t<NV>, 1>>;
+using OscSt1 = parameter::chain<OscSt1_InputRange, 
+                                parameter::plain<Sm2_impl::minmax_t<NV>, 0>>;
+
+DECLARE_PARAMETER_RANGE(OscCent1_InputRange, 
+                        -1., 
+                        1.);
+
+template <int NV>
+using OscCent1 = parameter::chain<OscCent1_InputRange, 
+                                  parameter::plain<math::add<NV>, 0>>;
 
 template <int NV>
 using OscMod1 = parameter::chain<ranges::Identity, 
@@ -3834,10 +3831,22 @@ using VcaFmSrc1_0 = parameter::from0To1<Sm2_impl::branch22_t<NV>,
 template <int NV>
 using VcaFmSrc1 = parameter::chain<VcaFmSrc1_InputRange, VcaFmSrc1_0<NV>>;
 
+DECLARE_PARAMETER_RANGE_STEP(OscSt2_InputRange, 
+                             -24., 
+                             24., 
+                             1.);
+
 template <int NV>
-using Oscfm2 = parameter::chain<ranges::Identity, 
-                                parameter::plain<Sm2_impl::pma_unscaled4_t<NV>, 1>, 
-                                parameter::plain<Sm2_impl::pma_unscaled15_t<NV>, 1>>;
+using OscSt2 = parameter::chain<OscSt2_InputRange, 
+                                parameter::plain<control::minmax<NV, parameter::empty>, 0>>;
+
+DECLARE_PARAMETER_RANGE(OscCent2_InputRange, 
+                        -1., 
+                        1.);
+
+template <int NV>
+using OscCent2 = parameter::chain<OscCent2_InputRange, 
+                                  parameter::plain<math::add<NV>, 0>>;
 
 template <int NV>
 using OscMod2 = parameter::chain<ranges::Identity, 
@@ -4261,17 +4270,32 @@ using File2Quant_0 = parameter::from0To1<Sm2_impl::branch8_t<NV>,
 template <int NV>
 using File2Quant = parameter::chain<File2Quant_InputRange, File2Quant_0<NV>>;
 
-using OscSt1 = parameter::empty;
+DECLARE_PARAMETER_RANGE(tune_0Range, 
+                        0., 
+                        32.);
+
 template <int NV>
-using OscCent1 = parameter::plain<Sm2_impl::pma_unscaled5_t<NV>, 
-                                  2>;
+using tune_0 = parameter::from0To1<math::sub<NV>, 
+                                   0, 
+                                   tune_0Range>;
+
+template <int NV> using tune_1 = tune_0<NV>;
+
+template <int NV>
+using tune = parameter::chain<ranges::Identity, 
+                              tune_0<NV>, 
+                              tune_1<NV>>;
+
+template <int NV>
+using Oscfm1 = parameter::plain<Sm2_impl::pma_unscaled3_t<NV>, 
+                                1>;
 template <int NV>
 using OscTempoSync1 = parameter::plain<Sm2_impl::branch2_t<NV>, 
                                        0>;
 template <int NV>
 using OscDiv1 = parameter::plain<Sm2_impl::tempo_sync_t<NV>, 
                                  1>;
-using Osc12Mix = OscSt1;
+using Osc12Mix = parameter::empty;
 template <int NV>
 using FilePosMod1 = parameter::plain<Sm2_impl::pma3_t<NV>, 1>;
 template <int NV>
@@ -4306,10 +4330,9 @@ using VcaGainFm1 = parameter::plain<Sm2_impl::pma_unscaled10_t<NV>,
                                     1>;
 template <int NV>
 using Pan1 = parameter::plain<jdsp::jpanner<NV>, 0>;
-using OscSt2 = OscSt1;
 template <int NV>
-using OscCent2 = parameter::plain<Sm2_impl::pma_unscaled4_t<NV>, 
-                                  2>;
+using Oscfm2 = parameter::plain<Sm2_impl::pma_unscaled15_t<NV>, 
+                                1>;
 template <int NV>
 using FilterCut2 = parameter::plain<Sm2_impl::global_mod11_t<NV>, 
                                     1>;
@@ -4328,7 +4351,7 @@ using VcaGainMod2 = parameter::plain<Sm2_impl::global_mod12_t<NV>,
 template <int NV>
 using VcaGainFm2 = parameter::plain<Sm2_impl::pma_unscaled12_t<NV>, 
                                     1>;
-using VcaGainModMode2 = OscSt1;
+using VcaGainModMode2 = Osc12Mix;
 template <int NV> using Pan2 = Pan1<NV>;
 template <int NV>
 using OscShape = parameter::plain<Sm2_impl::global_mod4_t<NV>, 
@@ -4351,7 +4374,7 @@ using Osc2InputGainFm = parameter::plain<Sm2_impl::pma_unscaled7_t<NV>,
 template <int NV>
 using Osc2InputGainModSrc = parameter::plain<Sm2_impl::global_mod5_t<NV>, 
                                              0>;
-using FilterInput1 = OscSt1;
+using FilterInput1 = Osc12Mix;
 template <int NV>
 using PostModMode = parameter::plain<Sm2_impl::branch3_t<NV>, 
                                      0>;
@@ -4368,8 +4391,8 @@ template <int NV>
 using PosEnvS = parameter::plain<Sm2_impl::ahdsr_t<NV>, 4>;
 template <int NV>
 using PosEnvR = parameter::plain<Sm2_impl::ahdsr_t<NV>, 5>;
-using PosVel = OscSt1;
-using OscsSubGain = OscSt1;
+using PosVel = Osc12Mix;
+using OscsSubGain = Osc12Mix;
 template <int NV>
 using PosTempo = parameter::plain<Sm2_impl::tempo_sync4_t<NV>, 
                                   0>;
@@ -4385,7 +4408,7 @@ using ShapeMod1 = parameter::plain<Sm2_impl::global_mod7_t<NV>,
 template <int NV>
 using ShapeFm2 = parameter::plain<Sm2_impl::pma_unscaled13_t<NV>, 
                                   1>;
-using PosSmooth = OscSt1;
+using PosSmooth = Osc12Mix;
 template <int NV>
 using Osc1Input = parameter::plain<Sm2_impl::global_mod8_t<NV>, 
                                    1>;
@@ -4451,7 +4474,7 @@ template <int NV>
 using User2 = parameter::plain<Sm2_impl::branch15_t<NV>, 
                                0>;
 template <int NV>
-using Sm2_t_plist = parameter::list<OscSt1, 
+using Sm2_t_plist = parameter::list<OscSt1<NV>, 
                                     OscCent1<NV>, 
                                     Oscfm1<NV>, 
                                     OscMod1<NV>, 
@@ -4481,7 +4504,7 @@ using Sm2_t_plist = parameter::list<OscSt1,
                                     Res1<NV>, 
                                     Pan1<NV>, 
                                     VcaFmSrc1<NV>, 
-                                    OscSt2, 
+                                    OscSt2<NV>, 
                                     OscCent2<NV>, 
                                     Oscfm2<NV>, 
                                     OscMod2<NV>, 
@@ -4571,7 +4594,8 @@ using Sm2_t_plist = parameter::list<OscSt1,
                                     File2PosMod<NV>, 
                                     File2Quant<NV>, 
                                     User1<NV>, 
-                                    User2<NV>>;
+                                    User2<NV>, 
+                                    tune<NV>>;
 }
 
 template <int NV>
@@ -4596,10 +4620,10 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		SNEX_METADATA_ID(Sm2);
 		SNEX_METADATA_NUM_CHANNELS(2);
-		SNEX_METADATA_ENCODED_PARAMETERS(2194)
+		SNEX_METADATA_ENCODED_PARAMETERS(2210)
 		{
 			0x005C, 0x0000, 0x0000, 0x734F, 0x5363, 0x3174, 0x0000, 0xC000, 
-            0x00C1, 0xC000, 0x0041, 0xC000, 0x00C1, 0x8000, 0x003F, 0x8000, 
+            0x00C1, 0xC000, 0x0041, 0x3000, 0x0041, 0x8000, 0x003F, 0x8000, 
             0x5C3F, 0x0100, 0x0000, 0x4F00, 0x6373, 0x6543, 0x746E, 0x0031, 
             0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 
             0x0000, 0x0000, 0x005C, 0x0002, 0x0000, 0x734F, 0x6663, 0x316D, 
@@ -4608,7 +4632,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x3164, 0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 
             0x8000, 0x003F, 0x0000, 0x5C00, 0x0400, 0x0000, 0x4F00, 0x6373, 
             0x6554, 0x706D, 0x536F, 0x6E79, 0x3163, 0x0000, 0x0000, 0x0000, 
-            0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 
+            0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x5C3F, 
             0x0500, 0x0000, 0x4F00, 0x6373, 0x6554, 0x706D, 0x316F, 0x0000, 
             0x0000, 0x0000, 0x9000, 0x0041, 0x8000, 0x003F, 0x8000, 0x003F, 
             0x8000, 0x5C3F, 0x0600, 0x0000, 0x4F00, 0x6373, 0x6944, 0x3176, 
@@ -4617,19 +4641,19 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x7253, 0x3163, 0x0000, 0x8000, 0x003F, 0xC000, 0x0040, 0x8000, 
             0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x0800, 0x0000, 0x4F00, 
             0x6373, 0x6950, 0x6374, 0x5368, 0x6372, 0x0031, 0x0000, 0x3F80, 
-            0x0000, 0x4188, 0x0000, 0x40A0, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x0000, 0x4188, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 
             0x005C, 0x0009, 0x0000, 0x734F, 0x3163, 0x4D32, 0x7869, 0x0000, 
             0x0000, 0x0000, 0x8000, 0x5C3F, 0x028F, 0x003F, 0x8000, 0x003F, 
             0x0000, 0x5C00, 0x0A00, 0x0000, 0x6600, 0x6C69, 0x5065, 0x736F, 
-            0x0031, 0x0000, 0x0000, 0x0000, 0x3F80, 0xF5C3, 0x3F68, 0x0000, 
+            0x0031, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 
             0x3F80, 0x0000, 0x0000, 0x005C, 0x000B, 0x0000, 0x6946, 0x656C, 
             0x6F50, 0x4D73, 0x646F, 0x0031, 0x0000, 0xBF80, 0x0000, 0x3F80, 
-            0xA3D7, 0xBF70, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x000C, 
+            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x000C, 
             0x0000, 0x6946, 0x656C, 0x6F50, 0x5173, 0x6175, 0x746E, 0x0031, 
             0x0000, 0x3F80, 0x0000, 0x4120, 0x0000, 0x3F80, 0x0000, 0x3F80, 
             0x0000, 0x3F80, 0x005C, 0x000D, 0x0000, 0x6946, 0x656C, 0x6E49, 
             0x7570, 0x4774, 0x6961, 0x316E, 0x0000, 0x0000, 0x0000, 0x8000, 
-            0xD73F, 0xF0A3, 0x003E, 0x8000, 0x003F, 0x0000, 0x5C00, 0x0E00, 
+            0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x0E00, 
             0x0000, 0x4600, 0x6C69, 0x4965, 0x706E, 0x7475, 0x6147, 0x6E69, 
             0x6F4D, 0x0064, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 
             0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x000F, 0x0000, 0x6946, 
@@ -4637,12 +4661,12 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x0000, 0x3F80, 0x0000, 0x4188, 0x0000, 0x3F80, 0x0000, 0x3F80, 
             0x0000, 0x3F80, 0x005C, 0x0010, 0x0000, 0x6946, 0x656C, 0x6E49, 
             0x7570, 0x4774, 0x6961, 0x466E, 0x316D, 0x0000, 0x8000, 0x00BF, 
-            0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 
+            0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 
             0x1100, 0x0000, 0x4600, 0x6C69, 0x6574, 0x4D72, 0x646F, 0x3165, 
             0x0000, 0x8000, 0x003F, 0x1000, 0x0041, 0x8000, 0x003F, 0x8000, 
             0x003F, 0x8000, 0x5C3F, 0x1200, 0x0000, 0x4600, 0x6C69, 0x6574, 
-            0x4372, 0x7475, 0x0031, 0x0000, 0x0000, 0x0000, 0x3F80, 0x3333, 
-            0x3F33, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0013, 0x0000, 
+            0x4372, 0x7475, 0x0031, 0x0000, 0x0000, 0x0000, 0x3F80, 0x851F, 
+            0x3F6B, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0013, 0x0000, 
             0x6946, 0x746C, 0x7265, 0x7543, 0x4D74, 0x646F, 0x0031, 0x0000, 
             0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
             0x0000, 0x005C, 0x0014, 0x0000, 0x6946, 0x746C, 0x7265, 0x7543, 
@@ -4654,7 +4678,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x6F4D, 0x6564, 0x0031, 0x0000, 0x0000, 0x0000, 0x40A0, 0x0000, 
             0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0017, 0x0000, 
             0x6356, 0x4761, 0x6961, 0x316E, 0x0000, 0x0000, 0x0000, 0x8000, 
-            0x0A3F, 0x63D7, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 0x1800, 
+            0x7B3F, 0x6E14, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 0x1800, 
             0x0000, 0x5600, 0x6163, 0x6147, 0x6E69, 0x6F4D, 0x3164, 0x0000, 
             0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 
             0x0000, 0x5C00, 0x1900, 0x0000, 0x5600, 0x6163, 0x6147, 0x6E69, 
@@ -4663,13 +4687,13 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x4761, 0x6961, 0x536E, 0x6372, 0x0031, 0x0000, 0x3F80, 0x0000, 
             0x4188, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
             0x001B, 0x0000, 0x6552, 0x3173, 0x0000, 0x0000, 0x0000, 0x8000, 
-            0x8F3F, 0x35C2, 0x183F, 0x8789, 0x003E, 0x0000, 0x5C00, 0x1C00, 
+            0x003F, 0x0000, 0x1800, 0x8789, 0x003E, 0x0000, 0x5C00, 0x1C00, 
             0x0000, 0x5000, 0x6E61, 0x0031, 0x0000, 0xBF80, 0x0000, 0x3F80, 
             0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x001D, 
             0x0000, 0x6356, 0x4661, 0x536D, 0x6372, 0x0031, 0x0000, 0x3F80, 
             0x0000, 0x40C0, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 
             0x005C, 0x001E, 0x0000, 0x734F, 0x5363, 0x3274, 0x0000, 0xC000, 
-            0x00C1, 0xC000, 0x0041, 0xB800, 0x00C1, 0x8000, 0x003F, 0x8000, 
+            0x00C1, 0xC000, 0x0041, 0xC000, 0x00C1, 0x8000, 0x003F, 0x8000, 
             0x5C3F, 0x1F00, 0x0000, 0x4F00, 0x6373, 0x6543, 0x746E, 0x0032, 
             0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 
             0x0000, 0x0000, 0x005C, 0x0020, 0x0000, 0x734F, 0x6663, 0x326D, 
@@ -4682,19 +4706,19 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x4600, 0x6C69, 0x6574, 0x4D72, 0x646F, 0x3265, 0x0000, 0x8000, 
             0x003F, 0x1000, 0x0041, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 
             0x5C3F, 0x2400, 0x0000, 0x4600, 0x6C69, 0x6574, 0x4372, 0x7475, 
-            0x0032, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0A3D, 0x3ED7, 0x0000, 
+            0x0032, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 
             0x3F80, 0x0000, 0x0000, 0x005C, 0x0025, 0x0000, 0x6946, 0x746C, 
             0x7265, 0x7543, 0x4D74, 0x646F, 0x0032, 0x0000, 0xBF80, 0x0000, 
-            0x3F80, 0xCCCD, 0x3DCC, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 
+            0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 
             0x0026, 0x0000, 0x6946, 0x746C, 0x7265, 0x7543, 0x4674, 0x326D, 
             0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 
             0x003F, 0x0000, 0x5C00, 0x2700, 0x0000, 0x4600, 0x6C69, 0x6574, 
             0x4372, 0x7475, 0x7253, 0x3263, 0x0000, 0x8000, 0x003F, 0x8800, 
-            0x0041, 0xA000, 0x0040, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x2800, 
+            0x0041, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x2800, 
             0x0000, 0x4600, 0x6C69, 0x6574, 0x4672, 0x646D, 0x7253, 0x0063, 
             0x0000, 0x3F80, 0x0000, 0x40C0, 0x0000, 0x3F80, 0x0000, 0x3F80, 
             0x0000, 0x3F80, 0x005C, 0x0029, 0x0000, 0x6356, 0x4761, 0x6961, 
-            0x326E, 0x0000, 0x0000, 0x0000, 0x8000, 0x483F, 0xFAE1, 0x003E, 
+            0x326E, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 
             0x8000, 0x003F, 0x0000, 0x5C00, 0x2A00, 0x0000, 0x5600, 0x6163, 
             0x6147, 0x6E69, 0x6F4D, 0x3264, 0x0000, 0x8000, 0x00BF, 0x8000, 
             0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x2B00, 
@@ -4706,13 +4730,13 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x4761, 0x6961, 0x4D6E, 0x646F, 0x6F4D, 0x6564, 0x0032, 0x0000, 
             0x0000, 0x0000, 0x3F80, 0x999A, 0x3E99, 0x0000, 0x3F80, 0x0000, 
             0x0000, 0x005C, 0x002E, 0x0000, 0x6552, 0x3273, 0x0000, 0x0000, 
-            0x0000, 0x8000, 0xC33F, 0x68F5, 0x183F, 0x8789, 0x003E, 0x0000, 
+            0x0000, 0x8000, 0x003F, 0x0000, 0x1800, 0x8789, 0x003E, 0x0000, 
             0x5C00, 0x2F00, 0x0000, 0x5000, 0x6E61, 0x0032, 0x0000, 0xBF80, 
             0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 
             0x005C, 0x0030, 0x0000, 0x6356, 0x4661, 0x536D, 0x6372, 0x0032, 
             0x0000, 0x3F80, 0x0000, 0x40C0, 0x0000, 0x3F80, 0x0000, 0x3F80, 
             0x0000, 0x3F80, 0x005C, 0x0031, 0x0000, 0x734F, 0x5363, 0x6168, 
-            0x6570, 0x0000, 0x0000, 0x0000, 0x8000, 0xC33F, 0xA8F5, 0x003E, 
+            0x6570, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 
             0x8000, 0x003F, 0x0000, 0x5C00, 0x3200, 0x0000, 0x4F00, 0x6373, 
             0x6853, 0x7061, 0x4D65, 0x646F, 0x0000, 0x8000, 0x00BF, 0x8000, 
             0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x3300, 
@@ -4738,14 +4762,14 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x466E, 0x536D, 0x6372, 0x0000, 0x8000, 0x003F, 0xC000, 0x0040, 
             0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x3B00, 0x0000, 
             0x4600, 0x6C69, 0x4965, 0x466E, 0x536D, 0x6372, 0x0000, 0x8000, 
-            0x003F, 0xC000, 0x0040, 0x0000, 0x0040, 0x8000, 0x003F, 0x8000, 
+            0x003F, 0xC000, 0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 
             0x5C3F, 0x3C00, 0x0000, 0x4600, 0x6C69, 0x6574, 0x4972, 0x706E, 
             0x7475, 0x0031, 0x0000, 0x3F80, 0x0000, 0x40A0, 0x0000, 0x3F80, 
             0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x003D, 0x0000, 0x6946, 
             0x746C, 0x7265, 0x6E49, 0x7570, 0x3274, 0x0000, 0x8000, 0x003F, 
             0xA000, 0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 
             0x3E00, 0x0000, 0x5000, 0x736F, 0x4D74, 0x646F, 0x6F4D, 0x6564, 
-            0x0000, 0x0000, 0x0000, 0x0000, 0x0040, 0x8000, 0x003F, 0x8000, 
+            0x0000, 0x0000, 0x0000, 0x0000, 0x0040, 0x0000, 0x0000, 0x8000, 
             0x003F, 0x8000, 0x5C3F, 0x3F00, 0x0000, 0x5000, 0x736F, 0x6E45, 
             0x5476, 0x6972, 0x0067, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
             0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0040, 0x0000, 
@@ -4765,14 +4789,14 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x6275, 0x6147, 0x6E69, 0x0000, 0x0000, 0x0000, 0x3800, 0x3342, 
             0xC333, 0x0040, 0x8000, 0xCD3F, 0xCCCC, 0x5C3D, 0x4700, 0x0000, 
             0x5000, 0x736F, 0x6554, 0x706D, 0x006F, 0x0000, 0x0000, 0x0000, 
-            0x4190, 0x0000, 0x40A0, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
+            0x4190, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
             0x0048, 0x0000, 0x6F50, 0x4473, 0x6269, 0x0000, 0x8000, 0x003F, 
-            0x0000, 0x0042, 0x2000, 0x0041, 0x8000, 0x003F, 0x8000, 0x5C3F, 
+            0x0000, 0x0042, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 
             0x4900, 0x0000, 0x4600, 0x6C69, 0x4965, 0x4F6E, 0x6666, 0x6573, 
-            0x0074, 0x0000, 0x0000, 0x0000, 0x3F80, 0xB852, 0x3F5E, 0x0000, 
+            0x0074, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 
             0x3F80, 0x0000, 0x0000, 0x005C, 0x004A, 0x0000, 0x736F, 0x5363, 
             0x6168, 0x6570, 0x6F4D, 0x6564, 0x0031, 0x0000, 0x3F80, 0x0000, 
-            0x4140, 0x0000, 0x4110, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
+            0x4140, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
             0x004B, 0x0000, 0x736F, 0x5363, 0x6168, 0x6570, 0x6F4D, 0x6564, 
             0x0032, 0x0000, 0x3F80, 0x0000, 0x4140, 0x0000, 0x3F80, 0x0000, 
             0x3F80, 0x0000, 0x3F80, 0x005C, 0x004C, 0x0000, 0x6873, 0x7061, 
@@ -4796,9 +4820,9 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x3F80, 0x005C, 0x0054, 0x0000, 0x6946, 0x656C, 0x6E49, 0x6553, 
             0x006C, 0x0000, 0x3F80, 0x0000, 0x40A0, 0x0000, 0x3F80, 0x0000, 
             0x3F80, 0x0000, 0x3F80, 0x005C, 0x0055, 0x0000, 0x6F56, 0x006C, 
-            0x0000, 0x0000, 0x0000, 0x3F80, 0xCCCD, 0x3ECC, 0x0000, 0x3F80, 
+            0x0000, 0x0000, 0x0000, 0x3F80, 0x0A3D, 0x3F57, 0x0000, 0x3F80, 
             0x0000, 0x0000, 0x005C, 0x0056, 0x0000, 0x734F, 0x3163, 0x6E49, 
-            0x7570, 0x0074, 0x0000, 0x0000, 0x0000, 0x3F80, 0xA3D7, 0x3F70, 
+            0x7570, 0x0074, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 
             0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0057, 0x0000, 0x734F, 
             0x3163, 0x6E49, 0x7570, 0x4D74, 0x646F, 0x0000, 0x8000, 0x00BF, 
             0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 
@@ -4817,37 +4841,37 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x3E4A, 0xCCCD, 0x3DCC, 0x005C, 0x005E, 0x0000, 0x0068, 0x0000, 
             0x0000, 0x4000, 0x461C, 0x0000, 0x0000, 0x6A72, 0x3E4A, 0xCCCD, 
             0x3DCC, 0x005C, 0x005F, 0x0000, 0x0064, 0x0000, 0x0000, 0x4000, 
-            0x461C, 0x0000, 0x4120, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 0x005C, 
+            0x461C, 0x4000, 0x461C, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 0x005C, 
             0x0060, 0x0000, 0x0072, 0x0000, 0x0000, 0x4000, 0x461C, 0x0000, 
             0x0000, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 0x005C, 0x0061, 0x0000, 
             0x4554, 0x504D, 0x324F, 0x0000, 0x0000, 0x0000, 0x9000, 0x0041, 
-            0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x6200, 0x0000, 
+            0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x6200, 0x0000, 
             0x4400, 0x5649, 0x0032, 0x0000, 0x3F80, 0x0000, 0x4200, 0x0000, 
             0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0063, 0x0000, 
             0x5953, 0x434E, 0x0032, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
             0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0064, 0x0000, 
             0x6946, 0x656C, 0x4932, 0x536E, 0x6C65, 0x0000, 0x8000, 0x003F, 
-            0xA000, 0x0040, 0xA000, 0x0040, 0x8000, 0x003F, 0x8000, 0x5C3F, 
+            0xA000, 0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 
             0x6500, 0x0000, 0x4600, 0x6C69, 0x3265, 0x6147, 0x6E69, 0x664F, 
             0x7366, 0x7465, 0x0000, 0xC800, 0x00C2, 0x0000, 0x0000, 0x0000, 
             0x0000, 0x8000, 0xCD3F, 0xCCCC, 0x5C3D, 0x6600, 0x0000, 0x4600, 
             0x6C69, 0x3265, 0x6147, 0x6E69, 0x0000, 0x0000, 0x0000, 0x8000, 
-            0x8F3F, 0x75C2, 0x003D, 0x8000, 0x003F, 0x0000, 0x5C00, 0x6700, 
+            0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x6700, 
             0x0000, 0x4600, 0x6C69, 0x3265, 0x6F4D, 0x0064, 0x0000, 0xBF80, 
             0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 
             0x005C, 0x0068, 0x0000, 0x6946, 0x656C, 0x4632, 0x006D, 0x0000, 
-            0xBF80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
+            0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
             0x0000, 0x005C, 0x0069, 0x0000, 0x6946, 0x656C, 0x4D32, 0x646F, 
             0x7253, 0x0063, 0x0000, 0x3F80, 0x0000, 0x4188, 0x0000, 0x3F80, 
             0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x006A, 0x0000, 0x6946, 
             0x656C, 0x4632, 0x536D, 0x6372, 0x0000, 0x8000, 0x003F, 0xC000, 
             0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x6B00, 
             0x0000, 0x4600, 0x6C69, 0x3265, 0x6554, 0x706D, 0x006F, 0x0000, 
-            0x0000, 0x0000, 0x4190, 0x0000, 0x4040, 0x0000, 0x3F80, 0x0000, 
+            0x0000, 0x0000, 0x4190, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
             0x3F80, 0x005C, 0x006C, 0x0000, 0x6946, 0x656C, 0x6944, 0x0076, 
-            0x0000, 0x3F80, 0x0000, 0x4200, 0x0000, 0x4100, 0x0000, 0x3F80, 
+            0x0000, 0x3F80, 0x0000, 0x4200, 0x0000, 0x3F80, 0x0000, 0x3F80, 
             0x0000, 0x3F80, 0x005C, 0x006D, 0x0000, 0x6946, 0x656C, 0x4D32, 
-            0x646F, 0x0065, 0x0000, 0x3F80, 0x0000, 0x4040, 0x0000, 0x4000, 
+            0x646F, 0x0065, 0x0000, 0x3F80, 0x0000, 0x4040, 0x0000, 0x3F80, 
             0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x006E, 0x0000, 0x6946, 
             0x656C, 0x4532, 0x766E, 0x7254, 0x6769, 0x0000, 0x0000, 0x0000, 
             0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x5C3F, 
@@ -4862,17 +4886,19 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x0000, 0x5C00, 0x7300, 0x0000, 0x4600, 0x6C69, 0x3265, 0x0052, 
             0x0000, 0x0000, 0x4000, 0x461C, 0x4CCD, 0x43DA, 0x6A72, 0x3E4A, 
             0xCCCD, 0x3DCC, 0x005C, 0x0074, 0x0000, 0x6946, 0x656C, 0x5032, 
-            0x736F, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x003F, 
+            0x736F, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 
             0x8000, 0x003F, 0x0000, 0x5C00, 0x7500, 0x0000, 0x4600, 0x6C69, 
             0x3265, 0x6F50, 0x4D73, 0x646F, 0x0000, 0x8000, 0x00BF, 0x8000, 
-            0x003F, 0x0000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 0x7600, 
+            0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x7600, 
             0x0000, 0x4600, 0x6C69, 0x3265, 0x7551, 0x6E61, 0x0074, 0x0000, 
             0x3F80, 0x0000, 0x4120, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
             0x3F80, 0x005C, 0x0077, 0x0000, 0x7355, 0x7265, 0x0031, 0x0000, 
-            0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
+            0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
             0x3F80, 0x005C, 0x0078, 0x0000, 0x7355, 0x7265, 0x0032, 0x0000, 
             0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
-            0x3F80, 0x0000
+            0x3F80, 0x005C, 0x0079, 0x0000, 0x7574, 0x656E, 0x0000, 0x0000, 
+            0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 
+            0x0000, 0x0000
 		};
 		SNEX_METADATA_ENCODED_MOD_INFO(17)
 		{
@@ -4903,27 +4929,24 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		auto& add33 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(4).getT(0);           // math::add<NV>
 		auto& chain72 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(5);                 // Sm2_impl::chain72_t<NV>
 		auto& add51 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(5).getT(0);           // math::add<NV>
-		auto& peak5 = this->getT(0).getT(0).getT(0).getT(0).getT(1);                           // Sm2_impl::peak5_t<NV>
+		auto& peak5 = this->getT(0).getT(0).getT(0).getT(0).getT(1);                           // Sm2_impl::peak5_t
 		auto& clear15 = this->getT(0).getT(0).getT(0).getT(0).getT(2);                         // math::clear<NV>
 		auto& split7 = this->getT(0).getT(0).getT(0).getT(0).getT(3);                          // Sm2_impl::split7_t<NV>
 		auto& chain62 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0);                 // Sm2_impl::chain62_t<NV>
 		auto& split6 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(0);          // Sm2_impl::split6_t<NV>
 		auto& chain59 = this->getT(0).getT(0).getT(0).getT(0).                                 // Sm2_impl::chain59_t<NV>
                         getT(3).getT(0).getT(0).getT(0);
-		auto& pitch_mod = this->getT(0).getT(0).getT(0).getT(0).                               // Sm2_impl::pitch_mod_t<NV>
-                          getT(3).getT(0).getT(0).getT(0).
-                          getT(0);
+		auto& minmax = this->getT(0).getT(0).getT(0).getT(0).                                  // Sm2_impl::minmax_t<NV>
+                       getT(3).getT(0).getT(0).getT(0).
+                       getT(0);
 		auto& add26 = this->getT(0).getT(0).getT(0).getT(0).                                   // math::add<NV>
                       getT(3).getT(0).getT(0).getT(0).
                       getT(1);
 		auto& chain182 = this->getT(0).getT(0).getT(0).getT(0).                                // Sm2_impl::chain182_t<NV>
                          getT(3).getT(0).getT(0).getT(1);
-		auto& pma_unscaled5 = this->getT(0).getT(0).getT(0).getT(0).                           // Sm2_impl::pma_unscaled5_t<NV>
-                              getT(3).getT(0).getT(0).getT(1).
-                              getT(0);
 		auto& add36 = this->getT(0).getT(0).getT(0).getT(0).                                   // math::add<NV>
                       getT(3).getT(0).getT(0).getT(1).
-                      getT(1);
+                      getT(0);
 		auto& chain60 = this->getT(0).getT(0).getT(0).getT(0).                                 // Sm2_impl::chain60_t<NV>
                         getT(3).getT(0).getT(0).getT(2);
 		auto& chain119 = this->getT(0).getT(0).getT(0).getT(0).                                // Sm2_impl::chain119_t<NV>
@@ -4933,7 +4956,10 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
                             getT(0).getT(0).getT(2).getT(0).getT(0);
 		auto& add89 = this->getT(0).getT(0).getT(0).getT(0).getT(3).                           // math::add<NV>
                       getT(0).getT(0).getT(2).getT(0).getT(1);
-		auto& peak_unscaled = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(1);   // Sm2_impl::peak_unscaled_t<NV>
+		auto& sub21 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(1);           // math::sub<NV>
+		auto& peak16 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(2);          // Sm2_impl::peak16_t
+		auto& mod2sig = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(3);         // math::mod2sig<NV>
+		auto& peak_unscaled = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(4);   // Sm2_impl::peak_unscaled_t<NV>
 		auto& modchain5 = this->getT(0).getT(0).getT(1);                                       // Sm2_impl::modchain5_t<NV>
 		auto& chain77 = this->getT(0).getT(0).getT(1).getT(0);                                 // Sm2_impl::chain77_t<NV>
 		auto& branch12 = this->getT(0).getT(0).getT(1).getT(0).getT(0);                        // Sm2_impl::branch12_t<NV>
@@ -4949,30 +4975,24 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		auto& add49 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(4).getT(0);           // math::add<NV>
 		auto& chain87 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(5);                 // Sm2_impl::chain87_t<NV>
 		auto& add52 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(5).getT(0);           // math::add<NV>
-		auto& peak13 = this->getT(0).getT(0).getT(1).getT(0).getT(1);                          // Sm2_impl::peak13_t<NV>
+		auto& peak13 = this->getT(0).getT(0).getT(1).getT(0).getT(1);                          // Sm2_impl::peak13_t
 		auto& clear18 = this->getT(0).getT(0).getT(1).getT(0).getT(2);                         // math::clear<NV>
 		auto& split10 = this->getT(0).getT(0).getT(1).getT(0).getT(3);                         // Sm2_impl::split10_t<NV>
 		auto& chain82 = this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0);                 // Sm2_impl::chain82_t<NV>
 		auto& split11 = this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0).getT(0);         // Sm2_impl::split11_t<NV>
 		auto& chain83 = this->getT(0).getT(0).getT(1).getT(0).                                 // Sm2_impl::chain83_t<NV>
                         getT(3).getT(0).getT(0).getT(0);
-		auto& pitch_mod1 = this->getT(0).getT(0).getT(1).getT(0).                              // Sm2_impl::pitch_mod1_t<NV>
-                           getT(3).getT(0).getT(0).getT(0).
-                           getT(0);
-		auto& converter3 = this->getT(0).getT(0).getT(1).getT(0).                              // Sm2_impl::converter3_t<NV>
-                           getT(3).getT(0).getT(0).getT(0).
-                           getT(1);
+		auto& minmax2 = this->getT(0).getT(0).getT(1).getT(0).                                 // control::minmax<NV, parameter::empty>
+                        getT(3).getT(0).getT(0).getT(0).
+                        getT(0);
 		auto& add42 = this->getT(0).getT(0).getT(1).getT(0).                                   // math::add<NV>
                       getT(3).getT(0).getT(0).getT(0).
-                      getT(2);
+                      getT(1);
 		auto& chain181 = this->getT(0).getT(0).getT(1).getT(0).                                // Sm2_impl::chain181_t<NV>
                          getT(3).getT(0).getT(0).getT(1);
-		auto& pma_unscaled4 = this->getT(0).getT(0).getT(1).getT(0).                           // Sm2_impl::pma_unscaled4_t<NV>
-                              getT(3).getT(0).getT(0).getT(1).
-                              getT(0);
 		auto& add35 = this->getT(0).getT(0).getT(1).getT(0).                                   // math::add<NV>
                       getT(3).getT(0).getT(0).getT(1).
-                      getT(1);
+                      getT(0);
 		auto& chain120 = this->getT(0).getT(0).getT(1).getT(0).                                // Sm2_impl::chain120_t<NV>
                          getT(3).getT(0).getT(0).getT(2);
 		auto& global_mod = this->getT(0).getT(0).getT(1).getT(0).                              // Sm2_impl::global_mod_t<NV>
@@ -4981,7 +5001,8 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		auto& add90 = this->getT(0).getT(0).getT(1).getT(0).                                   // math::add<NV>
                       getT(3).getT(0).getT(0).getT(2).
                       getT(1);
-		auto& peak_unscaled2 = this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0).getT(1);  // Sm2_impl::peak_unscaled2_t<NV>
+		auto& sub3 = this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0).getT(1);            // math::sub<NV>
+		auto& peak_unscaled2 = this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0).getT(2);  // Sm2_impl::peak_unscaled2_t<NV>
 		auto& modchain2 = this->getT(0).getT(0).getT(2);                                       // Sm2_impl::modchain2_t<NV>
 		auto& chain63 = this->getT(0).getT(0).getT(2).getT(0);                                 // Sm2_impl::chain63_t<NV>
 		auto& branch10 = this->getT(0).getT(0).getT(2).getT(0).getT(0);                        // Sm2_impl::branch10_t<NV>
@@ -5373,8 +5394,10 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		auto& chain15 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain15_t<NV>
                         getT(0).getT(0).getT(0).getT(2).
                         getT(0);
-		auto& phasor_fm1 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                  // core::phasor_fm<NV>
+		auto& converter2 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                  // Sm2_impl::converter2_t<NV>
                            getT(0).getT(0).getT(2).getT(0).getT(0);
+		auto& phasor_fm1 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                  // core::phasor_fm<NV>
+                           getT(0).getT(0).getT(2).getT(0).getT(1);
 		auto& chain16 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain16_t<NV>
                         getT(0).getT(0).getT(0).getT(2).
                         getT(1);
@@ -6201,11 +6224,11 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		// Parameter Connections -------------------------------------------------------------------
 		
-		this->getParameterT(1).connectT(0, pma_unscaled5); // OscCent1 -> pma_unscaled5::Add
+		this->getParameterT(0).connectT(0, minmax); // OscSt1 -> minmax::Value
 		
-		auto& Oscfm1_p = this->getParameterT(2);
-		Oscfm1_p.connectT(0, pma_unscaled5); // Oscfm1 -> pma_unscaled5::Multiply
-		Oscfm1_p.connectT(1, pma_unscaled3); // Oscfm1 -> pma_unscaled3::Multiply
+		this->getParameterT(1).connectT(0, add36); // OscCent1 -> add36::Value
+		
+		this->getParameterT(2).connectT(0, pma_unscaled3); // Oscfm1 -> pma_unscaled3::Multiply
 		
 		auto& OscMod1_p = this->getParameterT(3);
 		OscMod1_p.connectT(0, global_mod1); // OscMod1 -> global_mod1::Intensity
@@ -6278,11 +6301,11 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		this->getParameterT(29).connectT(0, branch22); // VcaFmSrc1 -> branch22::Index
 		
-		this->getParameterT(31).connectT(0, pma_unscaled4); // OscCent2 -> pma_unscaled4::Add
+		this->getParameterT(30).connectT(0, minmax2); // OscSt2 -> minmax2::Value
 		
-		auto& Oscfm2_p = this->getParameterT(32);
-		Oscfm2_p.connectT(0, pma_unscaled4);  // Oscfm2 -> pma_unscaled4::Multiply
-		Oscfm2_p.connectT(1, pma_unscaled15); // Oscfm2 -> pma_unscaled15::Multiply
+		this->getParameterT(31).connectT(0, add35); // OscCent2 -> add35::Value
+		
+		this->getParameterT(32).connectT(0, pma_unscaled15); // Oscfm2 -> pma_unscaled15::Multiply
 		
 		auto& OscMod2_p = this->getParameterT(33);
 		OscMod2_p.connectT(0, global_mod);   // OscMod2 -> global_mod::Intensity
@@ -6469,17 +6492,16 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		this->getParameterT(120).connectT(0, branch15); // User2 -> branch15::Index
 		
+		auto& tune_p = this->getParameterT(121);
+		tune_p.connectT(0, sub21); // tune -> sub21::Value
+		tune_p.connectT(1, sub3);  // tune -> sub3::Value
+		
 		// Modulation Connections ------------------------------------------------------------------
 		
-		pma_unscaled5.getWrappedObject().getParameter().connectT(0, add36);     // pma_unscaled5 -> add36::Value
-		peak5.getParameter().connectT(0, pma_unscaled5);                        // peak5 -> pma_unscaled5::Value
-		pitch_mod.getParameter().connectT(0, add26);                            // pitch_mod -> add26::Value
+		minmax.getWrappedObject().getParameter().connectT(0, add26);            // minmax -> add26::Value
 		global_mod1.getParameter().connectT(0, add89);                          // global_mod1 -> add89::Value
-		peak_unscaled.getParameter().connectT(0, phasor_fm1);                   // peak_unscaled -> phasor_fm1::FreqRatio
-		pma_unscaled4.getWrappedObject().getParameter().connectT(0, add35);     // pma_unscaled4 -> add35::Value
-		peak13.getParameter().connectT(0, pma_unscaled4);                       // peak13 -> pma_unscaled4::Value
-		converter3.getWrappedObject().getParameter().connectT(0, add42);        // converter3 -> add42::Value
-		pitch_mod1.getParameter().connectT(0, converter3);                      // pitch_mod1 -> converter3::Value
+		converter2.getWrappedObject().getParameter().connectT(0, phasor_fm1);   // converter2 -> phasor_fm1::FreqRatio
+		peak_unscaled.getParameter().connectT(0, converter2);                   // peak_unscaled -> converter2::Value
 		global_mod.getParameter().connectT(0, add90);                           // global_mod -> add90::Value
 		converter19.getWrappedObject().getParameter().connectT(0, jdelay6);     // converter19 -> jdelay6::DelayTime
 		converter18.getWrappedObject().getParameter().connectT(0, converter19); // converter18 -> converter19::Value
@@ -6803,13 +6825,14 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		clear15.setParameterT(0, 0.); // math::clear::Value
 		
-		pitch_mod.setParameterT(0, 1.); // core::pitch_mod::ProcessSignal
+		;                              // minmax::Value is automated
+		minmax.setParameterT(1, -24.); // control::minmax::Minimum
+		minmax.setParameterT(2, 24.);  // control::minmax::Maximum
+		minmax.setParameterT(3, 1.);   // control::minmax::Skew
+		minmax.setParameterT(4, 0.);   // control::minmax::Step
+		minmax.setParameterT(5, 0.);   // control::minmax::Polarity
 		
 		; // add26::Value is automated
-		
-		; // pma_unscaled5::Value is automated
-		; // pma_unscaled5::Multiply is automated
-		; // pma_unscaled5::Add is automated
 		
 		; // add36::Value is automated
 		
@@ -6820,6 +6843,10 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		;                                 // global_mod1::Intensity is automated
 		
 		; // add89::Value is automated
+		
+		; // sub21::Value is automated
+		
+		mod2sig.setParameterT(0, 0.); // math::mod2sig::Value
 		
 		; // branch12::Index is automated
 		
@@ -6837,15 +6864,14 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		clear18.setParameterT(0, 0.); // math::clear::Value
 		
-		pitch_mod1.setParameterT(0, 0.); // core::pitch_mod::ProcessSignal
+		;                               // minmax2::Value is automated
+		minmax2.setParameterT(1, -24.); // control::minmax::Minimum
+		minmax2.setParameterT(2, 24.);  // control::minmax::Maximum
+		minmax2.setParameterT(3, 1.);   // control::minmax::Skew
+		minmax2.setParameterT(4, 0.);   // control::minmax::Step
+		minmax2.setParameterT(5, 0.);   // control::minmax::Polarity
 		
-		; // converter3::Value is automated
-		
-		; // add42::Value is automated
-		
-		; // pma_unscaled4::Value is automated
-		; // pma_unscaled4::Multiply is automated
-		; // pma_unscaled4::Add is automated
+		add42.setParameterT(0, 0.); // math::add::Value
 		
 		; // add35::Value is automated
 		
@@ -6856,6 +6882,8 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		;                                // global_mod::Intensity is automated
 		
 		; // add90::Value is automated
+		
+		; // sub3::Value is automated
 		
 		; // branch10::Index is automated
 		
@@ -7236,6 +7264,8 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		gain1.setParameterT(2, 0.);  // core::gain::ResetValue
 		
 		; // branch2::Index is automated
+		
+		; // converter2::Value is automated
 		
 		phasor_fm1.setParameterT(0, 1.);   // core::phasor_fm::Gate
 		phasor_fm1.setParameterT(1, 110.); // core::phasor_fm::Frequency
@@ -8022,56 +8052,56 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		gain.setParameterT(1, 20.);  // core::gain::Smoothing
 		gain.setParameterT(2, -34.); // core::gain::ResetValue
 		
-		this->setParameterT(0, -24.);
+		this->setParameterT(0, 11.);
 		this->setParameterT(1, 0.);
 		this->setParameterT(2, 0.);
 		this->setParameterT(3, 0.);
-		this->setParameterT(4, 1.);
+		this->setParameterT(4, 0.);
 		this->setParameterT(5, 1.);
 		this->setParameterT(6, 1.);
 		this->setParameterT(7, 1.);
-		this->setParameterT(8, 5.);
+		this->setParameterT(8, 1.);
 		this->setParameterT(9, 0.51);
-		this->setParameterT(10, 0.91);
-		this->setParameterT(11, -0.94);
+		this->setParameterT(10, 0.);
+		this->setParameterT(11, 0.);
 		this->setParameterT(12, 1.);
-		this->setParameterT(13, 0.47);
+		this->setParameterT(13, 0.);
 		this->setParameterT(14, 0.);
 		this->setParameterT(15, 1.);
-		this->setParameterT(16, 1.);
+		this->setParameterT(16, 0.);
 		this->setParameterT(17, 1.);
-		this->setParameterT(18, 0.7);
+		this->setParameterT(18, 0.92);
 		this->setParameterT(19, 0.);
 		this->setParameterT(20, 0.);
 		this->setParameterT(21, 1.);
 		this->setParameterT(22, 0.);
-		this->setParameterT(23, 0.89);
+		this->setParameterT(23, 0.93);
 		this->setParameterT(24, 0.);
 		this->setParameterT(25, 0.);
 		this->setParameterT(26, 1.);
-		this->setParameterT(27, 0.71);
+		this->setParameterT(27, 0.);
 		this->setParameterT(28, 0.);
 		this->setParameterT(29, 1.);
-		this->setParameterT(30, -23.);
+		this->setParameterT(30, -24.);
 		this->setParameterT(31, 0.);
 		this->setParameterT(32, 0.);
 		this->setParameterT(33, 0.);
 		this->setParameterT(34, 1.);
 		this->setParameterT(35, 1.);
-		this->setParameterT(36, 0.42);
-		this->setParameterT(37, 0.1);
+		this->setParameterT(36, 0.);
+		this->setParameterT(37, 0.);
 		this->setParameterT(38, 0.);
-		this->setParameterT(39, 5.);
+		this->setParameterT(39, 1.);
 		this->setParameterT(40, 1.);
-		this->setParameterT(41, 0.49);
+		this->setParameterT(41, 0.);
 		this->setParameterT(42, 0.);
 		this->setParameterT(43, 0.);
 		this->setParameterT(44, 1.);
 		this->setParameterT(45, 0.3);
-		this->setParameterT(46, 0.91);
+		this->setParameterT(46, 0.);
 		this->setParameterT(47, 0.);
 		this->setParameterT(48, 1.);
-		this->setParameterT(49, 0.33);
+		this->setParameterT(49, 0.);
 		this->setParameterT(50, 0.);
 		this->setParameterT(51, 0.);
 		this->setParameterT(52, 1.);
@@ -8081,10 +8111,10 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->setParameterT(56, 0.);
 		this->setParameterT(57, 1.);
 		this->setParameterT(58, 1.);
-		this->setParameterT(59, 2.);
+		this->setParameterT(59, 1.);
 		this->setParameterT(60, 1.);
 		this->setParameterT(61, 1.);
-		this->setParameterT(62, 1.);
+		this->setParameterT(62, 0.);
 		this->setParameterT(63, 1.);
 		this->setParameterT(64, 0.);
 		this->setParameterT(65, 2.3);
@@ -8093,10 +8123,10 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->setParameterT(68, 0.);
 		this->setParameterT(69, 1.);
 		this->setParameterT(70, 6.1);
-		this->setParameterT(71, 5.);
-		this->setParameterT(72, 10.);
-		this->setParameterT(73, 0.87);
-		this->setParameterT(74, 9.);
+		this->setParameterT(71, 1.);
+		this->setParameterT(72, 1.);
+		this->setParameterT(73, 0.);
+		this->setParameterT(74, 1.);
 		this->setParameterT(75, 1.);
 		this->setParameterT(76, 0.);
 		this->setParameterT(77, 0.);
@@ -8107,8 +8137,8 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->setParameterT(82, 1.);
 		this->setParameterT(83, 1.);
 		this->setParameterT(84, 1.);
-		this->setParameterT(85, 0.4);
-		this->setParameterT(86, 0.94);
+		this->setParameterT(85, 0.84);
+		this->setParameterT(86, 0.);
 		this->setParameterT(87, 0.);
 		this->setParameterT(88, 0.);
 		this->setParameterT(89, 1.);
@@ -8117,32 +8147,33 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->setParameterT(92, 1.);
 		this->setParameterT(93, 0.);
 		this->setParameterT(94, 0.);
-		this->setParameterT(95, 10.);
+		this->setParameterT(95, 10000.);
 		this->setParameterT(96, 0.);
-		this->setParameterT(97, 0.);
+		this->setParameterT(97, 1.);
 		this->setParameterT(98, 1.);
 		this->setParameterT(99, 0.);
-		this->setParameterT(100, 5.);
+		this->setParameterT(100, 1.);
 		this->setParameterT(101, 0.);
-		this->setParameterT(102, 0.06);
+		this->setParameterT(102, 0.);
 		this->setParameterT(103, 0.);
-		this->setParameterT(104, 1.);
+		this->setParameterT(104, 0.);
 		this->setParameterT(105, 1.);
 		this->setParameterT(106, 1.);
-		this->setParameterT(107, 3.);
-		this->setParameterT(108, 8.);
-		this->setParameterT(109, 2.);
+		this->setParameterT(107, 1.);
+		this->setParameterT(108, 1.);
+		this->setParameterT(109, 1.);
 		this->setParameterT(110, 0.);
 		this->setParameterT(111, 0.);
 		this->setParameterT(112, 0.);
 		this->setParameterT(113, 10000.);
 		this->setParameterT(114, 1.);
 		this->setParameterT(115, 436.6);
-		this->setParameterT(116, 0.5);
-		this->setParameterT(117, 0.5);
+		this->setParameterT(116, 0.);
+		this->setParameterT(117, 0.);
 		this->setParameterT(118, 1.);
-		this->setParameterT(119, 0.);
+		this->setParameterT(119, 1.);
 		this->setParameterT(120, 0.);
+		this->setParameterT(121, 0.);
 		this->setExternalData({}, -1);
 	}
 	~instance() override
@@ -8164,14 +8195,8 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 	{
 		// Runtime target Connections --------------------------------------------------------------
 		
-		this->getT(0).getT(0).getT(0).getT(0).                                                                  // Sm2_impl::pitch_mod_t<NV>
-        getT(3).getT(0).getT(0).getT(0).
-        getT(0).connectToRuntimeTarget(addConnection, c);
 		this->getT(0).getT(0).getT(0).getT(0).getT(3).                                                          // Sm2_impl::global_mod1_t<NV>
         getT(0).getT(0).getT(2).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(1).getT(0).                                                                  // Sm2_impl::pitch_mod1_t<NV>
-        getT(3).getT(0).getT(0).getT(0).
-        getT(0).connectToRuntimeTarget(addConnection, c);
 		this->getT(0).getT(0).getT(1).getT(0).                                                                  // Sm2_impl::global_mod_t<NV>
         getT(3).getT(0).getT(0).getT(2).
         getT(0).connectToRuntimeTarget(addConnection, c);
@@ -8206,21 +8231,16 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 	{
 		// External Data Connections ---------------------------------------------------------------
 		
-		this->getT(0).getT(0).getT(0).getT(0).getT(1).setExternalData(b, index);                 // Sm2_impl::peak5_t<NV>
-		this->getT(0).getT(0).getT(0).getT(0).                                                   // Sm2_impl::pitch_mod_t<NV>
-        getT(3).getT(0).getT(0).getT(0).
-        getT(0).setExternalData(b, index);
+		this->getT(0).getT(0).getT(0).getT(0).getT(1).setExternalData(b, index);                 // Sm2_impl::peak5_t
 		this->getT(0).getT(0).getT(0).getT(0).getT(3).                                           // Sm2_impl::global_mod1_t<NV>
         getT(0).getT(0).getT(2).getT(0).getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(1).setExternalData(b, index); // Sm2_impl::peak_unscaled_t<NV>
-		this->getT(0).getT(0).getT(1).getT(0).getT(1).setExternalData(b, index);                 // Sm2_impl::peak13_t<NV>
-		this->getT(0).getT(0).getT(1).getT(0).                                                   // Sm2_impl::pitch_mod1_t<NV>
-        getT(3).getT(0).getT(0).getT(0).
-        getT(0).setExternalData(b, index);
+		this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(2).setExternalData(b, index); // Sm2_impl::peak16_t
+		this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(4).setExternalData(b, index); // Sm2_impl::peak_unscaled_t<NV>
+		this->getT(0).getT(0).getT(1).getT(0).getT(1).setExternalData(b, index);                 // Sm2_impl::peak13_t
 		this->getT(0).getT(0).getT(1).getT(0).                                                   // Sm2_impl::global_mod_t<NV>
         getT(3).getT(0).getT(0).getT(2).
         getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0).getT(1).setExternalData(b, index); // Sm2_impl::peak_unscaled2_t<NV>
+		this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0).getT(2).setExternalData(b, index); // Sm2_impl::peak_unscaled2_t<NV>
 		this->getT(0).getT(0).getT(2).getT(0).getT(1).setExternalData(b, index);                 // Sm2_impl::peak7_t<NV>
 		this->getT(0).getT(0).getT(2).getT(0).                                                   // Sm2_impl::global_mod3_t<NV>
         getT(3).getT(0).getT(1).getT(0).setExternalData(b, index);
