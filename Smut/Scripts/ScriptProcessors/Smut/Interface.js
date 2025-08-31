@@ -643,6 +643,30 @@ Content.getComponent("ShowPResetManager").setControlCallback(onShowPResetManager
 
 function onNoteOn()
 {
+	Message.ignoreEvent(Message.getNoteNumber() == 23);
+	Message.ignoreEvent(Message.getNoteNumber() == 22);
+	Message.ignoreEvent(Message.getNoteNumber() == 21);
+	Message.ignoreEvent(Message.getNoteNumber() == 20);
+	Message.ignoreEvent(Message.getNoteNumber() == 19);
+	Message.ignoreEvent(Message.getNoteNumber() == 18);
+	Message.ignoreEvent(Message.getNoteNumber() == 17);
+	Message.ignoreEvent(Message.getNoteNumber() == 16);
+	Message.ignoreEvent(Message.getNoteNumber() == 15);
+	Message.ignoreEvent(Message.getNoteNumber() == 14);
+	Message.ignoreEvent(Message.getNoteNumber() == 13);
+	Message.ignoreEvent(Message.getNoteNumber() == 12);
+	Message.ignoreEvent(Message.getNoteNumber() == 11);
+	Message.ignoreEvent(Message.getNoteNumber() == 10);
+	Message.ignoreEvent(Message.getNoteNumber() == 9);
+	Message.ignoreEvent(Message.getNoteNumber() == 8);
+	Message.ignoreEvent(Message.getNoteNumber() == 7);
+	Message.ignoreEvent(Message.getNoteNumber() == 6);
+	Message.ignoreEvent(Message.getNoteNumber() == 5);
+	Message.ignoreEvent(Message.getNoteNumber() == 4);
+	Message.ignoreEvent(Message.getNoteNumber() == 3);
+	Message.ignoreEvent(Message.getNoteNumber() == 2);
+	Message.ignoreEvent(Message.getNoteNumber() == 1);
+	Message.ignoreEvent(Message.getNoteNumber() == 0);
 	
 }
  function onNoteOff()
