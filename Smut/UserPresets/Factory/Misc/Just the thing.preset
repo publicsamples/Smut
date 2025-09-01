@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Preset Version="0.2.0">
+<Preset Version="0.2.1">
   <Content Processor="Interface">
     <Control type="ScriptComboBox" id="OscShapeMode4" value="1.0"/>
     <Control type="ScriptSlider" id="Osc2into1" value="0.0"/>
@@ -73,10 +73,10 @@
     <Control type="ScriptSlider" id="Cut1" value="1.0"/>
     <Control type="ScriptSlider" id="Q1" value="0.0"/>
     <Control type="ScriptSlider" id="Pan1" value="0.0"/>
-    <Control type="ScriptSlider" id="FilterGain1" value="1.0"/>
+    <Control type="ScriptSlider" id="FilterGain1" value="0.5099999904632568"/>
     <Control type="ScriptComboBox" id="FilterMode1" value="1.0"/>
-    <Control type="ScriptSliderPack" id="ScriptSliderPack1" value="0" data="16............6Qg2O......"/>
-    <Control type="ScriptSliderPack" id="ScriptSliderPack2" value="3" data="20.................WOJ79......"/>
+    <Control type="ScriptSliderPack" id="ScriptSliderPack1" value="0.0" data="16............6Qg2O......"/>
+    <Control type="ScriptSliderPack" id="ScriptSliderPack2" value="3.0" data="20.................WOJ79......"/>
     <Control type="ScriptSlider" id="Cut2" value="0.3100000023841858"/>
     <Control type="ScriptSlider" id="q2" value="0.8500000238418579"/>
     <Control type="ScriptSlider" id="Pan" value="0.0"/>
@@ -145,7 +145,7 @@
     <Control type="ScriptSlider" id="PosDiv2" value="2.0"/>
     <Control type="ScriptComboBox" id="PosModTempo2" value="1.0"/>
     <Control type="ScriptSlider" id="PosDiv3" value="0.0"/>
-    <Control type="ScriptSliderPack" id="EnvSp1" value="15" data="64....f+..............f+.....P35Q0OT35A+.....vv0ixO.....7nv04C...3O.....rGEt5C.....OJbM+."/>
+    <Control type="ScriptSliderPack" id="EnvSp1" value="15.0" data="64....f+..............f+.....P35Q0OT35A+.....vv0ixO.....7nv04C...3O.....rGEt5C.....OJbM+."/>
     <Control type="ScriptSlider" id="ModR1" value="1220.0"/>
     <Control type="ScriptSlider" id="ModS1" value="1.0"/>
     <Control type="ScriptSlider" id="ModD1" value="0.0"/>
