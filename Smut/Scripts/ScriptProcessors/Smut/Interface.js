@@ -2,14 +2,34 @@ Content.makeFrontInterface(795, 655);
 
 include("laf.js");
 include("KnobLAF1.js");
-include("KnobLAF2.js");
-include("KnobLAF3.js");
-include("KnobLAF4.js");
 include("Rect.js");
 include("Scopes.js");
 
-
+const var ShowPResetManager = Content.getComponent("ShowPResetManager");
+ShowPResetManager.setValue(1);
+ShowPResetManager.changed();
 const var SMUT = Synth.getChildSynth("SMUT");
+
+inline function onVoicesControl(component, value)
+{
+	if (value == 1) {
+	SMUT.setAttribute(SMUT.VoiceLimit, 1);
+	}
+	if (value == 2) {
+	SMUT.setAttribute(SMUT.VoiceLimit, 3);
+	}
+	if (value == 3) {
+	SMUT.setAttribute(SMUT.VoiceLimit, 5);
+	}
+	if (value == 4) {
+	SMUT.setAttribute(SMUT.VoiceLimit, 8);
+	}
+
+};
+
+Content.getComponent("Voices").setControlCallback(onVoicesControl);
+
+
 
 Engine.loadFontAs("{PROJECT_FOLDER}Montserrat-Medium.ttf", "mon");
 
@@ -56,8 +76,9 @@ inline function onSync1Control(component, value)
 {
 	for(s in Osc2Tune)
       s.showControl(value-1);
-      for(s in Osc2Tempo)
-            s.showControl(value);
+     
+     for(s in Osc2Tempo)
+       s.showControl(value);
       
       SMUT.setAttribute(SMUT.SYNC2, value);     
 };
@@ -68,7 +89,6 @@ Content.getComponent("Sync1").setControlCallback(onSync1Control);
 
 const var VisPanel1 = Content.getComponent("VisPanel1");
 const var OscUser1 = Content.getComponent("OscUser1");
-
 
 inline function onOscShapeMode1Control(component, value)
 {
@@ -81,9 +101,7 @@ inline function onOscShapeMode1Control(component, value)
 	else {
 		
 		OscUser1.showControl(0);
-		VisPanel1.showControl(1);
-	
-		
+		VisPanel1.showControl(1);		
 		}
 	
 };
@@ -356,240 +374,6 @@ Content.getComponent("LfoShape3").setControlCallback(onLfoShape3Control);
 
 //Samples
 
-const var foldersV1 = [];        // Top-level Genre foldersV1
-const var instrumentsV1 = {};    // Maps Genre to Instruments
-const var samplesV1 = {};        // Maps Instrument to .wav files
-const var foldersV2 = [];        // Top-level Genre foldersV1
-const var instrumentsV2 = {};    // Maps Genre to Instruments
-const var samplesV2 = {}; 
-
-const var Cat1 = Content.getComponent("Cat1");
-const var Bank1 = Content.getComponent("Bank1");
-const var Sample1 = Content.getComponent("Sample1");
-
-const var Cat2 = Content.getComponent("Cat2");
-const var Bank2 = Content.getComponent("Bank2");
-const var Sample2 = Content.getComponent("Sample2");
-
-const var File1 = Synth.getAudioSampleProcessor("SMUT");
-
-
-const slot1 = File1.getAudioFile(0);
-const slot2 = File1.getAudioFile(1);
-
-
-const var AudioList = Engine.loadAudioFilesIntoPool();
-
-inline function sortAudioFilesListV1() {
-	
-	               
-for (file in AudioList) {
-
-        local fullPath = file.split("}")[1];
-
-        local pathParts = fullPath.split("/");
-    
-        local genreFolder = pathParts[0];
-        local instrumentFolder = pathParts[1];
-        local sampleFile = pathParts[2];
-
-     
-        if (foldersV1.indexOf(genreFolder) == -1) {
-            foldersV1.push(genreFolder);
-            instrumentsV1[genreFolder] = []; 
-            instrumentsV2[genreFolder] = []; 
-        }
-
-       
-        if (instrumentsV1[genreFolder].indexOf(instrumentFolder) == -1) {
-            instrumentsV1[genreFolder].push(instrumentFolder);
-            samplesV1[instrumentFolder] = []; 
-            samplesV2[instrumentFolder] = []; 
-        }
-
-		
-
-        samplesV1[instrumentFolder].push(sampleFile);
-        samplesV2[instrumentFolder].push(sampleFile);
-  
-  
-    }
-
-
-   Cat1.set("items", foldersV1.join("\n"));
-   Cat2.set("items", foldersV1.join("\n"));
-
-
-}
-
-sortAudioFilesListV1();
-
-
-inline function onCat1Control(component, value)
- {
-  if (value >= 0) {
-
-        local selectedGenre = foldersV1[value-1];
-
-        if (instrumentsV1[selectedGenre]) {
-            Bank1.set("items", instrumentsV1[selectedGenre].join("\n"));
-     
-        } else {
-            Bank1.set("items", "no file");
-
-
-        }
-
-		Bank1.setValue(value);
-		Bank1.changed();
-		Sample1.setValue(value);
-		Sample1.changed();
-         
-    }
-}
-Content.getComponent("Cat1").setControlCallback(onCat1Control);
-
-
-inline function onBank1Control(component, value)
-{
-	   if (value >= 0) {
-	    
-        local selectedInstrument = Bank1.getItemText();
-
-        if (samplesV1[selectedInstrument]) {
-
-            Sample1.set("items", samplesV1[selectedInstrument].join("\n"))-1;
-        } else {
- 			Sample1.set("items", "no file");
-        }
-      
-        
-    }
-    
-    Bank1.setValue(value);
-}
-
-
-Content.getComponent("Bank1").setControlCallback(onBank1Control);
-
-
-inline function onSample1Control(component, value)
-{
-	
-	if (value >= 0) {
-
-		local selectedSample = Sample1.get("items").split("\n")[value - 1];
-
-       local selectedGenre = Cat1.getItemText();
-       local selectedInstrument = Bank1.getItemText();
-       local fullPath = "{PROJECT_FOLDER}" + selectedGenre + "/" + selectedInstrument + "/" + selectedSample;
-
-	
-	SMUT.setBypassed(false);
-	reg voc1 = value-1;
-	
-	Content.callAfterDelay(300, function()
-	{
-		Engine.allNotesOff();
-	
-		SMUT.setBypassed(true);
-		
-		Content.callAfterDelay(300, function()
-		{
-	
-	
-		SMUT.setBypassed(false);
-
-        slot1.loadFile("{PROJECT_FOLDER}" + Cat1.getItemText() + "/" + Bank1.getItemText()  + "/" + Sample1.getItemText());
-    
-    }, this);
-
-	}, SMUT);
-}
-}
-
-Content.getComponent("Sample1").setControlCallback(onSample1Control);
-
-
-inline function onCat2Control(component, value)
-{
- if (value >= 0) {
-        local selectedGenre = foldersV1[value-1];
-
-        if (instrumentsV1[selectedGenre]) {
-            Bank2.set("items", instrumentsV1[selectedGenre].join("\n"));
-     
-        } else {
-            Bank2.set("items", "no file");
-
-
-        }
-
-		Bank2.setValue(value);
-		Bank2.changed();
-		Sample2.setValue(value);
-		Sample2.changed();
-         
-    }
-};
-
-Content.getComponent("Cat2").setControlCallback(onCat2Control);
-
-
-inline function onBank2Control(component, value)
-{ if (value >= 0) {
-	    
-        local selectedInstrument = Bank2.getItemText();
-
-        if (samplesV2[selectedInstrument]) {
-
-            Sample2.set("items", samplesV1[selectedInstrument].join("\n"))-1;
-        } else {
- 			Sample2.set("items", "no file");
-        }
-      }
-   
-};
-
-Content.getComponent("Bank2").setControlCallback(onBank2Control);
-
-
-inline function onSample2Control(component, value)
-{
-if (value >= 0) {
-
-		local selectedSample = Sample2.get("items").split("\n")[value - 1];
-
-       local selectedGenre = Cat2.getItemText();
-       local selectedInstrument = Bank2.getItemText();
-       local fullPath = "{PROJECT_FOLDER}" + selectedGenre + "/" + selectedInstrument + "/" + selectedSample;
-
-	
-	SMUT.setBypassed(false);
-	reg voc2 = value-1;
-	
-	Content.callAfterDelay(300, function()
-	{
-		Engine.allNotesOff();
-	
-		SMUT.setBypassed(true);
-		
-		Content.callAfterDelay(300, function()
-		{
-	
-	
-		SMUT.setBypassed(false);
-
-        slot2.loadFile("{PROJECT_FOLDER}" + Cat2.getItemText() + "/" + Bank2.getItemText()  + "/" + Sample2.getItemText());
-    
-    }, this);
-
-	}, SMUT);
-}
-}
-
-Content.getComponent("Sample2").setControlCallback(onSample2Control);
-
 
 ///Presets
 
@@ -603,6 +387,7 @@ inline function oncmbPresetsControl(component, value)
 
 	local itemText = Engine.getUserPresetList()[value - 1];
 
+	Engine.loadUserPreset(itemText + ".preset");
 	Console.print(itemText);
 }
 
@@ -640,8 +425,175 @@ inline function onShowPResetManagerControl(component, value)
 Content.getComponent("ShowPResetManager").setControlCallback(onShowPResetManagerControl);
 
 
+//link
 
-function onNoteOn()
+const var Link = Content.getComponent("Link");
+
+Link.setMouseCallback(function(event)
+{
+  if (event.clicked)
+  {
+    Engine.openWebsite("https://modularsamples.gumroad.com/l/lgzxw");
+  } 
+  else 
+  {
+  //  link_hover = event.hover;
+    this.repaint();
+  }
+});
+
+
+//Samples New
+
+
+const var foldersV1 = [];        // Top-level Genre foldersV1
+const var instrumentsV1 = {};    // Maps Genre to Instruments
+const var samplesV1 = {};        // Maps Instrument to .wav files
+const var foldersV2 = [];        // Top-level Genre foldersV1
+const var instrumentsV2 = {};    // Maps Genre to Instruments
+const var samplesV2 = {}; 
+
+const var File1 = Synth.getAudioSampleProcessor("SMUT");
+
+const slot1 = File1.getAudioFile(0);
+const slot2 = File1.getAudioFile(1);
+
+const var AudioList = Engine.loadAudioFilesIntoPool();
+
+const var SampleA = Content.getComponent("SampleA");
+
+inline function createDelayBroadcaster(Sample1)
+{
+	return Engine.createBroadcaster({
+		"id": Sample1.get("id") + " Delayer",
+		"args": [ "unused" ]
+	});
+}
+
+const var KSampleABroadcaster = createDelayBroadcaster(SampleA);
+
+
+SampleA.setControlCallback(onSampleAControl);
+
+function functOne()
+{
+	Console.print("ONE");
+	Engine.allNotesOff();
+	SMUT.setBypassed(true);
+	// You need to call it with a new argument (random number) or
+	// it won't fire...
+	KSampleABroadcaster.callWithDelay(30, [Math.random()], functTwo);
+}
+
+function functTwo()
+{
+	;
+	KSampleABroadcaster.callWithDelay(50, [Math.random()], functThree);
+}
+
+function functThree()
+{
+	SMUT.setBypassed(false);
+	Console.print("THREE");
+}
+
+
+inline function onSampleAControl(component, value)
+{
+	functOne();
+
+	local itemText = AudioList[value - 1];
+	slot1.loadFile(itemText);
+		Console.print("{PROJECT_FOLDER}" + itemText);
+	if (!value)
+		return;
+}
+KSampleABroadcaster.callWithDelay(300, [Math.random()], populateAudioMenu);
+
+inline function populateAudioMenu()
+{
+	SampleA.set("items", "");
+
+	for (x in AudioList)
+	{
+		local fullPath = x.split("}")[1];
+		local arr = fullPath.split("/");
+		local item = "";
+
+		for (i = 0; i < arr.length; i++)
+		{
+			item += arr[i];
+			
+			if (i < arr.length - 1)
+				item += "::";
+		}
+
+		SampleA.addItem(item);
+	
+	}
+}
+
+const var SampleB = Content.getComponent("SampleB");
+
+inline function createDelayBroadcaster2(Sample2)
+{
+	return Engine.createBroadcaster({
+		"id": Sample2.get("id") + " Delayer",
+		"args": [ "unused" ]
+	});
+}
+
+const var KSampleABroadcaster2 = createDelayBroadcaster(SampleB);
+
+
+SampleB.setControlCallback(onSampleBControl);
+
+function functOne1()
+{
+	Console.print("ONE");
+	Engine.allNotesOff();
+	SMUT.setBypassed(true);
+	// You need to call it with a new argument (random number) or
+	// it won't fire...
+	KSampleABroadcaster2.callWithDelay(30, [Math.random()], functTwo);
+}
+
+
+
+inline function onSampleBControl(component, value)
+{
+	functOne1();
+
+	local itemText = AudioList[value - 1];
+	slot2.loadFile(itemText);
+		Console.print("{PROJECT_FOLDER}" + itemText);
+	if (!value)
+		return;
+}
+KSampleABroadcaster2.callWithDelay(300, [Math.random()], populateAudioMenu2);
+
+inline function populateAudioMenu2()
+{
+	SampleB.set("items", "");
+
+	for (x in AudioList)
+	{
+		local fullPath = x.split("}")[1];
+		local arr = fullPath.split("/");
+		local item = "";
+
+		for (i = 0; i < arr.length; i++)
+		{
+			item += arr[i];
+			
+			if (i < arr.length - 1)
+				item += "::";
+		}
+
+		SampleB.addItem(item);
+	
+	}
+}function onNoteOn()
 {
 	Message.ignoreEvent(Message.getNoteNumber() == 23);
 	Message.ignoreEvent(Message.getNoteNumber() == 22);

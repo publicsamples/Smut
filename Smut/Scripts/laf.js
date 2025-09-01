@@ -9,8 +9,8 @@ laf.registerFunction("drawComboBox", function(g, obj)
 {
     g.setColour(obj.bgColour);
     g.drawRoundedRectangle(obj.area, 3.0, 3.0);
-    g.setColour(Colours.withAlpha(obj.textColour, (obj.enabled && obj.active) ? 1.0 : 0.2));
-    ///g.setFont("Montserrat", 12.0);
+    g.setColour(obj.textColour);
+    g.setFont("Montserrat", 12.0);
    
   
     var a = obj.area;
@@ -26,6 +26,35 @@ laf.registerFunction("drawSliderPack", function(g, obj)
        g.setFont("Montserrat", 16.0);
 
 
+});
+
+laf.registerFunction("drawAlertWindow", function(g, obj)
+{
+    g.fillAll(0xFF333333);
+    
+    var a = [0, 0, obj.area[2], 30];
+    g.setColour(0x44000000);
+    g.fillRect(a);
+    g.setColour(Colours.white);
+    g.drawRect(obj.area, 0.3);
+     g.setFont("Montserrat", 16.0);
+    g.drawAlignedText(obj.title, a, "centred");
+});
+
+laf.registerFunction("drawDialogButton", function(g, obj)
+{
+    g.fillAll(0xFF000000);
+    
+    if(obj.over)
+        g.fillAll(0x94CF844F);
+        
+    if(obj.down)
+        g.fillAll(0x94CF844F);
+       
+      g.setFont("Montserrat", 16.0);
+        
+    g.setColour(Colours.white);
+    g.drawAlignedText(obj.text, obj.area, "centred");
 });
 
 laf.registerFunction("drawPresetBrowserListItem", function(g, obj)

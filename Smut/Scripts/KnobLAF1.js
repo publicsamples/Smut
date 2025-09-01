@@ -125,9 +125,9 @@ for(s in OscKbs)
 const var FileKnbs = [Content.getComponent("PosDiv"),
                       Content.getComponent("PosMod"),
                       Content.getComponent("FileInput"),
-                      Content.getComponent("OscMix1"),
+                      Content.getComponent("FilePos1"),
                       Content.getComponent("FileInput1"),
-                       Content.getComponent("OscMix10"),
+                       Content.getComponent("FilePosi1"),
                        Content.getComponent("PosMod1"),
                         Content.getComponent("PosDiv1")];
 
@@ -135,14 +135,14 @@ for(s in FileKnbs)
      s.setLocalLookAndFeel(KnobLaf); 
      
      
-const var FilterKnbs = [Content.getComponent("OscMix2"),
-                        Content.getComponent("OscMix3"),
-                        Content.getComponent("OscMix5"),
-                        Content.getComponent("OscMix4"),
-                        Content.getComponent("OscMix6"),
-                        Content.getComponent("OscMix7"),
-                        Content.getComponent("OscMix9"),
-                        Content.getComponent("OscMix8")];
+const var FilterKnbs = [Content.getComponent("Cut1"),
+                        Content.getComponent("Q1"),
+                        Content.getComponent("FilterGain1"),
+                        Content.getComponent("Pan1"),
+                        Content.getComponent("Cut2"),
+                        Content.getComponent("q2"),
+                        Content.getComponent("FilterGain2"),
+                        Content.getComponent("Pan")];
 
  for(s in FilterKnbs)
       s.setLocalLookAndFeel(KnobLaf);

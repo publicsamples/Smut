@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Network ID="combValueTest" AllowPolyphonic="1" Version="0.0.0">
+  <Node FactoryPath="container.chain" ID="combValueTest" Bypassed="0"
+        Name="combValueTest">
+    <Nodes>
+      <Node ID="oscillator" FactoryPath="core.oscillator" Bypassed="0" Name="oscillator">
+        <ComplexData>
+          <DisplayBuffers>
+            <DisplayBuffer Index="-1"/>
+          </DisplayBuffers>
+        </ComplexData>
+        <Parameters>
+          <Parameter MinValue="0.0" MaxValue="4.0" StepSize="1.0" ID="Mode" Value="1.0"
+                     DefaultValue="0.0"/>
+          <Parameter MinValue="20.0" MaxValue="20000.0" StepSize="0.1000000014901161"
+                     SkewFactor="0.2299045622348785" ID="Frequency" Value="220.0"/>
+          <Parameter MinValue="1.0" MaxValue="16.0" StepSize="1.0" ID="Freq Ratio"
+                     Value="1.0"/>
+          <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Gate" Value="1.0"/>
+          <Parameter MinValue="0.0" MaxValue="1.0" ID="Phase" Value="0.0"/>
+          <Parameter MinValue="0.0" MaxValue="1.0" ID="Gain" Value="1.0"/>
+        </Parameters>
+      </Node>
+      <Node ID="faust" FactoryPath="core.faust" Bypassed="0" Name="faust">
+        <Properties>
+          <Property ID="ClassId" Value="Comb"/>
+          <Property ID="NumParameters" Value="0"/>
+        </Properties>
+        <Parameters>
+          <Parameter MinValue="0.0" MaxValue="1.0" StepSize="0.009999999776482582"
+                     ID="aN" Value="0.9999999776482582" DefaultValue="0.0"/>
+          <Parameter MinValue="0.0" MaxValue="1000.0" StepSize="0.009999999776482582"
+                     ID="del" Value="999.9999776482582" DefaultValue="0.0"/>
+        </Parameters>
+        <SwitchTargets/>
+      </Node>
+    </Nodes>
+    <Parameters/>
+  </Node>
+</Network>
