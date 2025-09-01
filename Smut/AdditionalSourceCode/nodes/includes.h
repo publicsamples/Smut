@@ -28,6 +28,7 @@
 #include "Revern_networkdata.h"
 #include "rp_networkdata.h"
 #include "Sm2.h"
+#include "SmFx.h"
 #include "SuperDetune_networkdata.h"
 #include "VcaAdsr_networkdata.h"
 

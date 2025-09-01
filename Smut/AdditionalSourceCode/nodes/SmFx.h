@@ -11,7 +11,7 @@ using namespace scriptnode;
 using namespace snex;
 using namespace snex::Types;
 
-namespace Sm2_impl
+namespace SmFx_impl
 {
 // ==============================| Node & Parameter type declarations |==============================
 
@@ -93,21 +93,15 @@ using split6_t = container::split<parameter::empty,
                                   chain258_t<NV>, 
                                   chain60_t<NV>>;
 using peak16_t = wrap::no_data<wrap::no_process<core::peak>>;
-
-template <int NV>
-using converter2_t = control::converter<parameter::plain<core::phasor_fm<NV>, 2>, 
-                                        conversion_logic::st2pitch>;
-template <int NV>
-using peak_unscaled_t = wrap::mod<parameter::plain<converter2_t<NV>, 0>, 
-                                  wrap::no_data<core::peak_unscaled>>;
+using peak_unscaled_t = wrap::no_data<core::peak_unscaled>;
 
 template <int NV>
 using chain62_t = container::chain<parameter::empty, 
                                    wrap::fix<1, split6_t<NV>>, 
                                    math::sub<NV>, 
                                    peak16_t, 
-                                   wrap::no_process<math::mod2sig<NV>>, 
-                                   peak_unscaled_t<NV>>;
+                                   math::mod2sig<NV>, 
+                                   peak_unscaled_t>;
 
 template <int NV>
 using split7_t = container::split<parameter::empty, 
@@ -191,7 +185,9 @@ using split11_t = container::split<parameter::empty,
                                    chain260_t<NV>, 
                                    chain120_t<NV>>;
 
-template <int NV> using converter3_t = converter2_t<NV>;
+template <int NV>
+using converter3_t = control::converter<parameter::plain<core::phasor_fm<NV>, 2>, 
+                                        conversion_logic::st2pitch>;
 template <int NV>
 using peak_unscaled2_t = wrap::mod<parameter::plain<converter3_t<NV>, 0>, 
                                    wrap::no_data<core::peak_unscaled>>;
@@ -200,6 +196,7 @@ template <int NV>
 using chain82_t = container::chain<parameter::empty, 
                                    wrap::fix<1, split11_t<NV>>, 
                                    math::sub<NV>, 
+                                   math::mod2sig<NV>, 
                                    peak_unscaled2_t<NV>>;
 
 template <int NV>
@@ -267,31 +264,12 @@ template <int NV>
 using split12_t = container::split<parameter::empty, 
                                    wrap::fix<1, chain97_t<NV>>, 
                                    chain121_t<NV>>;
-
-template <int NV>
-using converter_t = control::converter<parameter::plain<core::phasor_fm<NV>, 2>, 
-                                       conversion_logic::ms2freq>;
-template <int NV>
-using tempo_sync_t = wrap::mod<parameter::plain<converter_t<NV>, 0>, 
-                               control::tempo_sync<NV>>;
-DECLARE_PARAMETER_RANGE_STEP(peak35_modRange, 
-                             0., 
-                             18., 
-                             1.);
-
-template <int NV>
-using peak35_mod = parameter::from0To1<tempo_sync_t<NV>, 
-                                       0, 
-                                       peak35_modRange>;
-
-template <int NV>
-using peak35_t = wrap::mod<peak35_mod<NV>, 
-                           wrap::no_data<core::peak>>;
+using peak35_t = wrap::no_data<core::peak>;
 
 template <int NV>
 using chain70_t = container::chain<parameter::empty, 
                                    wrap::fix<1, split12_t<NV>>, 
-                                   peak35_t<NV>>;
+                                   peak35_t>;
 
 template <int NV>
 using chain63_t = container::chain<parameter::empty, 
@@ -357,14 +335,21 @@ template <int NV>
 using chain98_t = container::chain<parameter::empty, 
                                    wrap::fix<1, split16_t<NV>>>;
 
-template <int NV> using converter1_t = converter_t<NV>;
+template <int NV>
+using converter1_t = control::converter<parameter::plain<core::phasor_fm<NV>, 2>, 
+                                        conversion_logic::ms2freq>;
 template <int NV>
 using tempo_sync2_t = wrap::mod<parameter::plain<converter1_t<NV>, 0>, 
                                 control::tempo_sync<NV>>;
+DECLARE_PARAMETER_RANGE_STEP(peak36_modRange, 
+                             0., 
+                             18., 
+                             1.);
+
 template <int NV>
 using peak36_mod = parameter::from0To1<tempo_sync2_t<NV>, 
                                        0, 
-                                       peak35_modRange>;
+                                       peak36_modRange>;
 
 template <int NV>
 using peak36_t = wrap::mod<peak36_mod<NV>, 
@@ -724,7 +709,7 @@ using branch29_t = container::branch<parameter::empty,
                                      chain227_t<NV>, 
                                      chain242_t<NV>, 
                                      chain243_t<NV>>;
-using peak21_t = wrap::no_data<core::peak>;
+using peak21_t = peak35_t;
 
 template <int NV> using pma_unscaled14_t = pma_unscaled3_t<NV>;
 
@@ -752,20 +737,7 @@ template <int NV>
 using split15_t = container::split<parameter::empty, 
                                    wrap::fix<1, chain244_t<NV>>, 
                                    chain245_t<NV>>;
-
-DECLARE_PARAMETER_RANGE_SKEW(peak3_modRange, 
-                             -100., 
-                             24., 
-                             5.42227);
-
-template <int NV>
-using peak3_mod = parameter::from0To1<core::gain<NV>, 
-                                      0, 
-                                      peak3_modRange>;
-
-template <int NV>
-using peak3_t = wrap::mod<peak3_mod<NV>, 
-                          wrap::no_data<core::peak>>;
+using peak3_t = peak35_t;
 
 template <int NV>
 using chain147_t = container::chain<parameter::empty, 
@@ -773,7 +745,7 @@ using chain147_t = container::chain<parameter::empty,
                                     peak21_t, 
                                     math::clear<NV>, 
                                     split15_t<NV>, 
-                                    peak3_t<NV>>;
+                                    peak3_t>;
 
 template <int NV>
 using modchain13_t_ = container::chain<parameter::empty, 
@@ -828,7 +800,15 @@ using split5_t = container::split<parameter::empty,
                                   wrap::fix<1, chain184_t<NV>>, 
                                   chain124_t<NV>>;
 
-template <int NV> using peak14_mod = peak3_mod<NV>;
+DECLARE_PARAMETER_RANGE_SKEW(peak14_modRange, 
+                             -100., 
+                             24., 
+                             5.42227);
+
+template <int NV>
+using peak14_mod = parameter::from0To1<core::gain<NV>, 
+                                       0, 
+                                       peak14_modRange>;
 
 template <int NV>
 using peak14_t = wrap::mod<peak14_mod<NV>, 
@@ -951,7 +931,7 @@ using branch32_t = container::branch<parameter::empty,
                                      chain275_t<NV>, 
                                      chain276_t<NV>, 
                                      chain277_t<NV>>;
-using peak38_t = peak21_t;
+using peak38_t = peak35_t;
 
 template <int NV> using pma_unscaled17_t = pma_unscaled3_t<NV>;
 
@@ -1398,42 +1378,9 @@ using split8_t = container::split<parameter::empty,
                                   modchain10_t<NV>, 
                                   modchain8_t<NV>, 
                                   modchain11_t<NV>>;
-template <int NV>
-using stereo_cable = cable::block<NV, 2>;
 
-template <int NV>
-using chain235_t = container::chain<parameter::empty, 
-                                    wrap::fix<2, routing::receive<NV, stereo_cable<NV>>>>;
-
-template <int NV> using chain236_t = chain235_t<NV>;
-
-template <int NV> using chain267_t = chain235_t<NV>;
-
-template <int NV> using chain237_t = chain235_t<NV>;
-
-template <int NV> using chain238_t = chain235_t<NV>;
-template <int NV>
-using branch28_t = container::branch<parameter::empty, 
-                                     wrap::fix<2, chain235_t<NV>>, 
-                                     chain236_t<NV>, 
-                                     chain267_t<NV>, 
-                                     chain237_t<NV>, 
-                                     chain238_t<NV>>;
-
-template <int NV>
-using chain15_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, converter2_t<NV>>, 
-                                   core::phasor_fm<NV>>;
-
-template <int NV>
-using chain16_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, tempo_sync_t<NV>>, 
-                                   converter_t<NV>, 
-                                   core::phasor_fm<NV>>;
-template <int NV>
-using branch2_t = container::branch<parameter::empty, 
-                                    wrap::fix<2, chain15_t<NV>>, 
-                                    chain16_t<NV>>;
+using chain266_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, core::empty>>;
 namespace custom
 {
 
@@ -1957,7 +1904,8 @@ using chain14_t = container::chain<parameter::empty,
                                    table4_t>;
 template <int NV>
 using branch_t = container::branch<parameter::empty, 
-                                   wrap::fix<2, chain1_t<NV>>, 
+                                   wrap::fix<2, chain266_t>, 
+                                   chain1_t<NV>, 
                                    chain111_t<NV>, 
                                    chain10_t<NV>, 
                                    chain11_t<NV>, 
@@ -1970,8 +1918,9 @@ using branch_t = container::branch<parameter::empty,
                                    chain13_t<NV>, 
                                    chain14_t<NV>>;
 
-using chain90_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, core::empty>>;
+using chain90_t = chain266_t;
+template <int NV>
+using stereo_cable = cable::block<NV, 2>;
 using oscilloscope_t = wrap::data<analyse::oscilloscope, 
                                   data::external::displaybuffer<2>>;
 
@@ -1990,7 +1939,10 @@ using peak15_mod = parameter::chain<ranges::Identity,
                                     parameter::plain<math::add<NV>, 0>, 
                                     parameter::plain<math::add<NV>, 0>, 
                                     parameter::plain<math::add<NV>, 0>, 
-                                    parameter::plain<math::add<NV>, 0>>;
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::clear<NV>, 0>, 
+                                    parameter::plain<math::clear<NV>, 0>>;
 
 template <int NV>
 using peak15_t = wrap::mod<peak15_mod<NV>, 
@@ -1998,7 +1950,7 @@ using peak15_t = wrap::mod<peak15_mod<NV>,
 
 template <int NV>
 using chain36_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, wrap::no_process<math::sig2mod<NV>>>, 
+                                   wrap::fix<2, math::sig2mod<NV>>, 
                                    oscilloscope_t, 
                                    peak15_t<NV>, 
                                    math::clear<NV>>;
@@ -2024,22 +1976,21 @@ using chain89_t = container::chain<parameter::empty,
 
 template <int NV>
 using chain17_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, branch28_t<NV>>, 
-                                   core::gain<NV>, 
-                                   branch2_t<NV>, 
-                                   core::mono2stereo, 
+                                   wrap::fix<2, core::gain<NV>>, 
                                    branch_t<NV>, 
                                    chain89_t<NV>>;
 
-template <int NV> using chain228_t = chain235_t<NV>;
+template <int NV>
+using chain228_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, routing::receive<NV, stereo_cable<NV>>>>;
 
-template <int NV> using chain230_t = chain235_t<NV>;
+template <int NV> using chain230_t = chain228_t<NV>;
 
-template <int NV> using chain268_t = chain235_t<NV>;
+template <int NV> using chain268_t = chain228_t<NV>;
 
-template <int NV> using chain229_t = chain235_t<NV>;
+template <int NV> using chain229_t = chain228_t<NV>;
 
-template <int NV> using chain231_t = chain235_t<NV>;
+template <int NV> using chain231_t = chain228_t<NV>;
 template <int NV>
 using branch27_t = container::branch<parameter::empty, 
                                      wrap::fix<2, chain228_t<NV>>, 
@@ -2590,11 +2541,30 @@ using branch4_t = container::branch<parameter::empty,
                                     chain29_t<NV>, 
                                     chain30_t<NV>>;
 
-using chain178_t = chain90_t;
+using chain178_t = chain266_t;
 using oscilloscope1_t = wrap::data<analyse::oscilloscope, 
                                    data::external::displaybuffer<1>>;
 
-template <int NV> using peak34_mod = peak15_mod<NV>;
+template <int NV>
+using peak34_mod = parameter::chain<ranges::Identity, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::clear<NV>, 0>, 
+                                    parameter::plain<math::clear<NV>, 0>, 
+                                    parameter::plain<math::clear<NV>, 0>>;
 
 template <int NV>
 using peak34_t = wrap::mod<peak34_mod<NV>, 
@@ -2613,7 +2583,7 @@ using split32_t = container::split<parameter::empty,
 
 template <int NV>
 using chain179_t = container::chain<parameter::empty, 
-                                    wrap::fix<2, wrap::no_process<math::sig2mod<NV>>>, 
+                                    wrap::fix<2, math::sig2mod<NV>>, 
                                     split32_t<NV>, 
                                     math::clear<NV>>;
 
@@ -2650,17 +2620,18 @@ using chain8_t = container::chain<parameter::empty,
 
 template <int NV>
 using chain_t = container::chain<parameter::empty, 
-                                 wrap::fix<2, chain8_t<NV>>>;
+                                 wrap::fix<2, chain8_t<NV>>, 
+                                 filters::one_pole<NV>>;
 
-template <int NV> using chain152_t = chain235_t<NV>;
+template <int NV> using chain152_t = chain228_t<NV>;
 
-template <int NV> using chain153_t = chain235_t<NV>;
+template <int NV> using chain153_t = chain228_t<NV>;
 
-template <int NV> using chain269_t = chain235_t<NV>;
+template <int NV> using chain269_t = chain228_t<NV>;
 
-template <int NV> using chain176_t = chain235_t<NV>;
+template <int NV> using chain176_t = chain228_t<NV>;
 
-template <int NV> using chain226_t = chain235_t<NV>;
+template <int NV> using chain226_t = chain228_t<NV>;
 template <int NV>
 using branch26_t = container::branch<parameter::empty, 
                                      wrap::fix<2, chain152_t<NV>>, 
@@ -2689,7 +2660,7 @@ using ramp_t = wrap::mod<ramp_mod<NV>,
 template <int NV>
 using tempo_sync4_t = wrap::mod<parameter::plain<ramp_t<NV>, 0>, 
                                 control::tempo_sync<NV>>;
-using peak4_t = peak21_t;
+using peak4_t = peak35_t;
 
 template <int NV>
 using ahdsr_multimod = parameter::list<parameter::plain<math::add<NV>, 0>, 
@@ -2921,9 +2892,27 @@ using frame2_block1_t_ = container::chain<parameter::empty,
 template <int NV>
 using frame2_block1_t = wrap::frame<2, frame2_block1_t_<NV>>;
 
-using chain255_t = chain90_t;
+using chain255_t = chain266_t;
 
-template <int NV> using peak31_mod = peak15_mod<NV>;
+template <int NV>
+using peak31_mod = parameter::chain<ranges::Identity, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::clear<NV>, 0>, 
+                                    parameter::plain<math::clear<NV>, 0>, 
+                                    parameter::plain<math::clear<NV>, 0>>;
 
 template <int NV>
 using peak31_t = wrap::mod<peak31_mod<NV>, 
@@ -2962,15 +2951,15 @@ using chain180_t = container::chain<parameter::empty,
                                     frame2_block1_t<NV>, 
                                     chain254_t<NV>>;
 
-template <int NV> using chain250_t = chain235_t<NV>;
+template <int NV> using chain250_t = chain228_t<NV>;
 
-template <int NV> using chain251_t = chain235_t<NV>;
+template <int NV> using chain251_t = chain228_t<NV>;
 
-template <int NV> using chain252_t = chain235_t<NV>;
+template <int NV> using chain252_t = chain228_t<NV>;
 
-template <int NV> using chain253_t = chain235_t<NV>;
+template <int NV> using chain253_t = chain228_t<NV>;
 
-template <int NV> using chain270_t = chain235_t<NV>;
+template <int NV> using chain270_t = chain228_t<NV>;
 template <int NV>
 using branch30_t = container::branch<parameter::empty, 
                                      wrap::fix<2, chain250_t<NV>>, 
@@ -2978,7 +2967,7 @@ using branch30_t = container::branch<parameter::empty,
                                      chain252_t<NV>, 
                                      chain253_t<NV>, 
                                      chain270_t<NV>>;
-using peak10_t = peak21_t;
+using peak10_t = peak35_t;
 
 template <int NV>
 using cable_table2_t = wrap::data<control::cable_table<parameter::plain<math::add<NV>, 0>>, 
@@ -3156,9 +3145,29 @@ using frame2_block2_t_ = container::chain<parameter::empty,
 template <int NV>
 using frame2_block2_t = wrap::frame<2, frame2_block2_t_<NV>>;
 
-using chain100_t = chain90_t;
+using chain100_t = chain266_t;
 
-template <int NV> using peak19_mod = peak15_mod<NV>;
+template <int NV>
+using peak19_mod = parameter::chain<ranges::Identity, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::add<NV>, 0>, 
+                                    parameter::plain<math::clear<NV>, 0>, 
+                                    parameter::plain<math::clear<NV>, 0>, 
+                                    parameter::plain<math::clear<NV>, 0>>;
 
 template <int NV>
 using peak19_t = wrap::mod<peak19_mod<NV>, 
@@ -3202,41 +3211,22 @@ using split_t = container::split<parameter::empty,
                                  chain180_t<NV>, 
                                  chain248_t<NV>>;
 
-template <int NV> using sliderbank_c0 = peak25_mod<NV>;
-
-template <int NV> using sliderbank_c1 = peak25_mod<NV>;
-
-template <int NV> using sliderbank_c2 = peak25_mod<NV>;
-
-template <int NV> using sliderbank_c3 = peak25_mod<NV>;
-
 template <int NV>
-using sliderbank_multimod = parameter::list<sliderbank_c0<NV>, 
-                                            sliderbank_c1<NV>, 
-                                            sliderbank_c2<NV>, 
-                                            sliderbank_c3<NV>>;
+using sliderbank_multimod = parameter::list<parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>, 
+                                            parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>, 
+                                            parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>, 
+                                            parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>>;
 
 template <int NV>
 using sliderbank_t = wrap::data<control::sliderbank<sliderbank_multimod<NV>>, 
                                 data::external::sliderpack<2>>;
 
 template <int NV>
-using chain161_t = container::chain<parameter::empty, 
-                                    wrap::fix<2, routing::receive<NV, stereo_cable<NV>>>, 
-                                    core::gain<NV>>;
-
-template <int NV> using chain162_t = chain161_t<NV>;
-
-template <int NV> using chain165_t = chain161_t<NV>;
-
-template <int NV> using chain164_t = chain161_t<NV>;
-
-template <int NV>
 using split39_t = container::split<parameter::empty, 
-                                   wrap::fix<2, chain161_t<NV>>, 
-                                   chain162_t<NV>, 
-                                   chain165_t<NV>, 
-                                   chain164_t<NV>>;
+                                   wrap::fix<2, routing::receive<NV, stereo_cable<NV>>>, 
+                                   routing::receive<NV, stereo_cable<NV>>, 
+                                   routing::receive<NV, stereo_cable<NV>>, 
+                                   routing::receive<NV, stereo_cable<NV>>>;
 
 template <int NV>
 using chain41_t = container::chain<parameter::empty, 
@@ -3250,7 +3240,8 @@ template <int NV> using chain44_t = chain41_t<NV>;
 
 template <int NV>
 using chain45_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, filters::allpass<NV>>>;
+                                   wrap::fix<2, filters::one_pole<NV>>, 
+                                   filters::allpass<NV>>;
 template <int NV>
 using stereo_frame_cable = cable::frame<NV, 2>;
 
@@ -3285,14 +3276,10 @@ template <int NV> using converter9_t = converter6_t<NV>;
 template <int NV>
 using converter8_t = control::converter<parameter::plain<converter9_t<NV>, 0>, 
                                         conversion_logic::midi2freq>;
-template <int NV>
-using midi1_t = wrap::mod<parameter::plain<converter8_t<NV>, 0>, 
-                          control::midi<midi_logic::notenumber<NV>>>;
 
 template <int NV>
 using chain56_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, midi1_t<NV>>, 
-                                   converter8_t<NV>, 
+                                   wrap::fix<2, converter8_t<NV>>, 
                                    converter9_t<NV>, 
                                    jdsp::jdelay<NV>>;
 
@@ -3350,9 +3337,9 @@ using branch6_t = container::branch<parameter::empty,
                                     chain123_t<NV>, 
                                     chain126_t<NV>>;
 
-using chain158_t = chain90_t;
+using chain158_t = chain266_t;
 
-template <int NV> using peak32_mod = peak15_mod<NV>;
+template <int NV> using peak32_mod = peak34_mod<NV>;
 
 template <int NV>
 using peak32_t = wrap::mod<peak32_mod<NV>, 
@@ -3391,44 +3378,24 @@ using chain154_t = container::chain<parameter::empty,
                                     core::gain<NV>, 
                                     jdsp::jpanner<NV>>;
 
-template <int NV> using sliderbank1_c0 = peak25_mod<NV>;
-
-template <int NV> using sliderbank1_c1 = peak25_mod<NV>;
-
-template <int NV> using sliderbank1_c2 = peak25_mod<NV>;
-
-template <int NV> using sliderbank1_c3 = peak25_mod<NV>;
-
-template <int NV> using sliderbank1_c4 = peak25_mod<NV>;
-
 template <int NV>
-using sliderbank1_multimod = parameter::list<sliderbank1_c0<NV>, 
-                                             sliderbank1_c1<NV>, 
-                                             sliderbank1_c2<NV>, 
-                                             sliderbank1_c3<NV>, 
-                                             sliderbank1_c4<NV>>;
+using sliderbank1_multimod = parameter::list<parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>, 
+                                             parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>, 
+                                             parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>, 
+                                             parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>, 
+                                             parameter::plain<routing::receive<NV, stereo_cable<NV>>, 0>>;
 
 template <int NV>
 using sliderbank1_t = wrap::data<control::sliderbank<sliderbank1_multimod<NV>>, 
                                  data::external::sliderpack<3>>;
 
-template <int NV> using chain259_t = chain161_t<NV>;
-
-template <int NV> using chain264_t = chain161_t<NV>;
-
-template <int NV> using chain263_t = chain161_t<NV>;
-
-template <int NV> using chain262_t = chain161_t<NV>;
-
-template <int NV> using chain261_t = chain161_t<NV>;
-
 template <int NV>
 using split40_t = container::split<parameter::empty, 
-                                   wrap::fix<2, chain259_t<NV>>, 
-                                   chain264_t<NV>, 
-                                   chain263_t<NV>, 
-                                   chain262_t<NV>, 
-                                   chain261_t<NV>>;
+                                   wrap::fix<2, routing::receive<NV, stereo_cable<NV>>>, 
+                                   routing::receive<NV, stereo_cable<NV>>, 
+                                   routing::receive<NV, stereo_cable<NV>>, 
+                                   routing::receive<NV, stereo_cable<NV>>, 
+                                   routing::receive<NV, stereo_cable<NV>>>;
 
 template <int NV> using chain168_t = chain41_t<NV>;
 
@@ -3438,43 +3405,25 @@ template <int NV> using chain170_t = chain41_t<NV>;
 
 template <int NV> using chain171_t = chain41_t<NV>;
 
-template <int NV> using chain172_t = chain45_t<NV>;
+template <int NV>
+using chain172_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, filters::allpass<NV>>>;
 
 template <int NV> using converter11_t = converter6_t<NV>;
 template <int NV>
 using converter10_t = control::converter<parameter::plain<converter11_t<NV>, 0>, 
                                          conversion_logic::midi2freq>;
-template <int NV>
-using midi2_t = wrap::mod<parameter::plain<converter10_t<NV>, 0>, 
-                          control::midi<midi_logic::notenumber<NV>>>;
 
 template <int NV>
 using chain61_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, midi2_t<NV>>, 
-                                   converter10_t<NV>, 
+                                   wrap::fix<2, converter10_t<NV>>, 
                                    converter11_t<NV>, 
-                                   jdsp::jdelay<NV>>;
-
-template <int NV> using converter13_t = converter6_t<NV>;
-template <int NV>
-using converter12_t = control::converter<parameter::plain<converter13_t<NV>, 0>, 
-                                         conversion_logic::midi2freq>;
-template <int NV>
-using midi3_t = wrap::mod<parameter::plain<converter12_t<NV>, 0>, 
-                          control::midi<midi_logic::notenumber<NV>>>;
-
-template <int NV>
-using chain92_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, midi3_t<NV>>, 
-                                   converter12_t<NV>, 
-                                   converter13_t<NV>, 
                                    jdsp::jdelay<NV>>;
 
 template <int NV>
 using chain166_t = container::chain<parameter::empty, 
                                     wrap::fix<2, routing::receive<NV, stereo_cable<NV>>>, 
                                     chain61_t<NV>, 
-                                    chain92_t<NV>, 
                                     filters::one_pole<NV>, 
                                     routing::send<NV, stereo_cable<NV>>>;
 
@@ -3482,14 +3431,10 @@ template <int NV> using converter15_t = converter6_t<NV>;
 template <int NV>
 using converter14_t = control::converter<parameter::plain<converter15_t<NV>, 0>, 
                                          conversion_logic::midi2freq>;
-template <int NV>
-using midi4_t = wrap::mod<parameter::plain<converter14_t<NV>, 0>, 
-                          control::midi<midi_logic::notenumber<NV>>>;
 
 template <int NV>
 using chain94_t = container::chain<parameter::empty, 
-                                   wrap::fix<2, midi4_t<NV>>, 
-                                   converter14_t<NV>, 
+                                   wrap::fix<2, converter14_t<NV>>, 
                                    converter15_t<NV>, 
                                    jdsp::jdelay<NV>>;
 
@@ -3547,13 +3492,13 @@ using branch13_t = container::branch<parameter::empty,
                                      chain232_t<NV>, 
                                      chain233_t<NV>>;
 
-using chain174_t = chain90_t;
+using chain174_t = chain266_t;
 
-template <int NV> using peak33_mod = peak15_mod<NV>;
+template <int NV> using peak33_mod = peak34_mod<NV>;
 
 template <int NV>
 using peak33_t = wrap::mod<peak33_mod<NV>, 
-                           wrap::no_data<wrap::no_process<core::peak>>>;
+                           wrap::no_data<core::peak>>;
 
 template <int NV>
 using chain257_t = container::chain<parameter::empty, 
@@ -3593,25 +3538,194 @@ using split26_t = container::split<parameter::empty,
                                    wrap::fix<2, chain154_t<NV>>, 
                                    chain160_t<NV>>;
 
+using chain165_t = chain266_t;
+
+template <int NV>
+using chain161_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, math::clear<NV>>, 
+                                    math::add<NV>>;
+
+using chain259_t = chain266_t;
+
+template <int NV> using chain162_t = chain161_t<NV>;
+
+template <int NV> using chain261_t = chain161_t<NV>;
+
+template <int NV> using chain265_t = chain161_t<NV>;
+
+template <int NV> using chain264_t = chain161_t<NV>;
+
+template <int NV> using chain263_t = chain161_t<NV>;
+
+template <int NV> using chain262_t = chain161_t<NV>;
+template <int NV>
+using branch19_t = container::branch<parameter::empty, 
+                                     wrap::fix<2, chain161_t<NV>>, 
+                                     chain259_t, 
+                                     chain162_t<NV>, 
+                                     chain261_t<NV>, 
+                                     chain265_t<NV>, 
+                                     chain264_t<NV>, 
+                                     chain263_t<NV>, 
+                                     chain262_t<NV>>;
+
+using ahdsr1_multimod = parameter::list<parameter::empty, parameter::empty>;
+
+template <int NV>
+using ahdsr1_t = wrap::no_data<envelope::ahdsr<NV, ahdsr1_multimod>>;
+template <int NV>
+using peak37_t = wrap::mod<parameter::plain<ahdsr1_t<NV>, 8>, 
+                           wrap::no_data<core::peak>>;
+
+template <int NV>
+using chain164_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, branch19_t<NV>>, 
+                                    math::rect<NV>, 
+                                    peak37_t<NV>, 
+                                    math::clear<NV>>;
+
+template <int NV>
+using split22_t = container::split<parameter::empty, 
+                                   wrap::fix<2, chain165_t>, 
+                                   chain164_t<NV>>;
+
+template <int NV>
+using chain163_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, split22_t<NV>>, 
+                                    ahdsr1_t<NV>, 
+                                    core::gain<NV>>;
+
+template <int NV> using chain286_t = chain161_t<NV>;
+
+template <int NV> using chain287_t = chain161_t<NV>;
+
+template <int NV> using chain288_t = chain161_t<NV>;
+
+template <int NV> using chain289_t = chain161_t<NV>;
+
+template <int NV> using chain290_t = chain161_t<NV>;
+
+template <int NV> using chain291_t = chain161_t<NV>;
+template <int NV>
+using branch24_t = container::branch<parameter::empty, 
+                                     wrap::fix<2, chain286_t<NV>>, 
+                                     chain287_t<NV>, 
+                                     chain288_t<NV>, 
+                                     chain289_t<NV>, 
+                                     chain290_t<NV>, 
+                                     chain291_t<NV>>;
+
+using global_cable_t_index = runtime_target::indexers::fix_hash<2164996>;
+using peak40_mod = parameter::plain<routing::global_cable<global_cable_t_index, parameter::empty>, 
+                                    0>;
+using peak40_t = wrap::mod<peak40_mod, 
+                           wrap::no_data<core::peak>>;
+
+template <int NV>
+using chain283_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, branch24_t<NV>>, 
+                                    math::rect<NV>, 
+                                    peak40_t, 
+                                    routing::global_cable<global_cable_t_index, parameter::empty>, 
+                                    math::clear<NV>>;
+
+template <int NV> using chain304_t = chain161_t<NV>;
+
+template <int NV> using chain305_t = chain161_t<NV>;
+
+template <int NV> using chain306_t = chain161_t<NV>;
+
+template <int NV> using chain307_t = chain161_t<NV>;
+
+template <int NV> using chain308_t = chain161_t<NV>;
+
+template <int NV> using chain309_t = chain161_t<NV>;
+template <int NV>
+using branch33_t = container::branch<parameter::empty, 
+                                     wrap::fix<2, chain304_t<NV>>, 
+                                     chain305_t<NV>, 
+                                     chain306_t<NV>, 
+                                     chain307_t<NV>, 
+                                     chain308_t<NV>, 
+                                     chain309_t<NV>>;
+
+using global_cable2_t_index = runtime_target::indexers::fix_hash<2164997>;
+using peak42_mod = parameter::plain<routing::global_cable<global_cable2_t_index, parameter::empty>, 
+                                    0>;
+using peak42_t = wrap::mod<peak42_mod, 
+                           wrap::no_data<core::peak>>;
+
+template <int NV>
+using chain301_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, branch33_t<NV>>, 
+                                    math::rect<NV>, 
+                                    peak42_t, 
+                                    routing::global_cable<global_cable2_t_index, parameter::empty>, 
+                                    math::clear<NV>>;
+
+template <int NV> using chain293_t = chain161_t<NV>;
+
+template <int NV> using chain295_t = chain161_t<NV>;
+
+template <int NV> using chain296_t = chain161_t<NV>;
+
+template <int NV> using chain298_t = chain161_t<NV>;
+
+template <int NV> using chain299_t = chain161_t<NV>;
+
+template <int NV> using chain300_t = chain161_t<NV>;
+template <int NV>
+using branch31_t = container::branch<parameter::empty, 
+                                     wrap::fix<2, chain293_t<NV>>, 
+                                     chain295_t<NV>, 
+                                     chain296_t<NV>, 
+                                     chain298_t<NV>, 
+                                     chain299_t<NV>, 
+                                     chain300_t<NV>>;
+
+using global_cable1_t_index = runtime_target::indexers::fix_hash<2164998>;
+using peak41_mod = parameter::plain<routing::global_cable<global_cable1_t_index, parameter::empty>, 
+                                    0>;
+using peak41_t = wrap::mod<peak41_mod, 
+                           wrap::no_data<core::peak>>;
+
+template <int NV>
+using chain292_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, branch31_t<NV>>, 
+                                    math::rect<NV>, 
+                                    peak41_t, 
+                                    routing::global_cable<global_cable1_t_index, parameter::empty>, 
+                                    math::clear<NV>>;
+
+template <int NV>
+using split37_t = container::split<parameter::empty, 
+                                   wrap::fix<2, chain283_t<NV>>, 
+                                   chain301_t<NV>, 
+                                   chain292_t<NV>>;
+
+template <int NV>
+using chain281_t = container::chain<parameter::empty, 
+                                    wrap::fix<2, split37_t<NV>>>;
+
+template <int NV>
+using split23_t = container::split<parameter::empty, 
+                                   wrap::fix<2, chain163_t<NV>>, 
+                                   chain281_t<NV>>;
+
 template <int NV>
 using fix8_block_t_ = container::chain<parameter::empty, 
                                        wrap::fix<2, split8_t<NV>>, 
                                        split_t<NV>, 
                                        math::clear<NV>, 
-                                       split26_t<NV>>;
+                                       split26_t<NV>, 
+                                       split23_t<NV>>;
 
 template <int NV>
 using fix8_block_t = wrap::fix_block<8, fix8_block_t_<NV>>;
 
-using ahdsr1_multimod = parameter::list<parameter::empty, 
-                                        parameter::plain<envelope::voice_manager, 0>>;
-
-template <int NV>
-using ahdsr1_t = wrap::no_data<envelope::ahdsr<NV, ahdsr1_multimod>>;
-
-namespace Sm2_t_parameters
+namespace SmFx_t_parameters
 {
-// Parameter list for Sm2_impl::Sm2_t --------------------------------------------------------------
+// Parameter list for SmFx_impl::SmFx_t ------------------------------------------------------------
 
 DECLARE_PARAMETER_RANGE_STEP(OscSt1_InputRange, 
                              -24., 
@@ -3620,17 +3734,25 @@ DECLARE_PARAMETER_RANGE_STEP(OscSt1_InputRange,
 
 template <int NV>
 using OscSt1 = parameter::chain<OscSt1_InputRange, 
-                                parameter::plain<Sm2_impl::minmax_t<NV>, 0>>;
+                                parameter::plain<SmFx_impl::minmax_t<NV>, 0>>;
+
+DECLARE_PARAMETER_RANGE(OscCent1_InputRange, 
+                        -1., 
+                        1.);
+
+template <int NV>
+using OscCent1 = parameter::chain<OscCent1_InputRange, 
+                                  parameter::plain<math::add<NV>, 0>>;
 
 template <int NV>
 using Oscfm1 = parameter::chain<ranges::Identity, 
-                                parameter::plain<Sm2_impl::pma_unscaled3_t<NV>, 1>, 
-                                parameter::plain<Sm2_impl::pma_t<NV>, 1>>;
+                                parameter::plain<SmFx_impl::pma_unscaled3_t<NV>, 1>, 
+                                parameter::plain<SmFx_impl::pma_t<NV>, 1>>;
 
 template <int NV>
 using OscMod1 = parameter::chain<ranges::Identity, 
-                                 parameter::plain<Sm2_impl::global_mod1_t<NV>, 4>, 
-                                 parameter::plain<Sm2_impl::global_mod3_t<NV>, 4>>;
+                                 parameter::plain<SmFx_impl::global_mod1_t<NV>, 4>, 
+                                 parameter::plain<SmFx_impl::global_mod3_t<NV>, 4>>;
 
 DECLARE_PARAMETER_RANGE_STEP(OscTempo1_InputRange, 
                              0., 
@@ -3639,7 +3761,7 @@ DECLARE_PARAMETER_RANGE_STEP(OscTempo1_InputRange,
 
 template <int NV>
 using OscTempo1 = parameter::chain<OscTempo1_InputRange, 
-                                   parameter::plain<Sm2_impl::global_mod3_t<NV>, 1>>;
+                                   parameter::plain<SmFx_impl::global_mod3_t<NV>, 1>>;
 
 DECLARE_PARAMETER_RANGE_STEP(OscFmSrc1_InputRange, 
                              1., 
@@ -3651,12 +3773,12 @@ DECLARE_PARAMETER_RANGE_STEP(OscFmSrc1_0Range,
                              1.);
 
 template <int NV>
-using OscFmSrc1_0 = parameter::from0To1<Sm2_impl::branch9_t<NV>, 
+using OscFmSrc1_0 = parameter::from0To1<SmFx_impl::branch9_t<NV>, 
                                         0, 
                                         OscFmSrc1_0Range>;
 
 template <int NV>
-using OscFmSrc1_1 = parameter::from0To1<Sm2_impl::branch10_t<NV>, 
+using OscFmSrc1_1 = parameter::from0To1<SmFx_impl::branch10_t<NV>, 
                                         0, 
                                         OscFmSrc1_0Range>;
 
@@ -3675,12 +3797,12 @@ DECLARE_PARAMETER_RANGE_STEP(OscPitchSrc1_0Range,
                              1.);
 
 template <int NV>
-using OscPitchSrc1_0 = parameter::from0To1<Sm2_impl::global_mod1_t<NV>, 
+using OscPitchSrc1_0 = parameter::from0To1<SmFx_impl::global_mod1_t<NV>, 
                                            0, 
                                            OscPitchSrc1_0Range>;
 
 template <int NV>
-using OscPitchSrc1_1 = parameter::from0To1<Sm2_impl::global_mod3_t<NV>, 
+using OscPitchSrc1_1 = parameter::from0To1<SmFx_impl::global_mod3_t<NV>, 
                                            0, 
                                            OscPitchSrc1_0Range>;
 
@@ -3691,8 +3813,8 @@ using OscPitchSrc1 = parameter::chain<OscPitchSrc1_InputRange,
 
 template <int NV>
 using filePos1 = parameter::chain<ranges::Identity, 
-                                  parameter::plain<Sm2_impl::cable_table4_t, 0>, 
-                                  parameter::plain<Sm2_impl::pma3_t<NV>, 2>>;
+                                  parameter::plain<SmFx_impl::cable_table4_t, 0>, 
+                                  parameter::plain<SmFx_impl::pma3_t<NV>, 2>>;
 
 DECLARE_PARAMETER_RANGE_STEP(FilePosQuant1_InputRange, 
                              1., 
@@ -3704,7 +3826,7 @@ DECLARE_PARAMETER_RANGE_STEP(FilePosQuant1_0Range,
                              1.);
 
 template <int NV>
-using FilePosQuant1_0 = parameter::from0To1<Sm2_impl::branch1_t<NV>, 
+using FilePosQuant1_0 = parameter::from0To1<SmFx_impl::branch1_t<NV>, 
                                             0, 
                                             FilePosQuant1_0Range>;
 
@@ -3717,7 +3839,7 @@ DECLARE_PARAMETER_RANGE_STEP(FileInputGainSrc1_InputRange,
                              17., 
                              1.);
 template <int NV>
-using FileInputGainSrc1_0 = parameter::from0To1<Sm2_impl::global_mod6_t<NV>, 
+using FileInputGainSrc1_0 = parameter::from0To1<SmFx_impl::global_mod6_t<NV>, 
                                                 0, 
                                                 OscPitchSrc1_0Range>;
 
@@ -3735,7 +3857,7 @@ DECLARE_PARAMETER_RANGE_STEP(FilterMode1_0Range,
                              1.);
 
 template <int NV>
-using FilterMode1_0 = parameter::from0To1<Sm2_impl::branch6_t<NV>, 
+using FilterMode1_0 = parameter::from0To1<SmFx_impl::branch6_t<NV>, 
                                           0, 
                                           FilterMode1_0Range>;
 
@@ -3747,7 +3869,7 @@ DECLARE_PARAMETER_RANGE_STEP(FilterCutSrc1_InputRange,
                              17., 
                              1.);
 template <int NV>
-using FilterCutSrc1_0 = parameter::from0To1<Sm2_impl::global_mod9_t<NV>, 
+using FilterCutSrc1_0 = parameter::from0To1<SmFx_impl::global_mod9_t<NV>, 
                                             0, 
                                             OscPitchSrc1_0Range>;
 
@@ -3760,7 +3882,7 @@ DECLARE_PARAMETER_RANGE_STEP(FilterModMode1_InputRange,
                              6., 
                              1.);
 template <int NV>
-using FilterModMode1_0 = parameter::from0To1<Sm2_impl::branch21_t<NV>, 
+using FilterModMode1_0 = parameter::from0To1<SmFx_impl::branch21_t<NV>, 
                                              0, 
                                              OscFmSrc1_0Range>;
 
@@ -3773,7 +3895,7 @@ DECLARE_PARAMETER_RANGE_STEP(VcaGainSrc1_InputRange,
                              17., 
                              1.);
 template <int NV>
-using VcaGainSrc1_0 = parameter::from0To1<Sm2_impl::global_mod10_t<NV>, 
+using VcaGainSrc1_0 = parameter::from0To1<SmFx_impl::global_mod10_t<NV>, 
                                           0, 
                                           OscPitchSrc1_0Range>;
 
@@ -3849,7 +3971,7 @@ DECLARE_PARAMETER_RANGE_STEP(VcaFmSrc1_InputRange,
                              6., 
                              1.);
 template <int NV>
-using VcaFmSrc1_0 = parameter::from0To1<Sm2_impl::branch22_t<NV>, 
+using VcaFmSrc1_0 = parameter::from0To1<SmFx_impl::branch22_t<NV>, 
                                         0, 
                                         OscFmSrc1_0Range>;
 
@@ -3863,29 +3985,37 @@ DECLARE_PARAMETER_RANGE_STEP(OscSt2_InputRange,
 
 template <int NV>
 using OscSt2 = parameter::chain<OscSt2_InputRange, 
-                                parameter::plain<Sm2_impl::minmax2_t<NV>, 0>>;
+                                parameter::plain<SmFx_impl::minmax2_t<NV>, 0>>;
+
+DECLARE_PARAMETER_RANGE(OscCent2_InputRange, 
+                        -1., 
+                        1.);
+
+template <int NV>
+using OscCent2 = parameter::chain<OscCent2_InputRange, 
+                                  parameter::plain<math::add<NV>, 0>>;
 
 template <int NV>
 using Oscfm2 = parameter::chain<ranges::Identity, 
-                                parameter::plain<Sm2_impl::pma_unscaled15_t<NV>, 1>, 
-                                parameter::plain<Sm2_impl::pma1_t<NV>, 1>>;
+                                parameter::plain<SmFx_impl::pma_unscaled15_t<NV>, 1>, 
+                                parameter::plain<SmFx_impl::pma1_t<NV>, 1>>;
 
 template <int NV>
 using OscMod2 = parameter::chain<ranges::Identity, 
-                                 parameter::plain<Sm2_impl::global_mod_t<NV>, 4>, 
-                                 parameter::plain<Sm2_impl::global_mod13_t<NV>, 4>>;
+                                 parameter::plain<SmFx_impl::global_mod_t<NV>, 4>, 
+                                 parameter::plain<SmFx_impl::global_mod13_t<NV>, 4>>;
 
 DECLARE_PARAMETER_RANGE_STEP(OscFmSrc2_InputRange, 
                              1., 
                              6., 
                              1.);
 template <int NV>
-using OscFmSrc2_0 = parameter::from0To1<Sm2_impl::branch12_t<NV>, 
+using OscFmSrc2_0 = parameter::from0To1<SmFx_impl::branch12_t<NV>, 
                                         0, 
                                         OscFmSrc1_0Range>;
 
 template <int NV>
-using OscFmSrc2_1 = parameter::from0To1<Sm2_impl::branch11_t<NV>, 
+using OscFmSrc2_1 = parameter::from0To1<SmFx_impl::branch11_t<NV>, 
                                         0, 
                                         OscFmSrc1_0Range>;
 
@@ -3899,7 +4029,7 @@ DECLARE_PARAMETER_RANGE_STEP(FilterMode2_InputRange,
                              9., 
                              1.);
 template <int NV>
-using FilterMode2_0 = parameter::from0To1<Sm2_impl::branch13_t<NV>, 
+using FilterMode2_0 = parameter::from0To1<SmFx_impl::branch13_t<NV>, 
                                           0, 
                                           FilterMode1_0Range>;
 
@@ -3911,7 +4041,7 @@ DECLARE_PARAMETER_RANGE_STEP(FilterCutSrc2_InputRange,
                              17., 
                              1.);
 template <int NV>
-using FilterCutSrc2_0 = parameter::from0To1<Sm2_impl::global_mod11_t<NV>, 
+using FilterCutSrc2_0 = parameter::from0To1<SmFx_impl::global_mod11_t<NV>, 
                                             0, 
                                             OscPitchSrc1_0Range>;
 
@@ -3924,7 +4054,7 @@ DECLARE_PARAMETER_RANGE_STEP(FilterFmdSrc_InputRange,
                              6., 
                              1.);
 template <int NV>
-using FilterFmdSrc_0 = parameter::from0To1<Sm2_impl::branch23_t<NV>, 
+using FilterFmdSrc_0 = parameter::from0To1<SmFx_impl::branch23_t<NV>, 
                                            0, 
                                            OscFmSrc1_0Range>;
 
@@ -3937,7 +4067,7 @@ DECLARE_PARAMETER_RANGE_STEP(VcaGainSrc2_InputRange,
                              17., 
                              1.);
 template <int NV>
-using VcaGainSrc2_0 = parameter::from0To1<Sm2_impl::global_mod12_t<NV>, 
+using VcaGainSrc2_0 = parameter::from0To1<SmFx_impl::global_mod12_t<NV>, 
                                           0, 
                                           OscPitchSrc1_0Range>;
 
@@ -3989,7 +4119,7 @@ DECLARE_PARAMETER_RANGE_STEP(VcaFmSrc2_InputRange,
                              6., 
                              1.);
 template <int NV>
-using VcaFmSrc2_0 = parameter::from0To1<Sm2_impl::branch25_t<NV>, 
+using VcaFmSrc2_0 = parameter::from0To1<SmFx_impl::branch25_t<NV>, 
                                         0, 
                                         OscFmSrc1_0Range>;
 
@@ -4001,7 +4131,7 @@ DECLARE_PARAMETER_RANGE_STEP(OscShapeModSrc_InputRange,
                              17., 
                              1.);
 template <int NV>
-using OscShapeModSrc_0 = parameter::from0To1<Sm2_impl::global_mod4_t<NV>, 
+using OscShapeModSrc_0 = parameter::from0To1<SmFx_impl::global_mod4_t<NV>, 
                                              0, 
                                              OscPitchSrc1_0Range>;
 
@@ -4014,7 +4144,7 @@ DECLARE_PARAMETER_RANGE_STEP(OscShapeFmSrc_InputRange,
                              6., 
                              1.);
 template <int NV>
-using OscShapeFmSrc_0 = parameter::from0To1<Sm2_impl::branch16_t<NV>, 
+using OscShapeFmSrc_0 = parameter::from0To1<SmFx_impl::branch16_t<NV>, 
                                             0, 
                                             OscFmSrc1_0Range>;
 
@@ -4027,7 +4157,7 @@ DECLARE_PARAMETER_RANGE_STEP(Osc2InputGainFmSrc_InputRange,
                              6., 
                              1.);
 template <int NV>
-using Osc2InputGainFmSrc_0 = parameter::from0To1<Sm2_impl::branch17_t<NV>, 
+using Osc2InputGainFmSrc_0 = parameter::from0To1<SmFx_impl::branch17_t<NV>, 
                                                  0, 
                                                  OscFmSrc1_0Range>;
 
@@ -4040,7 +4170,7 @@ DECLARE_PARAMETER_RANGE_STEP(FileInFmSrc_InputRange,
                              6., 
                              1.);
 template <int NV>
-using FileInFmSrc_0 = parameter::from0To1<Sm2_impl::branch20_t<NV>, 
+using FileInFmSrc_0 = parameter::from0To1<SmFx_impl::branch20_t<NV>, 
                                           0, 
                                           OscFmSrc1_0Range>;
 
@@ -4050,19 +4180,19 @@ using FileInFmSrc = parameter::chain<FileInFmSrc_InputRange, FileInFmSrc_0<NV>>;
 template <int NV>
 using FileInOffset = parameter::from0To1<core::gain<NV>, 
                                          0, 
-                                         Sm2_impl::peak39_modRange>;
+                                         SmFx_impl::peak39_modRange>;
 
 DECLARE_PARAMETER_RANGE_STEP(oscShapeMode1_InputRange, 
                              1., 
-                             12., 
+                             13., 
                              1.);
 DECLARE_PARAMETER_RANGE_STEP(oscShapeMode1_0Range, 
                              0., 
-                             11., 
+                             12., 
                              1.);
 
 template <int NV>
-using oscShapeMode1_0 = parameter::from0To1<Sm2_impl::branch_t<NV>, 
+using oscShapeMode1_0 = parameter::from0To1<SmFx_impl::branch_t<NV>, 
                                             0, 
                                             oscShapeMode1_0Range>;
 
@@ -4074,10 +4204,15 @@ DECLARE_PARAMETER_RANGE_STEP(oscShapeMode2_InputRange,
                              1., 
                              12., 
                              1.);
+DECLARE_PARAMETER_RANGE_STEP(oscShapeMode2_0Range, 
+                             0., 
+                             11., 
+                             1.);
+
 template <int NV>
-using oscShapeMode2_0 = parameter::from0To1<Sm2_impl::branch4_t<NV>, 
+using oscShapeMode2_0 = parameter::from0To1<SmFx_impl::branch4_t<NV>, 
                                             0, 
-                                            oscShapeMode1_0Range>;
+                                            oscShapeMode2_0Range>;
 
 template <int NV>
 using oscShapeMode2 = parameter::chain<oscShapeMode2_InputRange, 
@@ -4088,7 +4223,7 @@ DECLARE_PARAMETER_RANGE_STEP(ShapeSrc2_InputRange,
                              17., 
                              1.);
 template <int NV>
-using ShapeSrc2_0 = parameter::from0To1<Sm2_impl::global_mod7_t<NV>, 
+using ShapeSrc2_0 = parameter::from0To1<SmFx_impl::global_mod7_t<NV>, 
                                         0, 
                                         OscPitchSrc1_0Range>;
 
@@ -4100,7 +4235,7 @@ DECLARE_PARAMETER_RANGE_STEP(ShapeFmSrc2_InputRange,
                              6., 
                              1.);
 template <int NV>
-using ShapeFmSrc2_0 = parameter::from0To1<Sm2_impl::branch18_t<NV>, 
+using ShapeFmSrc2_0 = parameter::from0To1<SmFx_impl::branch18_t<NV>, 
                                           0, 
                                           OscFmSrc1_0Range>;
 
@@ -4112,12 +4247,12 @@ DECLARE_PARAMETER_RANGE_STEP(Osc2Src_InputRange,
                              17., 
                              1.);
 template <int NV>
-using Osc2Src_0 = parameter::from0To1<Sm2_impl::global_mod_t<NV>, 
+using Osc2Src_0 = parameter::from0To1<SmFx_impl::global_mod_t<NV>, 
                                       0, 
                                       OscPitchSrc1_0Range>;
 
 template <int NV>
-using Osc2Src_1 = parameter::from0To1<Sm2_impl::global_mod13_t<NV>, 
+using Osc2Src_1 = parameter::from0To1<SmFx_impl::global_mod13_t<NV>, 
                                       0, 
                                       OscPitchSrc1_0Range>;
 
@@ -4136,7 +4271,7 @@ DECLARE_PARAMETER_RANGE_STEP(Osc2InSel_0Range,
                              1.);
 
 template <int NV>
-using Osc2InSel_0 = parameter::from0To1<Sm2_impl::branch27_t<NV>, 
+using Osc2InSel_0 = parameter::from0To1<SmFx_impl::branch27_t<NV>, 
                                         0, 
                                         Osc2InSel_0Range>;
 
@@ -4148,7 +4283,7 @@ DECLARE_PARAMETER_RANGE_STEP(FileInSel_InputRange,
                              5., 
                              1.);
 template <int NV>
-using FileInSel_0 = parameter::from0To1<Sm2_impl::branch26_t<NV>, 
+using FileInSel_0 = parameter::from0To1<SmFx_impl::branch26_t<NV>, 
                                         0, 
                                         Osc2InSel_0Range>;
 
@@ -4158,14 +4293,14 @@ using FileInSel = parameter::chain<FileInSel_InputRange, FileInSel_0<NV>>;
 template <int NV>
 using Vol = parameter::from0To1<core::gain<NV>, 
                                 0, 
-                                Sm2_impl::peak25_modRange>;
+                                SmFx_impl::peak25_modRange>;
 
 DECLARE_PARAMETER_RANGE_STEP(OscFmSrc_InputRange, 
                              1., 
                              5., 
                              1.);
 template <int NV>
-using OscFmSrc_0 = parameter::from0To1<Sm2_impl::branch29_t<NV>, 
+using OscFmSrc_0 = parameter::from0To1<SmFx_impl::branch29_t<NV>, 
                                        0, 
                                        OscFmSrc1_0Range>;
 
@@ -4177,25 +4312,13 @@ DECLARE_PARAMETER_RANGE_STEP(Osc1InputSrc_InputRange,
                              17., 
                              1.);
 template <int NV>
-using Osc1InputSrc_0 = parameter::from0To1<Sm2_impl::global_mod8_t<NV>, 
+using Osc1InputSrc_0 = parameter::from0To1<SmFx_impl::global_mod8_t<NV>, 
                                            0, 
                                            OscPitchSrc1_0Range>;
 
 template <int NV>
 using Osc1InputSrc = parameter::chain<Osc1InputSrc_InputRange, 
                                       Osc1InputSrc_0<NV>>;
-
-DECLARE_PARAMETER_RANGE_STEP(Osc1InSel_InputRange, 
-                             1., 
-                             5., 
-                             1.);
-template <int NV>
-using Osc1InSel_0 = parameter::from0To1<Sm2_impl::branch28_t<NV>, 
-                                        0, 
-                                        Osc2InSel_0Range>;
-
-template <int NV>
-using Osc1InSel = parameter::chain<Osc1InSel_InputRange, Osc1InSel_0<NV>>;
 
 DECLARE_PARAMETER_RANGE_STEP(TEMPO2_InputRange, 
                              0., 
@@ -4204,14 +4327,14 @@ DECLARE_PARAMETER_RANGE_STEP(TEMPO2_InputRange,
 
 template <int NV>
 using TEMPO2 = parameter::chain<TEMPO2_InputRange, 
-                                parameter::plain<Sm2_impl::global_mod13_t<NV>, 1>>;
+                                parameter::plain<SmFx_impl::global_mod13_t<NV>, 1>>;
 
 DECLARE_PARAMETER_RANGE_STEP(File2InSel_InputRange, 
                              1., 
                              5., 
                              1.);
 template <int NV>
-using File2InSel_0 = parameter::from0To1<Sm2_impl::branch30_t<NV>, 
+using File2InSel_0 = parameter::from0To1<SmFx_impl::branch30_t<NV>, 
                                          0, 
                                          Osc2InSel_0Range>;
 
@@ -4225,7 +4348,7 @@ DECLARE_PARAMETER_RANGE_STEP(File2GainOffset_InputRange,
 template <int NV>
 using File2GainOffset_0 = parameter::from0To1<core::gain<NV>, 
                                               0, 
-                                              Sm2_impl::peak_modRange>;
+                                              SmFx_impl::peak_modRange>;
 
 template <int NV>
 using File2GainOffset = parameter::chain<File2GainOffset_InputRange, 
@@ -4236,7 +4359,7 @@ DECLARE_PARAMETER_RANGE_STEP(File2ModSrc_InputRange,
                              17., 
                              1.);
 template <int NV>
-using File2ModSrc_0 = parameter::from0To1<Sm2_impl::global_mod15_t<NV>, 
+using File2ModSrc_0 = parameter::from0To1<SmFx_impl::global_mod15_t<NV>, 
                                           0, 
                                           OscPitchSrc1_0Range>;
 
@@ -4248,7 +4371,7 @@ DECLARE_PARAMETER_RANGE_STEP(File2FmSrc_InputRange,
                              6., 
                              1.);
 template <int NV>
-using File2FmSrc_0 = parameter::from0To1<Sm2_impl::branch32_t<NV>, 
+using File2FmSrc_0 = parameter::from0To1<SmFx_impl::branch32_t<NV>, 
                                          0, 
                                          OscFmSrc1_0Range>;
 
@@ -4265,7 +4388,7 @@ DECLARE_PARAMETER_RANGE_STEP(File2Mode_0Range,
                              1.);
 
 template <int NV>
-using File2Mode_0 = parameter::from0To1<Sm2_impl::branch7_t<NV>, 
+using File2Mode_0 = parameter::from0To1<SmFx_impl::branch7_t<NV>, 
                                         0, 
                                         File2Mode_0Range>;
 
@@ -4274,15 +4397,15 @@ using File2Mode = parameter::chain<File2Mode_InputRange, File2Mode_0<NV>>;
 
 template <int NV>
 using File2Pos = parameter::chain<ranges::Identity, 
-                                  parameter::plain<Sm2_impl::pma2_t<NV>, 2>, 
-                                  parameter::plain<Sm2_impl::cable_table5_t, 0>>;
+                                  parameter::plain<SmFx_impl::pma2_t<NV>, 2>, 
+                                  parameter::plain<SmFx_impl::cable_table5_t, 0>>;
 
 DECLARE_PARAMETER_RANGE_STEP(File2Quant_InputRange, 
                              1., 
                              10., 
                              1.);
 template <int NV>
-using File2Quant_0 = parameter::from0To1<Sm2_impl::branch8_t<NV>, 
+using File2Quant_0 = parameter::from0To1<SmFx_impl::branch8_t<NV>, 
                                          0, 
                                          FilePosQuant1_0Range>;
 
@@ -4305,324 +4428,325 @@ using tune = parameter::chain<ranges::Identity,
                               tune_0<NV>, 
                               tune_1<NV>>;
 
+using OscTempoSync1 = parameter::empty;
+using OscDiv1 = OscTempoSync1;
+using Osc12Mix = OscTempoSync1;
 template <int NV>
-using OscCent1 = parameter::plain<math::add<NV>, 0>;
+using FilePosMod1 = parameter::plain<SmFx_impl::pma3_t<NV>, 1>;
 template <int NV>
-using OscTempoSync1 = parameter::plain<Sm2_impl::branch2_t<NV>, 
-                                       0>;
-template <int NV>
-using OscDiv1 = parameter::plain<Sm2_impl::tempo_sync_t<NV>, 
-                                 1>;
-using Osc12Mix = parameter::empty;
-template <int NV>
-using FilePosMod1 = parameter::plain<Sm2_impl::pma3_t<NV>, 1>;
-template <int NV>
-using FileInputGain1 = parameter::plain<Sm2_impl::global_mod6_t<NV>, 
+using FileInputGain1 = parameter::plain<SmFx_impl::global_mod6_t<NV>, 
                                         1>;
 template <int NV>
-using FileInputGainMod = parameter::plain<Sm2_impl::global_mod6_t<NV>, 
+using FileInputGainMod = parameter::plain<SmFx_impl::global_mod6_t<NV>, 
                                           4>;
 template <int NV>
-using FileInputGainFm1 = parameter::plain<Sm2_impl::pma_unscaled8_t<NV>, 
+using FileInputGainFm1 = parameter::plain<SmFx_impl::pma_unscaled8_t<NV>, 
                                           1>;
 template <int NV>
-using FilterCut1 = parameter::plain<Sm2_impl::global_mod9_t<NV>, 
+using FilterCut1 = parameter::plain<SmFx_impl::global_mod9_t<NV>, 
                                     1>;
 template <int NV>
-using FilterCutMod1 = parameter::plain<Sm2_impl::global_mod9_t<NV>, 
+using FilterCutMod1 = parameter::plain<SmFx_impl::global_mod9_t<NV>, 
                                        4>;
 template <int NV>
-using FilterCutFm1 = parameter::plain<Sm2_impl::pma_unscaled9_t<NV>, 
+using FilterCutFm1 = parameter::plain<SmFx_impl::pma_unscaled9_t<NV>, 
                                       1>;
 template <int NV>
-using VcaGain1 = parameter::plain<Sm2_impl::global_mod10_t<NV>, 
+using VcaGain1 = parameter::plain<SmFx_impl::global_mod10_t<NV>, 
                                   1>;
 template <int NV>
-using VcaGainMod1 = parameter::plain<Sm2_impl::global_mod10_t<NV>, 
+using VcaGainMod1 = parameter::plain<SmFx_impl::global_mod10_t<NV>, 
                                      4>;
 template <int NV>
-using VcaGainFm1 = parameter::plain<Sm2_impl::pma_unscaled10_t<NV>, 
+using VcaGainFm1 = parameter::plain<SmFx_impl::pma_unscaled10_t<NV>, 
                                     1>;
 template <int NV>
 using Pan1 = parameter::plain<jdsp::jpanner<NV>, 0>;
-template <int NV> using OscCent2 = OscCent1<NV>;
 template <int NV>
-using FilterCut2 = parameter::plain<Sm2_impl::global_mod11_t<NV>, 
+using FilterCut2 = parameter::plain<SmFx_impl::global_mod11_t<NV>, 
                                     1>;
 template <int NV>
-using FilterCutMod2 = parameter::plain<Sm2_impl::global_mod11_t<NV>, 
+using FilterCutMod2 = parameter::plain<SmFx_impl::global_mod11_t<NV>, 
                                        4>;
 template <int NV>
-using FilterCutFm2 = parameter::plain<Sm2_impl::pma_unscaled11_t<NV>, 
+using FilterCutFm2 = parameter::plain<SmFx_impl::pma_unscaled11_t<NV>, 
                                       1>;
 template <int NV>
-using VcaGain2 = parameter::plain<Sm2_impl::global_mod12_t<NV>, 
+using VcaGain2 = parameter::plain<SmFx_impl::global_mod12_t<NV>, 
                                   1>;
 template <int NV>
-using VcaGainMod2 = parameter::plain<Sm2_impl::global_mod12_t<NV>, 
+using VcaGainMod2 = parameter::plain<SmFx_impl::global_mod12_t<NV>, 
                                      4>;
 template <int NV>
-using VcaGainFm2 = parameter::plain<Sm2_impl::pma_unscaled12_t<NV>, 
+using VcaGainFm2 = parameter::plain<SmFx_impl::pma_unscaled12_t<NV>, 
                                     1>;
-using VcaGainModMode2 = Osc12Mix;
+using VcaGainModMode2 = OscTempoSync1;
 template <int NV> using Pan2 = Pan1<NV>;
 template <int NV>
-using OscShape = parameter::plain<Sm2_impl::global_mod4_t<NV>, 
+using OscShape = parameter::plain<SmFx_impl::global_mod4_t<NV>, 
                                   1>;
 template <int NV>
-using OscShapeMod = parameter::plain<Sm2_impl::global_mod4_t<NV>, 
+using OscShapeMod = parameter::plain<SmFx_impl::global_mod4_t<NV>, 
                                      4>;
 template <int NV>
-using OscShapeFm = parameter::plain<Sm2_impl::pma_unscaled6_t<NV>, 
+using OscShapeFm = parameter::plain<SmFx_impl::pma_unscaled6_t<NV>, 
                                     1>;
 template <int NV>
-using Osc2InputGain = parameter::plain<Sm2_impl::global_mod5_t<NV>, 
+using Osc2InputGain = parameter::plain<SmFx_impl::global_mod5_t<NV>, 
                                        1>;
 template <int NV>
-using Osc2InputGainMod = parameter::plain<Sm2_impl::global_mod5_t<NV>, 
+using Osc2InputGainMod = parameter::plain<SmFx_impl::global_mod5_t<NV>, 
                                           4>;
 template <int NV>
-using Osc2InputGainFm = parameter::plain<Sm2_impl::pma_unscaled7_t<NV>, 
+using Osc2InputGainFm = parameter::plain<SmFx_impl::pma_unscaled7_t<NV>, 
                                          1>;
 template <int NV>
-using Osc2InputGainModSrc = parameter::plain<Sm2_impl::global_mod5_t<NV>, 
+using Osc2InputGainModSrc = parameter::plain<SmFx_impl::global_mod5_t<NV>, 
                                              0>;
-using FilterInput1 = Osc12Mix;
-using FilterInput2 = Osc12Mix;
+using FilterInput1 = OscTempoSync1;
+using FilterInput2 = OscTempoSync1;
 template <int NV>
-using PostModMode = parameter::plain<Sm2_impl::branch3_t<NV>, 
+using PostModMode = parameter::plain<SmFx_impl::branch3_t<NV>, 
                                      0>;
 template <int NV>
-using PosEnvTrig = parameter::plain<Sm2_impl::input_toggle_t<NV>, 
+using PosEnvTrig = parameter::plain<SmFx_impl::input_toggle_t<NV>, 
                                     0>;
 template <int NV>
-using PosEnvA = parameter::plain<Sm2_impl::ahdsr_t<NV>, 0>;
+using PosEnvA = parameter::plain<SmFx_impl::ahdsr_t<NV>, 0>;
 template <int NV>
-using PosEnvH = parameter::plain<Sm2_impl::ahdsr_t<NV>, 2>;
+using PosEnvH = parameter::plain<SmFx_impl::ahdsr_t<NV>, 2>;
 template <int NV>
-using PosEnvD = parameter::plain<Sm2_impl::ahdsr_t<NV>, 3>;
+using PosEnvD = parameter::plain<SmFx_impl::ahdsr_t<NV>, 3>;
 template <int NV>
-using PosEnvS = parameter::plain<Sm2_impl::ahdsr_t<NV>, 4>;
+using PosEnvS = parameter::plain<SmFx_impl::ahdsr_t<NV>, 4>;
 template <int NV>
-using PosEnvR = parameter::plain<Sm2_impl::ahdsr_t<NV>, 5>;
-using PosVel = Osc12Mix;
-using OscsSubGain = Osc12Mix;
+using PosEnvR = parameter::plain<SmFx_impl::ahdsr_t<NV>, 5>;
+using PosVel = OscTempoSync1;
+using OscsSubGain = OscTempoSync1;
 template <int NV>
-using PosTempo = parameter::plain<Sm2_impl::tempo_sync4_t<NV>, 
+using PosTempo = parameter::plain<SmFx_impl::tempo_sync4_t<NV>, 
                                   0>;
 template <int NV>
-using PosDib = parameter::plain<Sm2_impl::tempo_sync4_t<NV>, 
+using PosDib = parameter::plain<SmFx_impl::tempo_sync4_t<NV>, 
                                 1>;
 template <int NV>
-using shape2 = parameter::plain<Sm2_impl::global_mod7_t<NV>, 
+using shape2 = parameter::plain<SmFx_impl::global_mod7_t<NV>, 
                                 1>;
 template <int NV>
-using ShapeMod1 = parameter::plain<Sm2_impl::global_mod7_t<NV>, 
+using ShapeMod1 = parameter::plain<SmFx_impl::global_mod7_t<NV>, 
                                    4>;
 template <int NV>
-using ShapeFm2 = parameter::plain<Sm2_impl::pma_unscaled13_t<NV>, 
+using ShapeFm2 = parameter::plain<SmFx_impl::pma_unscaled13_t<NV>, 
                                   1>;
-using PosSmooth = Osc12Mix;
+using PosSmooth = OscTempoSync1;
 template <int NV>
-using Osc1Input = parameter::plain<Sm2_impl::global_mod8_t<NV>, 
+using Osc1Input = parameter::plain<SmFx_impl::global_mod8_t<NV>, 
                                    1>;
 template <int NV>
-using Osc1InputMod = parameter::plain<Sm2_impl::global_mod8_t<NV>, 
+using Osc1InputMod = parameter::plain<SmFx_impl::global_mod8_t<NV>, 
                                       4>;
 template <int NV>
-using Osc1FM = parameter::plain<Sm2_impl::pma_unscaled14_t<NV>, 
+using Osc1FM = parameter::plain<SmFx_impl::pma_unscaled14_t<NV>, 
                                 1>;
+using Osc1InSel = OscTempoSync1;
 template <int NV>
-using s = parameter::plain<Sm2_impl::ahdsr1_t<NV>, 4>;
+using s = parameter::plain<SmFx_impl::ahdsr1_t<NV>, 
+                           4>;
 template <int NV>
-using a = parameter::plain<Sm2_impl::ahdsr1_t<NV>, 0>;
+using a = parameter::plain<SmFx_impl::ahdsr1_t<NV>, 
+                           0>;
 template <int NV>
-using h = parameter::plain<Sm2_impl::ahdsr1_t<NV>, 2>;
+using h = parameter::plain<SmFx_impl::ahdsr1_t<NV>, 
+                           2>;
 template <int NV>
-using d = parameter::plain<Sm2_impl::ahdsr1_t<NV>, 3>;
+using d = parameter::plain<SmFx_impl::ahdsr1_t<NV>, 
+                           3>;
 template <int NV>
-using r = parameter::plain<Sm2_impl::ahdsr1_t<NV>, 5>;
+using r = parameter::plain<SmFx_impl::ahdsr1_t<NV>, 
+                           5>;
 template <int NV>
-using DIV2 = parameter::plain<Sm2_impl::tempo_sync2_t<NV>, 
+using DIV2 = parameter::plain<SmFx_impl::tempo_sync2_t<NV>, 
                               1>;
 template <int NV>
-using SYNC2 = parameter::plain<Sm2_impl::branch5_t<NV>, 
+using SYNC2 = parameter::plain<SmFx_impl::branch5_t<NV>, 
                                0>;
 template <int NV>
-using File2Gain = parameter::plain<Sm2_impl::global_mod15_t<NV>, 
+using File2Gain = parameter::plain<SmFx_impl::global_mod15_t<NV>, 
                                    1>;
 template <int NV>
-using File2Mod = parameter::plain<Sm2_impl::global_mod15_t<NV>, 
+using File2Mod = parameter::plain<SmFx_impl::global_mod15_t<NV>, 
                                   4>;
 template <int NV>
-using File2Fm = parameter::plain<Sm2_impl::pma_unscaled17_t<NV>, 
+using File2Fm = parameter::plain<SmFx_impl::pma_unscaled17_t<NV>, 
                                  1>;
 template <int NV>
-using File2Tempo = parameter::plain<Sm2_impl::tempo_sync3_t<NV>, 
+using File2Tempo = parameter::plain<SmFx_impl::tempo_sync3_t<NV>, 
                                     0>;
 template <int NV>
-using FileDiv = parameter::plain<Sm2_impl::tempo_sync3_t<NV>, 
+using FileDiv = parameter::plain<SmFx_impl::tempo_sync3_t<NV>, 
                                  1>;
 template <int NV>
-using File2EnvTrig = parameter::plain<Sm2_impl::input_toggle1_t<NV>, 
+using File2EnvTrig = parameter::plain<SmFx_impl::input_toggle1_t<NV>, 
                                       0>;
 template <int NV>
-using File2A = parameter::plain<Sm2_impl::ahdsr2_t<NV>, 0>;
+using File2A = parameter::plain<SmFx_impl::ahdsr2_t<NV>, 
+                                0>;
 template <int NV>
-using File2H = parameter::plain<Sm2_impl::ahdsr2_t<NV>, 2>;
+using File2H = parameter::plain<SmFx_impl::ahdsr2_t<NV>, 
+                                2>;
 template <int NV>
-using File2D = parameter::plain<Sm2_impl::ahdsr2_t<NV>, 3>;
+using File2D = parameter::plain<SmFx_impl::ahdsr2_t<NV>, 
+                                3>;
 template <int NV>
-using File2S = parameter::plain<Sm2_impl::ahdsr2_t<NV>, 4>;
+using File2S = parameter::plain<SmFx_impl::ahdsr2_t<NV>, 
+                                4>;
 template <int NV>
-using File2R = parameter::plain<Sm2_impl::ahdsr2_t<NV>, 5>;
+using File2R = parameter::plain<SmFx_impl::ahdsr2_t<NV>, 
+                                5>;
 template <int NV>
-using File2PosMod = parameter::plain<Sm2_impl::pma2_t<NV>, 1>;
+using File2PosMod = parameter::plain<SmFx_impl::pma2_t<NV>, 1>;
 template <int NV>
-using User1 = parameter::plain<Sm2_impl::branch14_t<NV>, 
+using User1 = parameter::plain<SmFx_impl::branch14_t<NV>, 
                                0>;
 template <int NV>
-using User2 = parameter::plain<Sm2_impl::branch15_t<NV>, 
+using User2 = parameter::plain<SmFx_impl::branch15_t<NV>, 
                                0>;
-using Track1 = Osc12Mix;
-using Track2 = Osc12Mix;
+using Track1 = OscTempoSync1;
+using Track2 = OscTempoSync1;
 template <int NV>
-using Sm2_t_plist = parameter::list<OscSt1<NV>, 
-                                    OscCent1<NV>, 
-                                    Oscfm1<NV>, 
-                                    OscMod1<NV>, 
-                                    OscTempoSync1<NV>, 
-                                    OscTempo1<NV>, 
-                                    OscDiv1<NV>, 
-                                    OscFmSrc1<NV>, 
-                                    OscPitchSrc1<NV>, 
-                                    Osc12Mix, 
-                                    filePos1<NV>, 
-                                    FilePosMod1<NV>, 
-                                    FilePosQuant1<NV>, 
-                                    FileInputGain1<NV>, 
-                                    FileInputGainMod<NV>, 
-                                    FileInputGainSrc1<NV>, 
-                                    FileInputGainFm1<NV>, 
-                                    FilterMode1<NV>, 
-                                    FilterCut1<NV>, 
-                                    FilterCutMod1<NV>, 
-                                    FilterCutFm1<NV>, 
-                                    FilterCutSrc1<NV>, 
-                                    FilterModMode1<NV>, 
-                                    VcaGain1<NV>, 
-                                    VcaGainMod1<NV>, 
-                                    VcaGainFm1<NV>, 
-                                    VcaGainSrc1<NV>, 
-                                    Res1<NV>, 
-                                    Pan1<NV>, 
-                                    VcaFmSrc1<NV>, 
-                                    OscSt2<NV>, 
-                                    OscCent2<NV>, 
-                                    Oscfm2<NV>, 
-                                    OscMod2<NV>, 
-                                    OscFmSrc2<NV>, 
-                                    FilterMode2<NV>, 
-                                    FilterCut2<NV>, 
-                                    FilterCutMod2<NV>, 
-                                    FilterCutFm2<NV>, 
-                                    FilterCutSrc2<NV>, 
-                                    FilterFmdSrc<NV>, 
-                                    VcaGain2<NV>, 
-                                    VcaGainMod2<NV>, 
-                                    VcaGainFm2<NV>, 
-                                    VcaGainSrc2<NV>, 
-                                    VcaGainModMode2, 
-                                    Res2<NV>, 
-                                    Pan2<NV>, 
-                                    VcaFmSrc2<NV>, 
-                                    OscShape<NV>, 
-                                    OscShapeMod<NV>, 
-                                    OscShapeFm<NV>, 
-                                    OscShapeModSrc<NV>, 
-                                    OscShapeFmSrc<NV>, 
-                                    Osc2InputGain<NV>, 
-                                    Osc2InputGainMod<NV>, 
-                                    Osc2InputGainFm<NV>, 
-                                    Osc2InputGainModSrc<NV>, 
-                                    Osc2InputGainFmSrc<NV>, 
-                                    FileInFmSrc<NV>, 
-                                    FilterInput1, 
-                                    FilterInput2, 
-                                    PostModMode<NV>, 
-                                    PosEnvTrig<NV>, 
-                                    PosEnvA<NV>, 
-                                    PosEnvH<NV>, 
-                                    PosEnvD<NV>, 
-                                    PosEnvS<NV>, 
-                                    PosEnvR<NV>, 
-                                    PosVel, 
-                                    OscsSubGain, 
-                                    PosTempo<NV>, 
-                                    PosDib<NV>, 
-                                    FileInOffset<NV>, 
-                                    oscShapeMode1<NV>, 
-                                    oscShapeMode2<NV>, 
-                                    shape2<NV>, 
-                                    ShapeMod1<NV>, 
-                                    ShapeSrc2<NV>, 
-                                    ShapeFm2<NV>, 
-                                    ShapeFmSrc2<NV>, 
-                                    PosSmooth, 
-                                    Osc2Src<NV>, 
-                                    Osc2InSel<NV>, 
-                                    FileInSel<NV>, 
-                                    Vol<NV>, 
-                                    Osc1Input<NV>, 
-                                    Osc1InputMod<NV>, 
-                                    Osc1FM<NV>, 
-                                    OscFmSrc<NV>, 
-                                    Osc1InputSrc<NV>, 
-                                    Osc1InSel<NV>, 
-                                    s<NV>, 
-                                    a<NV>, 
-                                    h<NV>, 
-                                    d<NV>, 
-                                    r<NV>, 
-                                    TEMPO2<NV>, 
-                                    DIV2<NV>, 
-                                    SYNC2<NV>, 
-                                    File2InSel<NV>, 
-                                    File2GainOffset<NV>, 
-                                    File2Gain<NV>, 
-                                    File2Mod<NV>, 
-                                    File2Fm<NV>, 
-                                    File2ModSrc<NV>, 
-                                    File2FmSrc<NV>, 
-                                    File2Tempo<NV>, 
-                                    FileDiv<NV>, 
-                                    File2Mode<NV>, 
-                                    File2EnvTrig<NV>, 
-                                    File2A<NV>, 
-                                    File2H<NV>, 
-                                    File2D<NV>, 
-                                    File2S<NV>, 
-                                    File2R<NV>, 
-                                    File2Pos<NV>, 
-                                    File2PosMod<NV>, 
-                                    File2Quant<NV>, 
-                                    User1<NV>, 
-                                    User2<NV>, 
-                                    tune<NV>, 
-                                    Track1, 
-                                    Track2>;
+using SmFx_t_plist = parameter::list<OscSt1<NV>, 
+                                     OscCent1<NV>, 
+                                     Oscfm1<NV>, 
+                                     OscMod1<NV>, 
+                                     OscTempoSync1, 
+                                     OscTempo1<NV>, 
+                                     OscDiv1, 
+                                     OscFmSrc1<NV>, 
+                                     OscPitchSrc1<NV>, 
+                                     Osc12Mix, 
+                                     filePos1<NV>, 
+                                     FilePosMod1<NV>, 
+                                     FilePosQuant1<NV>, 
+                                     FileInputGain1<NV>, 
+                                     FileInputGainMod<NV>, 
+                                     FileInputGainSrc1<NV>, 
+                                     FileInputGainFm1<NV>, 
+                                     FilterMode1<NV>, 
+                                     FilterCut1<NV>, 
+                                     FilterCutMod1<NV>, 
+                                     FilterCutFm1<NV>, 
+                                     FilterCutSrc1<NV>, 
+                                     FilterModMode1<NV>, 
+                                     VcaGain1<NV>, 
+                                     VcaGainMod1<NV>, 
+                                     VcaGainFm1<NV>, 
+                                     VcaGainSrc1<NV>, 
+                                     Res1<NV>, 
+                                     Pan1<NV>, 
+                                     VcaFmSrc1<NV>, 
+                                     OscSt2<NV>, 
+                                     OscCent2<NV>, 
+                                     Oscfm2<NV>, 
+                                     OscMod2<NV>, 
+                                     OscFmSrc2<NV>, 
+                                     FilterMode2<NV>, 
+                                     FilterCut2<NV>, 
+                                     FilterCutMod2<NV>, 
+                                     FilterCutFm2<NV>, 
+                                     FilterCutSrc2<NV>, 
+                                     FilterFmdSrc<NV>, 
+                                     VcaGain2<NV>, 
+                                     VcaGainMod2<NV>, 
+                                     VcaGainFm2<NV>, 
+                                     VcaGainSrc2<NV>, 
+                                     VcaGainModMode2, 
+                                     Res2<NV>, 
+                                     Pan2<NV>, 
+                                     VcaFmSrc2<NV>, 
+                                     OscShape<NV>, 
+                                     OscShapeMod<NV>, 
+                                     OscShapeFm<NV>, 
+                                     OscShapeModSrc<NV>, 
+                                     OscShapeFmSrc<NV>, 
+                                     Osc2InputGain<NV>, 
+                                     Osc2InputGainMod<NV>, 
+                                     Osc2InputGainFm<NV>, 
+                                     Osc2InputGainModSrc<NV>, 
+                                     Osc2InputGainFmSrc<NV>, 
+                                     FileInFmSrc<NV>, 
+                                     FilterInput1, 
+                                     FilterInput2, 
+                                     PostModMode<NV>, 
+                                     PosEnvTrig<NV>, 
+                                     PosEnvA<NV>, 
+                                     PosEnvH<NV>, 
+                                     PosEnvD<NV>, 
+                                     PosEnvS<NV>, 
+                                     PosEnvR<NV>, 
+                                     PosVel, 
+                                     OscsSubGain, 
+                                     PosTempo<NV>, 
+                                     PosDib<NV>, 
+                                     FileInOffset<NV>, 
+                                     oscShapeMode1<NV>, 
+                                     oscShapeMode2<NV>, 
+                                     shape2<NV>, 
+                                     ShapeMod1<NV>, 
+                                     ShapeSrc2<NV>, 
+                                     ShapeFm2<NV>, 
+                                     ShapeFmSrc2<NV>, 
+                                     PosSmooth, 
+                                     Osc2Src<NV>, 
+                                     Osc2InSel<NV>, 
+                                     FileInSel<NV>, 
+                                     Vol<NV>, 
+                                     Osc1Input<NV>, 
+                                     Osc1InputMod<NV>, 
+                                     Osc1FM<NV>, 
+                                     OscFmSrc<NV>, 
+                                     Osc1InputSrc<NV>, 
+                                     Osc1InSel, 
+                                     s<NV>, 
+                                     a<NV>, 
+                                     h<NV>, 
+                                     d<NV>, 
+                                     r<NV>, 
+                                     TEMPO2<NV>, 
+                                     DIV2<NV>, 
+                                     SYNC2<NV>, 
+                                     File2InSel<NV>, 
+                                     File2GainOffset<NV>, 
+                                     File2Gain<NV>, 
+                                     File2Mod<NV>, 
+                                     File2Fm<NV>, 
+                                     File2ModSrc<NV>, 
+                                     File2FmSrc<NV>, 
+                                     File2Tempo<NV>, 
+                                     FileDiv<NV>, 
+                                     File2Mode<NV>, 
+                                     File2EnvTrig<NV>, 
+                                     File2A<NV>, 
+                                     File2H<NV>, 
+                                     File2D<NV>, 
+                                     File2S<NV>, 
+                                     File2R<NV>, 
+                                     File2Pos<NV>, 
+                                     File2PosMod<NV>, 
+                                     File2Quant<NV>, 
+                                     User1<NV>, 
+                                     User2<NV>, 
+                                     tune<NV>, 
+                                     Track1, 
+                                     Track2>;
 }
 
 template <int NV>
-using Sm2_t_ = container::chain<Sm2_t_parameters::Sm2_t_plist<NV>, 
-                                wrap::fix<2, fix8_block_t<NV>>, 
-                                ahdsr1_t<NV>, 
-                                envelope::voice_manager, 
-                                core::gain<NV>>;
+using SmFx_t_ = container::chain<SmFx_t_parameters::SmFx_t_plist<NV>, 
+                                 wrap::fix<2, fix8_block_t<NV>>>;
 
 // =================================| Root node initialiser class |=================================
 
-template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
+template <int NV> struct instance: public SmFx_impl::SmFx_t_<NV>
 {
 	
 	struct metadata
@@ -4633,7 +4757,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		static const int NumFilters = 0;
 		static const int NumDisplayBuffers = 3;
 		
-		SNEX_METADATA_ID(Sm2);
+		SNEX_METADATA_ID(SmFx);
 		SNEX_METADATA_NUM_CHANNELS(2);
 		SNEX_METADATA_ENCODED_PARAMETERS(2242)
 		{
@@ -4651,7 +4775,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x0500, 0x0000, 0x4F00, 0x6373, 0x6554, 0x706D, 0x316F, 0x0000, 
             0x0000, 0x0000, 0x9000, 0x0041, 0x8000, 0x003F, 0x8000, 0x003F, 
             0x8000, 0x5C3F, 0x0600, 0x0000, 0x4F00, 0x6373, 0x6944, 0x3176, 
-            0x0000, 0x8000, 0x003F, 0x0000, 0x0042, 0x2000, 0x0041, 0x8000, 
+            0x0000, 0x8000, 0x003F, 0x0000, 0x0042, 0x0000, 0x0042, 0x8000, 
             0x003F, 0x8000, 0x5C3F, 0x0700, 0x0000, 0x4F00, 0x6373, 0x6D46, 
             0x7253, 0x3163, 0x0000, 0x8000, 0x003F, 0xC000, 0x0040, 0x0000, 
             0x0040, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x0800, 0x0000, 0x4F00, 
@@ -4660,38 +4784,38 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x005C, 0x0009, 0x0000, 0x734F, 0x3163, 0x4D32, 0x7869, 0x0000, 
             0x0000, 0x0000, 0x8000, 0x5C3F, 0x028F, 0x003F, 0x8000, 0x003F, 
             0x0000, 0x5C00, 0x0A00, 0x0000, 0x6600, 0x6C69, 0x5065, 0x736F, 
-            0x0031, 0x0000, 0x0000, 0x0000, 0x3F80, 0x147B, 0x3EAE, 0x0000, 
+            0x0031, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F00, 0x0000, 
             0x3F80, 0x0000, 0x0000, 0x005C, 0x000B, 0x0000, 0x6946, 0x656C, 
             0x6F50, 0x4D73, 0x646F, 0x0031, 0x0000, 0xBF80, 0x0000, 0x3F80, 
-            0xEB85, 0xBED1, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x000C, 
+            0x3D71, 0x3E8A, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x000C, 
             0x0000, 0x6946, 0x656C, 0x6F50, 0x5173, 0x6175, 0x746E, 0x0031, 
-            0x0000, 0x3F80, 0x0000, 0x4120, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x0000, 0x3F80, 0x0000, 0x4120, 0x0000, 0x40C0, 0x0000, 0x3F80, 
             0x0000, 0x3F80, 0x005C, 0x000D, 0x0000, 0x6946, 0x656C, 0x6E49, 
             0x7570, 0x4774, 0x6961, 0x316E, 0x0000, 0x0000, 0x0000, 0x8000, 
-            0x523F, 0x9EB8, 0x003E, 0x8000, 0x003F, 0x0000, 0x5C00, 0x0E00, 
+            0xCD3F, 0xCCCC, 0x003D, 0x8000, 0x003F, 0x0000, 0x5C00, 0x0E00, 
             0x0000, 0x4600, 0x6C69, 0x4965, 0x706E, 0x7475, 0x6147, 0x6E69, 
-            0x6F4D, 0x0064, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 
+            0x6F4D, 0x0064, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x6666, 0x3F26, 
             0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x000F, 0x0000, 0x6946, 
             0x656C, 0x6E49, 0x7570, 0x4774, 0x6961, 0x536E, 0x6372, 0x0031, 
-            0x0000, 0x3F80, 0x0000, 0x4188, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x0000, 0x3F80, 0x0000, 0x4188, 0x0000, 0x4080, 0x0000, 0x3F80, 
             0x0000, 0x3F80, 0x005C, 0x0010, 0x0000, 0x6946, 0x656C, 0x6E49, 
             0x7570, 0x4774, 0x6961, 0x466E, 0x316D, 0x0000, 0x8000, 0x00BF, 
             0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 
             0x1100, 0x0000, 0x4600, 0x6C69, 0x6574, 0x4D72, 0x646F, 0x3165, 
             0x0000, 0x8000, 0x003F, 0x1000, 0x0041, 0x8000, 0x003F, 0x8000, 
             0x003F, 0x8000, 0x5C3F, 0x1200, 0x0000, 0x4600, 0x6C69, 0x6574, 
-            0x4372, 0x7475, 0x0031, 0x0000, 0x0000, 0x0000, 0x3F80, 0xAE14, 
-            0x3F07, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0013, 0x0000, 
+            0x4372, 0x7475, 0x0031, 0x0000, 0x0000, 0x0000, 0x3F80, 0x8F5C, 
+            0x3F02, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0013, 0x0000, 
             0x6946, 0x746C, 0x7265, 0x7543, 0x4D74, 0x646F, 0x0031, 0x0000, 
             0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
             0x0000, 0x005C, 0x0014, 0x0000, 0x6946, 0x746C, 0x7265, 0x7543, 
             0x4674, 0x316D, 0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 
             0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x1500, 0x0000, 0x4600, 
             0x6C69, 0x6574, 0x4372, 0x7475, 0x7253, 0x3163, 0x0000, 0x8000, 
-            0x003F, 0x8800, 0x0041, 0x0000, 0x0041, 0x8000, 0x003F, 0x8000, 
+            0x003F, 0x8800, 0x0041, 0x8000, 0x0040, 0x8000, 0x003F, 0x8000, 
             0x5C3F, 0x1600, 0x0000, 0x4600, 0x6C69, 0x6574, 0x4D72, 0x646F, 
             0x6F4D, 0x6564, 0x0031, 0x0000, 0x3F80, 0x0000, 0x40C0, 0x0000, 
-            0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0017, 0x0000, 
+            0x4080, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0017, 0x0000, 
             0x6356, 0x4761, 0x6961, 0x316E, 0x0000, 0x0000, 0x0000, 0x8000, 
             0x003F, 0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 0x1800, 
             0x0000, 0x5600, 0x6163, 0x6147, 0x6E69, 0x6F4D, 0x3164, 0x0000, 
@@ -4702,13 +4826,13 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x4761, 0x6961, 0x536E, 0x6372, 0x0031, 0x0000, 0x3F80, 0x0000, 
             0x4188, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
             0x001B, 0x0000, 0x6552, 0x3173, 0x0000, 0x0000, 0x0000, 0x8000, 
-            0x663F, 0xE666, 0x183E, 0x8789, 0x003E, 0x0000, 0x5C00, 0x1C00, 
+            0xEC3F, 0x7851, 0x183F, 0x8789, 0x003E, 0x0000, 0x5C00, 0x1C00, 
             0x0000, 0x5000, 0x6E61, 0x0031, 0x0000, 0xBF80, 0x0000, 0x3F80, 
-            0x851F, 0xBF6B, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x001D, 
+            0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x001D, 
             0x0000, 0x6356, 0x4661, 0x536D, 0x6372, 0x0031, 0x0000, 0x3F80, 
-            0x0000, 0x40C0, 0x0000, 0x4000, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x0000, 0x40C0, 0x0000, 0x4080, 0x0000, 0x3F80, 0x0000, 0x3F80, 
             0x005C, 0x001E, 0x0000, 0x734F, 0x5363, 0x3274, 0x0000, 0xC000, 
-            0x00C1, 0xC000, 0x0041, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 
+            0x00C1, 0xC000, 0x0041, 0xA000, 0x0040, 0x8000, 0x003F, 0x8000, 
             0x5C3F, 0x1F00, 0x0000, 0x4F00, 0x6373, 0x6543, 0x746E, 0x0032, 
             0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 
             0x0000, 0x0000, 0x005C, 0x0020, 0x0000, 0x734F, 0x6663, 0x326D, 
@@ -4721,7 +4845,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x4600, 0x6C69, 0x6574, 0x4D72, 0x646F, 0x3265, 0x0000, 0x8000, 
             0x003F, 0x1000, 0x0041, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 
             0x5C3F, 0x2400, 0x0000, 0x4600, 0x6C69, 0x6574, 0x4372, 0x7475, 
-            0x0032, 0x0000, 0x0000, 0x0000, 0x3F80, 0xAE14, 0x3F07, 0x0000, 
+            0x0032, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F40, 0x0000, 
             0x3F80, 0x0000, 0x0000, 0x005C, 0x0025, 0x0000, 0x6946, 0x746C, 
             0x7265, 0x7543, 0x4D74, 0x646F, 0x0032, 0x0000, 0xBF80, 0x0000, 
             0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 
@@ -4729,11 +4853,11 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 
             0x003F, 0x0000, 0x5C00, 0x2700, 0x0000, 0x4600, 0x6C69, 0x6574, 
             0x4372, 0x7475, 0x7253, 0x3263, 0x0000, 0x8000, 0x003F, 0x8800, 
-            0x0041, 0x0000, 0x0041, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x2800, 
+            0x0041, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x2800, 
             0x0000, 0x4600, 0x6C69, 0x6574, 0x4672, 0x646D, 0x7253, 0x0063, 
-            0x0000, 0x3F80, 0x0000, 0x40C0, 0x0000, 0x4000, 0x0000, 0x3F80, 
+            0x0000, 0x3F80, 0x0000, 0x40C0, 0x0000, 0x4040, 0x0000, 0x3F80, 
             0x0000, 0x3F80, 0x005C, 0x0029, 0x0000, 0x6356, 0x4761, 0x6961, 
-            0x326E, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x003F, 
+            0x326E, 0x0000, 0x0000, 0x0000, 0x8000, 0x663F, 0x6666, 0x003F, 
             0x8000, 0x003F, 0x0000, 0x5C00, 0x2A00, 0x0000, 0x5600, 0x6163, 
             0x6147, 0x6E69, 0x6F4D, 0x3264, 0x0000, 0x8000, 0x00BF, 0x8000, 
             0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x2B00, 
@@ -4745,26 +4869,26 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x4761, 0x6961, 0x4D6E, 0x646F, 0x6F4D, 0x6564, 0x0032, 0x0000, 
             0x0000, 0x0000, 0x3F80, 0x999A, 0x3E99, 0x0000, 0x3F80, 0x0000, 
             0x0000, 0x005C, 0x002E, 0x0000, 0x6552, 0x3273, 0x0000, 0x0000, 
-            0x0000, 0x8000, 0xCD3F, 0x0CCC, 0x183F, 0x8789, 0x003E, 0x0000, 
+            0x0000, 0x8000, 0x9A3F, 0x1999, 0x183F, 0x8789, 0x003E, 0x0000, 
             0x5C00, 0x2F00, 0x0000, 0x5000, 0x6E61, 0x0032, 0x0000, 0xBF80, 
-            0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 
+            0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 
             0x005C, 0x0030, 0x0000, 0x6356, 0x4661, 0x536D, 0x6372, 0x0032, 
             0x0000, 0x3F80, 0x0000, 0x40C0, 0x0000, 0x3F80, 0x0000, 0x3F80, 
             0x0000, 0x3F80, 0x005C, 0x0031, 0x0000, 0x734F, 0x5363, 0x6168, 
-            0x6570, 0x0000, 0x0000, 0x0000, 0x8000, 0x9A3F, 0x1999, 0x003E, 
+            0x6570, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 
             0x8000, 0x003F, 0x0000, 0x5C00, 0x3200, 0x0000, 0x4F00, 0x6373, 
             0x6853, 0x7061, 0x4D65, 0x646F, 0x0000, 0x8000, 0x00BF, 0x8000, 
             0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x3300, 
             0x0000, 0x4F00, 0x6373, 0x6853, 0x7061, 0x4665, 0x006D, 0x0000, 
-            0xBF80, 0x0000, 0x3F80, 0x51EC, 0x3DB8, 0x0000, 0x3F80, 0x0000, 
+            0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
             0x0000, 0x005C, 0x0034, 0x0000, 0x734F, 0x5363, 0x6168, 0x6570, 
             0x6F4D, 0x5364, 0x6372, 0x0000, 0x8000, 0x003F, 0x8800, 0x0041, 
-            0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x3500, 0x0000, 
+            0x8000, 0x0040, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x3500, 0x0000, 
             0x4F00, 0x6373, 0x6853, 0x7061, 0x4665, 0x536D, 0x6372, 0x0000, 
-            0x8000, 0x003F, 0xC000, 0x0040, 0x0000, 0x0040, 0x8000, 0x003F, 
+            0x8000, 0x003F, 0xC000, 0x0040, 0x4000, 0x0040, 0x8000, 0x003F, 
             0x8000, 0x5C3F, 0x3600, 0x0000, 0x4F00, 0x6373, 0x4932, 0x706E, 
-            0x7475, 0x6147, 0x6E69, 0x0000, 0x0000, 0x0000, 0x8000, 0x0A3F, 
-            0xA3D7, 0x003C, 0x8000, 0x003F, 0x0000, 0x5C00, 0x3700, 0x0000, 
+            0x7475, 0x6147, 0x6E69, 0x0000, 0x0000, 0x0000, 0x8000, 0x1F3F, 
+            0x6B85, 0x003E, 0x8000, 0x003F, 0x0000, 0x5C00, 0x3700, 0x0000, 
             0x4F00, 0x6373, 0x4932, 0x706E, 0x7475, 0x6147, 0x6E69, 0x6F4D, 
             0x0064, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 
             0x3F80, 0x0000, 0x0000, 0x005C, 0x0038, 0x0000, 0x734F, 0x3263, 
@@ -4804,25 +4928,25 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x6275, 0x6147, 0x6E69, 0x0000, 0x0000, 0x0000, 0x3800, 0x3342, 
             0xC333, 0x0040, 0x8000, 0xCD3F, 0xCCCC, 0x5C3D, 0x4700, 0x0000, 
             0x5000, 0x736F, 0x6554, 0x706D, 0x006F, 0x0000, 0x0000, 0x0000, 
-            0x4190, 0x0000, 0x4040, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
+            0x4190, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
             0x0048, 0x0000, 0x6F50, 0x4473, 0x6269, 0x0000, 0x8000, 0x003F, 
-            0x0000, 0x0042, 0x3000, 0x0041, 0x8000, 0x003F, 0x8000, 0x5C3F, 
+            0x0000, 0x0042, 0x2000, 0x0041, 0x8000, 0x003F, 0x8000, 0x5C3F, 
             0x4900, 0x0000, 0x4600, 0x6C69, 0x4965, 0x4F6E, 0x6666, 0x6573, 
-            0x0074, 0x0000, 0x0000, 0x0000, 0x3F80, 0x3D71, 0x3F4A, 0x0000, 
+            0x0074, 0x0000, 0x0000, 0x0000, 0x3F80, 0x3333, 0x3EB3, 0x0000, 
             0x3F80, 0x0000, 0x0000, 0x005C, 0x004A, 0x0000, 0x736F, 0x5363, 
             0x6168, 0x6570, 0x6F4D, 0x6564, 0x0031, 0x0000, 0x3F80, 0x0000, 
-            0x4140, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
+            0x4150, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
             0x004B, 0x0000, 0x736F, 0x5363, 0x6168, 0x6570, 0x6F4D, 0x6564, 
-            0x0032, 0x0000, 0x3F80, 0x0000, 0x4140, 0x0000, 0x3F80, 0x0000, 
+            0x0032, 0x0000, 0x3F80, 0x0000, 0x4140, 0x0000, 0x4120, 0x0000, 
             0x3F80, 0x0000, 0x3F80, 0x005C, 0x004C, 0x0000, 0x6873, 0x7061, 
-            0x3265, 0x0000, 0x0000, 0x0000, 0x8000, 0x713F, 0x8A3D, 0x003E, 
+            0x3265, 0x0000, 0x0000, 0x0000, 0x8000, 0x0A3F, 0xA3D7, 0x003C, 
             0x8000, 0x003F, 0x0000, 0x5C00, 0x4D00, 0x0000, 0x5300, 0x6168, 
-            0x6570, 0x6F4D, 0x3164, 0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 
-            0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x4E00, 0x0000, 
+            0x6570, 0x6F4D, 0x3164, 0x0000, 0x8000, 0x00BF, 0x8000, 0x663F, 
+            0x6666, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 0x4E00, 0x0000, 
             0x5300, 0x6168, 0x6570, 0x7253, 0x3263, 0x0000, 0x8000, 0x003F, 
             0x8800, 0x0041, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 
             0x4F00, 0x0000, 0x5300, 0x6168, 0x6570, 0x6D46, 0x0032, 0x0000, 
-            0xBF80, 0x0000, 0x3F80, 0x51EC, 0x3DB8, 0x0000, 0x3F80, 0x0000, 
+            0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
             0x0000, 0x005C, 0x0050, 0x0000, 0x6853, 0x7061, 0x4665, 0x536D, 
             0x6372, 0x0032, 0x0000, 0x3F80, 0x0000, 0x40C0, 0x0000, 0x3F80, 
             0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0051, 0x0000, 0x6F50, 
@@ -4831,13 +4955,13 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x0000, 0x734F, 0x3263, 0x7253, 0x0063, 0x0000, 0x3F80, 0x0000, 
             0x4188, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
             0x0053, 0x0000, 0x734F, 0x3263, 0x6E49, 0x6553, 0x006C, 0x0000, 
-            0x3F80, 0x0000, 0x40A0, 0x0000, 0x4000, 0x0000, 0x3F80, 0x0000, 
+            0x3F80, 0x0000, 0x40A0, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
             0x3F80, 0x005C, 0x0054, 0x0000, 0x6946, 0x656C, 0x6E49, 0x6553, 
             0x006C, 0x0000, 0x3F80, 0x0000, 0x40A0, 0x0000, 0x3F80, 0x0000, 
             0x3F80, 0x0000, 0x3F80, 0x005C, 0x0055, 0x0000, 0x6F56, 0x006C, 
             0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 
             0x0000, 0x0000, 0x005C, 0x0056, 0x0000, 0x734F, 0x3163, 0x6E49, 
-            0x7570, 0x0074, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 
+            0x7570, 0x0074, 0x0000, 0x0000, 0x0000, 0x3F80, 0xD70A, 0x3E23, 
             0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0057, 0x0000, 0x734F, 
             0x3163, 0x6E49, 0x7570, 0x4D74, 0x646F, 0x0000, 0x8000, 0x00BF, 
             0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 
@@ -4851,27 +4975,27 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x734F, 0x3163, 0x6E49, 0x6553, 0x006C, 0x0000, 0x3F80, 0x0000, 
             0x40A0, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
             0x005C, 0x0000, 0x0073, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
-            0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x005D, 0x0000, 
+            0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x005D, 0x0000, 
             0x0061, 0x0000, 0x0000, 0x4000, 0x461C, 0x0000, 0x0000, 0x6A72, 
             0x3E4A, 0xCCCD, 0x3DCC, 0x005C, 0x005E, 0x0000, 0x0068, 0x0000, 
             0x0000, 0x4000, 0x461C, 0x0000, 0x0000, 0x6A72, 0x3E4A, 0xCCCD, 
             0x3DCC, 0x005C, 0x005F, 0x0000, 0x0064, 0x0000, 0x0000, 0x4000, 
-            0x461C, 0x4000, 0x461C, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 0x005C, 
-            0x0060, 0x0000, 0x0072, 0x0000, 0x0000, 0x4000, 0x461C, 0x2400, 
-            0x4604, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 0x005C, 0x0061, 0x0000, 
+            0x461C, 0x3333, 0x43D9, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 0x005C, 
+            0x0060, 0x0000, 0x0072, 0x0000, 0x0000, 0x4000, 0x461C, 0x4000, 
+            0x4412, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 0x005C, 0x0061, 0x0000, 
             0x4554, 0x504D, 0x324F, 0x0000, 0x0000, 0x0000, 0x9000, 0x0041, 
             0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x6200, 0x0000, 
             0x4400, 0x5649, 0x0032, 0x0000, 0x3F80, 0x0000, 0x4200, 0x0000, 
-            0x4120, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0063, 0x0000, 
+            0x4188, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0063, 0x0000, 
             0x5953, 0x434E, 0x0032, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
             0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0064, 0x0000, 
             0x6946, 0x656C, 0x4932, 0x536E, 0x6C65, 0x0000, 0x8000, 0x003F, 
-            0xA000, 0x0040, 0x0000, 0x0040, 0x8000, 0x003F, 0x8000, 0x5C3F, 
+            0xA000, 0x0040, 0x4000, 0x0040, 0x8000, 0x003F, 0x8000, 0x5C3F, 
             0x6500, 0x0000, 0x4600, 0x6C69, 0x3265, 0x6147, 0x6E69, 0x664F, 
             0x7366, 0x7465, 0x0000, 0xC800, 0x00C2, 0x0000, 0x0000, 0x0000, 
             0x0000, 0x8000, 0xCD3F, 0xCCCC, 0x5C3D, 0x6600, 0x0000, 0x4600, 
             0x6C69, 0x3265, 0x6147, 0x6E69, 0x0000, 0x0000, 0x0000, 0x8000, 
-            0x5C3F, 0x428F, 0x003E, 0x8000, 0x003F, 0x0000, 0x5C00, 0x6700, 
+            0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x6700, 
             0x0000, 0x4600, 0x6C69, 0x3265, 0x6F4D, 0x0064, 0x0000, 0xBF80, 
             0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 
             0x005C, 0x0068, 0x0000, 0x6946, 0x656C, 0x4632, 0x006D, 0x0000, 
@@ -4884,7 +5008,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x0000, 0x4600, 0x6C69, 0x3265, 0x6554, 0x706D, 0x006F, 0x0000, 
             0x0000, 0x0000, 0x4190, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
             0x3F80, 0x005C, 0x006C, 0x0000, 0x6946, 0x656C, 0x6944, 0x0076, 
-            0x0000, 0x3F80, 0x0000, 0x4200, 0x0000, 0x4080, 0x0000, 0x3F80, 
+            0x0000, 0x3F80, 0x0000, 0x4200, 0x0000, 0x4100, 0x0000, 0x3F80, 
             0x0000, 0x3F80, 0x005C, 0x006D, 0x0000, 0x6946, 0x656C, 0x4D32, 
             0x646F, 0x0065, 0x0000, 0x3F80, 0x0000, 0x4040, 0x0000, 0x4000, 
             0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x006E, 0x0000, 0x6946, 
@@ -4901,10 +5025,10 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x0000, 0x5C00, 0x7300, 0x0000, 0x4600, 0x6C69, 0x3265, 0x0052, 
             0x0000, 0x0000, 0x4000, 0x461C, 0x0000, 0x4040, 0x6A72, 0x3E4A, 
             0xCCCD, 0x3DCC, 0x005C, 0x0074, 0x0000, 0x6946, 0x656C, 0x5032, 
-            0x736F, 0x0000, 0x0000, 0x0000, 0x8000, 0x5C3F, 0xC28F, 0x003E, 
+            0x736F, 0x0000, 0x0000, 0x0000, 0x8000, 0xEC3F, 0x3851, 0x003E, 
             0x8000, 0x003F, 0x0000, 0x5C00, 0x7500, 0x0000, 0x4600, 0x6C69, 
             0x3265, 0x6F50, 0x4D73, 0x646F, 0x0000, 0x8000, 0x00BF, 0x8000, 
-            0x003F, 0x8000, 0x003E, 0x8000, 0x003F, 0x0000, 0x5C00, 0x7600, 
+            0xAE3F, 0x6147, 0x003E, 0x8000, 0x003F, 0x0000, 0x5C00, 0x7600, 
             0x0000, 0x4600, 0x6C69, 0x3265, 0x7551, 0x6E61, 0x0074, 0x0000, 
             0x3F80, 0x0000, 0x4120, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 
             0x3F80, 0x005C, 0x0077, 0x0000, 0x7355, 0x7265, 0x0031, 0x0000, 
@@ -4931,721 +5055,678 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 	{
 		// Node References -------------------------------------------------------------------------
 		
-		auto& fix8_block = this->getT(0);                                                      // Sm2_impl::fix8_block_t<NV>
-		auto& split8 = this->getT(0).getT(0);                                                  // Sm2_impl::split8_t<NV>
-		auto& modchain1 = this->getT(0).getT(0).getT(0);                                       // Sm2_impl::modchain1_t<NV>
-		auto& chain37 = this->getT(0).getT(0).getT(0).getT(0);                                 // Sm2_impl::chain37_t<NV>
-		auto& branch9 = this->getT(0).getT(0).getT(0).getT(0).getT(0);                         // Sm2_impl::branch9_t<NV>
-		auto& chain58 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(0);                 // Sm2_impl::chain58_t<NV>
+		auto& fix8_block = this->getT(0);                                                      // SmFx_impl::fix8_block_t<NV>
+		auto& split8 = this->getT(0).getT(0);                                                  // SmFx_impl::split8_t<NV>
+		auto& modchain1 = this->getT(0).getT(0).getT(0);                                       // SmFx_impl::modchain1_t<NV>
+		auto& chain37 = this->getT(0).getT(0).getT(0).getT(0);                                 // SmFx_impl::chain37_t<NV>
+		auto& branch9 = this->getT(0).getT(0).getT(0).getT(0).getT(0);                         // SmFx_impl::branch9_t<NV>
+		auto& chain58 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(0);                 // SmFx_impl::chain58_t<NV>
 		auto& add24 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(0).getT(0);           // math::add<NV>
-		auto& chain57 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(1);                 // Sm2_impl::chain57_t<NV>
+		auto& chain57 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(1);                 // SmFx_impl::chain57_t<NV>
 		auto& add23 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(1).getT(0);           // math::add<NV>
-		auto& chain67 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(2);                 // Sm2_impl::chain67_t<NV>
+		auto& chain67 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(2);                 // SmFx_impl::chain67_t<NV>
 		auto& add25 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(2).getT(0);           // math::add<NV>
-		auto& chain38 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(3);                 // Sm2_impl::chain38_t<NV>
+		auto& chain38 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(3);                 // SmFx_impl::chain38_t<NV>
 		auto& add1 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(3).getT(0);            // math::add<NV>
-		auto& chain69 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(4);                 // Sm2_impl::chain69_t<NV>
+		auto& chain69 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(4);                 // SmFx_impl::chain69_t<NV>
 		auto& add33 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(4).getT(0);           // math::add<NV>
-		auto& chain72 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(5);                 // Sm2_impl::chain72_t<NV>
+		auto& chain72 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(5);                 // SmFx_impl::chain72_t<NV>
 		auto& add51 = this->getT(0).getT(0).getT(0).getT(0).getT(0).getT(5).getT(0);           // math::add<NV>
-		auto& peak5 = this->getT(0).getT(0).getT(0).getT(0).getT(1);                           // Sm2_impl::peak5_t<NV>
+		auto& peak5 = this->getT(0).getT(0).getT(0).getT(0).getT(1);                           // SmFx_impl::peak5_t<NV>
 		auto& clear15 = this->getT(0).getT(0).getT(0).getT(0).getT(2);                         // math::clear<NV>
-		auto& split7 = this->getT(0).getT(0).getT(0).getT(0).getT(3);                          // Sm2_impl::split7_t<NV>
-		auto& chain62 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0);                 // Sm2_impl::chain62_t<NV>
-		auto& split6 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(0);          // Sm2_impl::split6_t<NV>
-		auto& chain59 = this->getT(0).getT(0).getT(0).getT(0).                                 // Sm2_impl::chain59_t<NV>
+		auto& split7 = this->getT(0).getT(0).getT(0).getT(0).getT(3);                          // SmFx_impl::split7_t<NV>
+		auto& chain62 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0);                 // SmFx_impl::chain62_t<NV>
+		auto& split6 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(0);          // SmFx_impl::split6_t<NV>
+		auto& chain59 = this->getT(0).getT(0).getT(0).getT(0).                                 // SmFx_impl::chain59_t<NV>
                         getT(3).getT(0).getT(0).getT(0);
-		auto& minmax = this->getT(0).getT(0).getT(0).getT(0).                                  // Sm2_impl::minmax_t<NV>
+		auto& minmax = this->getT(0).getT(0).getT(0).getT(0).                                  // SmFx_impl::minmax_t<NV>
                        getT(3).getT(0).getT(0).getT(0).
                        getT(0);
 		auto& add26 = this->getT(0).getT(0).getT(0).getT(0).                                   // math::add<NV>
                       getT(3).getT(0).getT(0).getT(0).
                       getT(1);
-		auto& chain182 = this->getT(0).getT(0).getT(0).getT(0).                                // Sm2_impl::chain182_t<NV>
+		auto& chain182 = this->getT(0).getT(0).getT(0).getT(0).                                // SmFx_impl::chain182_t<NV>
                          getT(3).getT(0).getT(0).getT(1);
 		auto& add36 = this->getT(0).getT(0).getT(0).getT(0).                                   // math::add<NV>
                       getT(3).getT(0).getT(0).getT(1).
                       getT(0);
-		auto& chain258 = this->getT(0).getT(0).getT(0).getT(0).                                // Sm2_impl::chain258_t<NV>
+		auto& chain258 = this->getT(0).getT(0).getT(0).getT(0).                                // SmFx_impl::chain258_t<NV>
                          getT(3).getT(0).getT(0).getT(2);
-		auto& pma = this->getT(0).getT(0).getT(0).getT(0).                                     // Sm2_impl::pma_t<NV>
+		auto& pma = this->getT(0).getT(0).getT(0).getT(0).                                     // SmFx_impl::pma_t<NV>
                     getT(3).getT(0).getT(0).getT(2).
                     getT(0);
 		auto& add27 = this->getT(0).getT(0).getT(0).getT(0).                                   // math::add<NV>
                       getT(3).getT(0).getT(0).getT(2).
                       getT(1);
-		auto& chain60 = this->getT(0).getT(0).getT(0).getT(0).                                 // Sm2_impl::chain60_t<NV>
+		auto& chain60 = this->getT(0).getT(0).getT(0).getT(0).                                 // SmFx_impl::chain60_t<NV>
                         getT(3).getT(0).getT(0).getT(3);
-		auto& chain119 = this->getT(0).getT(0).getT(0).getT(0).                                // Sm2_impl::chain119_t<NV>
+		auto& chain119 = this->getT(0).getT(0).getT(0).getT(0).                                // SmFx_impl::chain119_t<NV>
                          getT(3).getT(0).getT(0).getT(3).
                          getT(0);
-		auto& global_mod1 = this->getT(0).getT(0).getT(0).getT(0).getT(3).                     // Sm2_impl::global_mod1_t<NV>
+		auto& global_mod1 = this->getT(0).getT(0).getT(0).getT(0).getT(3).                     // SmFx_impl::global_mod1_t<NV>
                             getT(0).getT(0).getT(3).getT(0).getT(0);
-		auto& minmax3 = this->getT(0).getT(0).getT(0).getT(0).getT(3).                         // Sm2_impl::minmax3_t<NV>
+		auto& minmax3 = this->getT(0).getT(0).getT(0).getT(0).getT(3).                         // SmFx_impl::minmax3_t<NV>
                         getT(0).getT(0).getT(3).getT(0).getT(1);
 		auto& add89 = this->getT(0).getT(0).getT(0).getT(0).getT(3).                           // math::add<NV>
                       getT(0).getT(0).getT(3).getT(0).getT(2);
 		auto& sub21 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(1);           // math::sub<NV>
-		auto& peak16 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(2);          // Sm2_impl::peak16_t
-		auto& mod2sig1 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(3);        // wrap::no_process<math::mod2sig<NV>>
-		auto& peak_unscaled = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(4);   // Sm2_impl::peak_unscaled_t<NV>
-		auto& modchain5 = this->getT(0).getT(0).getT(1);                                       // Sm2_impl::modchain5_t<NV>
-		auto& chain77 = this->getT(0).getT(0).getT(1).getT(0);                                 // Sm2_impl::chain77_t<NV>
-		auto& branch12 = this->getT(0).getT(0).getT(1).getT(0).getT(0);                        // Sm2_impl::branch12_t<NV>
-		auto& chain79 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(0);                 // Sm2_impl::chain79_t<NV>
+		auto& peak16 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(2);          // SmFx_impl::peak16_t
+		auto& mod2sig1 = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(3);        // math::mod2sig<NV>
+		auto& peak_unscaled = this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(4);   // SmFx_impl::peak_unscaled_t
+		auto& modchain5 = this->getT(0).getT(0).getT(1);                                       // SmFx_impl::modchain5_t<NV>
+		auto& chain77 = this->getT(0).getT(0).getT(1).getT(0);                                 // SmFx_impl::chain77_t<NV>
+		auto& branch12 = this->getT(0).getT(0).getT(1).getT(0).getT(0);                        // SmFx_impl::branch12_t<NV>
+		auto& chain79 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(0);                 // SmFx_impl::chain79_t<NV>
 		auto& add39 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(0).getT(0);           // math::add<NV>
-		auto& chain80 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(1);                 // Sm2_impl::chain80_t<NV>
+		auto& chain80 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(1);                 // SmFx_impl::chain80_t<NV>
 		auto& add40 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(1).getT(0);           // math::add<NV>
-		auto& chain81 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(2);                 // Sm2_impl::chain81_t<NV>
+		auto& chain81 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(2);                 // SmFx_impl::chain81_t<NV>
 		auto& add41 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(2).getT(0);           // math::add<NV>
-		auto& chain78 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(3);                 // Sm2_impl::chain78_t<NV>
+		auto& chain78 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(3);                 // SmFx_impl::chain78_t<NV>
 		auto& add38 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(3).getT(0);           // math::add<NV>
-		auto& chain86 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(4);                 // Sm2_impl::chain86_t<NV>
+		auto& chain86 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(4);                 // SmFx_impl::chain86_t<NV>
 		auto& add49 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(4).getT(0);           // math::add<NV>
-		auto& chain87 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(5);                 // Sm2_impl::chain87_t<NV>
+		auto& chain87 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(5);                 // SmFx_impl::chain87_t<NV>
 		auto& add52 = this->getT(0).getT(0).getT(1).getT(0).getT(0).getT(5).getT(0);           // math::add<NV>
-		auto& peak13 = this->getT(0).getT(0).getT(1).getT(0).getT(1);                          // Sm2_impl::peak13_t<NV>
+		auto& peak13 = this->getT(0).getT(0).getT(1).getT(0).getT(1);                          // SmFx_impl::peak13_t<NV>
 		auto& clear18 = this->getT(0).getT(0).getT(1).getT(0).getT(2);                         // math::clear<NV>
-		auto& split10 = this->getT(0).getT(0).getT(1).getT(0).getT(3);                         // Sm2_impl::split10_t<NV>
-		auto& chain82 = this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0);                 // Sm2_impl::chain82_t<NV>
-		auto& split11 = this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0).getT(0);         // Sm2_impl::split11_t<NV>
-		auto& chain83 = this->getT(0).getT(0).getT(1).getT(0).                                 // Sm2_impl::chain83_t<NV>
+		auto& split10 = this->getT(0).getT(0).getT(1).getT(0).getT(3);                         // SmFx_impl::split10_t<NV>
+		auto& chain82 = this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0);                 // SmFx_impl::chain82_t<NV>
+		auto& split11 = this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0).getT(0);         // SmFx_impl::split11_t<NV>
+		auto& chain83 = this->getT(0).getT(0).getT(1).getT(0).                                 // SmFx_impl::chain83_t<NV>
                         getT(3).getT(0).getT(0).getT(0);
-		auto& minmax2 = this->getT(0).getT(0).getT(1).getT(0).                                 // Sm2_impl::minmax2_t<NV>
+		auto& minmax2 = this->getT(0).getT(0).getT(1).getT(0).                                 // SmFx_impl::minmax2_t<NV>
                         getT(3).getT(0).getT(0).getT(0).
                         getT(0);
 		auto& add42 = this->getT(0).getT(0).getT(1).getT(0).                                   // math::add<NV>
                       getT(3).getT(0).getT(0).getT(0).
                       getT(1);
-		auto& chain181 = this->getT(0).getT(0).getT(1).getT(0).                                // Sm2_impl::chain181_t<NV>
+		auto& chain181 = this->getT(0).getT(0).getT(1).getT(0).                                // SmFx_impl::chain181_t<NV>
                          getT(3).getT(0).getT(0).getT(1);
 		auto& add35 = this->getT(0).getT(0).getT(1).getT(0).                                   // math::add<NV>
                       getT(3).getT(0).getT(0).getT(1).
                       getT(0);
-		auto& chain260 = this->getT(0).getT(0).getT(1).getT(0).                                // Sm2_impl::chain260_t<NV>
+		auto& chain260 = this->getT(0).getT(0).getT(1).getT(0).                                // SmFx_impl::chain260_t<NV>
                          getT(3).getT(0).getT(0).getT(2);
-		auto& pma1 = this->getT(0).getT(0).getT(1).getT(0).                                    // Sm2_impl::pma1_t<NV>
+		auto& pma1 = this->getT(0).getT(0).getT(1).getT(0).                                    // SmFx_impl::pma1_t<NV>
                      getT(3).getT(0).getT(0).getT(2).
                      getT(0);
 		auto& add43 = this->getT(0).getT(0).getT(1).getT(0).                                   // math::add<NV>
                       getT(3).getT(0).getT(0).getT(2).
                       getT(1);
-		auto& chain120 = this->getT(0).getT(0).getT(1).getT(0).                                // Sm2_impl::chain120_t<NV>
+		auto& chain120 = this->getT(0).getT(0).getT(1).getT(0).                                // SmFx_impl::chain120_t<NV>
                          getT(3).getT(0).getT(0).getT(3);
-		auto& global_mod = this->getT(0).getT(0).getT(1).getT(0).                              // Sm2_impl::global_mod_t<NV>
+		auto& global_mod = this->getT(0).getT(0).getT(1).getT(0).                              // SmFx_impl::global_mod_t<NV>
                            getT(3).getT(0).getT(0).getT(3).
                            getT(0);
-		auto& minmax1 = this->getT(0).getT(0).getT(1).getT(0).                                 // Sm2_impl::minmax1_t<NV>
+		auto& minmax1 = this->getT(0).getT(0).getT(1).getT(0).                                 // SmFx_impl::minmax1_t<NV>
                         getT(3).getT(0).getT(0).getT(3).
                         getT(1);
 		auto& add90 = this->getT(0).getT(0).getT(1).getT(0).                                   // math::add<NV>
                       getT(3).getT(0).getT(0).getT(3).
                       getT(2);
 		auto& sub3 = this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0).getT(1);            // math::sub<NV>
-		auto& peak_unscaled2 = this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0).getT(2);  // Sm2_impl::peak_unscaled2_t<NV>
-		auto& modchain2 = this->getT(0).getT(0).getT(2);                                       // Sm2_impl::modchain2_t<NV>
-		auto& chain63 = this->getT(0).getT(0).getT(2).getT(0);                                 // Sm2_impl::chain63_t<NV>
-		auto& branch10 = this->getT(0).getT(0).getT(2).getT(0).getT(0);                        // Sm2_impl::branch10_t<NV>
-		auto& chain65 = this->getT(0).getT(0).getT(2).getT(0).getT(0).getT(0);                 // Sm2_impl::chain65_t<NV>
+		auto& mod2sig = this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0).getT(2);         // math::mod2sig<NV>
+		auto& peak_unscaled2 = this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0).getT(3);  // SmFx_impl::peak_unscaled2_t<NV>
+		auto& modchain2 = this->getT(0).getT(0).getT(2);                                       // SmFx_impl::modchain2_t<NV>
+		auto& chain63 = this->getT(0).getT(0).getT(2).getT(0);                                 // SmFx_impl::chain63_t<NV>
+		auto& branch10 = this->getT(0).getT(0).getT(2).getT(0).getT(0);                        // SmFx_impl::branch10_t<NV>
+		auto& chain65 = this->getT(0).getT(0).getT(2).getT(0).getT(0).getT(0);                 // SmFx_impl::chain65_t<NV>
 		auto& add30 = this->getT(0).getT(0).getT(2).getT(0).getT(0).getT(0).getT(0);           // math::add<NV>
-		auto& chain66 = this->getT(0).getT(0).getT(2).getT(0).getT(0).getT(1);                 // Sm2_impl::chain66_t<NV>
+		auto& chain66 = this->getT(0).getT(0).getT(2).getT(0).getT(0).getT(1);                 // SmFx_impl::chain66_t<NV>
 		auto& add31 = this->getT(0).getT(0).getT(2).getT(0).getT(0).getT(1).getT(0);           // math::add<NV>
-		auto& chain68 = this->getT(0).getT(0).getT(2).getT(0).getT(0).getT(2);                 // Sm2_impl::chain68_t<NV>
+		auto& chain68 = this->getT(0).getT(0).getT(2).getT(0).getT(0).getT(2);                 // SmFx_impl::chain68_t<NV>
 		auto& add32 = this->getT(0).getT(0).getT(2).getT(0).getT(0).getT(2).getT(0);           // math::add<NV>
-		auto& chain64 = this->getT(0).getT(0).getT(2).getT(0).getT(0).getT(3);                 // Sm2_impl::chain64_t<NV>
+		auto& chain64 = this->getT(0).getT(0).getT(2).getT(0).getT(0).getT(3);                 // SmFx_impl::chain64_t<NV>
 		auto& add29 = this->getT(0).getT(0).getT(2).getT(0).getT(0).getT(3).getT(0);           // math::add<NV>
-		auto& chain71 = this->getT(0).getT(0).getT(2).getT(0).getT(0).getT(4);                 // Sm2_impl::chain71_t<NV>
+		auto& chain71 = this->getT(0).getT(0).getT(2).getT(0).getT(0).getT(4);                 // SmFx_impl::chain71_t<NV>
 		auto& add50 = this->getT(0).getT(0).getT(2).getT(0).getT(0).getT(4).getT(0);           // math::add<NV>
-		auto& chain73 = this->getT(0).getT(0).getT(2).getT(0).getT(0).getT(5);                 // Sm2_impl::chain73_t<NV>
+		auto& chain73 = this->getT(0).getT(0).getT(2).getT(0).getT(0).getT(5);                 // SmFx_impl::chain73_t<NV>
 		auto& add53 = this->getT(0).getT(0).getT(2).getT(0).getT(0).getT(5).getT(0);           // math::add<NV>
-		auto& peak7 = this->getT(0).getT(0).getT(2).getT(0).getT(1);                           // Sm2_impl::peak7_t<NV>
+		auto& peak7 = this->getT(0).getT(0).getT(2).getT(0).getT(1);                           // SmFx_impl::peak7_t<NV>
 		auto& clear17 = this->getT(0).getT(0).getT(2).getT(0).getT(2);                         // math::clear<NV>
-		auto& chain70 = this->getT(0).getT(0).getT(2).getT(0).getT(3);                         // Sm2_impl::chain70_t<NV>
-		auto& split12 = this->getT(0).getT(0).getT(2).getT(0).getT(3).getT(0);                 // Sm2_impl::split12_t<NV>
-		auto& chain97 = this->getT(0).getT(0).getT(2).getT(0).getT(3).getT(0).getT(0);         // Sm2_impl::chain97_t<NV>
-		auto& pma_unscaled3 = this->getT(0).getT(0).getT(2).getT(0).                           // Sm2_impl::pma_unscaled3_t<NV>
+		auto& chain70 = this->getT(0).getT(0).getT(2).getT(0).getT(3);                         // SmFx_impl::chain70_t<NV>
+		auto& split12 = this->getT(0).getT(0).getT(2).getT(0).getT(3).getT(0);                 // SmFx_impl::split12_t<NV>
+		auto& chain97 = this->getT(0).getT(0).getT(2).getT(0).getT(3).getT(0).getT(0);         // SmFx_impl::chain97_t<NV>
+		auto& pma_unscaled3 = this->getT(0).getT(0).getT(2).getT(0).                           // SmFx_impl::pma_unscaled3_t<NV>
                               getT(3).getT(0).getT(0).getT(0);
 		auto& add34 = this->getT(0).getT(0).getT(2).getT(0).                                   // math::add<NV>
                       getT(3).getT(0).getT(0).getT(1);
-		auto& chain121 = this->getT(0).getT(0).getT(2).getT(0).getT(3).getT(0).getT(1);        // Sm2_impl::chain121_t<NV>
-		auto& global_mod3 = this->getT(0).getT(0).getT(2).getT(0).                             // Sm2_impl::global_mod3_t<NV>
+		auto& chain121 = this->getT(0).getT(0).getT(2).getT(0).getT(3).getT(0).getT(1);        // SmFx_impl::chain121_t<NV>
+		auto& global_mod3 = this->getT(0).getT(0).getT(2).getT(0).                             // SmFx_impl::global_mod3_t<NV>
                             getT(3).getT(0).getT(1).getT(0);
 		auto& add91 = this->getT(0).getT(0).getT(2).getT(0).                                   // math::add<NV>
                       getT(3).getT(0).getT(1).getT(1);
-		auto& peak35 = this->getT(0).getT(0).getT(2).getT(0).getT(3).getT(1);                  // Sm2_impl::peak35_t<NV>
-		auto& modchain3 = this->getT(0).getT(0).getT(3);                                       // Sm2_impl::modchain3_t<NV>
-		auto& chain74 = this->getT(0).getT(0).getT(3).getT(0);                                 // Sm2_impl::chain74_t<NV>
-		auto& branch11 = this->getT(0).getT(0).getT(3).getT(0).getT(0);                        // Sm2_impl::branch11_t<NV>
-		auto& chain76 = this->getT(0).getT(0).getT(3).getT(0).getT(0).getT(0);                 // Sm2_impl::chain76_t<NV>
+		auto& peak35 = this->getT(0).getT(0).getT(2).getT(0).getT(3).getT(1);                  // SmFx_impl::peak35_t
+		auto& modchain3 = this->getT(0).getT(0).getT(3);                                       // SmFx_impl::modchain3_t<NV>
+		auto& chain74 = this->getT(0).getT(0).getT(3).getT(0);                                 // SmFx_impl::chain74_t<NV>
+		auto& branch11 = this->getT(0).getT(0).getT(3).getT(0).getT(0);                        // SmFx_impl::branch11_t<NV>
+		auto& chain76 = this->getT(0).getT(0).getT(3).getT(0).getT(0).getT(0);                 // SmFx_impl::chain76_t<NV>
 		auto& add57 = this->getT(0).getT(0).getT(3).getT(0).getT(0).getT(0).getT(0);           // math::add<NV>
-		auto& chain85 = this->getT(0).getT(0).getT(3).getT(0).getT(0).getT(1);                 // Sm2_impl::chain85_t<NV>
+		auto& chain85 = this->getT(0).getT(0).getT(3).getT(0).getT(0).getT(1);                 // SmFx_impl::chain85_t<NV>
 		auto& add68 = this->getT(0).getT(0).getT(3).getT(0).getT(0).getT(1).getT(0);           // math::add<NV>
-		auto& chain88 = this->getT(0).getT(0).getT(3).getT(0).getT(0).getT(2);                 // Sm2_impl::chain88_t<NV>
+		auto& chain88 = this->getT(0).getT(0).getT(3).getT(0).getT(0).getT(2);                 // SmFx_impl::chain88_t<NV>
 		auto& add78 = this->getT(0).getT(0).getT(3).getT(0).getT(0).getT(2).getT(0);           // math::add<NV>
-		auto& chain75 = this->getT(0).getT(0).getT(3).getT(0).getT(0).getT(3);                 // Sm2_impl::chain75_t<NV>
+		auto& chain75 = this->getT(0).getT(0).getT(3).getT(0).getT(0).getT(3);                 // SmFx_impl::chain75_t<NV>
 		auto& add56 = this->getT(0).getT(0).getT(3).getT(0).getT(0).getT(3).getT(0);           // math::add<NV>
-		auto& chain93 = this->getT(0).getT(0).getT(3).getT(0).getT(0).getT(4);                 // Sm2_impl::chain93_t<NV>
+		auto& chain93 = this->getT(0).getT(0).getT(3).getT(0).getT(0).getT(4);                 // SmFx_impl::chain93_t<NV>
 		auto& add82 = this->getT(0).getT(0).getT(3).getT(0).getT(0).getT(4).getT(0);           // math::add<NV>
-		auto& chain96 = this->getT(0).getT(0).getT(3).getT(0).getT(0).getT(5);                 // Sm2_impl::chain96_t<NV>
+		auto& chain96 = this->getT(0).getT(0).getT(3).getT(0).getT(0).getT(5);                 // SmFx_impl::chain96_t<NV>
 		auto& add83 = this->getT(0).getT(0).getT(3).getT(0).getT(0).getT(5).getT(0);           // math::add<NV>
-		auto& peak9 = this->getT(0).getT(0).getT(3).getT(0).getT(1);                           // Sm2_impl::peak9_t<NV>
+		auto& peak9 = this->getT(0).getT(0).getT(3).getT(0).getT(1);                           // SmFx_impl::peak9_t<NV>
 		auto& clear28 = this->getT(0).getT(0).getT(3).getT(0).getT(2);                         // math::clear<NV>
-		auto& chain98 = this->getT(0).getT(0).getT(3).getT(0).getT(3);                         // Sm2_impl::chain98_t<NV>
-		auto& split16 = this->getT(0).getT(0).getT(3).getT(0).getT(3).getT(0);                 // Sm2_impl::split16_t<NV>
-		auto& chain99 = this->getT(0).getT(0).getT(3).getT(0).getT(3).getT(0).getT(0);         // Sm2_impl::chain99_t<NV>
-		auto& pma_unscaled15 = this->getT(0).getT(0).getT(3).getT(0).                          // Sm2_impl::pma_unscaled15_t<NV>
+		auto& chain98 = this->getT(0).getT(0).getT(3).getT(0).getT(3);                         // SmFx_impl::chain98_t<NV>
+		auto& split16 = this->getT(0).getT(0).getT(3).getT(0).getT(3).getT(0);                 // SmFx_impl::split16_t<NV>
+		auto& chain99 = this->getT(0).getT(0).getT(3).getT(0).getT(3).getT(0).getT(0);         // SmFx_impl::chain99_t<NV>
+		auto& pma_unscaled15 = this->getT(0).getT(0).getT(3).getT(0).                          // SmFx_impl::pma_unscaled15_t<NV>
                                getT(3).getT(0).getT(0).getT(0);
 		auto& add129 = this->getT(0).getT(0).getT(3).getT(0).                                  // math::add<NV>
                        getT(3).getT(0).getT(0).getT(1);
-		auto& chain247 = this->getT(0).getT(0).getT(3).getT(0).getT(3).getT(0).getT(1);        // Sm2_impl::chain247_t<NV>
-		auto& global_mod13 = this->getT(0).getT(0).getT(3).getT(0).                            // Sm2_impl::global_mod13_t<NV>
+		auto& chain247 = this->getT(0).getT(0).getT(3).getT(0).getT(3).getT(0).getT(1);        // SmFx_impl::chain247_t<NV>
+		auto& global_mod13 = this->getT(0).getT(0).getT(3).getT(0).                            // SmFx_impl::global_mod13_t<NV>
                              getT(3).getT(0).getT(1).getT(0);
 		auto& add130 = this->getT(0).getT(0).getT(3).getT(0).                                  // math::add<NV>
                        getT(3).getT(0).getT(1).getT(1);
-		auto& peak36 = this->getT(0).getT(0).getT(3).getT(0).getT(4);                          // Sm2_impl::peak36_t<NV>
-		auto& modchain4 = this->getT(0).getT(0).getT(4);                                       // Sm2_impl::modchain4_t<NV>
-		auto& chain102 = this->getT(0).getT(0).getT(4).getT(0);                                // Sm2_impl::chain102_t<NV>
-		auto& branch16 = this->getT(0).getT(0).getT(4).getT(0).getT(0);                        // Sm2_impl::branch16_t<NV>
-		auto& chain104 = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(0);                // Sm2_impl::chain104_t<NV>
+		auto& peak36 = this->getT(0).getT(0).getT(3).getT(0).getT(4);                          // SmFx_impl::peak36_t<NV>
+		auto& modchain4 = this->getT(0).getT(0).getT(4);                                       // SmFx_impl::modchain4_t<NV>
+		auto& chain102 = this->getT(0).getT(0).getT(4).getT(0);                                // SmFx_impl::chain102_t<NV>
+		auto& branch16 = this->getT(0).getT(0).getT(4).getT(0).getT(0);                        // SmFx_impl::branch16_t<NV>
+		auto& chain104 = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(0);                // SmFx_impl::chain104_t<NV>
 		auto& add60 = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(0).getT(0);           // math::add<NV>
-		auto& chain105 = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(1);                // Sm2_impl::chain105_t<NV>
+		auto& chain105 = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(1);                // SmFx_impl::chain105_t<NV>
 		auto& add61 = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(1).getT(0);           // math::add<NV>
-		auto& chain110 = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(2);                // Sm2_impl::chain110_t<NV>
+		auto& chain110 = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(2);                // SmFx_impl::chain110_t<NV>
 		auto& add84 = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(2).getT(0);           // math::add<NV>
-		auto& chain103 = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(3);                // Sm2_impl::chain103_t<NV>
+		auto& chain103 = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(3);                // SmFx_impl::chain103_t<NV>
 		auto& add59 = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(3).getT(0);           // math::add<NV>
-		auto& chain194 = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(4);                // Sm2_impl::chain194_t<NV>
+		auto& chain194 = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(4);                // SmFx_impl::chain194_t<NV>
 		auto& add101 = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(4).getT(0);          // math::add<NV>
-		auto& chain197 = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(5);                // Sm2_impl::chain197_t<NV>
+		auto& chain197 = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(5);                // SmFx_impl::chain197_t<NV>
 		auto& add104 = this->getT(0).getT(0).getT(4).getT(0).getT(0).getT(5).getT(0);          // math::add<NV>
-		auto& peak17 = this->getT(0).getT(0).getT(4).getT(0).getT(1);                          // Sm2_impl::peak17_t<NV>
+		auto& peak17 = this->getT(0).getT(0).getT(4).getT(0).getT(1);                          // SmFx_impl::peak17_t<NV>
 		auto& clear16 = this->getT(0).getT(0).getT(4).getT(0).getT(2);                         // math::clear<NV>
-		auto& split4 = this->getT(0).getT(0).getT(4).getT(0).getT(3);                          // Sm2_impl::split4_t<NV>
-		auto& chain183 = this->getT(0).getT(0).getT(4).getT(0).getT(3).getT(0);                // Sm2_impl::chain183_t<NV>
-		auto& pma_unscaled6 = this->getT(0).getT(0).getT(4).getT(0).getT(3).getT(0).getT(0);   // Sm2_impl::pma_unscaled6_t<NV>
+		auto& split4 = this->getT(0).getT(0).getT(4).getT(0).getT(3);                          // SmFx_impl::split4_t<NV>
+		auto& chain183 = this->getT(0).getT(0).getT(4).getT(0).getT(3).getT(0);                // SmFx_impl::chain183_t<NV>
+		auto& pma_unscaled6 = this->getT(0).getT(0).getT(4).getT(0).getT(3).getT(0).getT(0);   // SmFx_impl::pma_unscaled6_t<NV>
 		auto& add37 = this->getT(0).getT(0).getT(4).getT(0).getT(3).getT(0).getT(1);           // math::add<NV>
-		auto& chain106 = this->getT(0).getT(0).getT(4).getT(0).getT(3).getT(1);                // Sm2_impl::chain106_t<NV>
-		auto& chain122 = this->getT(0).getT(0).getT(4).getT(0).getT(3).getT(1).getT(0);        // Sm2_impl::chain122_t<NV>
-		auto& global_mod4 = this->getT(0).getT(0).getT(4).getT(0).                             // Sm2_impl::global_mod4_t<NV>
+		auto& chain106 = this->getT(0).getT(0).getT(4).getT(0).getT(3).getT(1);                // SmFx_impl::chain106_t<NV>
+		auto& chain122 = this->getT(0).getT(0).getT(4).getT(0).getT(3).getT(1).getT(0);        // SmFx_impl::chain122_t<NV>
+		auto& global_mod4 = this->getT(0).getT(0).getT(4).getT(0).                             // SmFx_impl::global_mod4_t<NV>
                             getT(3).getT(1).getT(0).getT(0);
 		auto& add92 = this->getT(0).getT(0).getT(4).getT(0).                                   // math::add<NV>
                       getT(3).getT(1).getT(0).getT(1);
-		auto& peak6 = this->getT(0).getT(0).getT(4).getT(0).getT(4);                           // Sm2_impl::peak6_t<NV>
-		auto& modchain12 = this->getT(0).getT(0).getT(5);                                      // Sm2_impl::modchain12_t<NV>
-		auto& chain107 = this->getT(0).getT(0).getT(5).getT(0);                                // Sm2_impl::chain107_t<NV>
-		auto& branch18 = this->getT(0).getT(0).getT(5).getT(0).getT(0);                        // Sm2_impl::branch18_t<NV>
-		auto& chain133 = this->getT(0).getT(0).getT(5).getT(0).getT(0).getT(0);                // Sm2_impl::chain133_t<NV>
+		auto& peak6 = this->getT(0).getT(0).getT(4).getT(0).getT(4);                           // SmFx_impl::peak6_t<NV>
+		auto& modchain12 = this->getT(0).getT(0).getT(5);                                      // SmFx_impl::modchain12_t<NV>
+		auto& chain107 = this->getT(0).getT(0).getT(5).getT(0);                                // SmFx_impl::chain107_t<NV>
+		auto& branch18 = this->getT(0).getT(0).getT(5).getT(0).getT(0);                        // SmFx_impl::branch18_t<NV>
+		auto& chain133 = this->getT(0).getT(0).getT(5).getT(0).getT(0).getT(0);                // SmFx_impl::chain133_t<NV>
 		auto& add63 = this->getT(0).getT(0).getT(5).getT(0).getT(0).getT(0).getT(0);           // math::add<NV>
-		auto& chain139 = this->getT(0).getT(0).getT(5).getT(0).getT(0).getT(1);                // Sm2_impl::chain139_t<NV>
+		auto& chain139 = this->getT(0).getT(0).getT(5).getT(0).getT(0).getT(1);                // SmFx_impl::chain139_t<NV>
 		auto& add67 = this->getT(0).getT(0).getT(5).getT(0).getT(0).getT(1).getT(0);           // math::add<NV>
-		auto& chain140 = this->getT(0).getT(0).getT(5).getT(0).getT(0).getT(2);                // Sm2_impl::chain140_t<NV>
+		auto& chain140 = this->getT(0).getT(0).getT(5).getT(0).getT(0).getT(2);                // SmFx_impl::chain140_t<NV>
 		auto& add95 = this->getT(0).getT(0).getT(5).getT(0).getT(0).getT(2).getT(0);           // math::add<NV>
-		auto& chain108 = this->getT(0).getT(0).getT(5).getT(0).getT(0).getT(3);                // Sm2_impl::chain108_t<NV>
+		auto& chain108 = this->getT(0).getT(0).getT(5).getT(0).getT(0).getT(3);                // SmFx_impl::chain108_t<NV>
 		auto& add62 = this->getT(0).getT(0).getT(5).getT(0).getT(0).getT(3).getT(0);           // math::add<NV>
-		auto& chain223 = this->getT(0).getT(0).getT(5).getT(0).getT(0).getT(4);                // Sm2_impl::chain223_t<NV>
+		auto& chain223 = this->getT(0).getT(0).getT(5).getT(0).getT(0).getT(4);                // SmFx_impl::chain223_t<NV>
 		auto& add123 = this->getT(0).getT(0).getT(5).getT(0).getT(0).getT(4).getT(0);          // math::add<NV>
-		auto& chain224 = this->getT(0).getT(0).getT(5).getT(0).getT(0).getT(5);                // Sm2_impl::chain224_t<NV>
+		auto& chain224 = this->getT(0).getT(0).getT(5).getT(0).getT(0).getT(5);                // SmFx_impl::chain224_t<NV>
 		auto& add124 = this->getT(0).getT(0).getT(5).getT(0).getT(0).getT(5).getT(0);          // math::add<NV>
-		auto& peak30 = this->getT(0).getT(0).getT(5).getT(0).getT(1);                          // Sm2_impl::peak30_t<NV>
+		auto& peak30 = this->getT(0).getT(0).getT(5).getT(0).getT(1);                          // SmFx_impl::peak30_t<NV>
 		auto& clear26 = this->getT(0).getT(0).getT(5).getT(0).getT(2);                         // math::clear<NV>
-		auto& split14 = this->getT(0).getT(0).getT(5).getT(0).getT(3);                         // Sm2_impl::split14_t<NV>
-		auto& chain225 = this->getT(0).getT(0).getT(5).getT(0).getT(3).getT(0);                // Sm2_impl::chain225_t<NV>
-		auto& pma_unscaled13 = this->getT(0).getT(0).getT(5).getT(0).getT(3).getT(0).getT(0);  // Sm2_impl::pma_unscaled13_t<NV>
+		auto& split14 = this->getT(0).getT(0).getT(5).getT(0).getT(3);                         // SmFx_impl::split14_t<NV>
+		auto& chain225 = this->getT(0).getT(0).getT(5).getT(0).getT(3).getT(0);                // SmFx_impl::chain225_t<NV>
+		auto& pma_unscaled13 = this->getT(0).getT(0).getT(5).getT(0).getT(3).getT(0).getT(0);  // SmFx_impl::pma_unscaled13_t<NV>
 		auto& add44 = this->getT(0).getT(0).getT(5).getT(0).getT(3).getT(0).getT(1);           // math::add<NV>
-		auto& chain145 = this->getT(0).getT(0).getT(5).getT(0).getT(3).getT(1);                // Sm2_impl::chain145_t<NV>
-		auto& chain146 = this->getT(0).getT(0).getT(5).getT(0).getT(3).getT(1).getT(0);        // Sm2_impl::chain146_t<NV>
-		auto& global_mod7 = this->getT(0).getT(0).getT(5).getT(0).                             // Sm2_impl::global_mod7_t<NV>
+		auto& chain145 = this->getT(0).getT(0).getT(5).getT(0).getT(3).getT(1);                // SmFx_impl::chain145_t<NV>
+		auto& chain146 = this->getT(0).getT(0).getT(5).getT(0).getT(3).getT(1).getT(0);        // SmFx_impl::chain146_t<NV>
+		auto& global_mod7 = this->getT(0).getT(0).getT(5).getT(0).                             // SmFx_impl::global_mod7_t<NV>
                             getT(3).getT(1).getT(0).getT(0);
 		auto& add96 = this->getT(0).getT(0).getT(5).getT(0).                                   // math::add<NV>
                       getT(3).getT(1).getT(0).getT(1);
-		auto& peak8 = this->getT(0).getT(0).getT(5).getT(0).getT(4);                           // Sm2_impl::peak8_t<NV>
-		auto& modchain13 = this->getT(0).getT(0).getT(6);                                      // Sm2_impl::modchain13_t<NV>
-		auto& chain147 = this->getT(0).getT(0).getT(6).getT(0);                                // Sm2_impl::chain147_t<NV>
-		auto& branch29 = this->getT(0).getT(0).getT(6).getT(0).getT(0);                        // Sm2_impl::branch29_t<NV>
-		auto& chain239 = this->getT(0).getT(0).getT(6).getT(0).getT(0).getT(0);                // Sm2_impl::chain239_t<NV>
+		auto& peak8 = this->getT(0).getT(0).getT(5).getT(0).getT(4);                           // SmFx_impl::peak8_t<NV>
+		auto& modchain13 = this->getT(0).getT(0).getT(6);                                      // SmFx_impl::modchain13_t<NV>
+		auto& chain147 = this->getT(0).getT(0).getT(6).getT(0);                                // SmFx_impl::chain147_t<NV>
+		auto& branch29 = this->getT(0).getT(0).getT(6).getT(0).getT(0);                        // SmFx_impl::branch29_t<NV>
+		auto& chain239 = this->getT(0).getT(0).getT(6).getT(0).getT(0).getT(0);                // SmFx_impl::chain239_t<NV>
 		auto& add73 = this->getT(0).getT(0).getT(6).getT(0).getT(0).getT(0).getT(0);           // math::add<NV>
-		auto& chain240 = this->getT(0).getT(0).getT(6).getT(0).getT(0).getT(1);                // Sm2_impl::chain240_t<NV>
+		auto& chain240 = this->getT(0).getT(0).getT(6).getT(0).getT(0).getT(1);                // SmFx_impl::chain240_t<NV>
 		auto& add77 = this->getT(0).getT(0).getT(6).getT(0).getT(0).getT(1).getT(0);           // math::add<NV>
-		auto& chain241 = this->getT(0).getT(0).getT(6).getT(0).getT(0).getT(2);                // Sm2_impl::chain241_t<NV>
+		auto& chain241 = this->getT(0).getT(0).getT(6).getT(0).getT(0).getT(2);                // SmFx_impl::chain241_t<NV>
 		auto& add125 = this->getT(0).getT(0).getT(6).getT(0).getT(0).getT(2).getT(0);          // math::add<NV>
-		auto& chain227 = this->getT(0).getT(0).getT(6).getT(0).getT(0).getT(3);                // Sm2_impl::chain227_t<NV>
+		auto& chain227 = this->getT(0).getT(0).getT(6).getT(0).getT(0).getT(3);                // SmFx_impl::chain227_t<NV>
 		auto& add72 = this->getT(0).getT(0).getT(6).getT(0).getT(0).getT(3).getT(0);           // math::add<NV>
-		auto& chain242 = this->getT(0).getT(0).getT(6).getT(0).getT(0).getT(4);                // Sm2_impl::chain242_t<NV>
+		auto& chain242 = this->getT(0).getT(0).getT(6).getT(0).getT(0).getT(4);                // SmFx_impl::chain242_t<NV>
 		auto& add126 = this->getT(0).getT(0).getT(6).getT(0).getT(0).getT(4).getT(0);          // math::add<NV>
-		auto& chain243 = this->getT(0).getT(0).getT(6).getT(0).getT(0).getT(5);                // Sm2_impl::chain243_t<NV>
+		auto& chain243 = this->getT(0).getT(0).getT(6).getT(0).getT(0).getT(5);                // SmFx_impl::chain243_t<NV>
 		auto& add127 = this->getT(0).getT(0).getT(6).getT(0).getT(0).getT(5).getT(0);          // math::add<NV>
-		auto& peak21 = this->getT(0).getT(0).getT(6).getT(0).getT(1);                          // Sm2_impl::peak21_t
+		auto& peak21 = this->getT(0).getT(0).getT(6).getT(0).getT(1);                          // SmFx_impl::peak21_t
 		auto& clear27 = this->getT(0).getT(0).getT(6).getT(0).getT(2);                         // math::clear<NV>
-		auto& split15 = this->getT(0).getT(0).getT(6).getT(0).getT(3);                         // Sm2_impl::split15_t<NV>
-		auto& chain244 = this->getT(0).getT(0).getT(6).getT(0).getT(3).getT(0);                // Sm2_impl::chain244_t<NV>
-		auto& pma_unscaled14 = this->getT(0).getT(0).getT(6).getT(0).getT(3).getT(0).getT(0);  // Sm2_impl::pma_unscaled14_t<NV>
+		auto& split15 = this->getT(0).getT(0).getT(6).getT(0).getT(3);                         // SmFx_impl::split15_t<NV>
+		auto& chain244 = this->getT(0).getT(0).getT(6).getT(0).getT(3).getT(0);                // SmFx_impl::chain244_t<NV>
+		auto& pma_unscaled14 = this->getT(0).getT(0).getT(6).getT(0).getT(3).getT(0).getT(0);  // SmFx_impl::pma_unscaled14_t<NV>
 		auto& add55 = this->getT(0).getT(0).getT(6).getT(0).getT(3).getT(0).getT(1);           // math::add<NV>
-		auto& chain245 = this->getT(0).getT(0).getT(6).getT(0).getT(3).getT(1);                // Sm2_impl::chain245_t<NV>
-		auto& chain246 = this->getT(0).getT(0).getT(6).getT(0).getT(3).getT(1).getT(0);        // Sm2_impl::chain246_t<NV>
-		auto& global_mod8 = this->getT(0).getT(0).getT(6).getT(0).                             // Sm2_impl::global_mod8_t<NV>
+		auto& chain245 = this->getT(0).getT(0).getT(6).getT(0).getT(3).getT(1);                // SmFx_impl::chain245_t<NV>
+		auto& chain246 = this->getT(0).getT(0).getT(6).getT(0).getT(3).getT(1).getT(0);        // SmFx_impl::chain246_t<NV>
+		auto& global_mod8 = this->getT(0).getT(0).getT(6).getT(0).                             // SmFx_impl::global_mod8_t<NV>
                             getT(3).getT(1).getT(0).getT(0);
 		auto& add128 = this->getT(0).getT(0).getT(6).getT(0).                                  // math::add<NV>
                        getT(3).getT(1).getT(0).getT(1);
-		auto& peak3 = this->getT(0).getT(0).getT(6).getT(0).getT(4);                           // Sm2_impl::peak3_t<NV>
-		auto& modchain9 = this->getT(0).getT(0).getT(7);                                       // Sm2_impl::modchain9_t<NV>
-		auto& chain112 = this->getT(0).getT(0).getT(7).getT(0);                                // Sm2_impl::chain112_t<NV>
-		auto& branch17 = this->getT(0).getT(0).getT(7).getT(0).getT(0);                        // Sm2_impl::branch17_t<NV>
-		auto& chain114 = this->getT(0).getT(0).getT(7).getT(0).getT(0).getT(0);                // Sm2_impl::chain114_t<NV>
+		auto& peak3 = this->getT(0).getT(0).getT(6).getT(0).getT(4);                           // SmFx_impl::peak3_t
+		auto& modchain9 = this->getT(0).getT(0).getT(7);                                       // SmFx_impl::modchain9_t<NV>
+		auto& chain112 = this->getT(0).getT(0).getT(7).getT(0);                                // SmFx_impl::chain112_t<NV>
+		auto& branch17 = this->getT(0).getT(0).getT(7).getT(0).getT(0);                        // SmFx_impl::branch17_t<NV>
+		auto& chain114 = this->getT(0).getT(0).getT(7).getT(0).getT(0).getT(0);                // SmFx_impl::chain114_t<NV>
 		auto& add65 = this->getT(0).getT(0).getT(7).getT(0).getT(0).getT(0).getT(0);           // math::add<NV>
-		auto& chain115 = this->getT(0).getT(0).getT(7).getT(0).getT(0).getT(1);                // Sm2_impl::chain115_t<NV>
+		auto& chain115 = this->getT(0).getT(0).getT(7).getT(0).getT(0).getT(1);                // SmFx_impl::chain115_t<NV>
 		auto& add66 = this->getT(0).getT(0).getT(7).getT(0).getT(0).getT(1).getT(0);           // math::add<NV>
-		auto& chain116 = this->getT(0).getT(0).getT(7).getT(0).getT(0).getT(2);                // Sm2_impl::chain116_t<NV>
+		auto& chain116 = this->getT(0).getT(0).getT(7).getT(0).getT(0).getT(2);                // SmFx_impl::chain116_t<NV>
 		auto& add88 = this->getT(0).getT(0).getT(7).getT(0).getT(0).getT(2).getT(0);           // math::add<NV>
-		auto& chain113 = this->getT(0).getT(0).getT(7).getT(0).getT(0).getT(3);                // Sm2_impl::chain113_t<NV>
+		auto& chain113 = this->getT(0).getT(0).getT(7).getT(0).getT(0).getT(3);                // SmFx_impl::chain113_t<NV>
 		auto& add64 = this->getT(0).getT(0).getT(7).getT(0).getT(0).getT(3).getT(0);           // math::add<NV>
-		auto& chain195 = this->getT(0).getT(0).getT(7).getT(0).getT(0).getT(4);                // Sm2_impl::chain195_t<NV>
+		auto& chain195 = this->getT(0).getT(0).getT(7).getT(0).getT(0).getT(4);                // SmFx_impl::chain195_t<NV>
 		auto& add102 = this->getT(0).getT(0).getT(7).getT(0).getT(0).getT(4).getT(0);          // math::add<NV>
-		auto& chain198 = this->getT(0).getT(0).getT(7).getT(0).getT(0).getT(5);                // Sm2_impl::chain198_t<NV>
+		auto& chain198 = this->getT(0).getT(0).getT(7).getT(0).getT(0).getT(5);                // SmFx_impl::chain198_t<NV>
 		auto& add105 = this->getT(0).getT(0).getT(7).getT(0).getT(0).getT(5).getT(0);          // math::add<NV>
-		auto& peak18 = this->getT(0).getT(0).getT(7).getT(0).getT(1);                          // Sm2_impl::peak18_t<NV>
+		auto& peak18 = this->getT(0).getT(0).getT(7).getT(0).getT(1);                          // SmFx_impl::peak18_t<NV>
 		auto& clear23 = this->getT(0).getT(0).getT(7).getT(0).getT(2);                         // math::clear<NV>
-		auto& split5 = this->getT(0).getT(0).getT(7).getT(0).getT(3);                          // Sm2_impl::split5_t<NV>
-		auto& chain184 = this->getT(0).getT(0).getT(7).getT(0).getT(3).getT(0);                // Sm2_impl::chain184_t<NV>
-		auto& pma_unscaled7 = this->getT(0).getT(0).getT(7).getT(0).getT(3).getT(0).getT(0);   // Sm2_impl::pma_unscaled7_t<NV>
+		auto& split5 = this->getT(0).getT(0).getT(7).getT(0).getT(3);                          // SmFx_impl::split5_t<NV>
+		auto& chain184 = this->getT(0).getT(0).getT(7).getT(0).getT(3).getT(0);                // SmFx_impl::chain184_t<NV>
+		auto& pma_unscaled7 = this->getT(0).getT(0).getT(7).getT(0).getT(3).getT(0).getT(0);   // SmFx_impl::pma_unscaled7_t<NV>
 		auto& add45 = this->getT(0).getT(0).getT(7).getT(0).getT(3).getT(0).getT(1);           // math::add<NV>
-		auto& chain124 = this->getT(0).getT(0).getT(7).getT(0).getT(3).getT(1);                // Sm2_impl::chain124_t<NV>
-		auto& global_mod5 = this->getT(0).getT(0).getT(7).getT(0).getT(3).getT(1).getT(0);     // Sm2_impl::global_mod5_t<NV>
+		auto& chain124 = this->getT(0).getT(0).getT(7).getT(0).getT(3).getT(1);                // SmFx_impl::chain124_t<NV>
+		auto& global_mod5 = this->getT(0).getT(0).getT(7).getT(0).getT(3).getT(1).getT(0);     // SmFx_impl::global_mod5_t<NV>
 		auto& add93 = this->getT(0).getT(0).getT(7).getT(0).getT(3).getT(1).getT(1);           // math::add<NV>
-		auto& chain117 = this->getT(0).getT(0).getT(7).getT(0).getT(4);                        // Sm2_impl::chain117_t<NV>
-		auto& peak14 = this->getT(0).getT(0).getT(7).getT(0).getT(4).getT(0);                  // Sm2_impl::peak14_t<NV>
-		auto& modchain6 = this->getT(0).getT(0).getT(8);                                       // Sm2_impl::modchain6_t<NV>
-		auto& chain127 = this->getT(0).getT(0).getT(8).getT(0);                                // Sm2_impl::chain127_t<NV>
-		auto& branch20 = this->getT(0).getT(0).getT(8).getT(0).getT(0);                        // Sm2_impl::branch20_t<NV>
-		auto& chain129 = this->getT(0).getT(0).getT(8).getT(0).getT(0).getT(0);                // Sm2_impl::chain129_t<NV>
+		auto& chain117 = this->getT(0).getT(0).getT(7).getT(0).getT(4);                        // SmFx_impl::chain117_t<NV>
+		auto& peak14 = this->getT(0).getT(0).getT(7).getT(0).getT(4).getT(0);                  // SmFx_impl::peak14_t<NV>
+		auto& modchain6 = this->getT(0).getT(0).getT(8);                                       // SmFx_impl::modchain6_t<NV>
+		auto& chain127 = this->getT(0).getT(0).getT(8).getT(0);                                // SmFx_impl::chain127_t<NV>
+		auto& branch20 = this->getT(0).getT(0).getT(8).getT(0).getT(0);                        // SmFx_impl::branch20_t<NV>
+		auto& chain129 = this->getT(0).getT(0).getT(8).getT(0).getT(0).getT(0);                // SmFx_impl::chain129_t<NV>
 		auto& add70 = this->getT(0).getT(0).getT(8).getT(0).getT(0).getT(0).getT(0);           // math::add<NV>
-		auto& chain130 = this->getT(0).getT(0).getT(8).getT(0).getT(0).getT(1);                // Sm2_impl::chain130_t<NV>
+		auto& chain130 = this->getT(0).getT(0).getT(8).getT(0).getT(0).getT(1);                // SmFx_impl::chain130_t<NV>
 		auto& add71 = this->getT(0).getT(0).getT(8).getT(0).getT(0).getT(1).getT(0);           // math::add<NV>
-		auto& chain148 = this->getT(0).getT(0).getT(8).getT(0).getT(0).getT(2);                // Sm2_impl::chain148_t<NV>
+		auto& chain148 = this->getT(0).getT(0).getT(8).getT(0).getT(0).getT(2);                // SmFx_impl::chain148_t<NV>
 		auto& add85 = this->getT(0).getT(0).getT(8).getT(0).getT(0).getT(2).getT(0);           // math::add<NV>
-		auto& chain128 = this->getT(0).getT(0).getT(8).getT(0).getT(0).getT(3);                // Sm2_impl::chain128_t<NV>
+		auto& chain128 = this->getT(0).getT(0).getT(8).getT(0).getT(0).getT(3);                // SmFx_impl::chain128_t<NV>
 		auto& add69 = this->getT(0).getT(0).getT(8).getT(0).getT(0).getT(3).getT(0);           // math::add<NV>
-		auto& chain196 = this->getT(0).getT(0).getT(8).getT(0).getT(0).getT(4);                // Sm2_impl::chain196_t<NV>
+		auto& chain196 = this->getT(0).getT(0).getT(8).getT(0).getT(0).getT(4);                // SmFx_impl::chain196_t<NV>
 		auto& add103 = this->getT(0).getT(0).getT(8).getT(0).getT(0).getT(4).getT(0);          // math::add<NV>
-		auto& chain199 = this->getT(0).getT(0).getT(8).getT(0).getT(0).getT(5);                // Sm2_impl::chain199_t<NV>
+		auto& chain199 = this->getT(0).getT(0).getT(8).getT(0).getT(0).getT(5);                // SmFx_impl::chain199_t<NV>
 		auto& add106 = this->getT(0).getT(0).getT(8).getT(0).getT(0).getT(5).getT(0);          // math::add<NV>
-		auto& peak20 = this->getT(0).getT(0).getT(8).getT(0).getT(1);                          // Sm2_impl::peak20_t<NV>
+		auto& peak20 = this->getT(0).getT(0).getT(8).getT(0).getT(1);                          // SmFx_impl::peak20_t<NV>
 		auto& clear20 = this->getT(0).getT(0).getT(8).getT(0).getT(2);                         // math::clear<NV>
-		auto& split9 = this->getT(0).getT(0).getT(8).getT(0).getT(3);                          // Sm2_impl::split9_t<NV>
-		auto& chain185 = this->getT(0).getT(0).getT(8).getT(0).getT(3).getT(0);                // Sm2_impl::chain185_t<NV>
-		auto& pma_unscaled8 = this->getT(0).getT(0).getT(8).getT(0).getT(3).getT(0).getT(0);   // Sm2_impl::pma_unscaled8_t<NV>
+		auto& split9 = this->getT(0).getT(0).getT(8).getT(0).getT(3);                          // SmFx_impl::split9_t<NV>
+		auto& chain185 = this->getT(0).getT(0).getT(8).getT(0).getT(3).getT(0);                // SmFx_impl::chain185_t<NV>
+		auto& pma_unscaled8 = this->getT(0).getT(0).getT(8).getT(0).getT(3).getT(0).getT(0);   // SmFx_impl::pma_unscaled8_t<NV>
 		auto& add46 = this->getT(0).getT(0).getT(8).getT(0).getT(3).getT(0).getT(1);           // math::add<NV>
-		auto& chain131 = this->getT(0).getT(0).getT(8).getT(0).getT(3).getT(1);                // Sm2_impl::chain131_t<NV>
-		auto& chain151 = this->getT(0).getT(0).getT(8).getT(0).getT(3).getT(1).getT(0);        // Sm2_impl::chain151_t<NV>
-		auto& global_mod6 = this->getT(0).getT(0).getT(8).getT(0).                             // Sm2_impl::global_mod6_t<NV>
+		auto& chain131 = this->getT(0).getT(0).getT(8).getT(0).getT(3).getT(1);                // SmFx_impl::chain131_t<NV>
+		auto& chain151 = this->getT(0).getT(0).getT(8).getT(0).getT(3).getT(1).getT(0);        // SmFx_impl::chain151_t<NV>
+		auto& global_mod6 = this->getT(0).getT(0).getT(8).getT(0).                             // SmFx_impl::global_mod6_t<NV>
                             getT(3).getT(1).getT(0).getT(0);
 		auto& add94 = this->getT(0).getT(0).getT(8).getT(0).                                   // math::add<NV>
                       getT(3).getT(1).getT(0).getT(1);
-		auto& peak = this->getT(0).getT(0).getT(8).getT(0).getT(4);                            // Sm2_impl::peak_t<NV>
-		auto& modchain16 = this->getT(0).getT(0).getT(9);                                      // Sm2_impl::modchain16_t<NV>
-		auto& chain271 = this->getT(0).getT(0).getT(9).getT(0);                                // Sm2_impl::chain271_t<NV>
-		auto& branch32 = this->getT(0).getT(0).getT(9).getT(0).getT(0);                        // Sm2_impl::branch32_t<NV>
-		auto& chain272 = this->getT(0).getT(0).getT(9).getT(0).getT(0).getT(0);                // Sm2_impl::chain272_t<NV>
+		auto& peak = this->getT(0).getT(0).getT(8).getT(0).getT(4);                            // SmFx_impl::peak_t<NV>
+		auto& modchain16 = this->getT(0).getT(0).getT(9);                                      // SmFx_impl::modchain16_t<NV>
+		auto& chain271 = this->getT(0).getT(0).getT(9).getT(0);                                // SmFx_impl::chain271_t<NV>
+		auto& branch32 = this->getT(0).getT(0).getT(9).getT(0).getT(0);                        // SmFx_impl::branch32_t<NV>
+		auto& chain272 = this->getT(0).getT(0).getT(9).getT(0).getT(0).getT(0);                // SmFx_impl::chain272_t<NV>
 		auto& add147 = this->getT(0).getT(0).getT(9).getT(0).getT(0).getT(0).getT(0);          // math::add<NV>
-		auto& chain273 = this->getT(0).getT(0).getT(9).getT(0).getT(0).getT(1);                // Sm2_impl::chain273_t<NV>
+		auto& chain273 = this->getT(0).getT(0).getT(9).getT(0).getT(0).getT(1);                // SmFx_impl::chain273_t<NV>
 		auto& add148 = this->getT(0).getT(0).getT(9).getT(0).getT(0).getT(1).getT(0);          // math::add<NV>
-		auto& chain274 = this->getT(0).getT(0).getT(9).getT(0).getT(0).getT(2);                // Sm2_impl::chain274_t<NV>
+		auto& chain274 = this->getT(0).getT(0).getT(9).getT(0).getT(0).getT(2);                // SmFx_impl::chain274_t<NV>
 		auto& add149 = this->getT(0).getT(0).getT(9).getT(0).getT(0).getT(2).getT(0);          // math::add<NV>
-		auto& chain275 = this->getT(0).getT(0).getT(9).getT(0).getT(0).getT(3);                // Sm2_impl::chain275_t<NV>
+		auto& chain275 = this->getT(0).getT(0).getT(9).getT(0).getT(0).getT(3);                // SmFx_impl::chain275_t<NV>
 		auto& add150 = this->getT(0).getT(0).getT(9).getT(0).getT(0).getT(3).getT(0);          // math::add<NV>
-		auto& chain276 = this->getT(0).getT(0).getT(9).getT(0).getT(0).getT(4);                // Sm2_impl::chain276_t<NV>
+		auto& chain276 = this->getT(0).getT(0).getT(9).getT(0).getT(0).getT(4);                // SmFx_impl::chain276_t<NV>
 		auto& add151 = this->getT(0).getT(0).getT(9).getT(0).getT(0).getT(4).getT(0);          // math::add<NV>
-		auto& chain277 = this->getT(0).getT(0).getT(9).getT(0).getT(0).getT(5);                // Sm2_impl::chain277_t<NV>
+		auto& chain277 = this->getT(0).getT(0).getT(9).getT(0).getT(0).getT(5);                // SmFx_impl::chain277_t<NV>
 		auto& add152 = this->getT(0).getT(0).getT(9).getT(0).getT(0).getT(5).getT(0);          // math::add<NV>
-		auto& peak38 = this->getT(0).getT(0).getT(9).getT(0).getT(1);                          // Sm2_impl::peak38_t
+		auto& peak38 = this->getT(0).getT(0).getT(9).getT(0).getT(1);                          // SmFx_impl::peak38_t
 		auto& clear30 = this->getT(0).getT(0).getT(9).getT(0).getT(2);                         // math::clear<NV>
-		auto& split38 = this->getT(0).getT(0).getT(9).getT(0).getT(3);                         // Sm2_impl::split38_t<NV>
-		auto& chain278 = this->getT(0).getT(0).getT(9).getT(0).getT(3).getT(0);                // Sm2_impl::chain278_t<NV>
-		auto& pma_unscaled17 = this->getT(0).getT(0).getT(9).getT(0).getT(3).getT(0).getT(0);  // Sm2_impl::pma_unscaled17_t<NV>
+		auto& split38 = this->getT(0).getT(0).getT(9).getT(0).getT(3);                         // SmFx_impl::split38_t<NV>
+		auto& chain278 = this->getT(0).getT(0).getT(9).getT(0).getT(3).getT(0);                // SmFx_impl::chain278_t<NV>
+		auto& pma_unscaled17 = this->getT(0).getT(0).getT(9).getT(0).getT(3).getT(0).getT(0);  // SmFx_impl::pma_unscaled17_t<NV>
 		auto& add153 = this->getT(0).getT(0).getT(9).getT(0).getT(3).getT(0).getT(1);          // math::add<NV>
-		auto& chain279 = this->getT(0).getT(0).getT(9).getT(0).getT(3).getT(1);                // Sm2_impl::chain279_t<NV>
-		auto& chain280 = this->getT(0).getT(0).getT(9).getT(0).getT(3).getT(1).getT(0);        // Sm2_impl::chain280_t<NV>
-		auto& global_mod15 = this->getT(0).getT(0).getT(9).getT(0).                            // Sm2_impl::global_mod15_t<NV>
+		auto& chain279 = this->getT(0).getT(0).getT(9).getT(0).getT(3).getT(1);                // SmFx_impl::chain279_t<NV>
+		auto& chain280 = this->getT(0).getT(0).getT(9).getT(0).getT(3).getT(1).getT(0);        // SmFx_impl::chain280_t<NV>
+		auto& global_mod15 = this->getT(0).getT(0).getT(9).getT(0).                            // SmFx_impl::global_mod15_t<NV>
                              getT(3).getT(1).getT(0).getT(0);
 		auto& add154 = this->getT(0).getT(0).getT(9).getT(0).                                  // math::add<NV>
                        getT(3).getT(1).getT(0).getT(1);
-		auto& peak39 = this->getT(0).getT(0).getT(9).getT(0).getT(4);                          // Sm2_impl::peak39_t<NV>
-		auto& modchain7 = this->getT(0).getT(0).getT(10);                                      // Sm2_impl::modchain7_t<NV>
-		auto& chain134 = this->getT(0).getT(0).getT(10).getT(0);                               // Sm2_impl::chain134_t<NV>
-		auto& branch21 = this->getT(0).getT(0).getT(10).getT(0).getT(0);                       // Sm2_impl::branch21_t<NV>
-		auto& chain136 = this->getT(0).getT(0).getT(10).getT(0).getT(0).getT(0);               // Sm2_impl::chain136_t<NV>
+		auto& peak39 = this->getT(0).getT(0).getT(9).getT(0).getT(4);                          // SmFx_impl::peak39_t<NV>
+		auto& modchain7 = this->getT(0).getT(0).getT(10);                                      // SmFx_impl::modchain7_t<NV>
+		auto& chain134 = this->getT(0).getT(0).getT(10).getT(0);                               // SmFx_impl::chain134_t<NV>
+		auto& branch21 = this->getT(0).getT(0).getT(10).getT(0).getT(0);                       // SmFx_impl::branch21_t<NV>
+		auto& chain136 = this->getT(0).getT(0).getT(10).getT(0).getT(0).getT(0);               // SmFx_impl::chain136_t<NV>
 		auto& add75 = this->getT(0).getT(0).getT(10).getT(0).getT(0).getT(0).getT(0);          // math::add<NV>
-		auto& chain137 = this->getT(0).getT(0).getT(10).getT(0).getT(0).getT(1);               // Sm2_impl::chain137_t<NV>
+		auto& chain137 = this->getT(0).getT(0).getT(10).getT(0).getT(0).getT(1);               // SmFx_impl::chain137_t<NV>
 		auto& add76 = this->getT(0).getT(0).getT(10).getT(0).getT(0).getT(1).getT(0);          // math::add<NV>
-		auto& chain149 = this->getT(0).getT(0).getT(10).getT(0).getT(0).getT(2);               // Sm2_impl::chain149_t<NV>
+		auto& chain149 = this->getT(0).getT(0).getT(10).getT(0).getT(0).getT(2);               // SmFx_impl::chain149_t<NV>
 		auto& add86 = this->getT(0).getT(0).getT(10).getT(0).getT(0).getT(2).getT(0);          // math::add<NV>
-		auto& chain135 = this->getT(0).getT(0).getT(10).getT(0).getT(0).getT(3);               // Sm2_impl::chain135_t<NV>
+		auto& chain135 = this->getT(0).getT(0).getT(10).getT(0).getT(0).getT(3);               // SmFx_impl::chain135_t<NV>
 		auto& add74 = this->getT(0).getT(0).getT(10).getT(0).getT(0).getT(3).getT(0);          // math::add<NV>
-		auto& chain193 = this->getT(0).getT(0).getT(10).getT(0).getT(0).getT(4);               // Sm2_impl::chain193_t<NV>
+		auto& chain193 = this->getT(0).getT(0).getT(10).getT(0).getT(0).getT(4);               // SmFx_impl::chain193_t<NV>
 		auto& add100 = this->getT(0).getT(0).getT(10).getT(0).getT(0).getT(4).getT(0);         // math::add<NV>
-		auto& chain200 = this->getT(0).getT(0).getT(10).getT(0).getT(0).getT(5);               // Sm2_impl::chain200_t<NV>
+		auto& chain200 = this->getT(0).getT(0).getT(10).getT(0).getT(0).getT(5);               // SmFx_impl::chain200_t<NV>
 		auto& add107 = this->getT(0).getT(0).getT(10).getT(0).getT(0).getT(5).getT(0);         // math::add<NV>
-		auto& peak22 = this->getT(0).getT(0).getT(10).getT(0).getT(1);                         // Sm2_impl::peak22_t<NV>
+		auto& peak22 = this->getT(0).getT(0).getT(10).getT(0).getT(1);                         // SmFx_impl::peak22_t<NV>
 		auto& clear21 = this->getT(0).getT(0).getT(10).getT(0).getT(2);                        // math::clear<NV>
-		auto& chain138 = this->getT(0).getT(0).getT(10).getT(0).getT(3);                       // Sm2_impl::chain138_t<NV>
-		auto& split13 = this->getT(0).getT(0).getT(10).getT(0).getT(3).getT(0);                // Sm2_impl::split13_t<NV>
-		auto& chain186 = this->getT(0).getT(0).getT(10).getT(0).getT(3).getT(0).getT(0);       // Sm2_impl::chain186_t<NV>
-		auto& pma_unscaled9 = this->getT(0).getT(0).getT(10).getT(0).                          // Sm2_impl::pma_unscaled9_t<NV>
+		auto& chain138 = this->getT(0).getT(0).getT(10).getT(0).getT(3);                       // SmFx_impl::chain138_t<NV>
+		auto& split13 = this->getT(0).getT(0).getT(10).getT(0).getT(3).getT(0);                // SmFx_impl::split13_t<NV>
+		auto& chain186 = this->getT(0).getT(0).getT(10).getT(0).getT(3).getT(0).getT(0);       // SmFx_impl::chain186_t<NV>
+		auto& pma_unscaled9 = this->getT(0).getT(0).getT(10).getT(0).                          // SmFx_impl::pma_unscaled9_t<NV>
                               getT(3).getT(0).getT(0).getT(0);
 		auto& add47 = this->getT(0).getT(0).getT(10).getT(0).                                  // math::add<NV>
                       getT(3).getT(0).getT(0).getT(1);
-		auto& chain187 = this->getT(0).getT(0).getT(10).getT(0).getT(3).getT(0).getT(1);       // Sm2_impl::chain187_t<NV>
-		auto& chain188 = this->getT(0).getT(0).getT(10).getT(0).                               // Sm2_impl::chain188_t<NV>
+		auto& chain187 = this->getT(0).getT(0).getT(10).getT(0).getT(3).getT(0).getT(1);       // SmFx_impl::chain187_t<NV>
+		auto& chain188 = this->getT(0).getT(0).getT(10).getT(0).                               // SmFx_impl::chain188_t<NV>
                          getT(3).getT(0).getT(1).getT(0);
-		auto& global_mod9 = this->getT(0).getT(0).getT(10).getT(0).                            // Sm2_impl::global_mod9_t<NV>
+		auto& global_mod9 = this->getT(0).getT(0).getT(10).getT(0).                            // SmFx_impl::global_mod9_t<NV>
                             getT(3).getT(0).getT(1).getT(0).
                             getT(0);
 		auto& add97 = this->getT(0).getT(0).getT(10).getT(0).                                  // math::add<NV>
                       getT(3).getT(0).getT(1).getT(0).
                       getT(1);
-		auto& peak23 = this->getT(0).getT(0).getT(10).getT(0).getT(3).getT(1);                 // Sm2_impl::peak23_t<NV>
-		auto& modchain10 = this->getT(0).getT(0).getT(11);                                     // Sm2_impl::modchain10_t<NV>
-		auto& chain202 = this->getT(0).getT(0).getT(11).getT(0);                               // Sm2_impl::chain202_t<NV>
-		auto& branch23 = this->getT(0).getT(0).getT(11).getT(0).getT(0);                       // Sm2_impl::branch23_t<NV>
-		auto& chain204 = this->getT(0).getT(0).getT(11).getT(0).getT(0).getT(0);               // Sm2_impl::chain204_t<NV>
+		auto& peak23 = this->getT(0).getT(0).getT(10).getT(0).getT(3).getT(1);                 // SmFx_impl::peak23_t<NV>
+		auto& modchain10 = this->getT(0).getT(0).getT(11);                                     // SmFx_impl::modchain10_t<NV>
+		auto& chain202 = this->getT(0).getT(0).getT(11).getT(0);                               // SmFx_impl::chain202_t<NV>
+		auto& branch23 = this->getT(0).getT(0).getT(11).getT(0).getT(0);                       // SmFx_impl::branch23_t<NV>
+		auto& chain204 = this->getT(0).getT(0).getT(11).getT(0).getT(0).getT(0);               // SmFx_impl::chain204_t<NV>
 		auto& add110 = this->getT(0).getT(0).getT(11).getT(0).getT(0).getT(0).getT(0);         // math::add<NV>
-		auto& chain205 = this->getT(0).getT(0).getT(11).getT(0).getT(0).getT(1);               // Sm2_impl::chain205_t<NV>
+		auto& chain205 = this->getT(0).getT(0).getT(11).getT(0).getT(0).getT(1);               // SmFx_impl::chain205_t<NV>
 		auto& add111 = this->getT(0).getT(0).getT(11).getT(0).getT(0).getT(1).getT(0);         // math::add<NV>
-		auto& chain206 = this->getT(0).getT(0).getT(11).getT(0).getT(0).getT(2);               // Sm2_impl::chain206_t<NV>
+		auto& chain206 = this->getT(0).getT(0).getT(11).getT(0).getT(0).getT(2);               // SmFx_impl::chain206_t<NV>
 		auto& add112 = this->getT(0).getT(0).getT(11).getT(0).getT(0).getT(2).getT(0);         // math::add<NV>
-		auto& chain203 = this->getT(0).getT(0).getT(11).getT(0).getT(0).getT(3);               // Sm2_impl::chain203_t<NV>
+		auto& chain203 = this->getT(0).getT(0).getT(11).getT(0).getT(0).getT(3);               // SmFx_impl::chain203_t<NV>
 		auto& add109 = this->getT(0).getT(0).getT(11).getT(0).getT(0).getT(3).getT(0);         // math::add<NV>
-		auto& chain207 = this->getT(0).getT(0).getT(11).getT(0).getT(0).getT(4);               // Sm2_impl::chain207_t<NV>
+		auto& chain207 = this->getT(0).getT(0).getT(11).getT(0).getT(0).getT(4);               // SmFx_impl::chain207_t<NV>
 		auto& add113 = this->getT(0).getT(0).getT(11).getT(0).getT(0).getT(4).getT(0);         // math::add<NV>
-		auto& chain208 = this->getT(0).getT(0).getT(11).getT(0).getT(0).getT(5);               // Sm2_impl::chain208_t<NV>
+		auto& chain208 = this->getT(0).getT(0).getT(11).getT(0).getT(0).getT(5);               // SmFx_impl::chain208_t<NV>
 		auto& add114 = this->getT(0).getT(0).getT(11).getT(0).getT(0).getT(5).getT(0);         // math::add<NV>
 		auto& smoother = this->getT(0).getT(0).getT(11).getT(0).getT(1);                       // core::smoother<NV>
-		auto& peak26 = this->getT(0).getT(0).getT(11).getT(0).getT(2);                         // Sm2_impl::peak26_t<NV>
+		auto& peak26 = this->getT(0).getT(0).getT(11).getT(0).getT(2);                         // SmFx_impl::peak26_t<NV>
 		auto& clear24 = this->getT(0).getT(0).getT(11).getT(0).getT(3);                        // math::clear<NV>
-		auto& chain209 = this->getT(0).getT(0).getT(11).getT(0).getT(4);                       // Sm2_impl::chain209_t<NV>
-		auto& split33 = this->getT(0).getT(0).getT(11).getT(0).getT(4).getT(0);                // Sm2_impl::split33_t<NV>
-		auto& chain210 = this->getT(0).getT(0).getT(11).getT(0).getT(4).getT(0).getT(0);       // Sm2_impl::chain210_t<NV>
-		auto& pma_unscaled11 = this->getT(0).getT(0).getT(11).getT(0).                         // Sm2_impl::pma_unscaled11_t<NV>
+		auto& chain209 = this->getT(0).getT(0).getT(11).getT(0).getT(4);                       // SmFx_impl::chain209_t<NV>
+		auto& split33 = this->getT(0).getT(0).getT(11).getT(0).getT(4).getT(0);                // SmFx_impl::split33_t<NV>
+		auto& chain210 = this->getT(0).getT(0).getT(11).getT(0).getT(4).getT(0).getT(0);       // SmFx_impl::chain210_t<NV>
+		auto& pma_unscaled11 = this->getT(0).getT(0).getT(11).getT(0).                         // SmFx_impl::pma_unscaled11_t<NV>
                                getT(4).getT(0).getT(0).getT(0);
 		auto& add54 = this->getT(0).getT(0).getT(11).getT(0).                                  // math::add<NV>
                       getT(4).getT(0).getT(0).getT(1);
-		auto& chain211 = this->getT(0).getT(0).getT(11).getT(0).getT(4).getT(0).getT(1);       // Sm2_impl::chain211_t<NV>
-		auto& chain212 = this->getT(0).getT(0).getT(11).getT(0).                               // Sm2_impl::chain212_t<NV>
+		auto& chain211 = this->getT(0).getT(0).getT(11).getT(0).getT(4).getT(0).getT(1);       // SmFx_impl::chain211_t<NV>
+		auto& chain212 = this->getT(0).getT(0).getT(11).getT(0).                               // SmFx_impl::chain212_t<NV>
                          getT(4).getT(0).getT(1).getT(0);
-		auto& global_mod11 = this->getT(0).getT(0).getT(11).getT(0).                           // Sm2_impl::global_mod11_t<NV>
+		auto& global_mod11 = this->getT(0).getT(0).getT(11).getT(0).                           // SmFx_impl::global_mod11_t<NV>
                              getT(4).getT(0).getT(1).getT(0).
                              getT(0);
 		auto& add115 = this->getT(0).getT(0).getT(11).getT(0).                                 // math::add<NV>
                        getT(4).getT(0).getT(1).getT(0).
                        getT(1);
-		auto& peak27 = this->getT(0).getT(0).getT(11).getT(0).getT(4).getT(1);                 // Sm2_impl::peak27_t<NV>
+		auto& peak27 = this->getT(0).getT(0).getT(11).getT(0).getT(4).getT(1);                 // SmFx_impl::peak27_t<NV>
 		auto& add15 = this->getT(0).getT(0).getT(11).getT(0).getT(4).getT(2);                  // math::add<NV>
-		auto& modchain8 = this->getT(0).getT(0).getT(12);                                      // Sm2_impl::modchain8_t<NV>
-		auto& chain141 = this->getT(0).getT(0).getT(12).getT(0);                               // Sm2_impl::chain141_t<NV>
-		auto& branch22 = this->getT(0).getT(0).getT(12).getT(0).getT(0);                       // Sm2_impl::branch22_t<NV>
-		auto& chain143 = this->getT(0).getT(0).getT(12).getT(0).getT(0).getT(0);               // Sm2_impl::chain143_t<NV>
+		auto& modchain8 = this->getT(0).getT(0).getT(12);                                      // SmFx_impl::modchain8_t<NV>
+		auto& chain141 = this->getT(0).getT(0).getT(12).getT(0);                               // SmFx_impl::chain141_t<NV>
+		auto& branch22 = this->getT(0).getT(0).getT(12).getT(0).getT(0);                       // SmFx_impl::branch22_t<NV>
+		auto& chain143 = this->getT(0).getT(0).getT(12).getT(0).getT(0).getT(0);               // SmFx_impl::chain143_t<NV>
 		auto& add80 = this->getT(0).getT(0).getT(12).getT(0).getT(0).getT(0).getT(0);          // math::add<NV>
-		auto& chain144 = this->getT(0).getT(0).getT(12).getT(0).getT(0).getT(1);               // Sm2_impl::chain144_t<NV>
+		auto& chain144 = this->getT(0).getT(0).getT(12).getT(0).getT(0).getT(1);               // SmFx_impl::chain144_t<NV>
 		auto& add81 = this->getT(0).getT(0).getT(12).getT(0).getT(0).getT(1).getT(0);          // math::add<NV>
-		auto& chain150 = this->getT(0).getT(0).getT(12).getT(0).getT(0).getT(2);               // Sm2_impl::chain150_t<NV>
+		auto& chain150 = this->getT(0).getT(0).getT(12).getT(0).getT(0).getT(2);               // SmFx_impl::chain150_t<NV>
 		auto& add87 = this->getT(0).getT(0).getT(12).getT(0).getT(0).getT(2).getT(0);          // math::add<NV>
-		auto& chain142 = this->getT(0).getT(0).getT(12).getT(0).getT(0).getT(3);               // Sm2_impl::chain142_t<NV>
+		auto& chain142 = this->getT(0).getT(0).getT(12).getT(0).getT(0).getT(3);               // SmFx_impl::chain142_t<NV>
 		auto& add79 = this->getT(0).getT(0).getT(12).getT(0).getT(0).getT(3).getT(0);          // math::add<NV>
-		auto& chain192 = this->getT(0).getT(0).getT(12).getT(0).getT(0).getT(4);               // Sm2_impl::chain192_t<NV>
+		auto& chain192 = this->getT(0).getT(0).getT(12).getT(0).getT(0).getT(4);               // SmFx_impl::chain192_t<NV>
 		auto& add99 = this->getT(0).getT(0).getT(12).getT(0).getT(0).getT(4).getT(0);          // math::add<NV>
-		auto& chain201 = this->getT(0).getT(0).getT(12).getT(0).getT(0).getT(5);               // Sm2_impl::chain201_t<NV>
+		auto& chain201 = this->getT(0).getT(0).getT(12).getT(0).getT(0).getT(5);               // SmFx_impl::chain201_t<NV>
 		auto& add108 = this->getT(0).getT(0).getT(12).getT(0).getT(0).getT(5).getT(0);         // math::add<NV>
-		auto& peak24 = this->getT(0).getT(0).getT(12).getT(0).getT(1);                         // Sm2_impl::peak24_t<NV>
+		auto& peak24 = this->getT(0).getT(0).getT(12).getT(0).getT(1);                         // SmFx_impl::peak24_t<NV>
 		auto& clear22 = this->getT(0).getT(0).getT(12).getT(0).getT(2);                        // math::clear<NV>
-		auto& split19 = this->getT(0).getT(0).getT(12).getT(0).getT(3);                        // Sm2_impl::split19_t<NV>
-		auto& chain189 = this->getT(0).getT(0).getT(12).getT(0).getT(3).getT(0);               // Sm2_impl::chain189_t<NV>
-		auto& pma_unscaled10 = this->getT(0).getT(0).getT(12).getT(0).getT(3).getT(0).getT(0); // Sm2_impl::pma_unscaled10_t<NV>
+		auto& split19 = this->getT(0).getT(0).getT(12).getT(0).getT(3);                        // SmFx_impl::split19_t<NV>
+		auto& chain189 = this->getT(0).getT(0).getT(12).getT(0).getT(3).getT(0);               // SmFx_impl::chain189_t<NV>
+		auto& pma_unscaled10 = this->getT(0).getT(0).getT(12).getT(0).getT(3).getT(0).getT(0); // SmFx_impl::pma_unscaled10_t<NV>
 		auto& add48 = this->getT(0).getT(0).getT(12).getT(0).getT(3).getT(0).getT(1);          // math::add<NV>
-		auto& chain190 = this->getT(0).getT(0).getT(12).getT(0).getT(3).getT(1);               // Sm2_impl::chain190_t<NV>
-		auto& chain191 = this->getT(0).getT(0).getT(12).getT(0).getT(3).getT(1).getT(0);       // Sm2_impl::chain191_t<NV>
-		auto& global_mod10 = this->getT(0).getT(0).getT(12).getT(0).                           // Sm2_impl::global_mod10_t<NV>
+		auto& chain190 = this->getT(0).getT(0).getT(12).getT(0).getT(3).getT(1);               // SmFx_impl::chain190_t<NV>
+		auto& chain191 = this->getT(0).getT(0).getT(12).getT(0).getT(3).getT(1).getT(0);       // SmFx_impl::chain191_t<NV>
+		auto& global_mod10 = this->getT(0).getT(0).getT(12).getT(0).                           // SmFx_impl::global_mod10_t<NV>
                              getT(3).getT(1).getT(0).getT(0);
 		auto& add98 = this->getT(0).getT(0).getT(12).getT(0).                                  // math::add<NV>
                       getT(3).getT(1).getT(0).getT(1);
-		auto& peak25 = this->getT(0).getT(0).getT(12).getT(0).getT(4);                         // Sm2_impl::peak25_t<NV>
-		auto& modchain11 = this->getT(0).getT(0).getT(13);                                     // Sm2_impl::modchain11_t<NV>
-		auto& chain213 = this->getT(0).getT(0).getT(13).getT(0);                               // Sm2_impl::chain213_t<NV>
-		auto& branch25 = this->getT(0).getT(0).getT(13).getT(0).getT(0);                       // Sm2_impl::branch25_t<NV>
-		auto& chain215 = this->getT(0).getT(0).getT(13).getT(0).getT(0).getT(0);               // Sm2_impl::chain215_t<NV>
+		auto& peak25 = this->getT(0).getT(0).getT(12).getT(0).getT(4);                         // SmFx_impl::peak25_t<NV>
+		auto& modchain11 = this->getT(0).getT(0).getT(13);                                     // SmFx_impl::modchain11_t<NV>
+		auto& chain213 = this->getT(0).getT(0).getT(13).getT(0);                               // SmFx_impl::chain213_t<NV>
+		auto& branch25 = this->getT(0).getT(0).getT(13).getT(0).getT(0);                       // SmFx_impl::branch25_t<NV>
+		auto& chain215 = this->getT(0).getT(0).getT(13).getT(0).getT(0).getT(0);               // SmFx_impl::chain215_t<NV>
 		auto& add117 = this->getT(0).getT(0).getT(13).getT(0).getT(0).getT(0).getT(0);         // math::add<NV>
-		auto& chain216 = this->getT(0).getT(0).getT(13).getT(0).getT(0).getT(1);               // Sm2_impl::chain216_t<NV>
+		auto& chain216 = this->getT(0).getT(0).getT(13).getT(0).getT(0).getT(1);               // SmFx_impl::chain216_t<NV>
 		auto& add118 = this->getT(0).getT(0).getT(13).getT(0).getT(0).getT(1).getT(0);         // math::add<NV>
-		auto& chain217 = this->getT(0).getT(0).getT(13).getT(0).getT(0).getT(2);               // Sm2_impl::chain217_t<NV>
+		auto& chain217 = this->getT(0).getT(0).getT(13).getT(0).getT(0).getT(2);               // SmFx_impl::chain217_t<NV>
 		auto& add119 = this->getT(0).getT(0).getT(13).getT(0).getT(0).getT(2).getT(0);         // math::add<NV>
-		auto& chain214 = this->getT(0).getT(0).getT(13).getT(0).getT(0).getT(3);               // Sm2_impl::chain214_t<NV>
+		auto& chain214 = this->getT(0).getT(0).getT(13).getT(0).getT(0).getT(3);               // SmFx_impl::chain214_t<NV>
 		auto& add116 = this->getT(0).getT(0).getT(13).getT(0).getT(0).getT(3).getT(0);         // math::add<NV>
-		auto& chain218 = this->getT(0).getT(0).getT(13).getT(0).getT(0).getT(4);               // Sm2_impl::chain218_t<NV>
+		auto& chain218 = this->getT(0).getT(0).getT(13).getT(0).getT(0).getT(4);               // SmFx_impl::chain218_t<NV>
 		auto& add120 = this->getT(0).getT(0).getT(13).getT(0).getT(0).getT(4).getT(0);         // math::add<NV>
-		auto& chain219 = this->getT(0).getT(0).getT(13).getT(0).getT(0).getT(5);               // Sm2_impl::chain219_t<NV>
+		auto& chain219 = this->getT(0).getT(0).getT(13).getT(0).getT(0).getT(5);               // SmFx_impl::chain219_t<NV>
 		auto& add121 = this->getT(0).getT(0).getT(13).getT(0).getT(0).getT(5).getT(0);         // math::add<NV>
-		auto& peak28 = this->getT(0).getT(0).getT(13).getT(0).getT(1);                         // Sm2_impl::peak28_t<NV>
+		auto& peak28 = this->getT(0).getT(0).getT(13).getT(0).getT(1);                         // SmFx_impl::peak28_t<NV>
 		auto& clear25 = this->getT(0).getT(0).getT(13).getT(0).getT(2);                        // math::clear<NV>
-		auto& split34 = this->getT(0).getT(0).getT(13).getT(0).getT(3);                        // Sm2_impl::split34_t<NV>
-		auto& chain220 = this->getT(0).getT(0).getT(13).getT(0).getT(3).getT(0);               // Sm2_impl::chain220_t<NV>
-		auto& pma_unscaled12 = this->getT(0).getT(0).getT(13).getT(0).getT(3).getT(0).getT(0); // Sm2_impl::pma_unscaled12_t<NV>
+		auto& split34 = this->getT(0).getT(0).getT(13).getT(0).getT(3);                        // SmFx_impl::split34_t<NV>
+		auto& chain220 = this->getT(0).getT(0).getT(13).getT(0).getT(3).getT(0);               // SmFx_impl::chain220_t<NV>
+		auto& pma_unscaled12 = this->getT(0).getT(0).getT(13).getT(0).getT(3).getT(0).getT(0); // SmFx_impl::pma_unscaled12_t<NV>
 		auto& add58 = this->getT(0).getT(0).getT(13).getT(0).getT(3).getT(0).getT(1);          // math::add<NV>
-		auto& chain221 = this->getT(0).getT(0).getT(13).getT(0).getT(3).getT(1);               // Sm2_impl::chain221_t<NV>
-		auto& chain222 = this->getT(0).getT(0).getT(13).getT(0).getT(3).getT(1).getT(0);       // Sm2_impl::chain222_t<NV>
-		auto& global_mod12 = this->getT(0).getT(0).getT(13).getT(0).                           // Sm2_impl::global_mod12_t<NV>
+		auto& chain221 = this->getT(0).getT(0).getT(13).getT(0).getT(3).getT(1);               // SmFx_impl::chain221_t<NV>
+		auto& chain222 = this->getT(0).getT(0).getT(13).getT(0).getT(3).getT(1).getT(0);       // SmFx_impl::chain222_t<NV>
+		auto& global_mod12 = this->getT(0).getT(0).getT(13).getT(0).                           // SmFx_impl::global_mod12_t<NV>
                              getT(3).getT(1).getT(0).getT(0);
 		auto& add122 = this->getT(0).getT(0).getT(13).getT(0).                             // math::add<NV>
                        getT(3).getT(1).getT(0).getT(1);
-		auto& peak29 = this->getT(0).getT(0).getT(13).getT(0).getT(4);                     // Sm2_impl::peak29_t<NV>
-		auto& split = this->getT(0).getT(1);                                               // Sm2_impl::split_t<NV>
-		auto& chain = this->getT(0).getT(1).getT(0);                                       // Sm2_impl::chain_t<NV>
-		auto& chain8 = this->getT(0).getT(1).getT(0).getT(0);                              // Sm2_impl::chain8_t<NV>
-		auto& chain2 = this->getT(0).getT(1).getT(0).getT(0).getT(0);                      // Sm2_impl::chain2_t<NV>
-		auto& split2 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0);              // Sm2_impl::split2_t<NV>
-		auto& chain17 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).getT(0);     // Sm2_impl::chain17_t<NV>
-		auto& branch28 = this->getT(0).getT(1).getT(0).getT(0).                            // Sm2_impl::branch28_t<NV>
-                         getT(0).getT(0).getT(0).getT(0);
-		auto& chain235 = this->getT(0).getT(1).getT(0).getT(0).                            // Sm2_impl::chain235_t<NV>
-                         getT(0).getT(0).getT(0).getT(0).
-                         getT(0);
-		auto& receive22 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // routing::receive<NV, stereo_cable<NV>>
-                          getT(0).getT(0).getT(0).getT(0).getT(0);
-		auto& chain236 = this->getT(0).getT(1).getT(0).getT(0).                            // Sm2_impl::chain236_t<NV>
-                         getT(0).getT(0).getT(0).getT(0).
-                         getT(1);
-		auto& receive30 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // routing::receive<NV, stereo_cable<NV>>
-                          getT(0).getT(0).getT(0).getT(1).getT(0);
-		auto& chain267 = this->getT(0).getT(1).getT(0).getT(0).                            // Sm2_impl::chain267_t<NV>
-                         getT(0).getT(0).getT(0).getT(0).
-                         getT(2);
-		auto& receive37 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // routing::receive<NV, stereo_cable<NV>>
-                          getT(0).getT(0).getT(0).getT(2).getT(0);
-		auto& chain237 = this->getT(0).getT(1).getT(0).getT(0).                            // Sm2_impl::chain237_t<NV>
-                         getT(0).getT(0).getT(0).getT(0).
-                         getT(3);
-		auto& receive31 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // routing::receive<NV, stereo_cable<NV>>
-                          getT(0).getT(0).getT(0).getT(3).getT(0);
-		auto& chain238 = this->getT(0).getT(1).getT(0).getT(0).                            // Sm2_impl::chain238_t<NV>
-                         getT(0).getT(0).getT(0).getT(0).
-                         getT(4);
-		auto& receive32 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // routing::receive<NV, stereo_cable<NV>>
-                          getT(0).getT(0).getT(0).getT(4).getT(0);
+		auto& peak29 = this->getT(0).getT(0).getT(13).getT(0).getT(4);                     // SmFx_impl::peak29_t<NV>
+		auto& split = this->getT(0).getT(1);                                               // SmFx_impl::split_t<NV>
+		auto& chain = this->getT(0).getT(1).getT(0);                                       // SmFx_impl::chain_t<NV>
+		auto& chain8 = this->getT(0).getT(1).getT(0).getT(0);                              // SmFx_impl::chain8_t<NV>
+		auto& chain2 = this->getT(0).getT(1).getT(0).getT(0).getT(0);                      // SmFx_impl::chain2_t<NV>
+		auto& split2 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0);              // SmFx_impl::split2_t<NV>
+		auto& chain17 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).getT(0);     // SmFx_impl::chain17_t<NV>
 		auto& gain1 = this->getT(0).getT(1).getT(0).getT(0).                               // core::gain<NV>
-                      getT(0).getT(0).getT(0).getT(1);
-		auto& branch2 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::branch2_t<NV>
-                        getT(0).getT(0).getT(0).getT(2);
-		auto& chain15 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain15_t<NV>
-                        getT(0).getT(0).getT(0).getT(2).
-                        getT(0);
-		auto& converter2 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                  // Sm2_impl::converter2_t<NV>
-                           getT(0).getT(0).getT(2).getT(0).getT(0);
-		auto& phasor_fm1 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                  // core::phasor_fm<NV>
-                           getT(0).getT(0).getT(2).getT(0).getT(1);
-		auto& chain16 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain16_t<NV>
-                        getT(0).getT(0).getT(0).getT(2).
-                        getT(1);
-		auto& tempo_sync = this->getT(0).getT(1).getT(0).getT(0).getT(0).                  // Sm2_impl::tempo_sync_t<NV>
-                           getT(0).getT(0).getT(2).getT(1).getT(0);
-		auto& converter = this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // Sm2_impl::converter_t<NV>
-                          getT(0).getT(0).getT(2).getT(1).getT(1);
-		auto& phasor_fm2 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                  // core::phasor_fm<NV>
-                           getT(0).getT(0).getT(2).getT(1).getT(2);
-		auto& mono2stereo3 = this->getT(0).getT(1).getT(0).getT(0).                        // core::mono2stereo
-                             getT(0).getT(0).getT(0).getT(3);
-		auto& branch = this->getT(0).getT(1).getT(0).getT(0).                              // Sm2_impl::branch_t<NV>
-                       getT(0).getT(0).getT(0).getT(4);
-		auto& chain1 = this->getT(0).getT(1).getT(0).getT(0).                              // Sm2_impl::chain1_t<NV>
-                       getT(0).getT(0).getT(0).getT(4).
-                       getT(0);
+                      getT(0).getT(0).getT(0).getT(0);
+		auto& branch = this->getT(0).getT(1).getT(0).getT(0).                              // SmFx_impl::branch_t<NV>
+                       getT(0).getT(0).getT(0).getT(1);
+		auto& chain266 = this->getT(0).getT(1).getT(0).getT(0).                            // SmFx_impl::chain266_t
+                         getT(0).getT(0).getT(0).getT(1).
+                         getT(0);
+		auto& chain1 = this->getT(0).getT(1).getT(0).getT(0).                              // SmFx_impl::chain1_t<NV>
+                       getT(0).getT(0).getT(0).getT(1).
+                       getT(1);
 		auto& gain9 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // core::gain<NV>
-                      getT(0).getT(0).getT(4).getT(0).getT(0);
+                      getT(0).getT(0).getT(1).getT(1).getT(0);
 		auto& pi1 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                         // math::pi<NV>
-                    getT(0).getT(0).getT(4).getT(0).getT(1);
+                    getT(0).getT(0).getT(1).getT(1).getT(1);
 		auto& expr = this->getT(0).getT(1).getT(0).getT(0).getT(0).                        // math::expr<NV, custom::expr>
-                     getT(0).getT(0).getT(4).getT(0).getT(2);
-		auto& chain111 = this->getT(0).getT(1).getT(0).getT(0).                            // Sm2_impl::chain111_t<NV>
-                         getT(0).getT(0).getT(0).getT(4).
-                         getT(1);
+                     getT(0).getT(0).getT(1).getT(1).getT(2);
+		auto& chain111 = this->getT(0).getT(1).getT(0).getT(0).                            // SmFx_impl::chain111_t<NV>
+                         getT(0).getT(0).getT(0).getT(1).
+                         getT(2);
 		auto& gain37 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // core::gain<NV>
-                       getT(0).getT(0).getT(4).getT(1).getT(0);
+                       getT(0).getT(0).getT(1).getT(2).getT(0);
 		auto& fmod12 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // math::fmod<NV>
-                       getT(0).getT(0).getT(4).getT(1).getT(1);
+                       getT(0).getT(0).getT(1).getT(2).getT(1);
 		auto& expr13 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // math::expr<NV, custom::expr13>
-                       getT(0).getT(0).getT(4).getT(1).getT(2);
-		auto& chain10 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain10_t<NV>
-                        getT(0).getT(0).getT(0).getT(4).
-                        getT(2);
-		auto& smoothed_parameter4 = this->getT(0).getT(1).getT(0).getT(0).getT(0).         // Sm2_impl::smoothed_parameter4_t<NV>
-                                    getT(0).getT(0).getT(4).getT(2).getT(0);
-		auto& expr3 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // math::expr<NV, custom::expr3>
-                      getT(0).getT(0).getT(4).getT(2).getT(1);
-		auto& expr2 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // math::expr<NV, custom::expr2>
-                      getT(0).getT(0).getT(4).getT(2).getT(2);
-		auto& chain11 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain11_t<NV>
-                        getT(0).getT(0).getT(0).getT(4).
+                       getT(0).getT(0).getT(1).getT(2).getT(2);
+		auto& chain10 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::chain10_t<NV>
+                        getT(0).getT(0).getT(0).getT(1).
                         getT(3);
-		auto& smoothed_parameter1 = this->getT(0).getT(1).getT(0).getT(0).getT(0).         // Sm2_impl::smoothed_parameter1_t<NV>
-                                    getT(0).getT(0).getT(4).getT(3).getT(0);
+		auto& smoothed_parameter4 = this->getT(0).getT(1).getT(0).getT(0).getT(0).         // SmFx_impl::smoothed_parameter4_t<NV>
+                                    getT(0).getT(0).getT(1).getT(3).getT(0);
+		auto& expr3 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // math::expr<NV, custom::expr3>
+                      getT(0).getT(0).getT(1).getT(3).getT(1);
+		auto& expr2 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // math::expr<NV, custom::expr2>
+                      getT(0).getT(0).getT(1).getT(3).getT(2);
+		auto& chain11 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::chain11_t<NV>
+                        getT(0).getT(0).getT(0).getT(1).
+                        getT(4);
+		auto& smoothed_parameter1 = this->getT(0).getT(1).getT(0).getT(0).getT(0).         // SmFx_impl::smoothed_parameter1_t<NV>
+                                    getT(0).getT(0).getT(1).getT(4).getT(0);
 		auto& expr6 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // math::expr<NV, custom::expr6>
-                      getT(0).getT(0).getT(4).getT(3).getT(1);
+                      getT(0).getT(0).getT(1).getT(4).getT(1);
 		auto& expr4 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // math::expr<NV, custom::expr4>
-                      getT(0).getT(0).getT(4).getT(3).getT(2);
+                      getT(0).getT(0).getT(1).getT(4).getT(2);
 		auto& expr5 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // math::expr<NV, custom::expr5>
-                      getT(0).getT(0).getT(4).getT(3).getT(3);
-		auto& chain5 = this->getT(0).getT(1).getT(0).getT(0).                              // Sm2_impl::chain5_t<NV>
-                       getT(0).getT(0).getT(0).getT(4).
-                       getT(4);
+                      getT(0).getT(0).getT(1).getT(4).getT(3);
+		auto& chain5 = this->getT(0).getT(1).getT(0).getT(0).                              // SmFx_impl::chain5_t<NV>
+                       getT(0).getT(0).getT(0).getT(1).
+                       getT(5);
 		auto& fmod = this->getT(0).getT(1).getT(0).getT(0).getT(0).                        // wrap::no_process<math::fmod<NV>>
-                     getT(0).getT(0).getT(4).getT(4).getT(0);
+                     getT(0).getT(0).getT(1).getT(5).getT(0);
 		auto& pi = this->getT(0).getT(1).getT(0).getT(0).getT(0).                          // math::pi<NV>
-                   getT(0).getT(0).getT(4).getT(4).getT(1);
+                   getT(0).getT(0).getT(1).getT(5).getT(1);
 		auto& gain3 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // core::gain<NV>
-                      getT(0).getT(0).getT(4).getT(4).getT(2);
-		auto& table = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // Sm2_impl::table_t
-                      getT(0).getT(0).getT(4).getT(4).getT(3);
-		auto& chain109 = this->getT(0).getT(1).getT(0).getT(0).                            // Sm2_impl::chain109_t<NV>
-                         getT(0).getT(0).getT(0).getT(4).
-                         getT(5);
+                      getT(0).getT(0).getT(1).getT(5).getT(2);
+		auto& table = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // SmFx_impl::table_t
+                      getT(0).getT(0).getT(1).getT(5).getT(3);
+		auto& chain109 = this->getT(0).getT(1).getT(0).getT(0).                            // SmFx_impl::chain109_t<NV>
+                         getT(0).getT(0).getT(0).getT(1).
+                         getT(6);
 		auto& pi6 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                         // wrap::no_process<math::pi<NV>>
-                    getT(0).getT(0).getT(4).getT(5).getT(0);
+                    getT(0).getT(0).getT(1).getT(6).getT(0);
 		auto& gain35 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // core::gain<NV>
-                       getT(0).getT(0).getT(4).getT(5).getT(1);
+                       getT(0).getT(0).getT(1).getT(6).getT(1);
 		auto& fmod10 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // math::fmod<NV>
-                       getT(0).getT(0).getT(4).getT(5).getT(2);
-		auto& table10 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                     // Sm2_impl::table10_t
-                        getT(0).getT(0).getT(4).getT(5).getT(3);
-		auto& chain3 = this->getT(0).getT(1).getT(0).getT(0).                              // Sm2_impl::chain3_t<NV>
-                       getT(0).getT(0).getT(0).getT(4).
-                       getT(6);
-		auto& gain6 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // core::gain<NV>
-                      getT(0).getT(0).getT(4).getT(6).getT(0);
-		auto& rect = this->getT(0).getT(1).getT(0).getT(0).getT(0).                        // math::rect<NV>
-                     getT(0).getT(0).getT(4).getT(6).getT(1);
-		auto& chain4 = this->getT(0).getT(1).getT(0).getT(0).                              // Sm2_impl::chain4_t<NV>
-                       getT(0).getT(0).getT(0).getT(4).
+                       getT(0).getT(0).getT(1).getT(6).getT(2);
+		auto& table10 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                     // SmFx_impl::table10_t
+                        getT(0).getT(0).getT(1).getT(6).getT(3);
+		auto& chain3 = this->getT(0).getT(1).getT(0).getT(0).                              // SmFx_impl::chain3_t<NV>
+                       getT(0).getT(0).getT(0).getT(1).
                        getT(7);
+		auto& gain6 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // core::gain<NV>
+                      getT(0).getT(0).getT(1).getT(7).getT(0);
+		auto& rect = this->getT(0).getT(1).getT(0).getT(0).getT(0).                        // math::rect<NV>
+                     getT(0).getT(0).getT(1).getT(7).getT(1);
+		auto& chain4 = this->getT(0).getT(1).getT(0).getT(0).                              // SmFx_impl::chain4_t<NV>
+                       getT(0).getT(0).getT(0).getT(1).
+                       getT(8);
 		auto& gain4 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // core::gain<NV>
-                      getT(0).getT(0).getT(4).getT(7).getT(0);
+                      getT(0).getT(0).getT(1).getT(8).getT(0);
 		auto& fmod2 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // math::fmod<NV>
-                      getT(0).getT(0).getT(4).getT(7).getT(1);
+                      getT(0).getT(0).getT(1).getT(8).getT(1);
 		auto& pi2 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                         // wrap::no_process<math::pi<NV>>
-                    getT(0).getT(0).getT(4).getT(7).getT(2);
+                    getT(0).getT(0).getT(1).getT(8).getT(2);
 		auto& rect1 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // math::rect<NV>
-                      getT(0).getT(0).getT(4).getT(7).getT(3);
-		auto& chain12 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain12_t<NV>
-                        getT(0).getT(0).getT(0).getT(4).
-                        getT(8);
+                      getT(0).getT(0).getT(1).getT(8).getT(3);
+		auto& chain12 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::chain12_t<NV>
+                        getT(0).getT(0).getT(0).getT(1).
+                        getT(9);
 		auto& gain13 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // core::gain<NV>
-                       getT(0).getT(0).getT(4).getT(8).getT(0);
-		auto& table2 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // Sm2_impl::table2_t
-                       getT(0).getT(0).getT(4).getT(8).getT(1);
-		auto& chain6 = this->getT(0).getT(1).getT(0).getT(0).                              // Sm2_impl::chain6_t<NV>
-                       getT(0).getT(0).getT(0).getT(4).
-                       getT(9);
+                       getT(0).getT(0).getT(1).getT(9).getT(0);
+		auto& table2 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // SmFx_impl::table2_t
+                       getT(0).getT(0).getT(1).getT(9).getT(1);
+		auto& chain6 = this->getT(0).getT(1).getT(0).getT(0).                              // SmFx_impl::chain6_t<NV>
+                       getT(0).getT(0).getT(0).getT(1).
+                       getT(10);
 		auto& gain7 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // core::gain<NV>
-                      getT(0).getT(0).getT(4).getT(9).getT(0);
+                      getT(0).getT(0).getT(1).getT(10).getT(0);
 		auto& fmod4 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // math::fmod<NV>
-                      getT(0).getT(0).getT(4).getT(9).getT(1);
-		auto& table1 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // Sm2_impl::table1_t
-                       getT(0).getT(0).getT(4).getT(9).getT(2);
-		auto& chain13 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain13_t<NV>
-                        getT(0).getT(0).getT(0).getT(4).
-                        getT(10);
-		auto& gain14 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // core::gain<NV>
-                       getT(0).getT(0).getT(4).getT(10).getT(0);
-		auto& table3 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // Sm2_impl::table3_t
-                       getT(0).getT(0).getT(4).getT(10).getT(1);
-		auto& chain14 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain14_t<NV>
-                        getT(0).getT(0).getT(0).getT(4).
+                      getT(0).getT(0).getT(1).getT(10).getT(1);
+		auto& table1 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // SmFx_impl::table1_t
+                       getT(0).getT(0).getT(1).getT(10).getT(2);
+		auto& chain13 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::chain13_t<NV>
+                        getT(0).getT(0).getT(0).getT(1).
                         getT(11);
+		auto& gain14 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // core::gain<NV>
+                       getT(0).getT(0).getT(1).getT(11).getT(0);
+		auto& table3 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // SmFx_impl::table3_t
+                       getT(0).getT(0).getT(1).getT(11).getT(1);
+		auto& chain14 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::chain14_t<NV>
+                        getT(0).getT(0).getT(0).getT(1).
+                        getT(12);
 		auto& gain15 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // core::gain<NV>
-                       getT(0).getT(0).getT(4).getT(11).getT(0);
+                       getT(0).getT(0).getT(1).getT(12).getT(0);
 		auto& fmod6 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // math::fmod<NV>
-                      getT(0).getT(0).getT(4).getT(11).getT(1);
-		auto& table4 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // Sm2_impl::table4_t
-                       getT(0).getT(0).getT(4).getT(11).getT(2);
-		auto& chain89 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain89_t<NV>
-                        getT(0).getT(0).getT(0).getT(5);
-		auto& split20 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::split20_t<NV>
-                        getT(0).getT(0).getT(0).getT(5).
+                      getT(0).getT(0).getT(1).getT(12).getT(1);
+		auto& table4 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // SmFx_impl::table4_t
+                       getT(0).getT(0).getT(1).getT(12).getT(2);
+		auto& chain89 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::chain89_t<NV>
+                        getT(0).getT(0).getT(0).getT(2);
+		auto& split20 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::split20_t<NV>
+                        getT(0).getT(0).getT(0).getT(2).
                         getT(0);
-		auto& chain90 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                     // Sm2_impl::chain90_t
-                        getT(0).getT(0).getT(5).getT(0).getT(0);
-		auto& chain91 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                     // Sm2_impl::chain91_t<NV>
-                        getT(0).getT(0).getT(5).getT(0).getT(1);
-		auto& split21 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                     // Sm2_impl::split21_t<NV>
-                        getT(0).getT(0).getT(5).getT(0).getT(1).
+		auto& chain90 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                     // SmFx_impl::chain90_t
+                        getT(0).getT(0).getT(2).getT(0).getT(0);
+		auto& chain91 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                     // SmFx_impl::chain91_t<NV>
+                        getT(0).getT(0).getT(2).getT(0).getT(1);
+		auto& split21 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                     // SmFx_impl::split21_t<NV>
+                        getT(0).getT(0).getT(2).getT(0).getT(1).
                         getT(0);
 		auto& send9 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).               // routing::send<NV, stereo_cable<NV>>
-                      getT(0).getT(5).getT(0).getT(1).getT(0).getT(0);
-		auto& chain36 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).             // Sm2_impl::chain36_t<NV>
-                        getT(0).getT(5).getT(0).getT(1).getT(0).getT(1);
-		auto& sig2mod = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).             // wrap::no_process<math::sig2mod<NV>>
-                        getT(0).getT(5).getT(0).getT(1).getT(0).getT(1).
+                      getT(0).getT(2).getT(0).getT(1).getT(0).getT(0);
+		auto& chain36 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).             // SmFx_impl::chain36_t<NV>
+                        getT(0).getT(2).getT(0).getT(1).getT(0).getT(1);
+		auto& sig2mod = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).             // math::sig2mod<NV>
+                        getT(0).getT(2).getT(0).getT(1).getT(0).getT(1).
                         getT(0);
-		auto& oscilloscope = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).        // Sm2_impl::oscilloscope_t
-                             getT(0).getT(5).getT(0).getT(1).getT(0).getT(1).
+		auto& oscilloscope = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).        // SmFx_impl::oscilloscope_t
+                             getT(0).getT(2).getT(0).getT(1).getT(0).getT(1).
                              getT(1);
-		auto& peak15 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).              // Sm2_impl::peak15_t<NV>
-                       getT(0).getT(5).getT(0).getT(1).getT(0).getT(1).
+		auto& peak15 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).              // SmFx_impl::peak15_t<NV>
+                       getT(0).getT(2).getT(0).getT(1).getT(0).getT(1).
                        getT(2);
 		auto& clear9 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).              // math::clear<NV>
-                       getT(0).getT(5).getT(0).getT(1).getT(0).getT(1).
+                       getT(0).getT(2).getT(0).getT(1).getT(0).getT(1).
                        getT(3);
 		auto& clear7 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // math::clear<NV>
-                       getT(0).getT(0).getT(5).getT(0).getT(1).
+                       getT(0).getT(0).getT(2).getT(0).getT(1).
                        getT(1);
-		auto& chain18 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).getT(1);     // Sm2_impl::chain18_t<NV>
-		auto& branch27 = this->getT(0).getT(1).getT(0).getT(0).                            // Sm2_impl::branch27_t<NV>
+		auto& chain18 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).getT(1);     // SmFx_impl::chain18_t<NV>
+		auto& branch27 = this->getT(0).getT(1).getT(0).getT(0).                            // SmFx_impl::branch27_t<NV>
                          getT(0).getT(0).getT(1).getT(0);
-		auto& chain228 = this->getT(0).getT(1).getT(0).getT(0).                            // Sm2_impl::chain228_t<NV>
+		auto& chain228 = this->getT(0).getT(1).getT(0).getT(0).                            // SmFx_impl::chain228_t<NV>
                          getT(0).getT(0).getT(1).getT(0).
                          getT(0);
 		auto& receive11 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // routing::receive<NV, stereo_cable<NV>>
                           getT(0).getT(1).getT(0).getT(0).getT(0);
-		auto& chain230 = this->getT(0).getT(1).getT(0).getT(0).                            // Sm2_impl::chain230_t<NV>
+		auto& chain230 = this->getT(0).getT(1).getT(0).getT(0).                            // SmFx_impl::chain230_t<NV>
                          getT(0).getT(0).getT(1).getT(0).
                          getT(1);
 		auto& receive25 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // routing::receive<NV, stereo_cable<NV>>
                           getT(0).getT(1).getT(0).getT(1).getT(0);
-		auto& chain268 = this->getT(0).getT(1).getT(0).getT(0).                            // Sm2_impl::chain268_t<NV>
+		auto& chain268 = this->getT(0).getT(1).getT(0).getT(0).                            // SmFx_impl::chain268_t<NV>
                          getT(0).getT(0).getT(1).getT(0).
                          getT(2);
 		auto& receive38 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // routing::receive<NV, stereo_cable<NV>>
                           getT(0).getT(1).getT(0).getT(2).getT(0);
-		auto& chain229 = this->getT(0).getT(1).getT(0).getT(0).                            // Sm2_impl::chain229_t<NV>
+		auto& chain229 = this->getT(0).getT(1).getT(0).getT(0).                            // SmFx_impl::chain229_t<NV>
                          getT(0).getT(0).getT(1).getT(0).
                          getT(3);
 		auto& receive24 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // routing::receive<NV, stereo_cable<NV>>
                           getT(0).getT(1).getT(0).getT(3).getT(0);
-		auto& chain231 = this->getT(0).getT(1).getT(0).getT(0).                            // Sm2_impl::chain231_t<NV>
+		auto& chain231 = this->getT(0).getT(1).getT(0).getT(0).                            // SmFx_impl::chain231_t<NV>
                          getT(0).getT(0).getT(1).getT(0).
                          getT(4);
 		auto& receive26 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // routing::receive<NV, stereo_cable<NV>>
                           getT(0).getT(1).getT(0).getT(4).getT(0);
 		auto& gain32 = this->getT(0).getT(1).getT(0).getT(0).                              // core::gain<NV>
                        getT(0).getT(0).getT(1).getT(1);
-		auto& branch5 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::branch5_t<NV>
+		auto& branch5 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::branch5_t<NV>
                         getT(0).getT(0).getT(1).getT(2);
-		auto& chain31 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain31_t<NV>
+		auto& chain31 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::chain31_t<NV>
                         getT(0).getT(0).getT(1).getT(2).
                         getT(0);
-		auto& converter3 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                  // Sm2_impl::converter3_t<NV>
+		auto& converter3 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                  // SmFx_impl::converter3_t<NV>
                            getT(0).getT(1).getT(2).getT(0).getT(0);
 		auto& phasor_fm = this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // core::phasor_fm<NV>
                           getT(0).getT(1).getT(2).getT(0).getT(1);
-		auto& chain32 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain32_t<NV>
+		auto& chain32 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::chain32_t<NV>
                         getT(0).getT(0).getT(1).getT(2).
                         getT(1);
-		auto& tempo_sync2 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                 // Sm2_impl::tempo_sync2_t<NV>
+		auto& tempo_sync2 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                 // SmFx_impl::tempo_sync2_t<NV>
                             getT(0).getT(1).getT(2).getT(1).getT(0);
-		auto& converter1 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                  // Sm2_impl::converter1_t<NV>
+		auto& converter1 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                  // SmFx_impl::converter1_t<NV>
                            getT(0).getT(1).getT(2).getT(1).getT(1);
 		auto& phasor_fm3 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                  // core::phasor_fm<NV>
                            getT(0).getT(1).getT(2).getT(1).getT(2);
 		auto& mono2stereo = this->getT(0).getT(1).getT(0).getT(0).                         // core::mono2stereo
                             getT(0).getT(0).getT(1).getT(3);
-		auto& branch4 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::branch4_t<NV>
+		auto& branch4 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::branch4_t<NV>
                         getT(0).getT(0).getT(1).getT(4);
-		auto& chain21 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain21_t<NV>
+		auto& chain21 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::chain21_t<NV>
                         getT(0).getT(0).getT(1).getT(4).
                         getT(0);
 		auto& gain10 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // core::gain<NV>
@@ -5654,7 +5735,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
                     getT(0).getT(1).getT(4).getT(0).getT(1);
 		auto& expr1 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // math::expr<NV, custom::expr1>
                       getT(0).getT(1).getT(4).getT(0).getT(2);
-		auto& chain118 = this->getT(0).getT(1).getT(0).getT(0).                            // Sm2_impl::chain118_t<NV>
+		auto& chain118 = this->getT(0).getT(1).getT(0).getT(0).                            // SmFx_impl::chain118_t<NV>
                          getT(0).getT(0).getT(1).getT(4).
                          getT(1);
 		auto& gain39 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // core::gain<NV>
@@ -5663,19 +5744,19 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
                        getT(0).getT(1).getT(4).getT(1).getT(1);
 		auto& expr14 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // math::expr<NV, custom::expr14>
                        getT(0).getT(1).getT(4).getT(1).getT(2);
-		auto& chain22 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain22_t<NV>
+		auto& chain22 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::chain22_t<NV>
                         getT(0).getT(0).getT(1).getT(4).
                         getT(2);
-		auto& smoothed_parameter5 = this->getT(0).getT(1).getT(0).getT(0).getT(0).         // Sm2_impl::smoothed_parameter5_t<NV>
+		auto& smoothed_parameter5 = this->getT(0).getT(1).getT(0).getT(0).getT(0).         // SmFx_impl::smoothed_parameter5_t<NV>
                                     getT(0).getT(1).getT(4).getT(2).getT(0);
 		auto& expr7 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // math::expr<NV, custom::expr7>
                       getT(0).getT(1).getT(4).getT(2).getT(1);
 		auto& expr8 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // math::expr<NV, custom::expr8>
                       getT(0).getT(1).getT(4).getT(2).getT(2);
-		auto& chain23 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain23_t<NV>
+		auto& chain23 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::chain23_t<NV>
                         getT(0).getT(0).getT(1).getT(4).
                         getT(3);
-		auto& smoothed_parameter2 = this->getT(0).getT(1).getT(0).getT(0).getT(0).         // Sm2_impl::smoothed_parameter2_t<NV>
+		auto& smoothed_parameter2 = this->getT(0).getT(1).getT(0).getT(0).getT(0).         // SmFx_impl::smoothed_parameter2_t<NV>
                                     getT(0).getT(1).getT(4).getT(3).getT(0);
 		auto& expr9 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // math::expr<NV, custom::expr9>
                       getT(0).getT(1).getT(4).getT(3).getT(1);
@@ -5683,7 +5764,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
                        getT(0).getT(1).getT(4).getT(3).getT(2);
 		auto& expr11 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // math::expr<NV, custom::expr11>
                        getT(0).getT(1).getT(4).getT(3).getT(3);
-		auto& chain24 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain24_t<NV>
+		auto& chain24 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::chain24_t<NV>
                         getT(0).getT(0).getT(1).getT(4).
                         getT(4);
 		auto& fmod1 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // wrap::no_process<math::fmod<NV>>
@@ -5692,9 +5773,9 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
                     getT(0).getT(1).getT(4).getT(4).getT(1);
 		auto& gain5 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // core::gain<NV>
                       getT(0).getT(1).getT(4).getT(4).getT(2);
-		auto& table5 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // Sm2_impl::table5_t
+		auto& table5 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // SmFx_impl::table5_t
                        getT(0).getT(1).getT(4).getT(4).getT(3);
-		auto& chain132 = this->getT(0).getT(1).getT(0).getT(0).                            // Sm2_impl::chain132_t<NV>
+		auto& chain132 = this->getT(0).getT(1).getT(0).getT(0).                            // SmFx_impl::chain132_t<NV>
                          getT(0).getT(0).getT(1).getT(4).
                          getT(5);
 		auto& pi7 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                         // wrap::no_process<math::pi<NV>>
@@ -5703,16 +5784,16 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
                        getT(0).getT(1).getT(4).getT(5).getT(1);
 		auto& fmod11 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // math::fmod<NV>
                        getT(0).getT(1).getT(4).getT(5).getT(2);
-		auto& table11 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                     // Sm2_impl::table11_t
+		auto& table11 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                     // SmFx_impl::table11_t
                         getT(0).getT(1).getT(4).getT(5).getT(3);
-		auto& chain25 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain25_t<NV>
+		auto& chain25 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::chain25_t<NV>
                         getT(0).getT(0).getT(1).getT(4).
                         getT(6);
 		auto& gain11 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // core::gain<NV>
                        getT(0).getT(1).getT(4).getT(6).getT(0);
 		auto& rect2 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // math::rect<NV>
                       getT(0).getT(1).getT(4).getT(6).getT(1);
-		auto& chain26 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain26_t<NV>
+		auto& chain26 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::chain26_t<NV>
                         getT(0).getT(0).getT(1).getT(4).
                         getT(7);
 		auto& gain12 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // core::gain<NV>
@@ -5723,61 +5804,61 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
                     getT(0).getT(1).getT(4).getT(7).getT(2);
 		auto& rect3 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // math::rect<NV>
                       getT(0).getT(1).getT(4).getT(7).getT(3);
-		auto& chain27 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain27_t<NV>
+		auto& chain27 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::chain27_t<NV>
                         getT(0).getT(0).getT(1).getT(4).
                         getT(8);
 		auto& gain16 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // core::gain<NV>
                        getT(0).getT(1).getT(4).getT(8).getT(0);
-		auto& table6 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // Sm2_impl::table6_t
+		auto& table6 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // SmFx_impl::table6_t
                        getT(0).getT(1).getT(4).getT(8).getT(1);
-		auto& chain28 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain28_t<NV>
+		auto& chain28 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::chain28_t<NV>
                         getT(0).getT(0).getT(1).getT(4).
                         getT(9);
 		auto& gain17 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // core::gain<NV>
                        getT(0).getT(1).getT(4).getT(9).getT(0);
 		auto& fmod5 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // math::fmod<NV>
                       getT(0).getT(1).getT(4).getT(9).getT(1);
-		auto& table7 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // Sm2_impl::table7_t
+		auto& table7 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // SmFx_impl::table7_t
                        getT(0).getT(1).getT(4).getT(9).getT(2);
-		auto& chain29 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain29_t<NV>
+		auto& chain29 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::chain29_t<NV>
                         getT(0).getT(0).getT(1).getT(4).
                         getT(10);
 		auto& gain18 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // core::gain<NV>
                        getT(0).getT(1).getT(4).getT(10).getT(0);
-		auto& table8 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // Sm2_impl::table8_t
+		auto& table8 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // SmFx_impl::table8_t
                        getT(0).getT(1).getT(4).getT(10).getT(1);
-		auto& chain30 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::chain30_t<NV>
+		auto& chain30 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::chain30_t<NV>
                         getT(0).getT(0).getT(1).getT(4).
                         getT(11);
 		auto& gain19 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // core::gain<NV>
                        getT(0).getT(1).getT(4).getT(11).getT(0);
 		auto& fmod7 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                       // math::fmod<NV>
                       getT(0).getT(1).getT(4).getT(11).getT(1);
-		auto& table9 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // Sm2_impl::table9_t
+		auto& table9 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                      // SmFx_impl::table9_t
                        getT(0).getT(1).getT(4).getT(11).getT(2);
-		auto& chain177 = this->getT(0).getT(1).getT(0).getT(0).                            // Sm2_impl::chain177_t<NV>
+		auto& chain177 = this->getT(0).getT(1).getT(0).getT(0).                            // SmFx_impl::chain177_t<NV>
                          getT(0).getT(0).getT(1).getT(5);
-		auto& split31 = this->getT(0).getT(1).getT(0).getT(0).                             // Sm2_impl::split31_t<NV>
+		auto& split31 = this->getT(0).getT(1).getT(0).getT(0).                             // SmFx_impl::split31_t<NV>
                         getT(0).getT(0).getT(1).getT(5).
                         getT(0);
-		auto& chain178 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                    // Sm2_impl::chain178_t
+		auto& chain178 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                    // SmFx_impl::chain178_t
                          getT(0).getT(1).getT(5).getT(0).getT(0);
-		auto& chain179 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                    // Sm2_impl::chain179_t<NV>
+		auto& chain179 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                    // SmFx_impl::chain179_t<NV>
                          getT(0).getT(1).getT(5).getT(0).getT(1);
-		auto& sig2mod2 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                    // wrap::no_process<math::sig2mod<NV>>
+		auto& sig2mod2 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                    // math::sig2mod<NV>
                          getT(0).getT(1).getT(5).getT(0).getT(1).
                          getT(0);
-		auto& split32 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                     // Sm2_impl::split32_t<NV>
+		auto& split32 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                     // SmFx_impl::split32_t<NV>
                         getT(0).getT(1).getT(5).getT(0).getT(1).
                         getT(1);
 		auto& send16 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).              // routing::send<NV, stereo_cable<NV>>
                        getT(1).getT(5).getT(0).getT(1).getT(1).getT(0);
-		auto& chain46 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).             // Sm2_impl::chain46_t<NV>
+		auto& chain46 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).             // SmFx_impl::chain46_t<NV>
                         getT(1).getT(5).getT(0).getT(1).getT(1).getT(1);
-		auto& oscilloscope1 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).       // Sm2_impl::oscilloscope1_t
+		auto& oscilloscope1 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).       // SmFx_impl::oscilloscope1_t
                               getT(1).getT(5).getT(0).getT(1).getT(1).getT(1).
                               getT(0);
-		auto& peak34 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).              // Sm2_impl::peak34_t<NV>
+		auto& peak34 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).              // SmFx_impl::peak34_t<NV>
                        getT(1).getT(5).getT(0).getT(1).getT(1).getT(1).
                        getT(1);
 		auto& clear8 = this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).              // math::clear<NV>
@@ -5786,45 +5867,46 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		auto& clear12 = this->getT(0).getT(1).getT(0).getT(0).getT(0).                     // math::clear<NV>
                         getT(0).getT(1).getT(5).getT(0).getT(1).
                         getT(2);
-		auto& chain180 = this->getT(0).getT(1).getT(1);                                    // Sm2_impl::chain180_t<NV>
-		auto& branch26 = this->getT(0).getT(1).getT(1).getT(0);                            // Sm2_impl::branch26_t<NV>
-		auto& chain152 = this->getT(0).getT(1).getT(1).getT(0).getT(0);                    // Sm2_impl::chain152_t<NV>
+		auto& one_pole9 = this->getT(0).getT(1).getT(0).getT(1);                           // filters::one_pole<NV>
+		auto& chain180 = this->getT(0).getT(1).getT(1);                                    // SmFx_impl::chain180_t<NV>
+		auto& branch26 = this->getT(0).getT(1).getT(1).getT(0);                            // SmFx_impl::branch26_t<NV>
+		auto& chain152 = this->getT(0).getT(1).getT(1).getT(0).getT(0);                    // SmFx_impl::chain152_t<NV>
 		auto& receive8 = this->getT(0).getT(1).getT(1).getT(0).getT(0).getT(0);            // routing::receive<NV, stereo_cable<NV>>
-		auto& chain153 = this->getT(0).getT(1).getT(1).getT(0).getT(1);                    // Sm2_impl::chain153_t<NV>
+		auto& chain153 = this->getT(0).getT(1).getT(1).getT(0).getT(1);                    // SmFx_impl::chain153_t<NV>
 		auto& receive9 = this->getT(0).getT(1).getT(1).getT(0).getT(1).getT(0);            // routing::receive<NV, stereo_cable<NV>>
-		auto& chain269 = this->getT(0).getT(1).getT(1).getT(0).getT(2);                    // Sm2_impl::chain269_t<NV>
+		auto& chain269 = this->getT(0).getT(1).getT(1).getT(0).getT(2);                    // SmFx_impl::chain269_t<NV>
 		auto& receive39 = this->getT(0).getT(1).getT(1).getT(0).getT(2).getT(0);           // routing::receive<NV, stereo_cable<NV>>
-		auto& chain176 = this->getT(0).getT(1).getT(1).getT(0).getT(3);                    // Sm2_impl::chain176_t<NV>
+		auto& chain176 = this->getT(0).getT(1).getT(1).getT(0).getT(3);                    // SmFx_impl::chain176_t<NV>
 		auto& receive21 = this->getT(0).getT(1).getT(1).getT(0).getT(3).getT(0);           // routing::receive<NV, stereo_cable<NV>>
-		auto& chain226 = this->getT(0).getT(1).getT(1).getT(0).getT(4);                    // Sm2_impl::chain226_t<NV>
+		auto& chain226 = this->getT(0).getT(1).getT(1).getT(0).getT(4);                    // SmFx_impl::chain226_t<NV>
 		auto& receive23 = this->getT(0).getT(1).getT(1).getT(0).getT(4).getT(0);           // routing::receive<NV, stereo_cable<NV>>
 		auto& one_pole7 = this->getT(0).getT(1).getT(1).getT(1);                           // wrap::no_process<filters::one_pole<NV>>
 		auto& gain21 = this->getT(0).getT(1).getT(1).getT(2);                              // core::gain<NV>
 		auto& gain20 = this->getT(0).getT(1).getT(1).getT(3);                              // core::gain<NV>
-		auto& tempo_sync4 = this->getT(0).getT(1).getT(1).getT(4);                         // Sm2_impl::tempo_sync4_t<NV>
-		auto& frame2_block1 = this->getT(0).getT(1).getT(1).getT(5);                       // Sm2_impl::frame2_block1_t<NV>
-		auto& chain7 = this->getT(0).getT(1).getT(1).getT(5).getT(0);                      // Sm2_impl::chain7_t<NV>
-		auto& split1 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0);              // Sm2_impl::split1_t<NV>
-		auto& chain9 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).getT(0);      // Sm2_impl::chain9_t<NV>
-		auto& peak4 = this->getT(0).getT(1).getT(1).getT(5).                               // Sm2_impl::peak4_t
+		auto& tempo_sync4 = this->getT(0).getT(1).getT(1).getT(4);                         // SmFx_impl::tempo_sync4_t<NV>
+		auto& frame2_block1 = this->getT(0).getT(1).getT(1).getT(5);                       // SmFx_impl::frame2_block1_t<NV>
+		auto& chain7 = this->getT(0).getT(1).getT(1).getT(5).getT(0);                      // SmFx_impl::chain7_t<NV>
+		auto& split1 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0);              // SmFx_impl::split1_t<NV>
+		auto& chain9 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).getT(0);      // SmFx_impl::chain9_t<NV>
+		auto& peak4 = this->getT(0).getT(1).getT(1).getT(5).                               // SmFx_impl::peak4_t
                       getT(0).getT(0).getT(0).getT(0);
-		auto& split3 = this->getT(0).getT(1).getT(1).getT(5).                              // Sm2_impl::split3_t<NV>
+		auto& split3 = this->getT(0).getT(1).getT(1).getT(5).                              // SmFx_impl::split3_t<NV>
                        getT(0).getT(0).getT(0).getT(1);
-		auto& modchain = this->getT(0).getT(1).getT(1).getT(5).                            // Sm2_impl::modchain_t<NV>
+		auto& modchain = this->getT(0).getT(1).getT(1).getT(5).                            // SmFx_impl::modchain_t<NV>
                          getT(0).getT(0).getT(0).getT(1).
                          getT(0);
-		auto& chain47 = this->getT(0).getT(1).getT(1).getT(5).getT(0).                     // Sm2_impl::chain47_t<NV>
+		auto& chain47 = this->getT(0).getT(1).getT(1).getT(5).getT(0).                     // SmFx_impl::chain47_t<NV>
                         getT(0).getT(0).getT(1).getT(0).getT(0);
 		auto& clear13 = this->getT(0).getT(1).getT(1).getT(5).getT(0).                     // math::clear<NV>
                         getT(0).getT(0).getT(1).getT(0).getT(0).
                         getT(0);
-		auto& ramp = this->getT(0).getT(1).getT(1).getT(5).getT(0).                        // Sm2_impl::ramp_t<NV>
+		auto& ramp = this->getT(0).getT(1).getT(1).getT(5).getT(0).                        // SmFx_impl::ramp_t<NV>
                      getT(0).getT(0).getT(1).getT(0).getT(0).
                      getT(1);
-		auto& branch3 = this->getT(0).getT(1).getT(1).getT(5).getT(0).                     // Sm2_impl::branch3_t<NV>
+		auto& branch3 = this->getT(0).getT(1).getT(1).getT(5).getT(0).                     // SmFx_impl::branch3_t<NV>
                         getT(0).getT(0).getT(1).getT(0).getT(0).
                         getT(2);
-		auto& chain48 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).             // Sm2_impl::chain48_t<NV>
+		auto& chain48 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).             // SmFx_impl::chain48_t<NV>
                         getT(0).getT(1).getT(0).getT(0).getT(2).getT(0);
 		auto& add7 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).                // math::add<NV>
                      getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
@@ -5832,57 +5914,57 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		auto& rect6 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).               // math::rect<NV>
                       getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
                       getT(1);
-		auto& peak1 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).               // Sm2_impl::peak1_t<NV>
+		auto& peak1 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).               // SmFx_impl::peak1_t<NV>
                       getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
                       getT(2);
-		auto& input_toggle = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).        // Sm2_impl::input_toggle_t<NV>
+		auto& input_toggle = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).        // SmFx_impl::input_toggle_t<NV>
                              getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
                              getT(3);
 		auto& clear = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).               // math::clear<NV>
                       getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
                       getT(4);
-		auto& ahdsr = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).               // Sm2_impl::ahdsr_t<NV>
+		auto& ahdsr = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).               // SmFx_impl::ahdsr_t<NV>
                       getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
                       getT(5);
 		auto& add8 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).                // math::add<NV>
                      getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
                      getT(6);
-		auto& chain52 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).             // Sm2_impl::chain52_t<NV>
+		auto& chain52 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).             // SmFx_impl::chain52_t<NV>
                         getT(0).getT(1).getT(0).getT(0).getT(2).getT(1);
 		auto& clear2 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).              // math::clear<NV>
                        getT(0).getT(1).getT(0).getT(0).getT(2).getT(1).
                        getT(0);
-		auto& cable_table1 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).        // Sm2_impl::cable_table1_t<NV>
+		auto& cable_table1 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).        // SmFx_impl::cable_table1_t<NV>
                              getT(0).getT(1).getT(0).getT(0).getT(2).getT(1).
                              getT(1);
-		auto& cable_table4 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).        // Sm2_impl::cable_table4_t
+		auto& cable_table4 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).        // SmFx_impl::cable_table4_t
                              getT(0).getT(1).getT(0).getT(0).getT(2).getT(1).
                              getT(2);
-		auto& cable_table3 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).        // Sm2_impl::cable_table3_t
+		auto& cable_table3 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).        // SmFx_impl::cable_table3_t
                              getT(0).getT(1).getT(0).getT(0).getT(2).getT(1).
                              getT(3);
 		auto& add9 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).                // math::add<NV>
                      getT(0).getT(1).getT(0).getT(0).getT(2).getT(1).
                      getT(4);
-		auto& chain53 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).             // Sm2_impl::chain53_t<NV>
+		auto& chain53 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).             // SmFx_impl::chain53_t<NV>
                         getT(0).getT(1).getT(0).getT(0).getT(2).getT(2);
 		auto& clear1 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).              // math::clear<NV>
                        getT(0).getT(1).getT(0).getT(0).getT(2).getT(2).
                        getT(0);
-		auto& cable_pack = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).          // Sm2_impl::cable_pack_t<NV>
+		auto& cable_pack = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).          // SmFx_impl::cable_pack_t<NV>
                            getT(0).getT(1).getT(0).getT(0).getT(2).getT(2).
                            getT(1);
 		auto& add10 = this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).               // math::add<NV>
                       getT(0).getT(1).getT(0).getT(0).getT(2).getT(2).
                       getT(2);
-		auto& peak2 = this->getT(0).getT(1).getT(1).getT(5).getT(0).                       // Sm2_impl::peak2_t<NV>
+		auto& peak2 = this->getT(0).getT(1).getT(1).getT(5).getT(0).                       // SmFx_impl::peak2_t<NV>
                       getT(0).getT(0).getT(1).getT(0).getT(0).
                       getT(3);
-		auto& pma3 = this->getT(0).getT(1).getT(1).getT(5).                                // Sm2_impl::pma3_t<NV>
+		auto& pma3 = this->getT(0).getT(1).getT(1).getT(5).                                // SmFx_impl::pma3_t<NV>
                      getT(0).getT(0).getT(0).getT(2);
-		auto& smoothed_parameter = this->getT(0).getT(1).getT(1).getT(5).                  // Sm2_impl::smoothed_parameter_t<NV>
+		auto& smoothed_parameter = this->getT(0).getT(1).getT(1).getT(5).                  // SmFx_impl::smoothed_parameter_t<NV>
                                    getT(0).getT(0).getT(0).getT(3);
-		auto& branch1 = this->getT(0).getT(1).getT(1).getT(5).                             // Sm2_impl::branch1_t<NV>
+		auto& branch1 = this->getT(0).getT(1).getT(1).getT(5).                             // SmFx_impl::branch1_t<NV>
                         getT(0).getT(0).getT(0).getT(4);
 		auto& add13 = this->getT(0).getT(1).getT(1).getT(5).                               // math::add<NV>
                       getT(0).getT(0).getT(0).getT(4).
@@ -5914,72 +5996,72 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		auto& add6 = this->getT(0).getT(1).getT(1).getT(5).                                // math::add<NV>
                      getT(0).getT(0).getT(0).getT(4).
                      getT(9);
-		auto& branch14 = this->getT(0).getT(1).getT(1).getT(5).                            // Sm2_impl::branch14_t<NV>
+		auto& branch14 = this->getT(0).getT(1).getT(1).getT(5).                            // SmFx_impl::branch14_t<NV>
                          getT(0).getT(0).getT(0).getT(5);
-		auto& file_player = this->getT(0).getT(1).getT(1).getT(5).                         // Sm2_impl::file_player_t<NV>
+		auto& file_player = this->getT(0).getT(1).getT(1).getT(5).                         // SmFx_impl::file_player_t<NV>
                             getT(0).getT(0).getT(0).getT(5).
                             getT(0);
-		auto& file_player2 = this->getT(0).getT(1).getT(1).getT(5).                        // Sm2_impl::file_player2_t<NV>
+		auto& file_player2 = this->getT(0).getT(1).getT(1).getT(5).                        // SmFx_impl::file_player2_t<NV>
                              getT(0).getT(0).getT(0).getT(5).
                              getT(1);
-		auto& chain19 = this->getT(0).getT(1).getT(1).getT(5).                             // Sm2_impl::chain19_t<NV>
+		auto& chain19 = this->getT(0).getT(1).getT(1).getT(5).                             // SmFx_impl::chain19_t<NV>
                         getT(0).getT(0).getT(0).getT(6);
 		auto& one_pole = this->getT(0).getT(1).getT(1).getT(5).                            // wrap::no_process<filters::one_pole<NV>>
                          getT(0).getT(0).getT(0).getT(6).
                          getT(0);
-		auto& chain254 = this->getT(0).getT(1).getT(1).getT(6);                            // Sm2_impl::chain254_t<NV>
-		auto& split35 = this->getT(0).getT(1).getT(1).getT(6).getT(0);                     // Sm2_impl::split35_t<NV>
-		auto& chain255 = this->getT(0).getT(1).getT(1).getT(6).getT(0).getT(0);            // Sm2_impl::chain255_t
-		auto& chain256 = this->getT(0).getT(1).getT(1).getT(6).getT(0).getT(1);            // Sm2_impl::chain256_t<NV>
-		auto& split36 = this->getT(0).getT(1).getT(1).getT(6).getT(0).getT(1).getT(0);     // Sm2_impl::split36_t<NV>
+		auto& chain254 = this->getT(0).getT(1).getT(1).getT(6);                            // SmFx_impl::chain254_t<NV>
+		auto& split35 = this->getT(0).getT(1).getT(1).getT(6).getT(0);                     // SmFx_impl::split35_t<NV>
+		auto& chain255 = this->getT(0).getT(1).getT(1).getT(6).getT(0).getT(0);            // SmFx_impl::chain255_t
+		auto& chain256 = this->getT(0).getT(1).getT(1).getT(6).getT(0).getT(1);            // SmFx_impl::chain256_t<NV>
+		auto& split36 = this->getT(0).getT(1).getT(1).getT(6).getT(0).getT(1).getT(0);     // SmFx_impl::split36_t<NV>
 		auto& send17 = this->getT(0).getT(1).getT(1).getT(6).                              // routing::send<NV, stereo_cable<NV>>
                        getT(0).getT(1).getT(0).getT(0);
-		auto& chain20 = this->getT(0).getT(1).getT(1).getT(6).                             // Sm2_impl::chain20_t<NV>
+		auto& chain20 = this->getT(0).getT(1).getT(1).getT(6).                             // SmFx_impl::chain20_t<NV>
                         getT(0).getT(1).getT(0).getT(1);
 		auto& sig2mod4 = this->getT(0).getT(1).getT(1).getT(6).                            // wrap::no_process<math::sig2mod<NV>>
                          getT(0).getT(1).getT(0).getT(1).
                          getT(0);
-		auto& peak31 = this->getT(0).getT(1).getT(1).getT(6).                              // Sm2_impl::peak31_t<NV>
+		auto& peak31 = this->getT(0).getT(1).getT(1).getT(6).                              // SmFx_impl::peak31_t<NV>
                        getT(0).getT(1).getT(0).getT(1).
                        getT(1);
-		auto& chain248 = this->getT(0).getT(1).getT(2);                                    // Sm2_impl::chain248_t<NV>
-		auto& branch30 = this->getT(0).getT(1).getT(2).getT(0);                            // Sm2_impl::branch30_t<NV>
-		auto& chain250 = this->getT(0).getT(1).getT(2).getT(0).getT(0);                    // Sm2_impl::chain250_t<NV>
+		auto& chain248 = this->getT(0).getT(1).getT(2);                                    // SmFx_impl::chain248_t<NV>
+		auto& branch30 = this->getT(0).getT(1).getT(2).getT(0);                            // SmFx_impl::branch30_t<NV>
+		auto& chain250 = this->getT(0).getT(1).getT(2).getT(0).getT(0);                    // SmFx_impl::chain250_t<NV>
 		auto& receive10 = this->getT(0).getT(1).getT(2).getT(0).getT(0).getT(0);           // routing::receive<NV, stereo_cable<NV>>
-		auto& chain251 = this->getT(0).getT(1).getT(2).getT(0).getT(1);                    // Sm2_impl::chain251_t<NV>
+		auto& chain251 = this->getT(0).getT(1).getT(2).getT(0).getT(1);                    // SmFx_impl::chain251_t<NV>
 		auto& receive34 = this->getT(0).getT(1).getT(2).getT(0).getT(1).getT(0);           // routing::receive<NV, stereo_cable<NV>>
-		auto& chain252 = this->getT(0).getT(1).getT(2).getT(0).getT(2);                    // Sm2_impl::chain252_t<NV>
+		auto& chain252 = this->getT(0).getT(1).getT(2).getT(0).getT(2);                    // SmFx_impl::chain252_t<NV>
 		auto& receive35 = this->getT(0).getT(1).getT(2).getT(0).getT(2).getT(0);           // routing::receive<NV, stereo_cable<NV>>
-		auto& chain253 = this->getT(0).getT(1).getT(2).getT(0).getT(3);                    // Sm2_impl::chain253_t<NV>
+		auto& chain253 = this->getT(0).getT(1).getT(2).getT(0).getT(3);                    // SmFx_impl::chain253_t<NV>
 		auto& receive36 = this->getT(0).getT(1).getT(2).getT(0).getT(3).getT(0);           // routing::receive<NV, stereo_cable<NV>>
-		auto& chain270 = this->getT(0).getT(1).getT(2).getT(0).getT(4);                    // Sm2_impl::chain270_t<NV>
+		auto& chain270 = this->getT(0).getT(1).getT(2).getT(0).getT(4);                    // SmFx_impl::chain270_t<NV>
 		auto& receive40 = this->getT(0).getT(1).getT(2).getT(0).getT(4).getT(0);           // routing::receive<NV, stereo_cable<NV>>
 		auto& one_pole8 = this->getT(0).getT(1).getT(2).getT(1);                           // filters::one_pole<NV>
 		auto& gain22 = this->getT(0).getT(1).getT(2).getT(2);                              // core::gain<NV>
 		auto& gain23 = this->getT(0).getT(1).getT(2).getT(3);                              // core::gain<NV>
-		auto& frame2_block2 = this->getT(0).getT(1).getT(2).getT(4);                       // Sm2_impl::frame2_block2_t<NV>
-		auto& chain33 = this->getT(0).getT(1).getT(2).getT(4).getT(0);                     // Sm2_impl::chain33_t<NV>
-		auto& split17 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0);             // Sm2_impl::split17_t<NV>
-		auto& chain34 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).getT(0);     // Sm2_impl::chain34_t<NV>
-		auto& peak10 = this->getT(0).getT(1).getT(2).getT(4).                              // Sm2_impl::peak10_t
+		auto& frame2_block2 = this->getT(0).getT(1).getT(2).getT(4);                       // SmFx_impl::frame2_block2_t<NV>
+		auto& chain33 = this->getT(0).getT(1).getT(2).getT(4).getT(0);                     // SmFx_impl::chain33_t<NV>
+		auto& split17 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0);             // SmFx_impl::split17_t<NV>
+		auto& chain34 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).getT(0);     // SmFx_impl::chain34_t<NV>
+		auto& peak10 = this->getT(0).getT(1).getT(2).getT(4).                              // SmFx_impl::peak10_t
                        getT(0).getT(0).getT(0).getT(0);
-		auto& split18 = this->getT(0).getT(1).getT(2).getT(4).                             // Sm2_impl::split18_t<NV>
+		auto& split18 = this->getT(0).getT(1).getT(2).getT(4).                             // SmFx_impl::split18_t<NV>
                         getT(0).getT(0).getT(0).getT(1);
-		auto& modchain14 = this->getT(0).getT(1).getT(2).getT(4).                          // Sm2_impl::modchain14_t<NV>
+		auto& modchain14 = this->getT(0).getT(1).getT(2).getT(4).                          // SmFx_impl::modchain14_t<NV>
                            getT(0).getT(0).getT(0).getT(1).
                            getT(0);
-		auto& chain49 = this->getT(0).getT(1).getT(2).getT(4).getT(0).                     // Sm2_impl::chain49_t<NV>
+		auto& chain49 = this->getT(0).getT(1).getT(2).getT(4).getT(0).                     // SmFx_impl::chain49_t<NV>
                         getT(0).getT(0).getT(1).getT(0).getT(0);
-		auto& tempo_sync3 = this->getT(0).getT(1).getT(2).getT(4).getT(0).                 // Sm2_impl::tempo_sync3_t<NV>
+		auto& tempo_sync3 = this->getT(0).getT(1).getT(2).getT(4).getT(0).                 // SmFx_impl::tempo_sync3_t<NV>
                             getT(0).getT(0).getT(1).getT(0).getT(0).
                             getT(0);
-		auto& ramp1 = this->getT(0).getT(1).getT(2).getT(4).getT(0).                       // Sm2_impl::ramp1_t<NV>
+		auto& ramp1 = this->getT(0).getT(1).getT(2).getT(4).getT(0).                       // SmFx_impl::ramp1_t<NV>
                       getT(0).getT(0).getT(1).getT(0).getT(0).
                       getT(1);
-		auto& branch7 = this->getT(0).getT(1).getT(2).getT(4).getT(0).                     // Sm2_impl::branch7_t<NV>
+		auto& branch7 = this->getT(0).getT(1).getT(2).getT(4).getT(0).                     // SmFx_impl::branch7_t<NV>
                         getT(0).getT(0).getT(1).getT(0).getT(0).
                         getT(2);
-		auto& chain50 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).             // Sm2_impl::chain50_t<NV>
+		auto& chain50 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).             // SmFx_impl::chain50_t<NV>
                         getT(0).getT(1).getT(0).getT(0).getT(2).getT(0);
 		auto& add16 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).               // math::add<NV>
                       getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
@@ -5987,57 +6069,57 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		auto& rect7 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).               // math::rect<NV>
                       getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
                       getT(1);
-		auto& peak11 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).              // Sm2_impl::peak11_t<NV>
+		auto& peak11 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).              // SmFx_impl::peak11_t<NV>
                        getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
                        getT(2);
 		auto& clear3 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).              // math::clear<NV>
                        getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
                        getT(3);
-		auto& input_toggle1 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).       // Sm2_impl::input_toggle1_t<NV>
+		auto& input_toggle1 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).       // SmFx_impl::input_toggle1_t<NV>
                               getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
                               getT(4);
-		auto& ahdsr2 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).              // Sm2_impl::ahdsr2_t<NV>
+		auto& ahdsr2 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).              // SmFx_impl::ahdsr2_t<NV>
                        getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
                        getT(5);
 		auto& add17 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).               // math::add<NV>
                       getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
                       getT(6);
-		auto& chain54 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).             // Sm2_impl::chain54_t<NV>
+		auto& chain54 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).             // SmFx_impl::chain54_t<NV>
                         getT(0).getT(1).getT(0).getT(0).getT(2).getT(1);
 		auto& clear4 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).              // math::clear<NV>
                        getT(0).getT(1).getT(0).getT(0).getT(2).getT(1).
                        getT(0);
-		auto& cable_table2 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).        // Sm2_impl::cable_table2_t<NV>
+		auto& cable_table2 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).        // SmFx_impl::cable_table2_t<NV>
                              getT(0).getT(1).getT(0).getT(0).getT(2).getT(1).
                              getT(1);
-		auto& cable_table5 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).        // Sm2_impl::cable_table5_t
+		auto& cable_table5 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).        // SmFx_impl::cable_table5_t
                              getT(0).getT(1).getT(0).getT(0).getT(2).getT(1).
                              getT(2);
-		auto& cable_table6 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).        // Sm2_impl::cable_table6_t
+		auto& cable_table6 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).        // SmFx_impl::cable_table6_t
                              getT(0).getT(1).getT(0).getT(0).getT(2).getT(1).
                              getT(3);
 		auto& add18 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).               // math::add<NV>
                       getT(0).getT(1).getT(0).getT(0).getT(2).getT(1).
                       getT(4);
-		auto& chain55 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).             // Sm2_impl::chain55_t<NV>
+		auto& chain55 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).             // SmFx_impl::chain55_t<NV>
                         getT(0).getT(1).getT(0).getT(0).getT(2).getT(2);
 		auto& clear5 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).              // math::clear<NV>
                        getT(0).getT(1).getT(0).getT(0).getT(2).getT(2).
                        getT(0);
-		auto& cable_pack1 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).         // Sm2_impl::cable_pack1_t<NV>
+		auto& cable_pack1 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).         // SmFx_impl::cable_pack1_t<NV>
                             getT(0).getT(1).getT(0).getT(0).getT(2).getT(2).
                             getT(1);
 		auto& add19 = this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).               // math::add<NV>
                       getT(0).getT(1).getT(0).getT(0).getT(2).getT(2).
                       getT(2);
-		auto& peak12 = this->getT(0).getT(1).getT(2).getT(4).getT(0).                      // Sm2_impl::peak12_t<NV>
+		auto& peak12 = this->getT(0).getT(1).getT(2).getT(4).getT(0).                      // SmFx_impl::peak12_t<NV>
                        getT(0).getT(0).getT(1).getT(0).getT(0).
                        getT(3);
-		auto& pma2 = this->getT(0).getT(1).getT(2).getT(4).                                // Sm2_impl::pma2_t<NV>
+		auto& pma2 = this->getT(0).getT(1).getT(2).getT(4).                                // SmFx_impl::pma2_t<NV>
                      getT(0).getT(0).getT(0).getT(2);
-		auto& smoothed_parameter3 = this->getT(0).getT(1).getT(2).getT(4).                 // Sm2_impl::smoothed_parameter3_t<NV>
+		auto& smoothed_parameter3 = this->getT(0).getT(1).getT(2).getT(4).                 // SmFx_impl::smoothed_parameter3_t<NV>
                                     getT(0).getT(0).getT(0).getT(3);
-		auto& branch8 = this->getT(0).getT(1).getT(2).getT(4).                             // Sm2_impl::branch8_t<NV>
+		auto& branch8 = this->getT(0).getT(1).getT(2).getT(4).                             // SmFx_impl::branch8_t<NV>
                         getT(0).getT(0).getT(0).getT(4);
 		auto& add20 = this->getT(0).getT(1).getT(2).getT(4).                               // math::add<NV>
                       getT(0).getT(0).getT(0).getT(4).
@@ -6069,206 +6151,335 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		auto& add136 = this->getT(0).getT(1).getT(2).getT(4).                              // math::add<NV>
                        getT(0).getT(0).getT(0).getT(4).
                        getT(9);
-		auto& branch15 = this->getT(0).getT(1).getT(2).getT(4).                            // Sm2_impl::branch15_t<NV>
+		auto& branch15 = this->getT(0).getT(1).getT(2).getT(4).                            // SmFx_impl::branch15_t<NV>
                          getT(0).getT(0).getT(0).getT(5);
-		auto& file_player1 = this->getT(0).getT(1).getT(2).getT(4).                        // Sm2_impl::file_player1_t<NV>
+		auto& file_player1 = this->getT(0).getT(1).getT(2).getT(4).                        // SmFx_impl::file_player1_t<NV>
                              getT(0).getT(0).getT(0).getT(5).
                              getT(0);
-		auto& file_player3 = this->getT(0).getT(1).getT(2).getT(4).                        // Sm2_impl::file_player3_t<NV>
+		auto& file_player3 = this->getT(0).getT(1).getT(2).getT(4).                        // SmFx_impl::file_player3_t<NV>
                              getT(0).getT(0).getT(0).getT(5).
                              getT(1);
-		auto& chain35 = this->getT(0).getT(1).getT(2).getT(4).                             // Sm2_impl::chain35_t<NV>
+		auto& chain35 = this->getT(0).getT(1).getT(2).getT(4).                             // SmFx_impl::chain35_t<NV>
                         getT(0).getT(0).getT(0).getT(6);
 		auto& one_pole1 = this->getT(0).getT(1).getT(2).getT(4).                           // wrap::no_process<filters::one_pole<NV>>
                           getT(0).getT(0).getT(0).getT(6).
                           getT(0);
-		auto& chain95 = this->getT(0).getT(1).getT(2).getT(5);                             // Sm2_impl::chain95_t<NV>
-		auto& split24 = this->getT(0).getT(1).getT(2).getT(5).getT(0);                     // Sm2_impl::split24_t<NV>
-		auto& chain100 = this->getT(0).getT(1).getT(2).getT(5).getT(0).getT(0);            // Sm2_impl::chain100_t
-		auto& chain101 = this->getT(0).getT(1).getT(2).getT(5).getT(0).getT(1);            // Sm2_impl::chain101_t<NV>
-		auto& split25 = this->getT(0).getT(1).getT(2).getT(5).getT(0).getT(1).getT(0);     // Sm2_impl::split25_t<NV>
+		auto& chain95 = this->getT(0).getT(1).getT(2).getT(5);                             // SmFx_impl::chain95_t<NV>
+		auto& split24 = this->getT(0).getT(1).getT(2).getT(5).getT(0);                     // SmFx_impl::split24_t<NV>
+		auto& chain100 = this->getT(0).getT(1).getT(2).getT(5).getT(0).getT(0);            // SmFx_impl::chain100_t
+		auto& chain101 = this->getT(0).getT(1).getT(2).getT(5).getT(0).getT(1);            // SmFx_impl::chain101_t<NV>
+		auto& split25 = this->getT(0).getT(1).getT(2).getT(5).getT(0).getT(1).getT(0);     // SmFx_impl::split25_t<NV>
 		auto& send11 = this->getT(0).getT(1).getT(2).getT(5).                              // routing::send<NV, stereo_cable<NV>>
                        getT(0).getT(1).getT(0).getT(0);
-		auto& chain84 = this->getT(0).getT(1).getT(2).getT(5).                             // Sm2_impl::chain84_t<NV>
+		auto& chain84 = this->getT(0).getT(1).getT(2).getT(5).                             // SmFx_impl::chain84_t<NV>
                         getT(0).getT(1).getT(0).getT(1);
 		auto& sig2mod3 = this->getT(0).getT(1).getT(2).getT(5).                            // wrap::no_process<math::sig2mod<NV>>
                          getT(0).getT(1).getT(0).getT(1).
                          getT(0);
-		auto& peak19 = this->getT(0).getT(1).getT(2).getT(5).                              // Sm2_impl::peak19_t<NV>
+		auto& peak19 = this->getT(0).getT(1).getT(2).getT(5).                              // SmFx_impl::peak19_t<NV>
                        getT(0).getT(1).getT(0).getT(1).
                        getT(1);
 		auto& clear6 = this->getT(0).getT(2);                                              // math::clear<NV>
-		auto& split26 = this->getT(0).getT(3);                                             // Sm2_impl::split26_t<NV>
-		auto& chain154 = this->getT(0).getT(3).getT(0);                                    // Sm2_impl::chain154_t<NV>
-		auto& sliderbank = this->getT(0).getT(3).getT(0).getT(0);                          // Sm2_impl::sliderbank_t<NV>
-		auto& split39 = this->getT(0).getT(3).getT(0).getT(1);                             // Sm2_impl::split39_t<NV>
-		auto& chain161 = this->getT(0).getT(3).getT(0).getT(1).getT(0);                    // Sm2_impl::chain161_t<NV>
-		auto& receive7 = this->getT(0).getT(3).getT(0).getT(1).getT(0).getT(0);            // routing::receive<NV, stereo_cable<NV>>
-		auto& gain2 = this->getT(0).getT(3).getT(0).getT(1).getT(0).getT(1);               // core::gain<NV>
-		auto& chain162 = this->getT(0).getT(3).getT(0).getT(1).getT(1);                    // Sm2_impl::chain162_t<NV>
-		auto& receive6 = this->getT(0).getT(3).getT(0).getT(1).getT(1).getT(0);            // routing::receive<NV, stereo_cable<NV>>
-		auto& gain8 = this->getT(0).getT(3).getT(0).getT(1).getT(1).getT(1);               // core::gain<NV>
-		auto& chain165 = this->getT(0).getT(3).getT(0).getT(1).getT(2);                    // Sm2_impl::chain165_t<NV>
-		auto& receive13 = this->getT(0).getT(3).getT(0).getT(1).getT(2).getT(0);           // routing::receive<NV, stereo_cable<NV>>
-		auto& gain26 = this->getT(0).getT(3).getT(0).getT(1).getT(2).getT(1);              // core::gain<NV>
-		auto& chain164 = this->getT(0).getT(3).getT(0).getT(1).getT(3);                    // Sm2_impl::chain164_t<NV>
-		auto& receive4 = this->getT(0).getT(3).getT(0).getT(1).getT(3).getT(0);            // routing::receive<NV, stereo_cable<NV>>
-		auto& gain25 = this->getT(0).getT(3).getT(0).getT(1).getT(3).getT(1);              // core::gain<NV>
-		auto& branch6 = this->getT(0).getT(3).getT(0).getT(2);                             // Sm2_impl::branch6_t<NV>
-		auto& chain41 = this->getT(0).getT(3).getT(0).getT(2).getT(0);                     // Sm2_impl::chain41_t<NV>
+		auto& split26 = this->getT(0).getT(3);                                             // SmFx_impl::split26_t<NV>
+		auto& chain154 = this->getT(0).getT(3).getT(0);                                    // SmFx_impl::chain154_t<NV>
+		auto& sliderbank = this->getT(0).getT(3).getT(0).getT(0);                          // SmFx_impl::sliderbank_t<NV>
+		auto& split39 = this->getT(0).getT(3).getT(0).getT(1);                             // SmFx_impl::split39_t<NV>
+		auto& receive7 = this->getT(0).getT(3).getT(0).getT(1).getT(0);                    // routing::receive<NV, stereo_cable<NV>>
+		auto& receive6 = this->getT(0).getT(3).getT(0).getT(1).getT(1);                    // routing::receive<NV, stereo_cable<NV>>
+		auto& receive13 = this->getT(0).getT(3).getT(0).getT(1).getT(2);                   // routing::receive<NV, stereo_cable<NV>>
+		auto& receive4 = this->getT(0).getT(3).getT(0).getT(1).getT(3);                    // routing::receive<NV, stereo_cable<NV>>
+		auto& branch6 = this->getT(0).getT(3).getT(0).getT(2);                             // SmFx_impl::branch6_t<NV>
+		auto& chain41 = this->getT(0).getT(3).getT(0).getT(2).getT(0);                     // SmFx_impl::chain41_t<NV>
 		auto& svf = this->getT(0).getT(3).getT(0).getT(2).getT(0).getT(0);                 // filters::svf<NV>
-		auto& chain43 = this->getT(0).getT(3).getT(0).getT(2).getT(1);                     // Sm2_impl::chain43_t<NV>
+		auto& chain43 = this->getT(0).getT(3).getT(0).getT(2).getT(1);                     // SmFx_impl::chain43_t<NV>
 		auto& svf2 = this->getT(0).getT(3).getT(0).getT(2).getT(1).getT(0);                // filters::svf<NV>
-		auto& chain42 = this->getT(0).getT(3).getT(0).getT(2).getT(2);                     // Sm2_impl::chain42_t<NV>
+		auto& chain42 = this->getT(0).getT(3).getT(0).getT(2).getT(2);                     // SmFx_impl::chain42_t<NV>
 		auto& svf1 = this->getT(0).getT(3).getT(0).getT(2).getT(2).getT(0);                // filters::svf<NV>
-		auto& chain44 = this->getT(0).getT(3).getT(0).getT(2).getT(3);                     // Sm2_impl::chain44_t<NV>
+		auto& chain44 = this->getT(0).getT(3).getT(0).getT(2).getT(3);                     // SmFx_impl::chain44_t<NV>
 		auto& svf3 = this->getT(0).getT(3).getT(0).getT(2).getT(3).getT(0);                // filters::svf<NV>
-		auto& chain45 = this->getT(0).getT(3).getT(0).getT(2).getT(4);                     // Sm2_impl::chain45_t<NV>
-		auto& allpass = this->getT(0).getT(3).getT(0).getT(2).getT(4).getT(0);             // filters::allpass<NV>
-		auto& frame2_block = this->getT(0).getT(3).getT(0).getT(2).getT(5);                // Sm2_impl::frame2_block_t<NV>
-		auto& chain39 = this->getT(0).getT(3).getT(0).getT(2).getT(5).getT(0);             // Sm2_impl::chain39_t<NV>
+		auto& chain45 = this->getT(0).getT(3).getT(0).getT(2).getT(4);                     // SmFx_impl::chain45_t<NV>
+		auto& one_pole6 = this->getT(0).getT(3).getT(0).getT(2).getT(4).getT(0);           // filters::one_pole<NV>
+		auto& allpass = this->getT(0).getT(3).getT(0).getT(2).getT(4).getT(1);             // filters::allpass<NV>
+		auto& frame2_block = this->getT(0).getT(3).getT(0).getT(2).getT(5);                // SmFx_impl::frame2_block_t<NV>
+		auto& chain39 = this->getT(0).getT(3).getT(0).getT(2).getT(5).getT(0);             // SmFx_impl::chain39_t<NV>
 		auto& receive = this->getT(0).getT(3).getT(0).getT(2).getT(5).getT(0).getT(0);     // routing::receive<NV, stereo_frame_cable<NV>>
-		auto& chain51 = this->getT(0).getT(3).getT(0).getT(2).getT(5).getT(0).getT(1);     // Sm2_impl::chain51_t<NV>
-		auto& converter7 = this->getT(0).getT(3).getT(0).getT(2).                          // Sm2_impl::converter7_t<NV>
+		auto& chain51 = this->getT(0).getT(3).getT(0).getT(2).getT(5).getT(0).getT(1);     // SmFx_impl::chain51_t<NV>
+		auto& converter7 = this->getT(0).getT(3).getT(0).getT(2).                          // SmFx_impl::converter7_t<NV>
                            getT(5).getT(0).getT(1).getT(0);
-		auto& converter6 = this->getT(0).getT(3).getT(0).getT(2).                          // Sm2_impl::converter6_t<NV>
+		auto& converter6 = this->getT(0).getT(3).getT(0).getT(2).                          // SmFx_impl::converter6_t<NV>
                            getT(5).getT(0).getT(1).getT(1);
 		auto& jdelay = this->getT(0).getT(3).getT(0).getT(2).                              // jdsp::jdelay<NV>
                        getT(5).getT(0).getT(1).getT(2);
 		auto& one_pole2 = this->getT(0).getT(3).getT(0).getT(2).getT(5).getT(0).getT(2);   // filters::one_pole<NV>
 		auto& send = this->getT(0).getT(3).getT(0).getT(2).getT(5).getT(0).getT(3);        // routing::send<NV, stereo_frame_cable<NV>>
-		auto& chain40 = this->getT(0).getT(3).getT(0).getT(2).getT(6);                     // Sm2_impl::chain40_t<NV>
+		auto& chain40 = this->getT(0).getT(3).getT(0).getT(2).getT(6);                     // SmFx_impl::chain40_t<NV>
 		auto& receive1 = this->getT(0).getT(3).getT(0).getT(2).getT(6).getT(0);            // routing::receive<NV, stereo_cable<NV>>
-		auto& chain56 = this->getT(0).getT(3).getT(0).getT(2).getT(6).getT(1);             // Sm2_impl::chain56_t<NV>
-		auto& midi1 = this->getT(0).getT(3).getT(0).getT(2).getT(6).getT(1).getT(0);       // Sm2_impl::midi1_t<NV>
-		auto& converter8 = this->getT(0).getT(3).getT(0).getT(2).getT(6).getT(1).getT(1);  // Sm2_impl::converter8_t<NV>
-		auto& converter9 = this->getT(0).getT(3).getT(0).getT(2).getT(6).getT(1).getT(2);  // Sm2_impl::converter9_t<NV>
-		auto& jdelay1 = this->getT(0).getT(3).getT(0).getT(2).getT(6).getT(1).getT(3);     // jdsp::jdelay<NV>
+		auto& chain56 = this->getT(0).getT(3).getT(0).getT(2).getT(6).getT(1);             // SmFx_impl::chain56_t<NV>
+		auto& converter8 = this->getT(0).getT(3).getT(0).getT(2).getT(6).getT(1).getT(0);  // SmFx_impl::converter8_t<NV>
+		auto& converter9 = this->getT(0).getT(3).getT(0).getT(2).getT(6).getT(1).getT(1);  // SmFx_impl::converter9_t<NV>
+		auto& jdelay1 = this->getT(0).getT(3).getT(0).getT(2).getT(6).getT(1).getT(2);     // jdsp::jdelay<NV>
 		auto& one_pole3 = this->getT(0).getT(3).getT(0).getT(2).getT(6).getT(2);           // filters::one_pole<NV>
 		auto& send1 = this->getT(0).getT(3).getT(0).getT(2).getT(6).getT(3);               // routing::send<NV, stereo_cable<NV>>
-		auto& chain123 = this->getT(0).getT(3).getT(0).getT(2).getT(7);                    // Sm2_impl::chain123_t<NV>
+		auto& chain123 = this->getT(0).getT(3).getT(0).getT(2).getT(7);                    // SmFx_impl::chain123_t<NV>
 		auto& receive2 = this->getT(0).getT(3).getT(0).getT(2).getT(7).getT(0);            // routing::receive<NV, stereo_cable<NV>>
-		auto& chain125 = this->getT(0).getT(3).getT(0).getT(2).getT(7).getT(1);            // Sm2_impl::chain125_t<NV>
-		auto& converter16 = this->getT(0).getT(3).getT(0).getT(2).getT(7).getT(1).getT(0); // Sm2_impl::converter16_t<NV>
-		auto& converter17 = this->getT(0).getT(3).getT(0).getT(2).getT(7).getT(1).getT(1); // Sm2_impl::converter17_t<NV>
+		auto& chain125 = this->getT(0).getT(3).getT(0).getT(2).getT(7).getT(1);            // SmFx_impl::chain125_t<NV>
+		auto& converter16 = this->getT(0).getT(3).getT(0).getT(2).getT(7).getT(1).getT(0); // SmFx_impl::converter16_t<NV>
+		auto& converter17 = this->getT(0).getT(3).getT(0).getT(2).getT(7).getT(1).getT(1); // SmFx_impl::converter17_t<NV>
 		auto& jdelay5 = this->getT(0).getT(3).getT(0).getT(2).getT(7).getT(1).getT(2);     // jdsp::jdelay<NV>
 		auto& one_pole4 = this->getT(0).getT(3).getT(0).getT(2).getT(7).getT(2);           // filters::one_pole<NV>
 		auto& send2 = this->getT(0).getT(3).getT(0).getT(2).getT(7).getT(3);               // routing::send<NV, stereo_cable<NV>>
-		auto& chain126 = this->getT(0).getT(3).getT(0).getT(2).getT(8);                    // Sm2_impl::chain126_t<NV>
+		auto& chain126 = this->getT(0).getT(3).getT(0).getT(2).getT(8);                    // SmFx_impl::chain126_t<NV>
 		auto& receive3 = this->getT(0).getT(3).getT(0).getT(2).getT(8).getT(0);            // routing::receive<NV, stereo_cable<NV>>
-		auto& chain155 = this->getT(0).getT(3).getT(0).getT(2).getT(8).getT(1);            // Sm2_impl::chain155_t<NV>
-		auto& converter18 = this->getT(0).getT(3).getT(0).getT(2).getT(8).getT(1).getT(0); // Sm2_impl::converter18_t<NV>
-		auto& converter19 = this->getT(0).getT(3).getT(0).getT(2).getT(8).getT(1).getT(1); // Sm2_impl::converter19_t<NV>
+		auto& chain155 = this->getT(0).getT(3).getT(0).getT(2).getT(8).getT(1);            // SmFx_impl::chain155_t<NV>
+		auto& converter18 = this->getT(0).getT(3).getT(0).getT(2).getT(8).getT(1).getT(0); // SmFx_impl::converter18_t<NV>
+		auto& converter19 = this->getT(0).getT(3).getT(0).getT(2).getT(8).getT(1).getT(1); // SmFx_impl::converter19_t<NV>
 		auto& jdelay6 = this->getT(0).getT(3).getT(0).getT(2).getT(8).getT(1).getT(2);     // jdsp::jdelay<NV>
 		auto& one_pole5 = this->getT(0).getT(3).getT(0).getT(2).getT(8).getT(2);           // filters::one_pole<NV>
 		auto& send3 = this->getT(0).getT(3).getT(0).getT(2).getT(8).getT(3);               // routing::send<NV, stereo_cable<NV>>
-		auto& chain157 = this->getT(0).getT(3).getT(0).getT(3);                            // Sm2_impl::chain157_t<NV>
-		auto& split27 = this->getT(0).getT(3).getT(0).getT(3).getT(0);                     // Sm2_impl::split27_t<NV>
-		auto& chain158 = this->getT(0).getT(3).getT(0).getT(3).getT(0).getT(0);            // Sm2_impl::chain158_t
-		auto& chain159 = this->getT(0).getT(3).getT(0).getT(3).getT(0).getT(1);            // Sm2_impl::chain159_t<NV>
-		auto& split28 = this->getT(0).getT(3).getT(0).getT(3).getT(0).getT(1).getT(0);     // Sm2_impl::split28_t<NV>
+		auto& chain157 = this->getT(0).getT(3).getT(0).getT(3);                            // SmFx_impl::chain157_t<NV>
+		auto& split27 = this->getT(0).getT(3).getT(0).getT(3).getT(0);                     // SmFx_impl::split27_t<NV>
+		auto& chain158 = this->getT(0).getT(3).getT(0).getT(3).getT(0).getT(0);            // SmFx_impl::chain158_t
+		auto& chain159 = this->getT(0).getT(3).getT(0).getT(3).getT(0).getT(1);            // SmFx_impl::chain159_t<NV>
+		auto& split28 = this->getT(0).getT(3).getT(0).getT(3).getT(0).getT(1).getT(0);     // SmFx_impl::split28_t<NV>
 		auto& send12 = this->getT(0).getT(3).getT(0).getT(3).                              // routing::send<NV, stereo_cable<NV>>
                        getT(0).getT(1).getT(0).getT(0);
-		auto& chain249 = this->getT(0).getT(3).getT(0).getT(3).                            // Sm2_impl::chain249_t<NV>
+		auto& chain249 = this->getT(0).getT(3).getT(0).getT(3).                            // SmFx_impl::chain249_t<NV>
                          getT(0).getT(1).getT(0).getT(1);
 		auto& sig2mod5 = this->getT(0).getT(3).getT(0).getT(3).                            // wrap::no_process<math::sig2mod<NV>>
                          getT(0).getT(1).getT(0).getT(1).
                          getT(0);
-		auto& peak32 = this->getT(0).getT(3).getT(0).getT(3).                              // Sm2_impl::peak32_t<NV>
+		auto& peak32 = this->getT(0).getT(3).getT(0).getT(3).                              // SmFx_impl::peak32_t<NV>
                        getT(0).getT(1).getT(0).getT(1).
                        getT(1);
 		auto& clear10 = this->getT(0).getT(3).getT(0).getT(3).getT(0).getT(1).getT(1);     // math::clear<NV>
 		auto& gain38 = this->getT(0).getT(3).getT(0).getT(4);                              // core::gain<NV>
 		auto& jpanner = this->getT(0).getT(3).getT(0).getT(5);                             // jdsp::jpanner<NV>
-		auto& chain160 = this->getT(0).getT(3).getT(1);                                    // Sm2_impl::chain160_t<NV>
-		auto& sliderbank1 = this->getT(0).getT(3).getT(1).getT(0);                         // Sm2_impl::sliderbank1_t<NV>
-		auto& split40 = this->getT(0).getT(3).getT(1).getT(1);                             // Sm2_impl::split40_t<NV>
-		auto& chain259 = this->getT(0).getT(3).getT(1).getT(1).getT(0);                    // Sm2_impl::chain259_t<NV>
-		auto& receive15 = this->getT(0).getT(3).getT(1).getT(1).getT(0).getT(0);           // routing::receive<NV, stereo_cable<NV>>
-		auto& gain27 = this->getT(0).getT(3).getT(1).getT(1).getT(0).getT(1);              // core::gain<NV>
-		auto& chain264 = this->getT(0).getT(3).getT(1).getT(1).getT(1);                    // Sm2_impl::chain264_t<NV>
-		auto& receive16 = this->getT(0).getT(3).getT(1).getT(1).getT(1).getT(0);           // routing::receive<NV, stereo_cable<NV>>
-		auto& gain31 = this->getT(0).getT(3).getT(1).getT(1).getT(1).getT(1);              // core::gain<NV>
-		auto& chain263 = this->getT(0).getT(3).getT(1).getT(1).getT(2);                    // Sm2_impl::chain263_t<NV>
-		auto& receive17 = this->getT(0).getT(3).getT(1).getT(1).getT(2).getT(0);           // routing::receive<NV, stereo_cable<NV>>
-		auto& gain30 = this->getT(0).getT(3).getT(1).getT(1).getT(2).getT(1);              // core::gain<NV>
-		auto& chain262 = this->getT(0).getT(3).getT(1).getT(1).getT(3);                    // Sm2_impl::chain262_t<NV>
-		auto& receive14 = this->getT(0).getT(3).getT(1).getT(1).getT(3).getT(0);           // routing::receive<NV, stereo_cable<NV>>
-		auto& gain29 = this->getT(0).getT(3).getT(1).getT(1).getT(3).getT(1);              // core::gain<NV>
-		auto& chain261 = this->getT(0).getT(3).getT(1).getT(1).getT(4);                    // Sm2_impl::chain261_t<NV>
-		auto& receive18 = this->getT(0).getT(3).getT(1).getT(1).getT(4).getT(0);           // routing::receive<NV, stereo_cable<NV>>
-		auto& gain28 = this->getT(0).getT(3).getT(1).getT(1).getT(4).getT(1);              // core::gain<NV>
-		auto& branch13 = this->getT(0).getT(3).getT(1).getT(2);                            // Sm2_impl::branch13_t<NV>
-		auto& chain168 = this->getT(0).getT(3).getT(1).getT(2).getT(0);                    // Sm2_impl::chain168_t<NV>
+		auto& chain160 = this->getT(0).getT(3).getT(1);                                    // SmFx_impl::chain160_t<NV>
+		auto& sliderbank1 = this->getT(0).getT(3).getT(1).getT(0);                         // SmFx_impl::sliderbank1_t<NV>
+		auto& split40 = this->getT(0).getT(3).getT(1).getT(1);                             // SmFx_impl::split40_t<NV>
+		auto& receive15 = this->getT(0).getT(3).getT(1).getT(1).getT(0);                   // routing::receive<NV, stereo_cable<NV>>
+		auto& receive16 = this->getT(0).getT(3).getT(1).getT(1).getT(1);                   // routing::receive<NV, stereo_cable<NV>>
+		auto& receive17 = this->getT(0).getT(3).getT(1).getT(1).getT(2);                   // routing::receive<NV, stereo_cable<NV>>
+		auto& receive14 = this->getT(0).getT(3).getT(1).getT(1).getT(3);                   // routing::receive<NV, stereo_cable<NV>>
+		auto& receive18 = this->getT(0).getT(3).getT(1).getT(1).getT(4);                   // routing::receive<NV, stereo_cable<NV>>
+		auto& branch13 = this->getT(0).getT(3).getT(1).getT(2);                            // SmFx_impl::branch13_t<NV>
+		auto& chain168 = this->getT(0).getT(3).getT(1).getT(2).getT(0);                    // SmFx_impl::chain168_t<NV>
 		auto& svf8 = this->getT(0).getT(3).getT(1).getT(2).getT(0).getT(0);                // filters::svf<NV>
-		auto& chain169 = this->getT(0).getT(3).getT(1).getT(2).getT(1);                    // Sm2_impl::chain169_t<NV>
+		auto& chain169 = this->getT(0).getT(3).getT(1).getT(2).getT(1);                    // SmFx_impl::chain169_t<NV>
 		auto& svf9 = this->getT(0).getT(3).getT(1).getT(2).getT(1).getT(0);                // filters::svf<NV>
-		auto& chain170 = this->getT(0).getT(3).getT(1).getT(2).getT(2);                    // Sm2_impl::chain170_t<NV>
+		auto& chain170 = this->getT(0).getT(3).getT(1).getT(2).getT(2);                    // SmFx_impl::chain170_t<NV>
 		auto& svf10 = this->getT(0).getT(3).getT(1).getT(2).getT(2).getT(0);               // filters::svf<NV>
-		auto& chain171 = this->getT(0).getT(3).getT(1).getT(2).getT(3);                    // Sm2_impl::chain171_t<NV>
+		auto& chain171 = this->getT(0).getT(3).getT(1).getT(2).getT(3);                    // SmFx_impl::chain171_t<NV>
 		auto& svf11 = this->getT(0).getT(3).getT(1).getT(2).getT(3).getT(0);               // filters::svf<NV>
-		auto& chain172 = this->getT(0).getT(3).getT(1).getT(2).getT(4);                    // Sm2_impl::chain172_t<NV>
+		auto& chain172 = this->getT(0).getT(3).getT(1).getT(2).getT(4);                    // SmFx_impl::chain172_t<NV>
 		auto& allpass2 = this->getT(0).getT(3).getT(1).getT(2).getT(4).getT(0);            // filters::allpass<NV>
-		auto& chain166 = this->getT(0).getT(3).getT(1).getT(2).getT(5);                    // Sm2_impl::chain166_t<NV>
+		auto& chain166 = this->getT(0).getT(3).getT(1).getT(2).getT(5);                    // SmFx_impl::chain166_t<NV>
 		auto& receive19 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(0);           // routing::receive<NV, stereo_cable<NV>>
-		auto& chain61 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(1);             // Sm2_impl::chain61_t<NV>
-		auto& midi2 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(1).getT(0);       // Sm2_impl::midi2_t<NV>
-		auto& converter10 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(1).getT(1); // Sm2_impl::converter10_t<NV>
-		auto& converter11 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(1).getT(2); // Sm2_impl::converter11_t<NV>
-		auto& jdelay2 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(1).getT(3);     // jdsp::jdelay<NV>
-		auto& chain92 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(2);             // Sm2_impl::chain92_t<NV>
-		auto& midi3 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(2).getT(0);       // Sm2_impl::midi3_t<NV>
-		auto& converter12 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(2).getT(1); // Sm2_impl::converter12_t<NV>
-		auto& converter13 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(2).getT(2); // Sm2_impl::converter13_t<NV>
-		auto& jdelay3 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(2).getT(3);     // jdsp::jdelay<NV>
-		auto& one_pole12 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(3);          // filters::one_pole<NV>
-		auto& send13 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(4);              // routing::send<NV, stereo_cable<NV>>
-		auto& chain167 = this->getT(0).getT(3).getT(1).getT(2).getT(6);                    // Sm2_impl::chain167_t<NV>
+		auto& chain61 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(1);             // SmFx_impl::chain61_t<NV>
+		auto& converter10 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(1).getT(0); // SmFx_impl::converter10_t<NV>
+		auto& converter11 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(1).getT(1); // SmFx_impl::converter11_t<NV>
+		auto& jdelay2 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(1).getT(2);     // jdsp::jdelay<NV>
+		auto& one_pole12 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(2);          // filters::one_pole<NV>
+		auto& send13 = this->getT(0).getT(3).getT(1).getT(2).getT(5).getT(3);              // routing::send<NV, stereo_cable<NV>>
+		auto& chain167 = this->getT(0).getT(3).getT(1).getT(2).getT(6);                    // SmFx_impl::chain167_t<NV>
 		auto& receive20 = this->getT(0).getT(3).getT(1).getT(2).getT(6).getT(0);           // routing::receive<NV, stereo_cable<NV>>
-		auto& chain94 = this->getT(0).getT(3).getT(1).getT(2).getT(6).getT(1);             // Sm2_impl::chain94_t<NV>
-		auto& midi4 = this->getT(0).getT(3).getT(1).getT(2).getT(6).getT(1).getT(0);       // Sm2_impl::midi4_t<NV>
-		auto& converter14 = this->getT(0).getT(3).getT(1).getT(2).getT(6).getT(1).getT(1); // Sm2_impl::converter14_t<NV>
-		auto& converter15 = this->getT(0).getT(3).getT(1).getT(2).getT(6).getT(1).getT(2); // Sm2_impl::converter15_t<NV>
-		auto& jdelay4 = this->getT(0).getT(3).getT(1).getT(2).getT(6).getT(1).getT(3);     // jdsp::jdelay<NV>
+		auto& chain94 = this->getT(0).getT(3).getT(1).getT(2).getT(6).getT(1);             // SmFx_impl::chain94_t<NV>
+		auto& converter14 = this->getT(0).getT(3).getT(1).getT(2).getT(6).getT(1).getT(0); // SmFx_impl::converter14_t<NV>
+		auto& converter15 = this->getT(0).getT(3).getT(1).getT(2).getT(6).getT(1).getT(1); // SmFx_impl::converter15_t<NV>
+		auto& jdelay4 = this->getT(0).getT(3).getT(1).getT(2).getT(6).getT(1).getT(2);     // jdsp::jdelay<NV>
 		auto& one_pole13 = this->getT(0).getT(3).getT(1).getT(2).getT(6).getT(2);          // filters::one_pole<NV>
 		auto& send14 = this->getT(0).getT(3).getT(1).getT(2).getT(6).getT(3);              // routing::send<NV, stereo_cable<NV>>
-		auto& chain232 = this->getT(0).getT(3).getT(1).getT(2).getT(7);                    // Sm2_impl::chain232_t<NV>
+		auto& chain232 = this->getT(0).getT(3).getT(1).getT(2).getT(7);                    // SmFx_impl::chain232_t<NV>
 		auto& receive27 = this->getT(0).getT(3).getT(1).getT(2).getT(7).getT(0);           // routing::receive<NV, stereo_cable<NV>>
-		auto& chain156 = this->getT(0).getT(3).getT(1).getT(2).getT(7).getT(1);            // Sm2_impl::chain156_t<NV>
-		auto& converter20 = this->getT(0).getT(3).getT(1).getT(2).getT(7).getT(1).getT(0); // Sm2_impl::converter20_t<NV>
-		auto& converter21 = this->getT(0).getT(3).getT(1).getT(2).getT(7).getT(1).getT(1); // Sm2_impl::converter21_t<NV>
+		auto& chain156 = this->getT(0).getT(3).getT(1).getT(2).getT(7).getT(1);            // SmFx_impl::chain156_t<NV>
+		auto& converter20 = this->getT(0).getT(3).getT(1).getT(2).getT(7).getT(1).getT(0); // SmFx_impl::converter20_t<NV>
+		auto& converter21 = this->getT(0).getT(3).getT(1).getT(2).getT(7).getT(1).getT(1); // SmFx_impl::converter21_t<NV>
 		auto& jdelay7 = this->getT(0).getT(3).getT(1).getT(2).getT(7).getT(1).getT(2);     // jdsp::jdelay<NV>
 		auto& one_pole14 = this->getT(0).getT(3).getT(1).getT(2).getT(7).getT(2);          // filters::one_pole<NV>
 		auto& send18 = this->getT(0).getT(3).getT(1).getT(2).getT(7).getT(3);              // routing::send<NV, stereo_cable<NV>>
-		auto& chain233 = this->getT(0).getT(3).getT(1).getT(2).getT(8);                    // Sm2_impl::chain233_t<NV>
+		auto& chain233 = this->getT(0).getT(3).getT(1).getT(2).getT(8);                    // SmFx_impl::chain233_t<NV>
 		auto& receive28 = this->getT(0).getT(3).getT(1).getT(2).getT(8).getT(0);           // routing::receive<NV, stereo_cable<NV>>
-		auto& chain234 = this->getT(0).getT(3).getT(1).getT(2).getT(8).getT(1);            // Sm2_impl::chain234_t<NV>
-		auto& converter22 = this->getT(0).getT(3).getT(1).getT(2).getT(8).getT(1).getT(0); // Sm2_impl::converter22_t<NV>
-		auto& converter23 = this->getT(0).getT(3).getT(1).getT(2).getT(8).getT(1).getT(1); // Sm2_impl::converter23_t<NV>
+		auto& chain234 = this->getT(0).getT(3).getT(1).getT(2).getT(8).getT(1);            // SmFx_impl::chain234_t<NV>
+		auto& converter22 = this->getT(0).getT(3).getT(1).getT(2).getT(8).getT(1).getT(0); // SmFx_impl::converter22_t<NV>
+		auto& converter23 = this->getT(0).getT(3).getT(1).getT(2).getT(8).getT(1).getT(1); // SmFx_impl::converter23_t<NV>
 		auto& jdelay8 = this->getT(0).getT(3).getT(1).getT(2).getT(8).getT(1).getT(2);     // jdsp::jdelay<NV>
 		auto& one_pole15 = this->getT(0).getT(3).getT(1).getT(2).getT(8).getT(2);          // filters::one_pole<NV>
 		auto& send19 = this->getT(0).getT(3).getT(1).getT(2).getT(8).getT(3);              // routing::send<NV, stereo_cable<NV>>
-		auto& chain173 = this->getT(0).getT(3).getT(1).getT(3);                            // Sm2_impl::chain173_t<NV>
-		auto& split29 = this->getT(0).getT(3).getT(1).getT(3).getT(0);                     // Sm2_impl::split29_t<NV>
-		auto& chain174 = this->getT(0).getT(3).getT(1).getT(3).getT(0).getT(0);            // Sm2_impl::chain174_t
-		auto& chain175 = this->getT(0).getT(3).getT(1).getT(3).getT(0).getT(1);            // Sm2_impl::chain175_t<NV>
-		auto& split30 = this->getT(0).getT(3).getT(1).getT(3).getT(0).getT(1).getT(0);     // Sm2_impl::split30_t<NV>
+		auto& chain173 = this->getT(0).getT(3).getT(1).getT(3);                            // SmFx_impl::chain173_t<NV>
+		auto& split29 = this->getT(0).getT(3).getT(1).getT(3).getT(0);                     // SmFx_impl::split29_t<NV>
+		auto& chain174 = this->getT(0).getT(3).getT(1).getT(3).getT(0).getT(0);            // SmFx_impl::chain174_t
+		auto& chain175 = this->getT(0).getT(3).getT(1).getT(3).getT(0).getT(1);            // SmFx_impl::chain175_t<NV>
+		auto& split30 = this->getT(0).getT(3).getT(1).getT(3).getT(0).getT(1).getT(0);     // SmFx_impl::split30_t<NV>
 		auto& send15 = this->getT(0).getT(3).getT(1).getT(3).                              // routing::send<NV, stereo_cable<NV>>
                        getT(0).getT(1).getT(0).getT(0);
-		auto& chain257 = this->getT(0).getT(3).getT(1).getT(3).                        // Sm2_impl::chain257_t<NV>
+		auto& chain257 = this->getT(0).getT(3).getT(1).getT(3).                         // SmFx_impl::chain257_t<NV>
                          getT(0).getT(1).getT(0).getT(1);
-		auto& sig2mod6 = this->getT(0).getT(3).getT(1).getT(3).                        // math::sig2mod<NV>
+		auto& sig2mod6 = this->getT(0).getT(3).getT(1).getT(3).                         // math::sig2mod<NV>
                          getT(0).getT(1).getT(0).getT(1).
                          getT(0);
-		auto& peak33 = this->getT(0).getT(3).getT(1).getT(3).                          // Sm2_impl::peak33_t<NV>
+		auto& peak33 = this->getT(0).getT(3).getT(1).getT(3).                           // SmFx_impl::peak33_t<NV>
                        getT(0).getT(1).getT(0).getT(1).
                        getT(1);
-		auto& clear11 = this->getT(0).getT(3).getT(1).getT(3).getT(0).getT(1).getT(1); // math::clear<NV>
-		auto& gain41 = this->getT(0).getT(3).getT(1).getT(4);                          // core::gain<NV>
-		auto& jpanner2 = this->getT(0).getT(3).getT(1).getT(5);                        // jdsp::jpanner<NV>
-		auto& ahdsr1 = this->getT(1);                                                  // Sm2_impl::ahdsr1_t<NV>
-		auto& voice_manager = this->getT(2);                                           // envelope::voice_manager
-		auto& gain = this->getT(3);                                                    // core::gain<NV>
+		auto& clear11 = this->getT(0).getT(3).getT(1).getT(3).getT(0).getT(1).getT(1);  // math::clear<NV>
+		auto& gain41 = this->getT(0).getT(3).getT(1).getT(4);                           // core::gain<NV>
+		auto& jpanner2 = this->getT(0).getT(3).getT(1).getT(5);                         // jdsp::jpanner<NV>
+		auto& split23 = this->getT(0).getT(4);                                          // SmFx_impl::split23_t<NV>
+		auto& chain163 = this->getT(0).getT(4).getT(0);                                 // SmFx_impl::chain163_t<NV>
+		auto& split22 = this->getT(0).getT(4).getT(0).getT(0);                          // SmFx_impl::split22_t<NV>
+		auto& chain165 = this->getT(0).getT(4).getT(0).getT(0).getT(0);                 // SmFx_impl::chain165_t
+		auto& chain164 = this->getT(0).getT(4).getT(0).getT(0).getT(1);                 // SmFx_impl::chain164_t<NV>
+		auto& branch19 = this->getT(0).getT(4).getT(0).getT(0).getT(1).getT(0);         // SmFx_impl::branch19_t<NV>
+		auto& chain161 = this->getT(0).getT(4).getT(0).getT(0).getT(1).getT(0).getT(0); // SmFx_impl::chain161_t<NV>
+		auto& clear31 = this->getT(0).getT(4).getT(0).getT(0).                          // math::clear<NV>
+                        getT(1).getT(0).getT(0).getT(0);
+		auto& add137 = this->getT(0).getT(4).getT(0).getT(0).                           // math::add<NV>
+                       getT(1).getT(0).getT(0).getT(1);
+		auto& chain259 = this->getT(0).getT(4).getT(0).getT(0).getT(1).getT(0).getT(1); // SmFx_impl::chain259_t
+		auto& chain162 = this->getT(0).getT(4).getT(0).getT(0).getT(1).getT(0).getT(2); // SmFx_impl::chain162_t<NV>
+		auto& clear14 = this->getT(0).getT(4).getT(0).getT(0).                          // math::clear<NV>
+                        getT(1).getT(0).getT(2).getT(0);
+		auto& add138 = this->getT(0).getT(4).getT(0).getT(0).                           // math::add<NV>
+                       getT(1).getT(0).getT(2).getT(1);
+		auto& chain261 = this->getT(0).getT(4).getT(0).getT(0).getT(1).getT(0).getT(3); // SmFx_impl::chain261_t<NV>
+		auto& clear32 = this->getT(0).getT(4).getT(0).getT(0).                          // math::clear<NV>
+                        getT(1).getT(0).getT(3).getT(0);
+		auto& add140 = this->getT(0).getT(4).getT(0).getT(0).                           // math::add<NV>
+                       getT(1).getT(0).getT(3).getT(1);
+		auto& chain265 = this->getT(0).getT(4).getT(0).getT(0).getT(1).getT(0).getT(4); // SmFx_impl::chain265_t<NV>
+		auto& clear36 = this->getT(0).getT(4).getT(0).getT(0).                          // math::clear<NV>
+                        getT(1).getT(0).getT(4).getT(0);
+		auto& add144 = this->getT(0).getT(4).getT(0).getT(0).                           // math::add<NV>
+                       getT(1).getT(0).getT(4).getT(1);
+		auto& chain264 = this->getT(0).getT(4).getT(0).getT(0).getT(1).getT(0).getT(5); // SmFx_impl::chain264_t<NV>
+		auto& clear35 = this->getT(0).getT(4).getT(0).getT(0).                          // math::clear<NV>
+                        getT(1).getT(0).getT(5).getT(0);
+		auto& add143 = this->getT(0).getT(4).getT(0).getT(0).                           // math::add<NV>
+                       getT(1).getT(0).getT(5).getT(1);
+		auto& chain263 = this->getT(0).getT(4).getT(0).getT(0).getT(1).getT(0).getT(6); // SmFx_impl::chain263_t<NV>
+		auto& clear34 = this->getT(0).getT(4).getT(0).getT(0).                          // math::clear<NV>
+                        getT(1).getT(0).getT(6).getT(0);
+		auto& add142 = this->getT(0).getT(4).getT(0).getT(0).                           // math::add<NV>
+                       getT(1).getT(0).getT(6).getT(1);
+		auto& chain262 = this->getT(0).getT(4).getT(0).getT(0).getT(1).getT(0).getT(7); // SmFx_impl::chain262_t<NV>
+		auto& clear33 = this->getT(0).getT(4).getT(0).getT(0).                          // math::clear<NV>
+                        getT(1).getT(0).getT(7).getT(0);
+		auto& add141 = this->getT(0).getT(4).getT(0).getT(0).                           // math::add<NV>
+                       getT(1).getT(0).getT(7).getT(1);
+		auto& rect4 = this->getT(0).getT(4).getT(0).getT(0).getT(1).getT(1);            // math::rect<NV>
+		auto& peak37 = this->getT(0).getT(4).getT(0).getT(0).getT(1).getT(2);           // SmFx_impl::peak37_t<NV>
+		auto& clear19 = this->getT(0).getT(4).getT(0).getT(0).getT(1).getT(3);          // math::clear<NV>
+		auto& ahdsr1 = this->getT(0).getT(4).getT(0).getT(1);                           // SmFx_impl::ahdsr1_t<NV>
+		auto& gain = this->getT(0).getT(4).getT(0).getT(2);                             // core::gain<NV>
+		auto& chain281 = this->getT(0).getT(4).getT(1);                                 // SmFx_impl::chain281_t<NV>
+		auto& split37 = this->getT(0).getT(4).getT(1).getT(0);                          // SmFx_impl::split37_t<NV>
+		auto& chain283 = this->getT(0).getT(4).getT(1).getT(0).getT(0);                 // SmFx_impl::chain283_t<NV>
+		auto& branch24 = this->getT(0).getT(4).getT(1).getT(0).getT(0).getT(0);         // SmFx_impl::branch24_t<NV>
+		auto& chain286 = this->getT(0).getT(4).getT(1).getT(0).getT(0).getT(0).getT(0); // SmFx_impl::chain286_t<NV>
+		auto& clear38 = this->getT(0).getT(4).getT(1).getT(0).                          // math::clear<NV>
+                        getT(0).getT(0).getT(0).getT(0);
+		auto& add146 = this->getT(0).getT(4).getT(1).getT(0).                           // math::add<NV>
+                       getT(0).getT(0).getT(0).getT(1);
+		auto& chain287 = this->getT(0).getT(4).getT(1).getT(0).getT(0).getT(0).getT(1); // SmFx_impl::chain287_t<NV>
+		auto& clear39 = this->getT(0).getT(4).getT(1).getT(0).                          // math::clear<NV>
+                        getT(0).getT(0).getT(1).getT(0);
+		auto& add155 = this->getT(0).getT(4).getT(1).getT(0).                           // math::add<NV>
+                       getT(0).getT(0).getT(1).getT(1);
+		auto& chain288 = this->getT(0).getT(4).getT(1).getT(0).getT(0).getT(0).getT(2); // SmFx_impl::chain288_t<NV>
+		auto& clear40 = this->getT(0).getT(4).getT(1).getT(0).                          // math::clear<NV>
+                        getT(0).getT(0).getT(2).getT(0);
+		auto& add156 = this->getT(0).getT(4).getT(1).getT(0).                           // math::add<NV>
+                       getT(0).getT(0).getT(2).getT(1);
+		auto& chain289 = this->getT(0).getT(4).getT(1).getT(0).getT(0).getT(0).getT(3); // SmFx_impl::chain289_t<NV>
+		auto& clear41 = this->getT(0).getT(4).getT(1).getT(0).                          // math::clear<NV>
+                        getT(0).getT(0).getT(3).getT(0);
+		auto& add157 = this->getT(0).getT(4).getT(1).getT(0).                           // math::add<NV>
+                       getT(0).getT(0).getT(3).getT(1);
+		auto& chain290 = this->getT(0).getT(4).getT(1).getT(0).getT(0).getT(0).getT(4); // SmFx_impl::chain290_t<NV>
+		auto& clear42 = this->getT(0).getT(4).getT(1).getT(0).                          // math::clear<NV>
+                        getT(0).getT(0).getT(4).getT(0);
+		auto& add158 = this->getT(0).getT(4).getT(1).getT(0).                           // math::add<NV>
+                       getT(0).getT(0).getT(4).getT(1);
+		auto& chain291 = this->getT(0).getT(4).getT(1).getT(0).getT(0).getT(0).getT(5); // SmFx_impl::chain291_t<NV>
+		auto& clear43 = this->getT(0).getT(4).getT(1).getT(0).                          // math::clear<NV>
+                        getT(0).getT(0).getT(5).getT(0);
+		auto& add159 = this->getT(0).getT(4).getT(1).getT(0).                           // math::add<NV>
+                       getT(0).getT(0).getT(5).getT(1);
+		auto& rect5 = this->getT(0).getT(4).getT(1).getT(0).getT(0).getT(1);            // math::rect<NV>
+		auto& peak40 = this->getT(0).getT(4).getT(1).getT(0).getT(0).getT(2);           // SmFx_impl::peak40_t
+		auto& global_cable = this->getT(0).getT(4).getT(1).getT(0).getT(0).getT(3);     // routing::global_cable<global_cable_t_index, parameter::empty>
+		auto& clear44 = this->getT(0).getT(4).getT(1).getT(0).getT(0).getT(4);          // math::clear<NV>
+		auto& chain301 = this->getT(0).getT(4).getT(1).getT(0).getT(1);                 // SmFx_impl::chain301_t<NV>
+		auto& branch33 = this->getT(0).getT(4).getT(1).getT(0).getT(1).getT(0);         // SmFx_impl::branch33_t<NV>
+		auto& chain304 = this->getT(0).getT(4).getT(1).getT(0).getT(1).getT(0).getT(0); // SmFx_impl::chain304_t<NV>
+		auto& clear54 = this->getT(0).getT(4).getT(1).getT(0).                          // math::clear<NV>
+                        getT(1).getT(0).getT(0).getT(0);
+		auto& add168 = this->getT(0).getT(4).getT(1).getT(0).                           // math::add<NV>
+                       getT(1).getT(0).getT(0).getT(1);
+		auto& chain305 = this->getT(0).getT(4).getT(1).getT(0).getT(1).getT(0).getT(1); // SmFx_impl::chain305_t<NV>
+		auto& clear55 = this->getT(0).getT(4).getT(1).getT(0).                          // math::clear<NV>
+                        getT(1).getT(0).getT(1).getT(0);
+		auto& add169 = this->getT(0).getT(4).getT(1).getT(0).                           // math::add<NV>
+                       getT(1).getT(0).getT(1).getT(1);
+		auto& chain306 = this->getT(0).getT(4).getT(1).getT(0).getT(1).getT(0).getT(2); // SmFx_impl::chain306_t<NV>
+		auto& clear56 = this->getT(0).getT(4).getT(1).getT(0).                          // math::clear<NV>
+                        getT(1).getT(0).getT(2).getT(0);
+		auto& add170 = this->getT(0).getT(4).getT(1).getT(0).                           // math::add<NV>
+                       getT(1).getT(0).getT(2).getT(1);
+		auto& chain307 = this->getT(0).getT(4).getT(1).getT(0).getT(1).getT(0).getT(3); // SmFx_impl::chain307_t<NV>
+		auto& clear57 = this->getT(0).getT(4).getT(1).getT(0).                          // math::clear<NV>
+                        getT(1).getT(0).getT(3).getT(0);
+		auto& add171 = this->getT(0).getT(4).getT(1).getT(0).                           // math::add<NV>
+                       getT(1).getT(0).getT(3).getT(1);
+		auto& chain308 = this->getT(0).getT(4).getT(1).getT(0).getT(1).getT(0).getT(4); // SmFx_impl::chain308_t<NV>
+		auto& clear58 = this->getT(0).getT(4).getT(1).getT(0).                          // math::clear<NV>
+                        getT(1).getT(0).getT(4).getT(0);
+		auto& add172 = this->getT(0).getT(4).getT(1).getT(0).                           // math::add<NV>
+                       getT(1).getT(0).getT(4).getT(1);
+		auto& chain309 = this->getT(0).getT(4).getT(1).getT(0).getT(1).getT(0).getT(5); // SmFx_impl::chain309_t<NV>
+		auto& clear59 = this->getT(0).getT(4).getT(1).getT(0).                          // math::clear<NV>
+                        getT(1).getT(0).getT(5).getT(0);
+		auto& add173 = this->getT(0).getT(4).getT(1).getT(0).                           // math::add<NV>
+                       getT(1).getT(0).getT(5).getT(1);
+		auto& rect9 = this->getT(0).getT(4).getT(1).getT(0).getT(1).getT(1);            // math::rect<NV>
+		auto& peak42 = this->getT(0).getT(4).getT(1).getT(0).getT(1).getT(2);           // SmFx_impl::peak42_t
+		auto& global_cable2 = this->getT(0).getT(4).getT(1).getT(0).getT(1).getT(3);    // routing::global_cable<global_cable2_t_index, parameter::empty>
+		auto& clear60 = this->getT(0).getT(4).getT(1).getT(0).getT(1).getT(4);          // math::clear<NV>
+		auto& chain292 = this->getT(0).getT(4).getT(1).getT(0).getT(2);                 // SmFx_impl::chain292_t<NV>
+		auto& branch31 = this->getT(0).getT(4).getT(1).getT(0).getT(2).getT(0);         // SmFx_impl::branch31_t<NV>
+		auto& chain293 = this->getT(0).getT(4).getT(1).getT(0).getT(2).getT(0).getT(0); // SmFx_impl::chain293_t<NV>
+		auto& clear45 = this->getT(0).getT(4).getT(1).getT(0).                          // math::clear<NV>
+                        getT(2).getT(0).getT(0).getT(0);
+		auto& add160 = this->getT(0).getT(4).getT(1).getT(0).                           // math::add<NV>
+                       getT(2).getT(0).getT(0).getT(1);
+		auto& chain295 = this->getT(0).getT(4).getT(1).getT(0).getT(2).getT(0).getT(1); // SmFx_impl::chain295_t<NV>
+		auto& clear46 = this->getT(0).getT(4).getT(1).getT(0).                          // math::clear<NV>
+                        getT(2).getT(0).getT(1).getT(0);
+		auto& add161 = this->getT(0).getT(4).getT(1).getT(0).                           // math::add<NV>
+                       getT(2).getT(0).getT(1).getT(1);
+		auto& chain296 = this->getT(0).getT(4).getT(1).getT(0).getT(2).getT(0).getT(2); // SmFx_impl::chain296_t<NV>
+		auto& clear47 = this->getT(0).getT(4).getT(1).getT(0).                          // math::clear<NV>
+                        getT(2).getT(0).getT(2).getT(0);
+		auto& add162 = this->getT(0).getT(4).getT(1).getT(0).                           // math::add<NV>
+                       getT(2).getT(0).getT(2).getT(1);
+		auto& chain298 = this->getT(0).getT(4).getT(1).getT(0).getT(2).getT(0).getT(3); // SmFx_impl::chain298_t<NV>
+		auto& clear49 = this->getT(0).getT(4).getT(1).getT(0).                          // math::clear<NV>
+                        getT(2).getT(0).getT(3).getT(0);
+		auto& add164 = this->getT(0).getT(4).getT(1).getT(0).                           // math::add<NV>
+                       getT(2).getT(0).getT(3).getT(1);
+		auto& chain299 = this->getT(0).getT(4).getT(1).getT(0).getT(2).getT(0).getT(4); // SmFx_impl::chain299_t<NV>
+		auto& clear50 = this->getT(0).getT(4).getT(1).getT(0).                          // math::clear<NV>
+                        getT(2).getT(0).getT(4).getT(0);
+		auto& add165 = this->getT(0).getT(4).getT(1).getT(0).                           // math::add<NV>
+                       getT(2).getT(0).getT(4).getT(1);
+		auto& chain300 = this->getT(0).getT(4).getT(1).getT(0).getT(2).getT(0).getT(5); // SmFx_impl::chain300_t<NV>
+		auto& clear51 = this->getT(0).getT(4).getT(1).getT(0).                          // math::clear<NV>
+                        getT(2).getT(0).getT(5).getT(0);
+		auto& add166 = this->getT(0).getT(4).getT(1).getT(0).                        // math::add<NV>
+                       getT(2).getT(0).getT(5).getT(1);
+		auto& rect8 = this->getT(0).getT(4).getT(1).getT(0).getT(2).getT(1);         // math::rect<NV>
+		auto& peak41 = this->getT(0).getT(4).getT(1).getT(0).getT(2).getT(2);        // SmFx_impl::peak41_t
+		auto& global_cable1 = this->getT(0).getT(4).getT(1).getT(0).getT(2).getT(3); // routing::global_cable<global_cable1_t_index, parameter::empty>
+		auto& clear52 = this->getT(0).getT(4).getT(1).getT(0).getT(2).getT(4);       // math::clear<NV>
 		
 		// Parameter Connections -------------------------------------------------------------------
 		
@@ -6284,11 +6495,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		OscMod1_p.connectT(0, global_mod1); // OscMod1 -> global_mod1::Intensity
 		OscMod1_p.connectT(1, global_mod3); // OscMod1 -> global_mod3::Intensity
 		
-		this->getParameterT(4).connectT(0, branch2); // OscTempoSync1 -> branch2::Index
-		
 		this->getParameterT(5).connectT(0, global_mod3); // OscTempo1 -> global_mod3::Value
-		
-		this->getParameterT(6).connectT(0, tempo_sync); // OscDiv1 -> tempo_sync::Multiplier
 		
 		auto& OscFmSrc1_p = this->getParameterT(7);
 		OscFmSrc1_p.connectT(0, branch9);  // OscFmSrc1 -> branch9::Index
@@ -6480,8 +6687,6 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		this->getParameterT(90).connectT(0, global_mod8); // Osc1InputSrc -> global_mod8::Index
 		
-		this->getParameterT(91).connectT(0, branch28); // Osc1InSel -> branch28::Index
-		
 		this->getParameterT(92).connectT(0, ahdsr1); // s -> ahdsr1::Sustain
 		
 		this->getParameterT(93).connectT(0, ahdsr1); // a -> ahdsr1::Attack
@@ -6553,8 +6758,6 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		minmax.getWrappedObject().getParameter().connectT(0, add26);          // minmax -> add26::Value
 		minmax3.getWrappedObject().getParameter().connectT(0, add89);         // minmax3 -> add89::Value
 		global_mod1.getParameter().connectT(0, minmax3);                      // global_mod1 -> minmax3::Value
-		converter2.getWrappedObject().getParameter().connectT(0, phasor_fm1); // converter2 -> phasor_fm1::FreqRatio
-		peak_unscaled.getParameter().connectT(0, converter2);                 // peak_unscaled -> converter2::Value
 		pma1.getWrappedObject().getParameter().connectT(0, add43);            // pma1 -> add43::Value
 		peak13.getParameter().connectT(0, pma1);                              // peak13 -> pma1::Value
 		minmax2.getWrappedObject().getParameter().connectT(0, add42);         // minmax2 -> add42::Value
@@ -6565,9 +6768,6 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		pma_unscaled3.getWrappedObject().getParameter().connectT(0, add34);   // pma_unscaled3 -> add34::Value
 		peak7.getParameter().connectT(0, pma_unscaled3);                      // peak7 -> pma_unscaled3::Value
 		global_mod3.getParameter().connectT(0, add91);                        // global_mod3 -> add91::Value
-		converter.getWrappedObject().getParameter().connectT(0, phasor_fm2);  // converter -> phasor_fm2::FreqRatio
-		tempo_sync.getParameter().connectT(0, converter);                     // tempo_sync -> converter::Value
-		peak35.getParameter().connectT(0, tempo_sync);                        // peak35 -> tempo_sync::Tempo
 		pma_unscaled15.getWrappedObject().getParameter().connectT(0, add129); // pma_unscaled15 -> add129::Value
 		peak9.getParameter().connectT(0, pma_unscaled15);                     // peak9 -> pma_unscaled15::Value
 		global_mod13.getParameter().connectT(0, add130);                      // global_mod13 -> add130::Value
@@ -6610,7 +6810,6 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		peak8.getParameter().connectT(11, gain19);                            // peak8 -> gain19::Gain
 		pma_unscaled14.getWrappedObject().getParameter().connectT(0, add55);  // pma_unscaled14 -> add55::Value
 		global_mod8.getParameter().connectT(0, add128);                       // global_mod8 -> add128::Value
-		peak3.getParameter().connectT(0, gain1);                              // peak3 -> gain1::Gain
 		pma_unscaled7.getWrappedObject().getParameter().connectT(0, add45);   // pma_unscaled7 -> add45::Value
 		peak18.getParameter().connectT(0, pma_unscaled7);                     // peak18 -> pma_unscaled7::Value
 		global_mod5.getParameter().connectT(0, add93);                        // global_mod5 -> add93::Value
@@ -6669,6 +6868,9 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		peak15.getParameter().connectT(11, add73);                            // peak15 -> add73::Value
 		peak15.getParameter().connectT(12, add57);                            // peak15 -> add57::Value
 		peak15.getParameter().connectT(13, add147);                           // peak15 -> add147::Value
+		peak15.getParameter().connectT(14, add138);                           // peak15 -> add138::Value
+		peak15.getParameter().connectT(15, clear38);                          // peak15 -> clear38::Value
+		peak15.getParameter().connectT(16, clear54);                          // peak15 -> clear54::Value
 		peak34.getParameter().connectT(0, add23);                             // peak34 -> add23::Value
 		peak34.getParameter().connectT(1, add40);                             // peak34 -> add40::Value
 		peak34.getParameter().connectT(2, add31);                             // peak34 -> add31::Value
@@ -6683,6 +6885,10 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		peak34.getParameter().connectT(11, add77);                            // peak34 -> add77::Value
 		peak34.getParameter().connectT(12, add68);                            // peak34 -> add68::Value
 		peak34.getParameter().connectT(13, add148);                           // peak34 -> add148::Value
+		peak34.getParameter().connectT(14, add140);                           // peak34 -> add140::Value
+		peak34.getParameter().connectT(15, clear39);                          // peak34 -> clear39::Value
+		peak34.getParameter().connectT(16, clear55);                          // peak34 -> clear55::Value
+		peak34.getParameter().connectT(17, clear46);                          // peak34 -> clear46::Value
 		cable_table1.getWrappedObject().getParameter().connectT(0, add9);     // cable_table1 -> add9::Value
 		cable_pack.getWrappedObject().getParameter().connectT(0, add10);      // cable_pack -> add10::Value
 		ramp.getParameter().connectT(0, cable_table1);                        // ramp -> cable_table1::Value
@@ -6720,6 +6926,9 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		peak31.getParameter().connectT(11, add87);                              // peak31 -> add87::Value
 		peak31.getParameter().connectT(12, add112);                             // peak31 -> add112::Value
 		peak31.getParameter().connectT(13, add86);                              // peak31 -> add86::Value
+		peak31.getParameter().connectT(14, clear40);                            // peak31 -> clear40::Value
+		peak31.getParameter().connectT(15, clear56);                            // peak31 -> clear56::Value
+		peak31.getParameter().connectT(16, clear47);                            // peak31 -> clear47::Value
 		cable_table2.getWrappedObject().getParameter().connectT(0, add18);      // cable_table2 -> add18::Value
 		cable_pack1.getWrappedObject().getParameter().connectT(0, add19);       // cable_pack1 -> add19::Value
 		ramp1.getParameter().connectT(0, add16);                                // ramp1 -> add16::Value
@@ -6757,16 +6966,20 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		peak19.getParameter().connectT(11, add116);                              // peak19 -> add116::Value
 		peak19.getParameter().connectT(12, add29);                               // peak19 -> add29::Value
 		peak19.getParameter().connectT(13, add1);                                // peak19 -> add1::Value
+		peak19.getParameter().connectT(14, add144);                              // peak19 -> add144::Value
+		peak19.getParameter().connectT(15, add143);                              // peak19 -> add143::Value
+		peak19.getParameter().connectT(16, clear41);                             // peak19 -> clear41::Value
+		peak19.getParameter().connectT(17, clear57);                             // peak19 -> clear57::Value
+		peak19.getParameter().connectT(18, clear49);                             // peak19 -> clear49::Value
 		auto& sliderbank_p = sliderbank.getWrappedObject().getParameter();
-		sliderbank_p.getParameterT(0).connectT(0, gain2);                       // sliderbank -> gain2::Gain
-		sliderbank_p.getParameterT(1).connectT(0, gain8);                       // sliderbank -> gain8::Gain
-		sliderbank_p.getParameterT(2).connectT(0, gain26);                      // sliderbank -> gain26::Gain
-		sliderbank_p.getParameterT(3).connectT(0, gain25);                      // sliderbank -> gain25::Gain
+		sliderbank_p.getParameterT(0).connectT(0, receive7);                    // sliderbank -> receive7::Feedback
+		sliderbank_p.getParameterT(1).connectT(0, receive6);                    // sliderbank -> receive6::Feedback
+		sliderbank_p.getParameterT(2).connectT(0, receive13);                   // sliderbank -> receive13::Feedback
+		sliderbank_p.getParameterT(3).connectT(0, receive4);                    // sliderbank -> receive4::Feedback
 		converter6.getWrappedObject().getParameter().connectT(0, jdelay);       // converter6 -> jdelay::DelayTime
 		converter7.getWrappedObject().getParameter().connectT(0, converter6);   // converter7 -> converter6::Value
 		converter9.getWrappedObject().getParameter().connectT(0, jdelay1);      // converter9 -> jdelay1::DelayTime
 		converter8.getWrappedObject().getParameter().connectT(0, converter9);   // converter8 -> converter9::Value
-		midi1.getParameter().connectT(0, converter8);                           // midi1 -> converter8::Value
 		converter17.getWrappedObject().getParameter().connectT(0, jdelay5);     // converter17 -> jdelay5::DelayTime
 		converter16.getWrappedObject().getParameter().connectT(0, converter17); // converter16 -> converter17::Value
 		converter19.getWrappedObject().getParameter().connectT(0, jdelay6);     // converter19 -> jdelay6::DelayTime
@@ -6785,21 +6998,20 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		peak32.getParameter().connectT(11, add126);                             // peak32 -> add126::Value
 		peak32.getParameter().connectT(12, add82);                              // peak32 -> add82::Value
 		peak32.getParameter().connectT(13, add151);                             // peak32 -> add151::Value
+		peak32.getParameter().connectT(14, add142);                             // peak32 -> add142::Value
+		peak32.getParameter().connectT(15, clear42);                            // peak32 -> clear42::Value
+		peak32.getParameter().connectT(16, clear58);                            // peak32 -> clear58::Value
+		peak32.getParameter().connectT(17, clear50);                            // peak32 -> clear50::Value
 		auto& sliderbank1_p = sliderbank1.getWrappedObject().getParameter();
-		sliderbank1_p.getParameterT(0).connectT(0, gain27);                     // sliderbank1 -> gain27::Gain
-		sliderbank1_p.getParameterT(1).connectT(0, gain31);                     // sliderbank1 -> gain31::Gain
-		sliderbank1_p.getParameterT(2).connectT(0, gain30);                     // sliderbank1 -> gain30::Gain
-		sliderbank1_p.getParameterT(3).connectT(0, gain29);                     // sliderbank1 -> gain29::Gain
-		sliderbank1_p.getParameterT(4).connectT(0, gain28);                     // sliderbank1 -> gain28::Gain
+		sliderbank1_p.getParameterT(0).connectT(0, receive15);                  // sliderbank1 -> receive15::Feedback
+		sliderbank1_p.getParameterT(1).connectT(0, receive16);                  // sliderbank1 -> receive16::Feedback
+		sliderbank1_p.getParameterT(2).connectT(0, receive17);                  // sliderbank1 -> receive17::Feedback
+		sliderbank1_p.getParameterT(3).connectT(0, receive14);                  // sliderbank1 -> receive14::Feedback
+		sliderbank1_p.getParameterT(4).connectT(0, receive18);                  // sliderbank1 -> receive18::Feedback
 		converter11.getWrappedObject().getParameter().connectT(0, jdelay2);     // converter11 -> jdelay2::DelayTime
 		converter10.getWrappedObject().getParameter().connectT(0, converter11); // converter10 -> converter11::Value
-		midi2.getParameter().connectT(0, converter10);                          // midi2 -> converter10::Value
-		converter13.getWrappedObject().getParameter().connectT(0, jdelay3);     // converter13 -> jdelay3::DelayTime
-		converter12.getWrappedObject().getParameter().connectT(0, converter13); // converter12 -> converter13::Value
-		midi3.getParameter().connectT(0, converter12);                          // midi3 -> converter12::Value
 		converter15.getWrappedObject().getParameter().connectT(0, jdelay4);     // converter15 -> jdelay4::DelayTime
 		converter14.getWrappedObject().getParameter().connectT(0, converter15); // converter14 -> converter15::Value
-		midi4.getParameter().connectT(0, converter14);                          // midi4 -> converter14::Value
 		converter21.getWrappedObject().getParameter().connectT(0, jdelay7);     // converter21 -> jdelay7::DelayTime
 		converter20.getWrappedObject().getParameter().connectT(0, converter21); // converter20 -> converter21::Value
 		converter23.getWrappedObject().getParameter().connectT(0, jdelay8);     // converter23 -> jdelay8::DelayTime
@@ -6818,8 +7030,15 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		peak33.getParameter().connectT(11, add127);                             // peak33 -> add127::Value
 		peak33.getParameter().connectT(12, add83);                              // peak33 -> add83::Value
 		peak33.getParameter().connectT(13, add152);                             // peak33 -> add152::Value
+		peak33.getParameter().connectT(14, add141);                             // peak33 -> add141::Value
+		peak33.getParameter().connectT(15, clear51);                            // peak33 -> clear51::Value
+		peak33.getParameter().connectT(16, clear59);                            // peak33 -> clear59::Value
+		peak33.getParameter().connectT(17, clear43);                            // peak33 -> clear43::Value
 		auto& ahdsr1_p = ahdsr1.getWrappedObject().getParameter();
-		ahdsr1_p.getParameterT(1).connectT(0, voice_manager); // ahdsr1 -> voice_manager::KillVoice
+		peak37.getParameter().connectT(0, ahdsr1);        // peak37 -> ahdsr1::Gate
+		peak40.getParameter().connectT(0, global_cable);  // peak40 -> global_cable::Value
+		peak42.getParameter().connectT(0, global_cable2); // peak42 -> global_cable2::Value
+		peak41.getParameter().connectT(0, global_cable1); // peak41 -> global_cable1::Value
 		
 		// Send Connections ------------------------------------------------------------------------
 		
@@ -6829,17 +7048,14 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		send9.connect(receive7);
 		send9.connect(receive8);
 		send16.connect(receive16);
-		send16.connect(receive22);
 		send16.connect(receive34);
 		send16.connect(receive6);
 		send16.connect(receive9);
 		send17.connect(receive13);
 		send17.connect(receive17);
 		send17.connect(receive25);
-		send17.connect(receive30);
 		send17.connect(receive35);
 		send11.connect(receive14);
-		send11.connect(receive37);
 		send11.connect(receive38);
 		send11.connect(receive39);
 		send11.connect(receive4);
@@ -6850,7 +7066,6 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		send12.connect(receive18);
 		send12.connect(receive21);
 		send12.connect(receive24);
-		send12.connect(receive31);
 		send12.connect(receive36);
 		send13.connect(receive19);
 		send14.connect(receive20);
@@ -6858,7 +7073,6 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		send19.connect(receive28);
 		send15.connect(receive23);
 		send15.connect(receive26);
-		send15.connect(receive32);
 		send15.connect(receive40);
 		
 		// Default Values --------------------------------------------------------------------------
@@ -6964,6 +7178,8 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		; // add90::Value is automated
 		
 		; // sub3::Value is automated
+		
+		mod2sig.setParameterT(0, 0.); // math::mod2sig::Value
 		
 		; // branch10::Index is automated
 		
@@ -7330,42 +7546,9 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		; // add122::Value is automated
 		
-		; // branch28::Index is automated
-		
-		receive22.setParameterT(0, 1.); // routing::receive::Feedback
-		
-		receive30.setParameterT(0, 1.); // routing::receive::Feedback
-		
-		receive37.setParameterT(0, 1.); // routing::receive::Feedback
-		
-		receive31.setParameterT(0, 1.); // routing::receive::Feedback
-		
-		receive32.setParameterT(0, 1.); // routing::receive::Feedback
-		
-		;                              // gain1::Gain is automated
+		gain1.setParameterT(0, -21.);  // core::gain::Gain
 		gain1.setParameterT(1, 0.);    // core::gain::Smoothing
 		gain1.setParameterT(2, -100.); // core::gain::ResetValue
-		
-		; // branch2::Index is automated
-		
-		; // converter2::Value is automated
-		
-		phasor_fm1.setParameterT(0, 1.);   // core::phasor_fm::Gate
-		phasor_fm1.setParameterT(1, 110.); // core::phasor_fm::Frequency
-		;                                  // phasor_fm1::FreqRatio is automated
-		phasor_fm1.setParameterT(3, 0.);   // core::phasor_fm::Phase
-		
-		;                                   // tempo_sync::Tempo is automated
-		;                                   // tempo_sync::Multiplier is automated
-		tempo_sync.setParameterT(2, 1.);    // control::tempo_sync::Enabled
-		tempo_sync.setParameterT(3, 406.2); // control::tempo_sync::UnsyncedTime
-		
-		; // converter::Value is automated
-		
-		phasor_fm2.setParameterT(0, 1.);   // core::phasor_fm::Gate
-		phasor_fm2.setParameterT(1, 110.); // core::phasor_fm::Frequency
-		;                                  // phasor_fm2::FreqRatio is automated
-		phasor_fm2.setParameterT(3, 0.);   // core::phasor_fm::Phase
 		
 		; // branch::Index is automated
 		
@@ -7591,6 +7774,13 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		clear8.setParameterT(0, 0.); // math::clear::Value
 		
 		clear12.setParameterT(0, 0.); // math::clear::Value
+		
+		one_pole9.setParameterT(0, 50.);  // filters::one_pole::Frequency
+		one_pole9.setParameterT(1, 1.);   // filters::one_pole::Q
+		one_pole9.setParameterT(2, 0.);   // filters::one_pole::Gain
+		one_pole9.setParameterT(3, 0.01); // filters::one_pole::Smoothing
+		one_pole9.setParameterT(4, 1.);   // filters::one_pole::Mode
+		one_pole9.setParameterT(5, 1.);   // filters::one_pole::Enabled
 		
 		; // branch26::Index is automated
 		
@@ -7852,29 +8042,13 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		sliderbank.setParameterT(0, 1.); // control::sliderbank::Value
 		
-		receive7.setParameterT(0, 1.); // routing::receive::Feedback
+		; // receive7::Feedback is automated
 		
-		;                              // gain2::Gain is automated
-		gain2.setParameterT(1, 20.);   // core::gain::Smoothing
-		gain2.setParameterT(2, -100.); // core::gain::ResetValue
+		; // receive6::Feedback is automated
 		
-		receive6.setParameterT(0, 1.); // routing::receive::Feedback
+		; // receive13::Feedback is automated
 		
-		;                            // gain8::Gain is automated
-		gain8.setParameterT(1, 20.); // core::gain::Smoothing
-		gain8.setParameterT(2, 0.);  // core::gain::ResetValue
-		
-		receive13.setParameterT(0, 1.); // routing::receive::Feedback
-		
-		;                             // gain26::Gain is automated
-		gain26.setParameterT(1, 20.); // core::gain::Smoothing
-		gain26.setParameterT(2, 0.);  // core::gain::ResetValue
-		
-		receive4.setParameterT(0, 1.); // routing::receive::Feedback
-		
-		;                             // gain25::Gain is automated
-		gain25.setParameterT(1, 20.); // core::gain::Smoothing
-		gain25.setParameterT(2, 0.);  // core::gain::ResetValue
+		; // receive4::Feedback is automated
 		
 		; // branch6::Index is automated
 		
@@ -7906,6 +8080,13 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		svf3.setParameterT(4, 3.);   // filters::svf::Mode
 		svf3.setParameterT(5, 1.);   // filters::svf::Enabled
 		
+		one_pole6.setParameterT(0, 50.);  // filters::one_pole::Frequency
+		one_pole6.setParameterT(1, 1.);   // filters::one_pole::Q
+		one_pole6.setParameterT(2, 0.);   // filters::one_pole::Gain
+		one_pole6.setParameterT(3, 0.01); // filters::one_pole::Smoothing
+		one_pole6.setParameterT(4, 10.);  // filters::one_pole::Mode
+		one_pole6.setParameterT(5, 1.);   // filters::one_pole::Enabled
+		
 		;                                    // allpass::Frequency is automated
 		;                                    // allpass::Q is automated
 		allpass.setParameterT(2, 0.);        // filters::allpass::Gain
@@ -7931,7 +8112,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		; // receive1::Feedback is automated
 		
-		; // converter8::Value is automated
+		converter8.setParameterT(0, 0.); // control::converter::Value
 		
 		; // converter9::Value is automated
 		
@@ -7990,35 +8171,15 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		sliderbank1.setParameterT(0, 1.); // control::sliderbank::Value
 		
-		receive15.setParameterT(0, 1.); // routing::receive::Feedback
+		; // receive15::Feedback is automated
 		
-		;                             // gain27::Gain is automated
-		gain27.setParameterT(1, 20.); // core::gain::Smoothing
-		gain27.setParameterT(2, 0.);  // core::gain::ResetValue
+		; // receive16::Feedback is automated
 		
-		receive16.setParameterT(0, 1.); // routing::receive::Feedback
+		; // receive17::Feedback is automated
 		
-		;                             // gain31::Gain is automated
-		gain31.setParameterT(1, 20.); // core::gain::Smoothing
-		gain31.setParameterT(2, 0.);  // core::gain::ResetValue
+		; // receive14::Feedback is automated
 		
-		receive17.setParameterT(0, 1.); // routing::receive::Feedback
-		
-		;                             // gain30::Gain is automated
-		gain30.setParameterT(1, 20.); // core::gain::Smoothing
-		gain30.setParameterT(2, 0.);  // core::gain::ResetValue
-		
-		receive14.setParameterT(0, 1.); // routing::receive::Feedback
-		
-		;                             // gain29::Gain is automated
-		gain29.setParameterT(1, 20.); // core::gain::Smoothing
-		gain29.setParameterT(2, 0.);  // core::gain::ResetValue
-		
-		receive18.setParameterT(0, 1.); // routing::receive::Feedback
-		
-		;                             // gain28::Gain is automated
-		gain28.setParameterT(1, 20.); // core::gain::Smoothing
-		gain28.setParameterT(2, 0.);  // core::gain::ResetValue
+		; // receive18::Feedback is automated
 		
 		; // branch13::Index is automated
 		
@@ -8059,19 +8220,12 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		; // receive19::Feedback is automated
 		
-		; // converter10::Value is automated
+		converter10.setParameterT(0, 0.); // control::converter::Value
 		
 		; // converter11::Value is automated
 		
 		jdelay2.setParameterT(0, 30.); // jdsp::jdelay::Limit
 		;                              // jdelay2::DelayTime is automated
-		
-		; // converter12::Value is automated
-		
-		; // converter13::Value is automated
-		
-		jdelay3.setParameterT(0, 30.); // jdsp::jdelay::Limit
-		;                              // jdelay3::DelayTime is automated
 		
 		;                                // one_pole12::Frequency is automated
 		;                                // one_pole12::Q is automated
@@ -8082,7 +8236,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		; // receive20::Feedback is automated
 		
-		; // converter14::Value is automated
+		converter14.setParameterT(0, 0.); // control::converter::Value
 		
 		; // converter15::Value is automated
 		
@@ -8139,6 +8293,40 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		;                              // jpanner2::Pan is automated
 		jpanner2.setParameterT(1, 1.); // jdsp::jpanner::Rule
 		
+		branch19.setParameterT(0, 0.); // container::branch::Index
+		
+		clear31.setParameterT(0, 0.); // math::clear::Value
+		
+		add137.setParameterT(0, 1.); // math::add::Value
+		
+		clear14.setParameterT(0, 0.); // math::clear::Value
+		
+		; // add138::Value is automated
+		
+		clear32.setParameterT(0, 0.); // math::clear::Value
+		
+		; // add140::Value is automated
+		
+		clear36.setParameterT(0, 0.); // math::clear::Value
+		
+		; // add144::Value is automated
+		
+		clear35.setParameterT(0, 0.); // math::clear::Value
+		
+		; // add143::Value is automated
+		
+		clear34.setParameterT(0, 0.); // math::clear::Value
+		
+		; // add142::Value is automated
+		
+		clear33.setParameterT(0, 0.); // math::clear::Value
+		
+		; // add141::Value is automated
+		
+		rect4.setParameterT(0, 0.); // math::rect::Value
+		
+		clear19.setParameterT(0, 0.); // math::clear::Value
+		
 		;                             // ahdsr1::Attack is automated
 		ahdsr1.setParameterT(1, 1.);  // envelope::ahdsr::AttackLevel
 		;                             // ahdsr1::Hold is automated
@@ -8147,13 +8335,107 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		;                             // ahdsr1::Release is automated
 		ahdsr1.setParameterT(6, 0.5); // envelope::ahdsr::AttackCurve
 		ahdsr1.setParameterT(7, 0.);  // envelope::ahdsr::Retrigger
-		ahdsr1.setParameterT(8, 0.);  // envelope::ahdsr::Gate
-		
-		; // voice_manager::KillVoice is automated
+		;                             // ahdsr1::Gate is automated
 		
 		;                            // gain::Gain is automated
 		gain.setParameterT(1, 20.);  // core::gain::Smoothing
 		gain.setParameterT(2, -18.); // core::gain::ResetValue
+		
+		branch24.setParameterT(0, 0.); // container::branch::Index
+		
+		; // clear38::Value is automated
+		
+		add146.setParameterT(0, 0.); // math::add::Value
+		
+		; // clear39::Value is automated
+		
+		add155.setParameterT(0, 0.); // math::add::Value
+		
+		; // clear40::Value is automated
+		
+		add156.setParameterT(0, 0.); // math::add::Value
+		
+		; // clear41::Value is automated
+		
+		add157.setParameterT(0, 0.); // math::add::Value
+		
+		; // clear42::Value is automated
+		
+		add158.setParameterT(0, 0.); // math::add::Value
+		
+		; // clear43::Value is automated
+		
+		add159.setParameterT(0, 0.); // math::add::Value
+		
+		rect5.setParameterT(0, 0.); // math::rect::Value
+		
+		; // global_cable::Value is automated
+		
+		clear44.setParameterT(0, 0.); // math::clear::Value
+		
+		branch33.setParameterT(0, 0.); // container::branch::Index
+		
+		; // clear54::Value is automated
+		
+		add168.setParameterT(0, 0.); // math::add::Value
+		
+		; // clear55::Value is automated
+		
+		add169.setParameterT(0, 0.); // math::add::Value
+		
+		; // clear56::Value is automated
+		
+		add170.setParameterT(0, 0.); // math::add::Value
+		
+		; // clear57::Value is automated
+		
+		add171.setParameterT(0, 0.); // math::add::Value
+		
+		; // clear58::Value is automated
+		
+		add172.setParameterT(0, 0.); // math::add::Value
+		
+		; // clear59::Value is automated
+		
+		add173.setParameterT(0, 0.); // math::add::Value
+		
+		rect9.setParameterT(0, 0.); // math::rect::Value
+		
+		; // global_cable2::Value is automated
+		
+		clear60.setParameterT(0, 0.); // math::clear::Value
+		
+		branch31.setParameterT(0, 0.); // container::branch::Index
+		
+		clear45.setParameterT(0, 0.); // math::clear::Value
+		
+		add160.setParameterT(0, 1.); // math::add::Value
+		
+		; // clear46::Value is automated
+		
+		add161.setParameterT(0, 0.); // math::add::Value
+		
+		; // clear47::Value is automated
+		
+		add162.setParameterT(0, 0.); // math::add::Value
+		
+		; // clear49::Value is automated
+		
+		add164.setParameterT(0, 0.); // math::add::Value
+		
+		; // clear50::Value is automated
+		
+		add165.setParameterT(0, 0.); // math::add::Value
+		
+		; // clear51::Value is automated
+		
+		add166.setParameterT(0, 0.); // math::add::Value
+		
+		rect8.setParameterT(0, 0.); // math::rect::Value
+		
+		; // global_cable1::Value is automated
+		
+		clear52.setParameterT(0, 0.); // math::clear::Value
 		
 		this->setParameterT(0, 0.);
 		this->setParameterT(1, 0.);
@@ -8161,55 +8443,55 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->setParameterT(3, 0.);
 		this->setParameterT(4, 0.);
 		this->setParameterT(5, 1.);
-		this->setParameterT(6, 10.);
+		this->setParameterT(6, 32.);
 		this->setParameterT(7, 2.);
 		this->setParameterT(8, 1.);
 		this->setParameterT(9, 0.51);
-		this->setParameterT(10, 0.34);
-		this->setParameterT(11, -0.41);
-		this->setParameterT(12, 1.);
-		this->setParameterT(13, 0.31);
-		this->setParameterT(14, 0.);
-		this->setParameterT(15, 1.);
+		this->setParameterT(10, 0.5);
+		this->setParameterT(11, 0.27);
+		this->setParameterT(12, 6.);
+		this->setParameterT(13, 0.1);
+		this->setParameterT(14, 0.65);
+		this->setParameterT(15, 4.);
 		this->setParameterT(16, 0.);
 		this->setParameterT(17, 1.);
-		this->setParameterT(18, 0.53);
+		this->setParameterT(18, 0.51);
 		this->setParameterT(19, 0.);
 		this->setParameterT(20, 0.);
-		this->setParameterT(21, 8.);
-		this->setParameterT(22, 1.);
+		this->setParameterT(21, 4.);
+		this->setParameterT(22, 4.);
 		this->setParameterT(23, 1.);
 		this->setParameterT(24, 0.);
 		this->setParameterT(25, 0.);
 		this->setParameterT(26, 1.);
-		this->setParameterT(27, 0.45);
-		this->setParameterT(28, -0.92);
-		this->setParameterT(29, 2.);
-		this->setParameterT(30, 0.);
+		this->setParameterT(27, 0.97);
+		this->setParameterT(28, 0.);
+		this->setParameterT(29, 4.);
+		this->setParameterT(30, 5.);
 		this->setParameterT(31, 0.);
 		this->setParameterT(32, 0.);
 		this->setParameterT(33, 0.);
 		this->setParameterT(34, 1.);
 		this->setParameterT(35, 1.);
-		this->setParameterT(36, 0.53);
+		this->setParameterT(36, 0.75);
 		this->setParameterT(37, 0.);
 		this->setParameterT(38, 0.);
-		this->setParameterT(39, 8.);
-		this->setParameterT(40, 2.);
-		this->setParameterT(41, 1.);
+		this->setParameterT(39, 1.);
+		this->setParameterT(40, 3.);
+		this->setParameterT(41, 0.9);
 		this->setParameterT(42, 0.);
 		this->setParameterT(43, 0.);
 		this->setParameterT(44, 1.);
 		this->setParameterT(45, 0.3);
-		this->setParameterT(46, 0.55);
-		this->setParameterT(47, 1.);
+		this->setParameterT(46, 0.6);
+		this->setParameterT(47, 0.);
 		this->setParameterT(48, 1.);
-		this->setParameterT(49, 0.15);
+		this->setParameterT(49, 0.);
 		this->setParameterT(50, 0.);
-		this->setParameterT(51, 0.09);
-		this->setParameterT(52, 1.);
-		this->setParameterT(53, 2.);
-		this->setParameterT(54, 0.02);
+		this->setParameterT(51, 0.);
+		this->setParameterT(52, 4.);
+		this->setParameterT(53, 3.);
+		this->setParameterT(54, 0.23);
 		this->setParameterT(55, 0.);
 		this->setParameterT(56, 0.);
 		this->setParameterT(57, 1.);
@@ -8226,44 +8508,44 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->setParameterT(68, 1456.);
 		this->setParameterT(69, 1.);
 		this->setParameterT(70, 6.1);
-		this->setParameterT(71, 3.);
-		this->setParameterT(72, 11.);
-		this->setParameterT(73, 0.79);
+		this->setParameterT(71, 1.);
+		this->setParameterT(72, 10.);
+		this->setParameterT(73, 0.35);
 		this->setParameterT(74, 1.);
-		this->setParameterT(75, 1.);
-		this->setParameterT(76, 0.27);
-		this->setParameterT(77, 0.);
+		this->setParameterT(75, 10.);
+		this->setParameterT(76, 0.02);
+		this->setParameterT(77, 0.9);
 		this->setParameterT(78, 1.);
-		this->setParameterT(79, 0.09);
+		this->setParameterT(79, 0.);
 		this->setParameterT(80, 1.);
 		this->setParameterT(81, 0.);
 		this->setParameterT(82, 1.);
-		this->setParameterT(83, 2.);
+		this->setParameterT(83, 1.);
 		this->setParameterT(84, 1.);
 		this->setParameterT(85, 1.);
-		this->setParameterT(86, 0.);
+		this->setParameterT(86, 0.16);
 		this->setParameterT(87, 0.);
 		this->setParameterT(88, 0.);
 		this->setParameterT(89, 1.);
 		this->setParameterT(90, 1.);
 		this->setParameterT(91, 1.);
-		this->setParameterT(92, 1.);
+		this->setParameterT(92, 0.);
 		this->setParameterT(93, 0.);
 		this->setParameterT(94, 0.);
-		this->setParameterT(95, 10000.);
-		this->setParameterT(96, 8457.);
+		this->setParameterT(95, 434.4);
+		this->setParameterT(96, 585.);
 		this->setParameterT(97, 1.);
-		this->setParameterT(98, 10.);
+		this->setParameterT(98, 17.);
 		this->setParameterT(99, 0.);
-		this->setParameterT(100, 2.);
+		this->setParameterT(100, 3.);
 		this->setParameterT(101, 0.);
-		this->setParameterT(102, 0.19);
+		this->setParameterT(102, 0.);
 		this->setParameterT(103, 0.);
 		this->setParameterT(104, 0.);
 		this->setParameterT(105, 1.);
 		this->setParameterT(106, 1.);
 		this->setParameterT(107, 1.);
-		this->setParameterT(108, 4.);
+		this->setParameterT(108, 8.);
 		this->setParameterT(109, 2.);
 		this->setParameterT(110, 1.);
 		this->setParameterT(111, 222.);
@@ -8271,8 +8553,8 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->setParameterT(113, 2);
 		this->setParameterT(114, 1.);
 		this->setParameterT(115, 3);
-		this->setParameterT(116, 0.38);
-		this->setParameterT(117, 0.25);
+		this->setParameterT(116, 0.18);
+		this->setParameterT(117, 0.22);
 		this->setParameterT(118, 1.);
 		this->setParameterT(119, 0.);
 		this->setParameterT(120, 0.);
@@ -8300,216 +8582,223 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 	{
 		// Runtime target Connections --------------------------------------------------------------
 		
-		this->getT(0).getT(0).getT(0).getT(0).getT(3).                                                          // Sm2_impl::global_mod1_t<NV>
+		this->getT(0).getT(0).getT(0).getT(0).getT(3).                                                          // SmFx_impl::global_mod1_t<NV>
         getT(0).getT(0).getT(3).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(1).getT(0).                                                                  // Sm2_impl::global_mod_t<NV>
+		this->getT(0).getT(0).getT(1).getT(0).                                                                  // SmFx_impl::global_mod_t<NV>
         getT(3).getT(0).getT(0).getT(3).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(2).getT(0).                                                                  // Sm2_impl::global_mod3_t<NV>
+		this->getT(0).getT(0).getT(2).getT(0).                                                                  // SmFx_impl::global_mod3_t<NV>
         getT(3).getT(0).getT(1).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(3).getT(0).                                                                  // Sm2_impl::global_mod13_t<NV>
+		this->getT(0).getT(0).getT(3).getT(0).                                                                  // SmFx_impl::global_mod13_t<NV>
         getT(3).getT(0).getT(1).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(4).getT(0).                                                                  // Sm2_impl::global_mod4_t<NV>
+		this->getT(0).getT(0).getT(4).getT(0).                                                                  // SmFx_impl::global_mod4_t<NV>
         getT(3).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(5).getT(0).                                                                  // Sm2_impl::global_mod7_t<NV>
+		this->getT(0).getT(0).getT(5).getT(0).                                                                  // SmFx_impl::global_mod7_t<NV>
         getT(3).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(6).getT(0).                                                                  // Sm2_impl::global_mod8_t<NV>
+		this->getT(0).getT(0).getT(6).getT(0).                                                                  // SmFx_impl::global_mod8_t<NV>
         getT(3).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(7).getT(0).getT(3).getT(1).getT(0).connectToRuntimeTarget(addConnection, c); // Sm2_impl::global_mod5_t<NV>
-		this->getT(0).getT(0).getT(8).getT(0).                                                                  // Sm2_impl::global_mod6_t<NV>
+		this->getT(0).getT(0).getT(7).getT(0).getT(3).getT(1).getT(0).connectToRuntimeTarget(addConnection, c); // SmFx_impl::global_mod5_t<NV>
+		this->getT(0).getT(0).getT(8).getT(0).                                                                  // SmFx_impl::global_mod6_t<NV>
         getT(3).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(9).getT(0).   // Sm2_impl::global_mod15_t<NV>
+		this->getT(0).getT(0).getT(9).getT(0).                                                          // SmFx_impl::global_mod15_t<NV>
         getT(3).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(10).getT(0).  // Sm2_impl::global_mod9_t<NV>
+		this->getT(0).getT(0).getT(10).getT(0).                                                         // SmFx_impl::global_mod9_t<NV>
         getT(3).getT(0).getT(1).getT(0).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(11).getT(0).  // Sm2_impl::global_mod11_t<NV>
+		this->getT(0).getT(0).getT(11).getT(0).                                                         // SmFx_impl::global_mod11_t<NV>
         getT(4).getT(0).getT(1).getT(0).
         getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(12).getT(0).  // Sm2_impl::global_mod10_t<NV>
+		this->getT(0).getT(0).getT(12).getT(0).                                                         // SmFx_impl::global_mod10_t<NV>
         getT(3).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
-		this->getT(0).getT(0).getT(13).getT(0).  // Sm2_impl::global_mod12_t<NV>
+		this->getT(0).getT(0).getT(13).getT(0).                                                         // SmFx_impl::global_mod12_t<NV>
         getT(3).getT(1).getT(0).getT(0).connectToRuntimeTarget(addConnection, c);
+		this->getT(0).getT(4).getT(1).getT(0).getT(0).getT(3).connectToRuntimeTarget(addConnection, c); // routing::global_cable<global_cable_t_index, parameter::empty>
+		this->getT(0).getT(4).getT(1).getT(0).getT(1).getT(3).connectToRuntimeTarget(addConnection, c); // routing::global_cable<global_cable2_t_index, parameter::empty>
+		this->getT(0).getT(4).getT(1).getT(0).getT(2).getT(3).connectToRuntimeTarget(addConnection, c); // routing::global_cable<global_cable1_t_index, parameter::empty>
 	}
 	
 	void setExternalData(const ExternalData& b, int index)
 	{
 		// External Data Connections ---------------------------------------------------------------
 		
-		this->getT(0).getT(0).getT(0).getT(0).getT(1).setExternalData(b, index);                 // Sm2_impl::peak5_t<NV>
-		this->getT(0).getT(0).getT(0).getT(0).getT(3).                                           // Sm2_impl::global_mod1_t<NV>
+		this->getT(0).getT(0).getT(0).getT(0).getT(1).setExternalData(b, index);                 // SmFx_impl::peak5_t<NV>
+		this->getT(0).getT(0).getT(0).getT(0).getT(3).                                           // SmFx_impl::global_mod1_t<NV>
         getT(0).getT(0).getT(3).getT(0).getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(2).setExternalData(b, index); // Sm2_impl::peak16_t
-		this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(4).setExternalData(b, index); // Sm2_impl::peak_unscaled_t<NV>
-		this->getT(0).getT(0).getT(1).getT(0).getT(1).setExternalData(b, index);                 // Sm2_impl::peak13_t<NV>
-		this->getT(0).getT(0).getT(1).getT(0).                                                   // Sm2_impl::global_mod_t<NV>
+		this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(2).setExternalData(b, index); // SmFx_impl::peak16_t
+		this->getT(0).getT(0).getT(0).getT(0).getT(3).getT(0).getT(4).setExternalData(b, index); // SmFx_impl::peak_unscaled_t
+		this->getT(0).getT(0).getT(1).getT(0).getT(1).setExternalData(b, index);                 // SmFx_impl::peak13_t<NV>
+		this->getT(0).getT(0).getT(1).getT(0).                                                   // SmFx_impl::global_mod_t<NV>
         getT(3).getT(0).getT(0).getT(3).
         getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0).getT(2).setExternalData(b, index); // Sm2_impl::peak_unscaled2_t<NV>
-		this->getT(0).getT(0).getT(2).getT(0).getT(1).setExternalData(b, index);                 // Sm2_impl::peak7_t<NV>
-		this->getT(0).getT(0).getT(2).getT(0).                                                   // Sm2_impl::global_mod3_t<NV>
+		this->getT(0).getT(0).getT(1).getT(0).getT(3).getT(0).getT(3).setExternalData(b, index); // SmFx_impl::peak_unscaled2_t<NV>
+		this->getT(0).getT(0).getT(2).getT(0).getT(1).setExternalData(b, index);                 // SmFx_impl::peak7_t<NV>
+		this->getT(0).getT(0).getT(2).getT(0).                                                   // SmFx_impl::global_mod3_t<NV>
         getT(3).getT(0).getT(1).getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(2).getT(0).getT(3).getT(1).setExternalData(b, index);         // Sm2_impl::peak35_t<NV>
-		this->getT(0).getT(0).getT(3).getT(0).getT(1).setExternalData(b, index);                 // Sm2_impl::peak9_t<NV>
-		this->getT(0).getT(0).getT(3).getT(0).                                                   // Sm2_impl::global_mod13_t<NV>
+		this->getT(0).getT(0).getT(2).getT(0).getT(3).getT(1).setExternalData(b, index);         // SmFx_impl::peak35_t
+		this->getT(0).getT(0).getT(3).getT(0).getT(1).setExternalData(b, index);                 // SmFx_impl::peak9_t<NV>
+		this->getT(0).getT(0).getT(3).getT(0).                                                   // SmFx_impl::global_mod13_t<NV>
         getT(3).getT(0).getT(1).getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(3).getT(0).getT(4).setExternalData(b, index);                 // Sm2_impl::peak36_t<NV>
-		this->getT(0).getT(0).getT(4).getT(0).getT(1).setExternalData(b, index);                 // Sm2_impl::peak17_t<NV>
-		this->getT(0).getT(0).getT(4).getT(0).                                                   // Sm2_impl::global_mod4_t<NV>
+		this->getT(0).getT(0).getT(3).getT(0).getT(4).setExternalData(b, index);                 // SmFx_impl::peak36_t<NV>
+		this->getT(0).getT(0).getT(4).getT(0).getT(1).setExternalData(b, index);                 // SmFx_impl::peak17_t<NV>
+		this->getT(0).getT(0).getT(4).getT(0).                                                   // SmFx_impl::global_mod4_t<NV>
         getT(3).getT(1).getT(0).getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(4).getT(0).getT(4).setExternalData(b, index);                 // Sm2_impl::peak6_t<NV>
-		this->getT(0).getT(0).getT(5).getT(0).getT(1).setExternalData(b, index);                 // Sm2_impl::peak30_t<NV>
-		this->getT(0).getT(0).getT(5).getT(0).                                                   // Sm2_impl::global_mod7_t<NV>
+		this->getT(0).getT(0).getT(4).getT(0).getT(4).setExternalData(b, index);                 // SmFx_impl::peak6_t<NV>
+		this->getT(0).getT(0).getT(5).getT(0).getT(1).setExternalData(b, index);                 // SmFx_impl::peak30_t<NV>
+		this->getT(0).getT(0).getT(5).getT(0).                                                   // SmFx_impl::global_mod7_t<NV>
         getT(3).getT(1).getT(0).getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(5).getT(0).getT(4).setExternalData(b, index);                 // Sm2_impl::peak8_t<NV>
-		this->getT(0).getT(0).getT(6).getT(0).getT(1).setExternalData(b, index);                 // Sm2_impl::peak21_t
-		this->getT(0).getT(0).getT(6).getT(0).                                                   // Sm2_impl::global_mod8_t<NV>
+		this->getT(0).getT(0).getT(5).getT(0).getT(4).setExternalData(b, index);                 // SmFx_impl::peak8_t<NV>
+		this->getT(0).getT(0).getT(6).getT(0).getT(1).setExternalData(b, index);                 // SmFx_impl::peak21_t
+		this->getT(0).getT(0).getT(6).getT(0).                                                   // SmFx_impl::global_mod8_t<NV>
         getT(3).getT(1).getT(0).getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(6).getT(0).getT(4).setExternalData(b, index);                 // Sm2_impl::peak3_t<NV>
-		this->getT(0).getT(0).getT(7).getT(0).getT(1).setExternalData(b, index);                 // Sm2_impl::peak18_t<NV>
-		this->getT(0).getT(0).getT(7).getT(0).getT(3).getT(1).getT(0).setExternalData(b, index); // Sm2_impl::global_mod5_t<NV>
-		this->getT(0).getT(0).getT(7).getT(0).getT(4).getT(0).setExternalData(b, index);         // Sm2_impl::peak14_t<NV>
-		this->getT(0).getT(0).getT(8).getT(0).getT(1).setExternalData(b, index);                 // Sm2_impl::peak20_t<NV>
-		this->getT(0).getT(0).getT(8).getT(0).                                                   // Sm2_impl::global_mod6_t<NV>
+		this->getT(0).getT(0).getT(6).getT(0).getT(4).setExternalData(b, index);                 // SmFx_impl::peak3_t
+		this->getT(0).getT(0).getT(7).getT(0).getT(1).setExternalData(b, index);                 // SmFx_impl::peak18_t<NV>
+		this->getT(0).getT(0).getT(7).getT(0).getT(3).getT(1).getT(0).setExternalData(b, index); // SmFx_impl::global_mod5_t<NV>
+		this->getT(0).getT(0).getT(7).getT(0).getT(4).getT(0).setExternalData(b, index);         // SmFx_impl::peak14_t<NV>
+		this->getT(0).getT(0).getT(8).getT(0).getT(1).setExternalData(b, index);                 // SmFx_impl::peak20_t<NV>
+		this->getT(0).getT(0).getT(8).getT(0).                                                   // SmFx_impl::global_mod6_t<NV>
         getT(3).getT(1).getT(0).getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(8).getT(0).getT(4).setExternalData(b, index);          // Sm2_impl::peak_t<NV>
-		this->getT(0).getT(0).getT(9).getT(0).getT(1).setExternalData(b, index);          // Sm2_impl::peak38_t
-		this->getT(0).getT(0).getT(9).getT(0).                                            // Sm2_impl::global_mod15_t<NV>
+		this->getT(0).getT(0).getT(8).getT(0).getT(4).setExternalData(b, index);          // SmFx_impl::peak_t<NV>
+		this->getT(0).getT(0).getT(9).getT(0).getT(1).setExternalData(b, index);          // SmFx_impl::peak38_t
+		this->getT(0).getT(0).getT(9).getT(0).                                            // SmFx_impl::global_mod15_t<NV>
         getT(3).getT(1).getT(0).getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(9).getT(0).getT(4).setExternalData(b, index);          // Sm2_impl::peak39_t<NV>
-		this->getT(0).getT(0).getT(10).getT(0).getT(1).setExternalData(b, index);         // Sm2_impl::peak22_t<NV>
-		this->getT(0).getT(0).getT(10).getT(0).                                           // Sm2_impl::global_mod9_t<NV>
+		this->getT(0).getT(0).getT(9).getT(0).getT(4).setExternalData(b, index);          // SmFx_impl::peak39_t<NV>
+		this->getT(0).getT(0).getT(10).getT(0).getT(1).setExternalData(b, index);         // SmFx_impl::peak22_t<NV>
+		this->getT(0).getT(0).getT(10).getT(0).                                           // SmFx_impl::global_mod9_t<NV>
         getT(3).getT(0).getT(1).getT(0).
         getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(10).getT(0).getT(3).getT(1).setExternalData(b, index); // Sm2_impl::peak23_t<NV>
-		this->getT(0).getT(0).getT(11).getT(0).getT(2).setExternalData(b, index);         // Sm2_impl::peak26_t<NV>
-		this->getT(0).getT(0).getT(11).getT(0).                                           // Sm2_impl::global_mod11_t<NV>
+		this->getT(0).getT(0).getT(10).getT(0).getT(3).getT(1).setExternalData(b, index); // SmFx_impl::peak23_t<NV>
+		this->getT(0).getT(0).getT(11).getT(0).getT(2).setExternalData(b, index);         // SmFx_impl::peak26_t<NV>
+		this->getT(0).getT(0).getT(11).getT(0).                                           // SmFx_impl::global_mod11_t<NV>
         getT(4).getT(0).getT(1).getT(0).
         getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(11).getT(0).getT(4).getT(1).setExternalData(b, index); // Sm2_impl::peak27_t<NV>
-		this->getT(0).getT(0).getT(12).getT(0).getT(1).setExternalData(b, index);         // Sm2_impl::peak24_t<NV>
-		this->getT(0).getT(0).getT(12).getT(0).                                           // Sm2_impl::global_mod10_t<NV>
+		this->getT(0).getT(0).getT(11).getT(0).getT(4).getT(1).setExternalData(b, index); // SmFx_impl::peak27_t<NV>
+		this->getT(0).getT(0).getT(12).getT(0).getT(1).setExternalData(b, index);         // SmFx_impl::peak24_t<NV>
+		this->getT(0).getT(0).getT(12).getT(0).                                           // SmFx_impl::global_mod10_t<NV>
         getT(3).getT(1).getT(0).getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(12).getT(0).getT(4).setExternalData(b, index); // Sm2_impl::peak25_t<NV>
-		this->getT(0).getT(0).getT(13).getT(0).getT(1).setExternalData(b, index); // Sm2_impl::peak28_t<NV>
-		this->getT(0).getT(0).getT(13).getT(0).                                   // Sm2_impl::global_mod12_t<NV>
+		this->getT(0).getT(0).getT(12).getT(0).getT(4).setExternalData(b, index);        // SmFx_impl::peak25_t<NV>
+		this->getT(0).getT(0).getT(13).getT(0).getT(1).setExternalData(b, index);        // SmFx_impl::peak28_t<NV>
+		this->getT(0).getT(0).getT(13).getT(0).                                          // SmFx_impl::global_mod12_t<NV>
         getT(3).getT(1).getT(0).getT(0).setExternalData(b, index);
-		this->getT(0).getT(0).getT(13).getT(0).getT(4).setExternalData(b, index); // Sm2_impl::peak29_t<NV>
-		this->getT(0).getT(1).getT(0).getT(0).getT(0).                            // Sm2_impl::table_t
-        getT(0).getT(0).getT(4).getT(4).getT(3).setExternalData(b, index);
-		this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // Sm2_impl::table10_t
-        getT(0).getT(0).getT(4).getT(5).getT(3).setExternalData(b, index);
-		this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // Sm2_impl::table2_t
-        getT(0).getT(0).getT(4).getT(8).getT(1).setExternalData(b, index);
-		this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // Sm2_impl::table1_t
-        getT(0).getT(0).getT(4).getT(9).getT(2).setExternalData(b, index);
-		this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // Sm2_impl::table3_t
-        getT(0).getT(0).getT(4).getT(10).getT(1).setExternalData(b, index);
-		this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // Sm2_impl::table4_t
-        getT(0).getT(0).getT(4).getT(11).getT(2).setExternalData(b, index);
-		this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).           // Sm2_impl::oscilloscope_t
-        getT(0).getT(5).getT(0).getT(1).getT(0).getT(1).
+		this->getT(0).getT(0).getT(13).getT(0).getT(4).setExternalData(b, index);        // SmFx_impl::peak29_t<NV>
+		this->getT(0).getT(1).getT(0).getT(0).getT(0).                                   // SmFx_impl::table_t
+        getT(0).getT(0).getT(1).getT(5).getT(3).setExternalData(b, index);
+		this->getT(0).getT(1).getT(0).getT(0).getT(0).                                   // SmFx_impl::table10_t
+        getT(0).getT(0).getT(1).getT(6).getT(3).setExternalData(b, index);
+		this->getT(0).getT(1).getT(0).getT(0).getT(0).                                   // SmFx_impl::table2_t
+        getT(0).getT(0).getT(1).getT(9).getT(1).setExternalData(b, index);
+		this->getT(0).getT(1).getT(0).getT(0).getT(0).                                   // SmFx_impl::table1_t
+        getT(0).getT(0).getT(1).getT(10).getT(2).setExternalData(b, index);
+		this->getT(0).getT(1).getT(0).getT(0).getT(0).                                   // SmFx_impl::table3_t
+        getT(0).getT(0).getT(1).getT(11).getT(1).setExternalData(b, index);
+		this->getT(0).getT(1).getT(0).getT(0).getT(0).                                   // SmFx_impl::table4_t
+        getT(0).getT(0).getT(1).getT(12).getT(2).setExternalData(b, index);
+		this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).                           // SmFx_impl::oscilloscope_t
+        getT(0).getT(2).getT(0).getT(1).getT(0).getT(1).
         getT(1).setExternalData(b, index);
-		this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).           // Sm2_impl::peak15_t<NV>
-        getT(0).getT(5).getT(0).getT(1).getT(0).getT(1).
+		this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).                           // SmFx_impl::peak15_t<NV>
+        getT(0).getT(2).getT(0).getT(1).getT(0).getT(1).
         getT(2).setExternalData(b, index);
-		this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // Sm2_impl::table5_t
+		this->getT(0).getT(1).getT(0).getT(0).getT(0).                                   // SmFx_impl::table5_t
         getT(0).getT(1).getT(4).getT(4).getT(3).setExternalData(b, index);
-		this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // Sm2_impl::table11_t
+		this->getT(0).getT(1).getT(0).getT(0).getT(0).                                   // SmFx_impl::table11_t
         getT(0).getT(1).getT(4).getT(5).getT(3).setExternalData(b, index);
-		this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // Sm2_impl::table6_t
+		this->getT(0).getT(1).getT(0).getT(0).getT(0).                                   // SmFx_impl::table6_t
         getT(0).getT(1).getT(4).getT(8).getT(1).setExternalData(b, index);
-		this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // Sm2_impl::table7_t
+		this->getT(0).getT(1).getT(0).getT(0).getT(0).                                   // SmFx_impl::table7_t
         getT(0).getT(1).getT(4).getT(9).getT(2).setExternalData(b, index);
-		this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // Sm2_impl::table8_t
+		this->getT(0).getT(1).getT(0).getT(0).getT(0).                                   // SmFx_impl::table8_t
         getT(0).getT(1).getT(4).getT(10).getT(1).setExternalData(b, index);
-		this->getT(0).getT(1).getT(0).getT(0).getT(0).                   // Sm2_impl::table9_t
+		this->getT(0).getT(1).getT(0).getT(0).getT(0).                                   // SmFx_impl::table9_t
         getT(0).getT(1).getT(4).getT(11).getT(2).setExternalData(b, index);
-		this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).           // Sm2_impl::oscilloscope1_t
+		this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).                           // SmFx_impl::oscilloscope1_t
         getT(1).getT(5).getT(0).getT(1).getT(1).getT(1).
         getT(0).setExternalData(b, index);
-		this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).           // Sm2_impl::peak34_t<NV>
+		this->getT(0).getT(1).getT(0).getT(0).getT(0).getT(0).                           // SmFx_impl::peak34_t<NV>
         getT(1).getT(5).getT(0).getT(1).getT(1).getT(1).
         getT(1).setExternalData(b, index);
-		this->getT(0).getT(1).getT(1).getT(5).                           // Sm2_impl::peak4_t
+		this->getT(0).getT(1).getT(1).getT(5).                                           // SmFx_impl::peak4_t
         getT(0).getT(0).getT(0).getT(0).setExternalData(b, index);
-		this->getT(0).getT(1).getT(1).getT(5).getT(0).                   // Sm2_impl::ramp_t<NV>
+		this->getT(0).getT(1).getT(1).getT(5).getT(0).                                   // SmFx_impl::ramp_t<NV>
         getT(0).getT(0).getT(1).getT(0).getT(0).
         getT(1).setExternalData(b, index);
-		this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).           // Sm2_impl::peak1_t<NV>
+		this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).                           // SmFx_impl::peak1_t<NV>
         getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
         getT(2).setExternalData(b, index);
-		this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).           // Sm2_impl::ahdsr_t<NV>
+		this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).                           // SmFx_impl::ahdsr_t<NV>
         getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
         getT(5).setExternalData(b, index);
-		this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).           // Sm2_impl::cable_table1_t<NV>
+		this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).                           // SmFx_impl::cable_table1_t<NV>
         getT(0).getT(1).getT(0).getT(0).getT(2).getT(1).
         getT(1).setExternalData(b, index);
-		this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).           // Sm2_impl::cable_table4_t
+		this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).                           // SmFx_impl::cable_table4_t
         getT(0).getT(1).getT(0).getT(0).getT(2).getT(1).
         getT(2).setExternalData(b, index);
-		this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).           // Sm2_impl::cable_table3_t
+		this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).                           // SmFx_impl::cable_table3_t
         getT(0).getT(1).getT(0).getT(0).getT(2).getT(1).
         getT(3).setExternalData(b, index);
-		this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).           // Sm2_impl::cable_pack_t<NV>
+		this->getT(0).getT(1).getT(1).getT(5).getT(0).getT(0).                           // SmFx_impl::cable_pack_t<NV>
         getT(0).getT(1).getT(0).getT(0).getT(2).getT(2).
         getT(1).setExternalData(b, index);
-		this->getT(0).getT(1).getT(1).getT(5).getT(0).                   // Sm2_impl::peak2_t<NV>
+		this->getT(0).getT(1).getT(1).getT(5).getT(0).                                   // SmFx_impl::peak2_t<NV>
         getT(0).getT(0).getT(1).getT(0).getT(0).
         getT(3).setExternalData(b, index);
-		this->getT(0).getT(1).getT(1).getT(5).                           // Sm2_impl::file_player_t<NV>
+		this->getT(0).getT(1).getT(1).getT(5).                                           // SmFx_impl::file_player_t<NV>
         getT(0).getT(0).getT(0).getT(5).
         getT(0).setExternalData(b, index);
-		this->getT(0).getT(1).getT(1).getT(5).                           // Sm2_impl::file_player2_t<NV>
+		this->getT(0).getT(1).getT(1).getT(5).                                           // SmFx_impl::file_player2_t<NV>
         getT(0).getT(0).getT(0).getT(5).
         getT(1).setExternalData(b, index);
-		this->getT(0).getT(1).getT(1).getT(6).                           // Sm2_impl::peak31_t<NV>
+		this->getT(0).getT(1).getT(1).getT(6).                                           // SmFx_impl::peak31_t<NV>
         getT(0).getT(1).getT(0).getT(1).
         getT(1).setExternalData(b, index);
-		this->getT(0).getT(1).getT(2).getT(4).                           // Sm2_impl::peak10_t
+		this->getT(0).getT(1).getT(2).getT(4).                                           // SmFx_impl::peak10_t
         getT(0).getT(0).getT(0).getT(0).setExternalData(b, index);
-		this->getT(0).getT(1).getT(2).getT(4).getT(0).                   // Sm2_impl::ramp1_t<NV>
+		this->getT(0).getT(1).getT(2).getT(4).getT(0).                                   // SmFx_impl::ramp1_t<NV>
         getT(0).getT(0).getT(1).getT(0).getT(0).
         getT(1).setExternalData(b, index);
-		this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).           // Sm2_impl::peak11_t<NV>
+		this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).                           // SmFx_impl::peak11_t<NV>
         getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
         getT(2).setExternalData(b, index);
-		this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).           // Sm2_impl::ahdsr2_t<NV>
+		this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).                           // SmFx_impl::ahdsr2_t<NV>
         getT(0).getT(1).getT(0).getT(0).getT(2).getT(0).
         getT(5).setExternalData(b, index);
-		this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).           // Sm2_impl::cable_table2_t<NV>
+		this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).                           // SmFx_impl::cable_table2_t<NV>
         getT(0).getT(1).getT(0).getT(0).getT(2).getT(1).
         getT(1).setExternalData(b, index);
-		this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).           // Sm2_impl::cable_table5_t
+		this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).                           // SmFx_impl::cable_table5_t
         getT(0).getT(1).getT(0).getT(0).getT(2).getT(1).
         getT(2).setExternalData(b, index);
-		this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).           // Sm2_impl::cable_table6_t
+		this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).                           // SmFx_impl::cable_table6_t
         getT(0).getT(1).getT(0).getT(0).getT(2).getT(1).
         getT(3).setExternalData(b, index);
-		this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).           // Sm2_impl::cable_pack1_t<NV>
+		this->getT(0).getT(1).getT(2).getT(4).getT(0).getT(0).                           // SmFx_impl::cable_pack1_t<NV>
         getT(0).getT(1).getT(0).getT(0).getT(2).getT(2).
         getT(1).setExternalData(b, index);
-		this->getT(0).getT(1).getT(2).getT(4).getT(0).                   // Sm2_impl::peak12_t<NV>
+		this->getT(0).getT(1).getT(2).getT(4).getT(0).                                   // SmFx_impl::peak12_t<NV>
         getT(0).getT(0).getT(1).getT(0).getT(0).
         getT(3).setExternalData(b, index);
-		this->getT(0).getT(1).getT(2).getT(4).                           // Sm2_impl::file_player1_t<NV>
+		this->getT(0).getT(1).getT(2).getT(4).                                           // SmFx_impl::file_player1_t<NV>
         getT(0).getT(0).getT(0).getT(5).
         getT(0).setExternalData(b, index);
-		this->getT(0).getT(1).getT(2).getT(4).                           // Sm2_impl::file_player3_t<NV>
+		this->getT(0).getT(1).getT(2).getT(4).                                           // SmFx_impl::file_player3_t<NV>
         getT(0).getT(0).getT(0).getT(5).
         getT(1).setExternalData(b, index);
-		this->getT(0).getT(1).getT(2).getT(5).                           // Sm2_impl::peak19_t<NV>
+		this->getT(0).getT(1).getT(2).getT(5).                                           // SmFx_impl::peak19_t<NV>
         getT(0).getT(1).getT(0).getT(1).
         getT(1).setExternalData(b, index);
-		this->getT(0).getT(3).getT(0).getT(0).setExternalData(b, index); // Sm2_impl::sliderbank_t<NV>
-		this->getT(0).getT(3).getT(0).getT(3).                           // Sm2_impl::peak32_t<NV>
+		this->getT(0).getT(3).getT(0).getT(0).setExternalData(b, index);                 // SmFx_impl::sliderbank_t<NV>
+		this->getT(0).getT(3).getT(0).getT(3).                                           // SmFx_impl::peak32_t<NV>
         getT(0).getT(1).getT(0).getT(1).
         getT(1).setExternalData(b, index);
-		this->getT(0).getT(3).getT(1).getT(0).setExternalData(b, index); // Sm2_impl::sliderbank1_t<NV>
-		this->getT(0).getT(3).getT(1).getT(3).                           // Sm2_impl::peak33_t<NV>
+		this->getT(0).getT(3).getT(1).getT(0).setExternalData(b, index);                 // SmFx_impl::sliderbank1_t<NV>
+		this->getT(0).getT(3).getT(1).getT(3).                                           // SmFx_impl::peak33_t<NV>
         getT(0).getT(1).getT(0).getT(1).
         getT(1).setExternalData(b, index);
-		this->getT(1).setExternalData(b, index); // Sm2_impl::ahdsr1_t<NV>
+		this->getT(0).getT(4).getT(0).getT(0).getT(1).getT(2).setExternalData(b, index); // SmFx_impl::peak37_t<NV>
+		this->getT(0).getT(4).getT(0).getT(1).setExternalData(b, index);                 // SmFx_impl::ahdsr1_t<NV>
+		this->getT(0).getT(4).getT(1).getT(0).getT(0).getT(2).setExternalData(b, index); // SmFx_impl::peak40_t
+		this->getT(0).getT(4).getT(1).getT(0).getT(1).getT(2).setExternalData(b, index); // SmFx_impl::peak42_t
+		this->getT(0).getT(4).getT(1).getT(0).getT(2).getT(2).setExternalData(b, index); // SmFx_impl::peak41_t
 	}
 };
 }
@@ -8526,7 +8815,7 @@ namespace project
 // polyphonic template declaration
 
 template <int NV>
-using Sm2 = wrap::node<Sm2_impl::instance<NV>>;
+using SmFx = wrap::node<SmFx_impl::instance<NV>>;
 }
 
 
