@@ -27,28 +27,28 @@ struct Factory: public scriptnode::dll::StaticLibraryHostFactory
 		TempoSyncer::initTempoData();
 		// Node registrations ---------------------------------------------------------
 		
-		registerPolyNode<project::Env<1>, project::Env<NUM_POLYPHONIC_VOICES>>();
 		registerPolyNode<project::LfoNew<1>, wrap::illegal_poly<project::LfoNew<1>>>();
 		registerPolyNode<project::Sm2<1>, project::Sm2<NUM_POLYPHONIC_VOICES>>();
 		registerPolyNode<project::SmFx<1>, project::SmFx<NUM_POLYPHONIC_VOICES>>();
-		registerDataNode<project::combValueTest_networkdata>();
-		registerDataNode<project::empty_networkdata>();
-		registerDataNode<project::FoldTests_networkdata>();
-		registerDataNode<project::GainMod_networkdata>();
-		registerDataNode<project::lfo_networkdata>();
-		registerDataNode<project::lfo2_networkdata>();
-		registerDataNode<project::lfo3_networkdata>();
-		registerDataNode<project::lfo4_networkdata>();
-		registerDataNode<project::Lfos_networkdata>();
+		registerPolyNode<project::Env<1>, project::Env<NUM_POLYPHONIC_VOICES>>();
+		registerDataNode<project::VcaAdsr_networkdata>();
+		registerDataNode<project::ptichCorrect_networkdata>();
 		registerDataNode<project::ModConnect_networkdata>();
+		registerDataNode<project::Revern_networkdata>();
+		registerDataNode<project::lfo4_networkdata>();
+		registerDataNode<project::SuperDetune_networkdata>();
+		registerDataNode<project::combValueTest_networkdata>();
+		registerDataNode<project::PitchTempo_networkdata>();
+		registerDataNode<project::GainMod_networkdata>();
+		registerDataNode<project::lfo3_networkdata>();
+		registerDataNode<project::rp_networkdata>();
+		registerDataNode<project::FoldTests_networkdata>();
+		registerDataNode<project::lfo_networkdata>();
+		registerDataNode<project::Lfos_networkdata>();
+		registerDataNode<project::lfo2_networkdata>();
+		registerDataNode<project::empty_networkdata>();
 		registerDataNode<project::mp_networkdata>();
 		registerDataNode<project::pitch_networkdata>();
-		registerDataNode<project::PitchTempo_networkdata>();
-		registerDataNode<project::ptichCorrect_networkdata>();
-		registerDataNode<project::Revern_networkdata>();
-		registerDataNode<project::rp_networkdata>();
-		registerDataNode<project::SuperDetune_networkdata>();
-		registerDataNode<project::VcaAdsr_networkdata>();
 	}
 };
 }
