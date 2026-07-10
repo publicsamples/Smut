@@ -30,8 +30,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          vst3_root="$GITHUB_WORKSPACE/CIExports/vst3"
-          fallback_root="$GITHUB_WORKSPACE/Binaries"
+          vst3_root="$GITHUB_WORKSPACE/Smut/CIExports/vst3"
+          fallback_root="$GITHUB_WORKSPACE/Smut/Binaries"
 
           is_complete_export_root() {
             local root="$1"
@@ -50,13 +50,13 @@ jobs:
           set -euo pipefail
           echo "Commit: $GITHUB_SHA"
           files=(
-            "Binaries/Source/Plugin.cpp"
-            "Binaries/Source/PresetData.cpp"
-            "Binaries/Source/CopyProtection.cpp"
-            "AdditionalSourceCode/nodes/factory.cpp"
-            "AdditionalSourceCode/nodes/RNBO.cpp"
-            "Binaries/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp"
-            "Binaries/JuceLibraryCode/include_juce_audio_plugin_client_utils.cpp"
+            "Smut/Binaries/Source/Plugin.cpp"
+            "Smut/Binaries/Source/PresetData.cpp"
+            "Smut/Binaries/Source/CopyProtection.cpp"
+            "Smut/AdditionalSourceCode/nodes/factory.cpp"
+            "Smut/AdditionalSourceCode/nodes/RNBO.cpp"
+            "Smut/Binaries/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp"
+            "Smut/Binaries/JuceLibraryCode/include_juce_audio_plugin_client_utils.cpp"
           )
           for f in "${files[@]}"; do
             if [[ -f "$f" ]]; then

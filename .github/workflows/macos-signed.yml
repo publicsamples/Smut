@@ -45,9 +45,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          vst3_root="$GITHUB_WORKSPACE/CIExports/vst3"
-          au_root="$GITHUB_WORKSPACE/CIExports/au"
-          fallback_root="$GITHUB_WORKSPACE/Binaries"
+          vst3_root="$GITHUB_WORKSPACE/Smut/CIExports/vst3"
+          au_root="$GITHUB_WORKSPACE/Smut/CIExports/au"
+          fallback_root="$GITHUB_WORKSPACE/Smut/Binaries"
 
           is_complete_export_root() {
             local root="$1"
@@ -72,11 +72,11 @@ jobs:
           set -euo pipefail
           echo "Commit: $GITHUB_SHA"
           files=(
-            "Binaries/Source/Plugin.cpp"
-            "Binaries/Source/PresetData.cpp"
-            "Binaries/Source/CopyProtection.cpp"
-            "AdditionalSourceCode/nodes/factory.cpp"
-            "AdditionalSourceCode/nodes/RNBO.cpp"
+            "Smut/Binaries/Source/Plugin.cpp"
+            "Smut/Binaries/Source/PresetData.cpp"
+            "Smut/Binaries/Source/CopyProtection.cpp"
+            "Smut/AdditionalSourceCode/nodes/factory.cpp"
+            "Smut/AdditionalSourceCode/nodes/RNBO.cpp"
             "${VST3_ROOT#$GITHUB_WORKSPACE/}/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp"
             "${VST3_ROOT#$GITHUB_WORKSPACE/}/JuceLibraryCode/include_juce_audio_plugin_client_utils.cpp"
           )
@@ -249,7 +249,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          compiled_dir="$GITHUB_WORKSPACE/Binaries/Compiled"
+          compiled_dir="$GITHUB_WORKSPACE/Smut/Binaries/Compiled"
           mkdir -p "$compiled_dir"
           for root in "$VST3_ROOT" "$AU_ROOT"; do
             if [[ -d "$root/Compiled" ]]; then
@@ -336,7 +336,7 @@ jobs:
             [[ -z "$bundle" ]] && continue
             found_any=1
             echo "$bundle" >> bundles.txt
-          done < <(find "$GITHUB_WORKSPACE/Binaries/Compiled" -type d \( -name "*.vst3" -o -name "*.component" \))
+          done < <(find "$GITHUB_WORKSPACE/Smut/Binaries/Compiled" -type d \( -name "*.vst3" -o -name "*.component" \))
 
           if [[ "$found_any" -eq 0 ]]; then
             echo "ERROR: No plugin bundles found to sign."
