@@ -1,0 +1,199 @@
+name: Linux
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  linux:
+    runs-on: ubuntu-22.04
+    container:
+      image: ubuntu:20.04
+    env:
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - name: Bootstrap container tools
+        run: |
+          apt-get update
+          apt-get install -y git ca-certificates
+
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Resolve export root
+        shell: bash
+        run: |
+          set -euo pipefail
+          vst3_root="$GITHUB_WORKSPACE/CIExports/vst3"
+          fallback_root="$GITHUB_WORKSPACE/Binaries"
+
+          is_complete_export_root() {
+            local root="$1"
+            [[ -d "$root/Builds" && -d "$root/Source" && -d "$root/JuceLibraryCode" ]]
+          }
+
+          if is_complete_export_root "$vst3_root"; then
+            echo "VST3_ROOT=$vst3_root" >> "$GITHUB_ENV"
+          else
+            echo "VST3_ROOT=$fallback_root" >> "$GITHUB_ENV"
+          fi
+
+      - name: Source fingerprint (Linux)
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Commit: $GITHUB_SHA"
+          files=(
+            "Binaries/Source/Plugin.cpp"
+            "Binaries/Source/PresetData.cpp"
+            "Binaries/Source/CopyProtection.cpp"
+            "AdditionalSourceCode/nodes/factory.cpp"
+            "AdditionalSourceCode/nodes/RNBO.cpp"
+            "Binaries/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp"
+            "Binaries/JuceLibraryCode/include_juce_audio_plugin_client_utils.cpp"
+          )
+          for f in "${files[@]}"; do
+            if [[ -f "$f" ]]; then
+              sha256sum "$f"
+            else
+              echo "MISSING  $f"
+            fi
+          done
+
+      - name: Install dependencies (Linux)
+        run: |
+          apt-get update
+          apt-get install -y \
+            build-essential \
+            pkg-config \
+            zip \
+            libasound2-dev \
+            libfreetype6-dev \
+            libcurl4-openssl-dev \
+            libx11-dev \
+            libxext-dev \
+            libxinerama-dev \
+            libxrandr-dev \
+            libxcursor-dev \
+            libxcomposite-dev \
+            libxrender-dev \
+            libgl1-mesa-dev
+
+      - name: Normalize project paths for CI (Linux)
+        shell: bash
+        run: |
+          set -euo pipefail
+          ws="$GITHUB_WORKSPACE"
+          hise="$ws/HISE"
+          plugin_makefile="$VST3_ROOT/Builds/LinuxMakefile/Makefile"
+          sdk_dir=""
+          for candidate in \
+            "$VST3_ROOT/JUCE/modules/juce_audio_processors_headless/format_types/VST3_SDK" \
+            "$ws/HISE/JUCE/modules/juce_audio_processors_headless/format_types/VST3_SDK" \
+            "$ws/HISE/JUCE/modules/juce_audio_processors/format_types/VST3_SDK" \
+            "$VST3_ROOT/JUCE/modules/juce_audio_processors/format_types/VST3_SDK"; do
+            if [[ -f "$candidate/pluginterfaces/vst/vsttypes.h" ]]; then
+              sdk_dir="$candidate"
+              break
+            fi
+          done
+          if [[ -z "$sdk_dir" ]]; then
+            echo "ERROR: Could not locate VST3 SDK in expected paths."
+            exit 1
+          fi
+          sdk_dir_escaped="${sdk_dir// /\\ }"
+          headless_hise_sdk_dir="$hise/JUCE/modules/juce_audio_processors_headless/format_types/VST3_SDK"
+
+          test -f "$sdk_dir/pluginterfaces/vst/vsttypes.h"
+
+          if [[ -f "$plugin_makefile" ]]; then
+            HISE_ROOT="$hise" SDK_ROOT_ESC="$sdk_dir_escaped" perl -0pi -e '
+              s#/Users/rick/Documents/GitHub/HISE#$ENV{HISE_ROOT}#g;
+              s#/JUCE/modules/juce_audio_processors/format_types/VST3_SDK#$ENV{SDK_ROOT_ESC}#g;
+              s#/Users/rick/Documents/GitHub/HISE/tools/SDK/VST3\\ SDK#$ENV{SDK_ROOT_ESC}#g;
+              s#%FFT_HEADER_PATH%;##g;
+              s#%FFT_LINKER_FLAGS%##g;
+            ' "$plugin_makefile"
+
+            if ! grep -Fq -- "-I$sdk_dir_escaped" "$plugin_makefile"; then
+              SDK_ROOT_ESC="$sdk_dir_escaped" perl -0pi -e '
+                s/\$\(CPPFLAGS\)/-I$ENV{SDK_ROOT_ESC} \$\(CPPFLAGS\)/g;
+              ' "$plugin_makefile"
+            fi
+          fi
+
+          mkdir -p "$(dirname "$headless_hise_sdk_dir")"
+          if [[ ! -e "$headless_hise_sdk_dir" ]]; then
+            ln -s "$sdk_dir" "$headless_hise_sdk_dir"
+          fi
+
+          wrapper="$hise/JUCE/modules/juce_audio_plugin_client/VST3/juce_VST3_Wrapper.cpp"
+          if [[ -f "$wrapper" ]]; then
+            perl -0pi -e '
+              s/list->getInt\s*\(\s*Vst::ChannelContext::kChannelColorKey\s*,\s*colour\s*\)/list->getInt (Vst::ChannelContext::kChannelColorKey, (Steinberg::int64&) colour)/g;
+              s/jmax\s*\(\s*\(juce::int64\)\s*0\s*,\s*processContext\.projectTimeSamples\s*\)/jmax ((juce::int64) 0, (juce::int64) processContext.projectTimeSamples)/g;
+            ' "$wrapper"
+          fi
+
+          client_utils="$VST3_ROOT/JuceLibraryCode/include_juce_audio_plugin_client_utils.cpp"
+          if [[ -f "$client_utils" ]]; then
+            printf '%s\n' '#include "AppConfig.h"' > "$client_utils"
+          fi
+
+      - name: Build Linux VST3
+        shell: bash
+        run: |
+          set -euo pipefail
+          plugin_makefile_dir="$VST3_ROOT/Builds/LinuxMakefile"
+          plugin_makefile="$plugin_makefile_dir/Makefile"
+
+          if [[ -f "$plugin_makefile" ]] && grep -Eq '^VST3[[:space:]]*:' "$plugin_makefile"; then
+            echo "Building Linux VST3 from $plugin_makefile_dir"
+            make -C "$plugin_makefile_dir" CONFIG=Release VST3 -j"$(nproc)"
+          else
+            echo "No VST3 target found in $plugin_makefile"
+            exit 1
+          fi
+
+      - name: Inspect runtime deps (Linux)
+        shell: bash
+        run: |
+          set -euo pipefail
+          target_file="$(find "$VST3_ROOT" -type f -path "*.vst3/Contents/*-linux/*.so" | head -n1)"
+          if [[ -z "${target_file:-}" ]]; then
+            echo "No Linux binary found for dependency inspection"
+            exit 1
+          fi
+          echo "Inspecting: $target_file"
+          ldd "$target_file" || true
+          strings "$target_file" | grep -E 'GLIBC_[0-9]+\.[0-9]+' | sort -u | tail -n 10 || true
+
+      - name: Package (Linux)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          mapfile -d '' bundles < <(find "$VST3_ROOT" -type d -name "*.vst3" -print0)
+
+          for bundle in "${bundles[@]}"; do
+            base="$(basename "$bundle")"
+            (cd "$(dirname "$bundle")" && zip -r "$GITHUB_WORKSPACE/dist/${base}.zip" "$base")
+          done
+
+          if ! compgen -G "dist/*.zip" > /dev/null; then
+            echo "No Linux build artifacts found"
+            exit 1
+          fi
+          ls -la dist
+
+      - name: Upload artifacts (Linux)
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-builds-unsigned
+          path: dist/*.zip

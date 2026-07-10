@@ -1,0 +1,199 @@
+name: Windows
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Resolve export root
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $pluginRoot = Join-Path $env:GITHUB_WORKSPACE "CIExports\vst3"
+          $fallbackRoot = Join-Path $env:GITHUB_WORKSPACE "Binaries"
+
+          function Test-CompleteExportRoot([string]$Root) {
+            return (Test-Path (Join-Path $Root "Builds")) `
+              -and (Test-Path (Join-Path $Root "Source")) `
+              -and (Test-Path (Join-Path $Root "JuceLibraryCode"))
+          }
+
+          if (Test-CompleteExportRoot $pluginRoot) {
+            "VST3_ROOT=$pluginRoot" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          } else {
+            "VST3_ROOT=$fallbackRoot" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          }
+
+      - name: Source fingerprint (Windows)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          Write-Host "Commit: $env:GITHUB_SHA"
+          $files = @(
+            "Binaries\Source\Plugin.cpp",
+            "Binaries\Source\PresetData.cpp",
+            "Binaries\Source\CopyProtection.cpp",
+            "AdditionalSourceCode\nodes\factory.cpp",
+            "AdditionalSourceCode\nodes\RNBO.cpp",
+            "Binaries\JuceLibraryCode\include_juce_audio_plugin_client_VST3.cpp",
+            "Binaries\JuceLibraryCode\include_juce_audio_plugin_client_utils.cpp"
+          )
+          foreach ($f in $files) {
+            if (Test-Path $f) {
+              $h = Get-FileHash -Algorithm SHA256 -Path $f
+              Write-Host "$($h.Hash.ToLower())  $f"
+            } else {
+              Write-Host "MISSING  $f"
+            }
+          }
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+        with:
+          msbuild-architecture: x64
+
+      - name: Normalize project paths for CI (Windows)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $ws = $env:GITHUB_WORKSPACE
+          $hise = Join-Path $ws "HISE"
+          $sdkCandidates = @(
+            (Join-Path $env:VST3_ROOT "JUCE\modules\juce_audio_processors_headless\format_types\VST3_SDK"),
+            (Join-Path $ws "HISE\JUCE\modules\juce_audio_processors_headless\format_types\VST3_SDK"),
+            (Join-Path $ws "HISE\JUCE\modules\juce_audio_processors\format_types\VST3_SDK"),
+            (Join-Path $env:VST3_ROOT "JUCE\modules\juce_audio_processors\format_types\VST3_SDK")
+          )
+          $juceVst3Sdk = $null
+          foreach ($c in $sdkCandidates) {
+            if (Test-Path (Join-Path $c "pluginterfaces\vst\vsttypes.h")) { $juceVst3Sdk = $c; break }
+          }
+          if (-not $juceVst3Sdk) { throw "Missing VST3 SDK in expected paths." }
+
+          $vstProj = Join-Path $env:VST3_ROOT "Builds\VisualStudio2022\Smut_VST3.vcxproj"
+          $sharedProj = Join-Path $env:VST3_ROOT "Builds\VisualStudio2022\Smut_SharedCode.vcxproj"
+
+          foreach ($p in @($vstProj, $sharedProj)) {
+            if (!(Test-Path $p)) { continue }
+            $c = Get-Content -Raw -Path $p
+            $c = $c.Replace('\Users\rick\Documents\GitHub\HISE\JUCE\modules\juce_audio_processors\format_types\VST3_SDK', $juceVst3Sdk)
+            $c = $c.Replace('\Users\rick\Documents\GitHub\HISE\tools\SDK\VST3 SDK', $juceVst3Sdk)
+            $c = $c.Replace('\Users\rick\Documents\GitHub\HISE', $hise)
+            $c = $c.Replace('/Users/rick/Documents/GitHub/HISE', $hise)
+            $c = $c.Replace('%FFT_HEADER_PATH%;', '')
+            $c = $c.Replace('%FFT_LINKER_FLAGS%', '')
+            $c = $c.Replace('%WIN_STATIC_LIBS%', '')
+            $c = $c.Replace('%WIN_STATIC_LIB_FOLDER_R64%;', '')
+            $c = $c.Replace('%WIN_STATIC_LIB_FOLDER_D64%;', '')
+            $c = $c.Replace('%PREBUILD_COMMAND%;', '')
+            $c = $c.Replace('%PREBUILD_COMMAND%', '')
+            $c = $c.Replace('PAMPLEJUCE_IPP;', '')
+            $c = $c.Replace('_IPP_SEQUENTIAL_STATIC;', '')
+            $c = $c.Replace('PAMPLEJUCE_IPP=1;', '')
+            $c = $c.Replace('_IPP_SEQUENTIAL_STATIC=1;', '')
+            $c = $c.Replace('WIN32;_WINDOWS;', 'WIN32;_WINDOWS;NOMINMAX;stricmp=_stricmp;')
+            Set-Content -Path $p -Value $c -NoNewline
+          }
+
+          foreach ($p in @($vstProj, $sharedProj)) {
+            if (!(Test-Path $p)) { continue }
+            try {
+              [void]([xml](Get-Content -Raw -Path $p))
+            } catch {
+              throw "Invalid project XML after normalization: $p`n$($_.Exception.Message)"
+            }
+          }
+
+          $juceTextDir = Join-Path $hise "JUCE\modules\juce_core\text"
+          if (Test-Path $juceTextDir) {
+            Get-ChildItem -Path $juceTextDir -Filter "juce_CharPointer_*.h" -File | ForEach-Object {
+              $hc = Get-Content -Raw -Path $_.FullName
+              $hc = [regex]::Replace($hc, '\bstricmp\b', '_stricmp')
+              $hc = [regex]::Replace($hc, '\bstrnicmp\b', '_strnicmp')
+              Set-Content -Path $_.FullName -Value $hc -NoNewline
+            }
+          }
+          $asciiHdr = Join-Path $juceTextDir "juce_CharPointer_ASCII.h"
+          if (Test-Path $asciiHdr) {
+            $ac = Get-Content -Raw -Path $asciiHdr
+            $ac = [regex]::Replace($ac, '\bstricmp\b', '_stricmp')
+            $ac = [regex]::Replace($ac, '\bstrnicmp\b', '_strnicmp')
+            Set-Content -Path $asciiHdr -Value $ac -NoNewline
+            if (Select-String -Path $asciiHdr -Pattern '\bstricmp\b' -Quiet) {
+              throw "Failed to patch stricmp in $asciiHdr"
+            }
+          }
+
+          $clientUtils = Join-Path $env:VST3_ROOT "JuceLibraryCode\include_juce_audio_plugin_client_utils.cpp"
+          if (Test-Path $clientUtils) {
+            '#include "AppConfig.h"' | Set-Content -Path $clientUtils -NoNewline
+          }
+
+          $clientVst3 = Join-Path $env:VST3_ROOT "JuceLibraryCode\include_juce_audio_plugin_client_VST3.cpp"
+          if (Test-Path $clientVst3) {
+            $vc = Get-Content -Raw -Path $clientVst3
+            $vc = [regex]::Replace($vc, '^\s*#include\s*<public\.sdk/source/common/commonstringconvert\.cpp>\s*\r?\n?', '', 'Multiline')
+            $vc = [regex]::Replace($vc, '^\s*#include\s*<public\.sdk/source/vst/utility/stringconvert\.cpp>\s*\r?\n?', '', 'Multiline')
+            $vc = [regex]::Replace($vc, '(?s)\r?\n// StringConvertCIShim:.*?\r?\n\}\}\}', '')
+            Set-Content -Path $clientVst3 -Value $vc -NoNewline
+          }
+
+      - name: Build Windows VST3
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          function Invoke-MSBuild([string]$ProjectPath, [string]$Label) {
+            if (-not (Test-Path $ProjectPath)) { return }
+            Write-Host "Building ${Label}: $ProjectPath"
+            msbuild $ProjectPath /m /t:Build /p:Configuration=Release /p:Platform=x64 /p:PreferredToolArchitecture=x64
+            if ($LASTEXITCODE -ne 0) {
+              throw "MSBuild failed for $Label"
+            }
+          }
+
+          $shared = Join-Path $env:VST3_ROOT "Builds\VisualStudio2022\Smut_SharedCode.vcxproj"
+          $vst3 = Join-Path $env:VST3_ROOT "Builds\VisualStudio2022\Smut_VST3.vcxproj"
+
+          Invoke-MSBuild $shared "Windows plugin shared code"
+          Invoke-MSBuild $vst3 "Windows VST3"
+
+      - name: Package (Windows)
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          $vst3Files = @()
+          if (Test-Path $env:VST3_ROOT) {
+            $vst3Files = Get-ChildItem -Path $env:VST3_ROOT -Recurse -Filter *.vst3 -File
+          }
+          foreach ($f in $vst3Files) {
+            $zipPath = Join-Path "dist" ($f.Name + ".zip")
+            Compress-Archive -Path $f.FullName -DestinationPath $zipPath -Force
+          }
+
+          $distFiles = Get-ChildItem dist -File
+          if ($distFiles.Count -eq 0) {
+            throw "No Windows build artifacts found"
+          }
+
+          Get-ChildItem dist
+
+      - name: Upload artifacts (Windows)
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-builds-unsigned
+          path: dist/*.zip

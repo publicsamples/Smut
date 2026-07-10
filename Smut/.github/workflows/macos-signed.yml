@@ -1,0 +1,383 @@
+name: MacOS (signed)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  mac-signed:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Validate required secrets
+        shell: bash
+        env:
+          DEVELOPER_ID_APP_CERT_P12_BASE64: ${{ secrets.DEVELOPER_ID_APP_CERT_P12_BASE64 }}
+          DEVELOPER_ID_APP_CERT_PASSWORD: ${{ secrets.DEVELOPER_ID_APP_CERT_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+        run: |
+          set -euo pipefail
+          required=(
+            DEVELOPER_ID_APP_CERT_P12_BASE64
+            DEVELOPER_ID_APP_CERT_PASSWORD
+            APPLE_ID
+            APPLE_TEAM_ID
+            APPLE_APP_SPECIFIC_PASSWORD
+          )
+          for var_name in "${required[@]}"; do
+            if [[ -z "${!var_name:-}" ]]; then
+              echo "ERROR: Missing required secret: $var_name"
+              exit 1
+            fi
+          done
+
+      - name: Resolve export roots
+        shell: bash
+        run: |
+          set -euo pipefail
+          vst3_root="$GITHUB_WORKSPACE/CIExports/vst3"
+          au_root="$GITHUB_WORKSPACE/CIExports/au"
+          fallback_root="$GITHUB_WORKSPACE/Binaries"
+
+          is_complete_export_root() {
+            local root="$1"
+            [[ -d "$root/Builds" && -d "$root/Source" && -d "$root/JuceLibraryCode" ]]
+          }
+
+          if is_complete_export_root "$vst3_root"; then
+            echo "VST3_ROOT=$vst3_root" >> "$GITHUB_ENV"
+          else
+            echo "VST3_ROOT=$fallback_root" >> "$GITHUB_ENV"
+          fi
+
+          if is_complete_export_root "$au_root"; then
+            echo "AU_ROOT=$au_root" >> "$GITHUB_ENV"
+          else
+            echo "AU_ROOT=$fallback_root" >> "$GITHUB_ENV"
+          fi
+
+      - name: Source fingerprint (macOS)
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Commit: $GITHUB_SHA"
+          files=(
+            "Binaries/Source/Plugin.cpp"
+            "Binaries/Source/PresetData.cpp"
+            "Binaries/Source/CopyProtection.cpp"
+            "AdditionalSourceCode/nodes/factory.cpp"
+            "AdditionalSourceCode/nodes/RNBO.cpp"
+            "${VST3_ROOT#$GITHUB_WORKSPACE/}/JuceLibraryCode/include_juce_audio_plugin_client_VST3.cpp"
+            "${VST3_ROOT#$GITHUB_WORKSPACE/}/JuceLibraryCode/include_juce_audio_plugin_client_utils.cpp"
+          )
+          for f in "${files[@]}"; do
+            if [[ -f "$f" ]]; then
+              shasum -a 256 "$f"
+            else
+              echo "MISSING  $f"
+            fi
+          done
+
+      - name: Ensure VST3 SDK headers exist
+        shell: bash
+        run: |
+          set -euo pipefail
+          sdk_dir=""
+          for candidate in \
+            "$VST3_ROOT/JUCE/modules/juce_audio_processors_headless/format_types/VST3_SDK" \
+            "$GITHUB_WORKSPACE/HISE/JUCE/modules/juce_audio_processors_headless/format_types/VST3_SDK" \
+            "$GITHUB_WORKSPACE/HISE/JUCE/modules/juce_audio_processors/format_types/VST3_SDK" \
+            "$VST3_ROOT/JUCE/modules/juce_audio_processors/format_types/VST3_SDK"; do
+            if [[ -f "$candidate/pluginterfaces/vst/vsttypes.h" ]]; then
+              sdk_dir="$candidate"
+              break
+            fi
+          done
+          if [[ -z "$sdk_dir" ]]; then
+            echo "ERROR: Could not locate VST3 SDK in expected paths."
+            exit 1
+          fi
+          sdk_header="$sdk_dir/pluginterfaces/vst/vsttypes.h"
+          sdk_speaker="$sdk_dir/pluginterfaces/vst/vstspeaker.h"
+          headless_sdk_dir="$GITHUB_WORKSPACE/HISE/JUCE/modules/juce_audio_processors_headless/format_types/VST3_SDK"
+
+          if [[ ! -f "$sdk_header" || ! -f "$sdk_speaker" ]]; then
+            echo "ERROR: Expected VST3 SDK at $sdk_dir but required files were missing."
+            exit 1
+          fi
+
+          mkdir -p "$(dirname "$headless_sdk_dir")"
+          rm -rf "$headless_sdk_dir"
+          ln -s "$sdk_dir" "$headless_sdk_dir"
+
+          juce_vst3_headers=""
+          for candidate in \
+            "$GITHUB_WORKSPACE/HISE/JUCE/modules/juce_audio_processors/format_types/juce_VST3Headers.h" \
+            "$VST3_ROOT/JUCE/modules/juce_audio_processors/format_types/juce_VST3Headers.h"; do
+            if [[ -f "$candidate" ]]; then
+              juce_vst3_headers="$candidate"
+              break
+            fi
+          done
+
+          if [[ -n "$juce_vst3_headers" ]]; then
+            while IFS= read -r rel_cpp; do
+              [[ -z "$rel_cpp" ]] && continue
+              target="$sdk_dir/$rel_cpp"
+              if [[ ! -f "$target" ]]; then
+                echo "Creating VST3 SDK compatibility stub: $rel_cpp"
+                mkdir -p "$(dirname "$target")"
+                printf '%s\n' '/* CI compatibility stub for missing VST3 SDK translation unit. */' > "$target"
+              fi
+            done < <(sed -n 's/^[[:space:]]*#include[[:space:]]*<\([^>]*\.cpp\)>.*/\1/p' "$juce_vst3_headers" | sort -u)
+          fi
+
+          test -f "$sdk_header"
+          test -f "$sdk_speaker"
+          test -f "$headless_sdk_dir/pluginterfaces/vst/vsttypes.h"
+          test -f "$headless_sdk_dir/pluginterfaces/vst/vstspeaker.h"
+
+      - name: Normalize project paths for CI
+        shell: bash
+        run: |
+          set -euo pipefail
+          plugin_pbxproj="$VST3_ROOT/Builds/MacOSX/Smut.xcodeproj/project.pbxproj"
+          au_pbxproj="$AU_ROOT/Builds/MacOSX/Smut.xcodeproj/project.pbxproj"
+          sdk_dir="$GITHUB_WORKSPACE/HISE/JUCE/modules/juce_audio_processors_headless/format_types/VST3_SDK"
+          test -f "$plugin_pbxproj" || test -f "$au_pbxproj"
+
+          for pbxproj in "$plugin_pbxproj" "$au_pbxproj"; do
+            [[ -f "$pbxproj" ]] || continue
+            HISE_ROOT="$GITHUB_WORKSPACE/HISE" perl -0pi -e '
+              s#/Users/rick/Documents/GitHub/HISE#$ENV{HISE_ROOT}#g;
+              s#/JUCE/modules/juce_audio_processors/format_types/VST3_SDK#/JUCE/modules/juce_audio_processors_headless/format_types/VST3_SDK#g;
+            ' "$pbxproj"
+
+            perl -0pi -e '
+              s#(include_juce_audio_plugin_client_VST3\\.cpp \\*/ = \\{isa = PBXBuildFile; fileRef = [A-F0-9]+;)(\\s*\\};)#$1 settings = {COMPILER_FLAGS = "-x objective-c++"; };$2#g;
+            ' "$pbxproj"
+          done
+
+          vst3_common=""
+          for candidate in \
+            "$GITHUB_WORKSPACE/HISE/JUCE/modules/juce_audio_processors/format_types/juce_VST3Common.h" \
+            "$VST3_ROOT/JUCE/modules/juce_audio_processors/format_types/juce_VST3Common.h" \
+            "$AU_ROOT/JUCE/modules/juce_audio_processors/format_types/juce_VST3Common.h"; do
+            if [[ -f "$candidate" ]]; then
+              vst3_common="$candidate"
+              break
+            fi
+          done
+
+          if [[ -n "$vst3_common" ]]; then
+            if ! grep -q 'kSpeakerACN0' "$sdk_dir/pluginterfaces/vst/vstspeaker.h"; then
+              perl -0pi -e '
+                s/^[ \t]*case\s+Steinberg::Vst::kSpeakerACN\d+:\s*return\s+AudioChannelSet::ambisonicACN\d+;\s*\n//mg;
+                s/^[ \t]*case\s+Steinberg::Vst::kSpeakerB(?:sl|sr|rl|rr):\s*return\s+AudioChannelSet::(?:bottomSideLeft|bottomSideRight|bottomRearLeft|bottomRearRight);\s*\n//mg;
+                s/return\s+Steinberg::Vst::kSpeakerACN\d+;/return 0;/g;
+                s/return\s+Steinberg::Vst::kSpeakerB(?:sl|sr|rl|rr);/return 0;/g;
+              ' "$vst3_common"
+
+              if grep -Eq 'case[[:space:]]+Steinberg::Vst::kSpeakerACN|return[[:space:]]+Steinberg::Vst::kSpeakerACN|case[[:space:]]+Steinberg::Vst::kSpeakerB(sl|sr|rl|rr)|return[[:space:]]+Steinberg::Vst::kSpeakerB(sl|sr|rl|rr)' "$vst3_common"; then
+                echo "ERROR: Legacy speaker symbol patch did not fully apply to $vst3_common"
+                exit 1
+              fi
+            fi
+          fi
+
+      - name: Build available macOS targets
+        shell: bash
+        run: |
+          set -euo pipefail
+          build_scheme() {
+            local project="$1"
+            local scheme="$2"
+            echo "Building scheme: $scheme"
+            xcodebuild \
+              -project "$project" \
+              -scheme "$scheme" \
+              -configuration Release \
+              MACOSX_DEPLOYMENT_TARGET=10.13 \
+              CODE_SIGNING_ALLOWED=NO \
+              build
+          }
+
+          has_scheme() {
+            local project="$1"
+            local scheme="$2"
+            local schemes_file="$3"
+            xcodebuild -list -project "$project" > "$schemes_file"
+            grep -Fq "$scheme" "$schemes_file"
+          }
+
+          built_any=0
+          plugin_project="$VST3_ROOT/Builds/MacOSX/Smut.xcodeproj"
+          au_project="$AU_ROOT/Builds/MacOSX/Smut.xcodeproj"
+
+          if [[ -d "$plugin_project" ]]; then
+            plugin_schemes="$RUNNER_TEMP/plugin-mac-schemes.txt"
+            if has_scheme "$plugin_project" "Smut - VST3" "$plugin_schemes"; then
+              build_scheme "$plugin_project" "Smut - VST3"
+              built_any=1
+            fi
+          fi
+
+          if [[ -d "$au_project" ]]; then
+            au_schemes="$RUNNER_TEMP/au-mac-schemes.txt"
+            if has_scheme "$au_project" "Smut - AU" "$au_schemes"; then
+              build_scheme "$au_project" "Smut - AU"
+              built_any=1
+            fi
+          fi
+
+          if [[ "$built_any" -eq 0 ]]; then
+            echo "ERROR: No supported build schemes found in export roots."
+            exit 1
+          fi
+
+      - name: Collect build outputs into Binaries/Compiled
+        shell: bash
+        run: |
+          set -euo pipefail
+          compiled_dir="$GITHUB_WORKSPACE/Binaries/Compiled"
+          mkdir -p "$compiled_dir"
+          for root in "$VST3_ROOT" "$AU_ROOT"; do
+            if [[ -d "$root/Compiled" ]]; then
+              find "$root/Compiled" -mindepth 1 -maxdepth 1 -exec cp -R {} "$compiled_dir/" \;
+            fi
+
+            build_release_dir="$root/Builds/MacOSX/build/Release"
+            if [[ -d "$build_release_dir" ]]; then
+              find "$build_release_dir" -mindepth 1 -maxdepth 1 \
+                \( -name "*.vst3" -o -name "*.component" \) \
+                -exec cp -R {} "$compiled_dir/" \;
+            fi
+          done
+          find "$compiled_dir" -mindepth 1 -maxdepth 1 | sort
+
+      - name: Import Developer ID certificate
+        shell: bash
+        env:
+          DEVELOPER_ID_APP_CERT_P12_BASE64: ${{ secrets.DEVELOPER_ID_APP_CERT_P12_BASE64 }}
+          DEVELOPER_ID_APP_CERT_PASSWORD: ${{ secrets.DEVELOPER_ID_APP_CERT_PASSWORD }}
+        run: |
+          set -euo pipefail
+          KEYCHAIN_PATH="$RUNNER_TEMP/build-signing.keychain-db"
+          KEYCHAIN_PASSWORD="$(openssl rand -base64 24)"
+
+          echo "KEYCHAIN_PATH=$KEYCHAIN_PATH" >> "$GITHUB_ENV"
+          echo "KEYCHAIN_PASSWORD=$KEYCHAIN_PASSWORD" >> "$GITHUB_ENV"
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security list-keychains -d user -s "$KEYCHAIN_PATH"
+          security default-keychain -d user -s "$KEYCHAIN_PATH"
+
+          CERT_P12="$RUNNER_TEMP/developer_id_app.p12"
+          echo "$DEVELOPER_ID_APP_CERT_P12_BASE64" | base64 --decode > "$CERT_P12"
+          security import "$CERT_P12" -k "$KEYCHAIN_PATH" -P "$DEVELOPER_ID_APP_CERT_PASSWORD" -T /usr/bin/codesign -T /usr/bin/security
+          security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          if ! security find-identity -v -p codesigning "$KEYCHAIN_PATH" | grep -q 'Developer ID Application:'; then
+            echo "ERROR: No 'Developer ID Application' signing identity found after import."
+            echo "The P12 secret likely does not contain the correct cert+private-key pair."
+            echo "Re-export the cert from Keychain Access as .p12 including private key,"
+            echo "then update DEVELOPER_ID_APP_CERT_P12_BASE64 and DEVELOPER_ID_APP_CERT_PASSWORD."
+            security find-identity -v -p codesigning "$KEYCHAIN_PATH" || true
+            exit 1
+          fi
+
+      - name: Sign bundles
+        shell: bash
+        env:
+          DEVELOPER_ID_APPLICATION_IDENTITY: ${{ secrets.DEVELOPER_ID_APPLICATION_IDENTITY }}
+        run: |
+          set -euo pipefail
+
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security list-keychains -d user -s "$KEYCHAIN_PATH"
+
+          sign_identity="$DEVELOPER_ID_APPLICATION_IDENTITY"
+          if [[ -z "${sign_identity:-}" ]]; then
+            sign_identity="$(security find-identity -v -p codesigning "$KEYCHAIN_PATH" | awk -F\" '/Developer ID Application:/{print $2; exit}')"
+          fi
+
+          if [[ -z "${sign_identity:-}" ]]; then
+            echo "ERROR: No Developer ID Application identity found in keychain."
+            security find-identity -v -p codesigning "$KEYCHAIN_PATH" || true
+            exit 1
+          fi
+
+          if ! security find-identity -v -p codesigning "$KEYCHAIN_PATH" | grep -Fq "\"$sign_identity\""; then
+            echo "Requested identity not found in keychain; falling back to first Developer ID Application identity."
+            sign_identity="$(security find-identity -v -p codesigning "$KEYCHAIN_PATH" | awk -F\" '/Developer ID Application:/{print $2; exit}')"
+          fi
+
+          if [[ -z "${sign_identity:-}" ]]; then
+            echo "ERROR: Could not resolve a signing identity."
+            security find-identity -v -p codesigning "$KEYCHAIN_PATH" || true
+            exit 1
+          fi
+
+          mkdir -p dist
+          : > bundles.txt
+          found_any=0
+          while IFS= read -r bundle; do
+            [[ -z "$bundle" ]] && continue
+            found_any=1
+            echo "$bundle" >> bundles.txt
+          done < <(find "$GITHUB_WORKSPACE/Binaries/Compiled" -type d \( -name "*.vst3" -o -name "*.component" \))
+
+          if [[ "$found_any" -eq 0 ]]; then
+            echo "ERROR: No plugin bundles found to sign."
+            exit 1
+          fi
+
+          while IFS= read -r bundle; do
+            echo "Signing: $bundle"
+            codesign --force --deep --options runtime --timestamp --keychain "$KEYCHAIN_PATH" --sign "$sign_identity" "$bundle"
+            codesign --verify --deep --strict --verbose=2 "$bundle"
+          done < bundles.txt
+
+      - name: Configure notarytool profile
+        shell: bash
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+        run: |
+          set -euo pipefail
+          xcrun notarytool store-credentials "ci-notary-profile" \
+            --apple-id "$APPLE_ID" \
+            --team-id "$APPLE_TEAM_ID" \
+            --password "$APPLE_APP_SPECIFIC_PASSWORD"
+
+      - name: Notarize and staple bundles
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist
+          while IFS= read -r bundle; do
+            name="$(basename "$bundle")"
+            zip_path="dist/$name.zip"
+            ditto -c -k --sequesterRsrc --keepParent "$bundle" "$zip_path"
+            xcrun notarytool submit "$zip_path" --keychain-profile "ci-notary-profile" --wait
+            xcrun stapler staple "$bundle"
+            ditto -c -k --sequesterRsrc --keepParent "$bundle" "$zip_path"
+          done < bundles.txt
+
+      - name: Upload signed artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: mac-builds-signed
+          path: dist/*.zip

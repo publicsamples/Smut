@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Network ID="mp" Version="0.0.0" AllowPolyphonic="1">
+  <Node FactoryPath="container.chain" ID="mp" Bypassed="0" Name="mp"
+        ShowParameters="1">
+    <Nodes>
+      <Node ID="add" FactoryPath="math.add" Bypassed="0" Name="add">
+        <Parameters>
+          <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Automated="1"/>
+        </Parameters>
+      </Node>
+    </Nodes>
+    <Parameters>
+      <Parameter ID="pitch" MinValue="0.0" MaxValue="123.0" StepSize="1" ExternalModulation="Disabled"
+                 Value="71.0" SkewFactor="0.2299045622348785" DefaultValue="123.0">
+        <Connections>
+          <Connection NodeId="add" ParameterId="Value"/>
+        </Connections>
+      </Parameter>
+    </Parameters>
+  </Node>
+</Network>
