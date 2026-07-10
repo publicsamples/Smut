@@ -358,7 +358,7 @@ using table6_t = wrap::data<math::table,
 template <int NV>
 using chain41_t = container::chain<parameter::empty, 
                                    wrap::fix<1, core::gain<NV>>, 
-                                   wrap::no_process<math::fmod<NV>>, 
+                                   math::fmod<NV>, 
                                    math::pi<NV>, 
                                    table6_t>;
 
@@ -588,7 +588,7 @@ using table14_t = wrap::data<math::table,
 template <int NV>
 using chain43_t = container::chain<parameter::empty, 
                                    wrap::fix<1, core::gain<NV>>, 
-                                   wrap::no_process<math::fmod<NV>>, 
+                                   math::fmod<NV>, 
                                    math::pi<NV>, 
                                    table14_t>;
 using table15_t = table14_t;
@@ -831,25 +831,23 @@ template <int NV> struct instance: public LfoNew_impl::LfoNew_t_<NV>
 		
 		SNEX_METADATA_ID(LfoNew);
 		SNEX_METADATA_NUM_CHANNELS(1);
-		SNEX_METADATA_ENCODED_PARAMETERS(84)
+		SNEX_METADATA_ENCODED_PARAMETERS(86)
 		{
 			0x005C, 0x0000, 0x0000, 0x6554, 0x706D, 0x006F, 0x0000, 0x0000, 
-            0x0000, 0x4190, 0x0000, 0x4100, 0x0000, 0x3F80, 0x0000, 0x3F80, 
-            0x005C, 0x0001, 0x0000, 0x6944, 0x6976, 0x6564, 0x0000, 0x8000, 
-            0x003F, 0x0000, 0x0042, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 
-            0x5C3F, 0x0200, 0x0000, 0x5300, 0x6168, 0x6570, 0x0000, 0x8000, 
-            0x003F, 0xC000, 0x0040, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 
-            0x5C3F, 0x0300, 0x0000, 0x4100, 0x6A64, 0x7375, 0x0074, 0x0000, 
-            0x0000, 0x0000, 0x3F80, 0x7160, 0x3EF8, 0x0000, 0x3F80, 0x0000, 
-            0x0000, 0x005C, 0x0004, 0x0000, 0x6441, 0x4D6A, 0x646F, 0x0065, 
-            0x0000, 0x3F80, 0x0000, 0x4040, 0x0000, 0x3F80, 0x0000, 0x3F80, 
-            0x0000, 0x3F80, 0x0000, 0x0000
+            0x0000, 0x9000, 0x0041, 0x0000, 0x0041, 0x8000, 0x003F, 0x8000, 
+            0x5C3F, 0x0100, 0x0000, 0x4400, 0x7669, 0x6469, 0x0065, 0x0000, 
+            0x8000, 0x003F, 0x0000, 0x0042, 0x8000, 0x003F, 0x8000, 0x003F, 
+            0x8000, 0x5C3F, 0x0200, 0x0000, 0x5300, 0x6168, 0x6570, 0x0000, 
+            0x0000, 0x3F80, 0x0000, 0x40C0, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x0000, 0x3F80, 0x005C, 0x0003, 0x0000, 0x6441, 0x756A, 0x7473, 
+            0x0000, 0x0000, 0x0000, 0x0000, 0x3F80, 0x7160, 0x3EF8, 0x0000, 
+            0x3F80, 0x0000, 0x0000, 0x005C, 0x0004, 0x0000, 0x6441, 0x4D6A, 
+            0x646F, 0x0065, 0x0000, 0x8000, 0x003F, 0x4000, 0x0040, 0x8000, 
+            0x003F, 0x8000, 0x003F, 0x8000, 0x003F, 0x0000
 		};
-		SNEX_METADATA_ENCODED_MOD_INFO(17)
+		SNEX_METADATA_ENCODED_MOD_INFO(2)
 		{
-			0x003A, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
-            0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
-            0x0000
+			0x3D3B, 0x003E
 		};
 	};
 	
@@ -921,7 +919,7 @@ template <int NV> struct instance: public LfoNew_impl::LfoNew_t_<NV>
 		auto& branch8 = this->getT(0).getT(1).getT(4).getT(0);                                // LfoNew_impl::branch8_t<NV>
 		auto& chain41 = this->getT(0).getT(1).getT(4).getT(0).getT(0);                        // LfoNew_impl::chain41_t<NV>
 		auto& gain8 = this->getT(0).getT(1).getT(4).getT(0).getT(0).getT(0);                  // core::gain<NV>
-		auto& fmod6 = this->getT(0).getT(1).getT(4).getT(0).getT(0).getT(1);                  // wrap::no_process<math::fmod<NV>>
+		auto& fmod6 = this->getT(0).getT(1).getT(4).getT(0).getT(0).getT(1);                  // math::fmod<NV>
 		auto& pi15 = this->getT(0).getT(1).getT(4).getT(0).getT(0).getT(2);                   // math::pi<NV>
 		auto& table6 = this->getT(0).getT(1).getT(4).getT(0).getT(0).getT(3);                 // LfoNew_impl::table6_t
 		auto& chain135 = this->getT(0).getT(1).getT(4).getT(0).getT(1);                       // LfoNew_impl::chain135_t<NV>
@@ -940,7 +938,7 @@ template <int NV> struct instance: public LfoNew_impl::LfoNew_t_<NV>
 		auto& branch9 = this->getT(0).getT(1).getT(5).getT(0);                                // LfoNew_impl::branch9_t<NV>
 		auto& chain43 = this->getT(0).getT(1).getT(5).getT(0).getT(0);                        // LfoNew_impl::chain43_t<NV>
 		auto& gain9 = this->getT(0).getT(1).getT(5).getT(0).getT(0).getT(0);                  // core::gain<NV>
-		auto& fmod8 = this->getT(0).getT(1).getT(5).getT(0).getT(0).getT(1);                  // wrap::no_process<math::fmod<NV>>
+		auto& fmod8 = this->getT(0).getT(1).getT(5).getT(0).getT(0).getT(1);                  // math::fmod<NV>
 		auto& pi17 = this->getT(0).getT(1).getT(5).getT(0).getT(0).getT(2);                   // math::pi<NV>
 		auto& table14 = this->getT(0).getT(1).getT(5).getT(0).getT(0).getT(3);                // LfoNew_impl::table14_t
 		auto& chain136 = this->getT(0).getT(1).getT(5).getT(0).getT(1);                       // LfoNew_impl::chain136_t<NV>

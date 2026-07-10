@@ -2,10 +2,10 @@
 
 const var laf = Engine.createGlobalScriptLookAndFeel();
 
+const var Menulaf = Engine.createGlobalScriptLookAndFeel();
 
 
-
-laf.registerFunction("drawComboBox", function(g, obj)
+Menulaf.registerFunction("drawComboBox", function(g, obj)
 {
     g.setColour(obj.bgColour);
     g.drawRoundedRectangle(obj.area, 3.0, 3.0);
@@ -173,4 +173,65 @@ LAF_Button.registerFunction("drawToggleButton", function(g, obj)
 ///////////////// BUTTON DEFINITION ///////////////// 
                     
                     
-                    
+const var Menus = [Content.getComponent("ScriptComboBox1"),
+                   Content.getComponent("ScriptComboBox2"),
+                   Content.getComponent("ScriptComboBox3"),
+                   Content.getComponent("ScriptComboBox4"),
+                   Content.getComponent("ScriptComboBox5"),
+                   Content.getComponent("ScriptComboBox6"),
+                   Content.getComponent("ScriptComboBox7"),
+                   Content.getComponent("ScriptComboBox8"),
+                   Content.getComponent("ScriptComboBox9"),
+                   Content.getComponent("ScriptComboBox10"),
+                   Content.getComponent("ScriptComboBox11"),
+                   Content.getComponent("ScriptComboBox12"),
+                   Content.getComponent("ScriptComboBox13"),
+                   Content.getComponent("ScriptComboBox14"),
+                   Content.getComponent("ScriptComboBox15"),
+                   Content.getComponent("ScriptComboBox20"),
+                   Content.getComponent("ScriptComboBox21"),
+                   Content.getComponent("ScriptComboBox22"),
+                   Content.getComponent("ScriptComboBox16"),
+                   Content.getComponent("ScriptComboBox17"),
+                   Content.getComponent("ScriptComboBox23"),
+                   Content.getComponent("ScriptComboBox24"),
+                   Content.getComponent("ScriptComboBox18"),
+                   Content.getComponent("ScriptComboBox19"),
+                   Content.getComponent("cmbPresets"),
+                   Content.getComponent("LfoShape1"),
+                   Content.getComponent("LfoShape2"),
+                   Content.getComponent("LfoShape3"),
+                   Content.getComponent("PosModMode6"),
+                   Content.getComponent("PosModMode7"),
+                   Content.getComponent("PosModMode8"),
+                   Content.getComponent("PosModTempo6"),
+                   Content.getComponent("PosModTempo7"),
+                   Content.getComponent("PosModTempo5"),
+                   Content.getComponent("PosModTempo4"),
+                   Content.getComponent("PosModTempo3"),
+                   Content.getComponent("PosModTempo2"),
+                   Content.getComponent("EnvMode1"),
+                   Content.getComponent("EnvMode2"),
+                   Content.getComponent("EnvMode3"),
+                   Content.getComponent("EnvSel"),
+                   Content.getComponent("Voices"),
+                   Content.getComponent("OscShapeMode4"),
+                   Content.getComponent("OscShapeMode1"),
+                   Content.getComponent("SampleA"),
+                   Content.getComponent("QuantMode1"),
+                   Content.getComponent("QuantMode"),
+                   Content.getComponent("PosModMode"),
+                   Content.getComponent("PosModTempo"),
+                   Content.getComponent("FilterMode1"),
+                   Content.getComponent("FilterMode2"),
+                   Content.getComponent("PosModTempo1"),
+                   Content.getComponent("PosModMode1"),
+                   Content.getComponent("QuantMode2"),
+                   Content.getComponent("QuantMode3"),
+                   Content.getComponent("SampleB"),
+                   Content.getComponent("LfoSel"),
+                   Content.getComponent("OscShapeMode2"),
+                   Content.getComponent("OscShapeMode5")];
+ 
+ for(s in Menus)
+      s.setLocalLookAndFeel(Menulaf);                
