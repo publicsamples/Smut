@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Network ID="PitchTempo" AllowPolyphonic="1" Version="0.0.0">
+  <Node FactoryPath="container.chain" ID="PitchTempo" Bypassed="0" Name="PitchTempo">
+    <Nodes>
+      <Node ID="add" FactoryPath="math.add" Bypassed="0" Name="add">
+        <Parameters>
+          <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" Value="0.253546875"
+                     DefaultValue="0.0"/>
+        </Parameters>
+      </Node>
+    </Nodes>
+    <Parameters/>
+  </Node>
+</Network>

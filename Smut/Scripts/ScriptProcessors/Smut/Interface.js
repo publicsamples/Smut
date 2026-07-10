@@ -142,35 +142,12 @@ const var UserWave = [Content.getComponent("UserWaveform1"),
 const var AudioWaveform1 = Content.getComponent("AudioWaveform1");
 
 
-inline function onUserModeControl(component, value)
-{
-		for(s in UserWave)
-      s.showControl(value-1);
-     	 AudioWaveform1.showControl(value);
-      
-      SMUT.setAttribute(SMUT.User1, 1-value);   
-};
-
-Content.getComponent("UserMode").setControlCallback(onUserModeControl);
-
 //File User2
 
 const var UserWave1 = [Content.getComponent("UserWaveform2"),
                       Content.getComponent("UserInstructions1")];
 
 const var AudioWaveform2 = Content.getComponent("AudioWaveform2");
-
-
-inline function onUserMode1Control(component, value)
-{
-		for(s in UserWave1)
-      s.showControl(value-1);
-     	 AudioWaveform2.showControl(value);
-      
-      SMUT.setAttribute(SMUT.User2, 1-value);   
-};
-
-Content.getComponent("UserMode1").setControlCallback(onUserMode1Control);
 
 //File1 Mod Mode
 
@@ -388,7 +365,7 @@ inline function oncmbPresetsControl(component, value)
 	local itemText = Engine.getUserPresetList()[value - 1];
 
 	Engine.loadUserPreset(itemText + ".preset");
-	Console.print(itemText);
+//	Console.print(itemText);
 }
 
 populatePresetsMenu();
@@ -446,154 +423,12 @@ Link.setMouseCallback(function(event)
 //Samples New
 
 
-const var foldersV1 = [];        // Top-level Genre foldersV1
-const var instrumentsV1 = {};    // Maps Genre to Instruments
-const var samplesV1 = {};        // Maps Instrument to .wav files
-const var foldersV2 = [];        // Top-level Genre foldersV1
-const var instrumentsV2 = {};    // Maps Genre to Instruments
-const var samplesV2 = {}; 
-
 const var File1 = Synth.getAudioSampleProcessor("SMUT");
 
 const slot1 = File1.getAudioFile(0);
 const slot2 = File1.getAudioFile(1);
 
-const var AudioList = Engine.loadAudioFilesIntoPool();
-
-const var SampleA = Content.getComponent("SampleA");
-
-inline function createDelayBroadcaster(Sample1)
-{
-	return Engine.createBroadcaster({
-		"id": Sample1.get("id") + " Delayer",
-		"args": [ "unused" ]
-	});
-}
-
-const var KSampleABroadcaster = createDelayBroadcaster(SampleA);
-
-
-SampleA.setControlCallback(onSampleAControl);
-
-function functOne()
-{
-	Console.print("ONE");
-	Engine.allNotesOff();
-	SMUT.setBypassed(true);
-	// You need to call it with a new argument (random number) or
-	// it won't fire...
-	KSampleABroadcaster.callWithDelay(30, [Math.random()], functTwo);
-}
-
-function functTwo()
-{
-	;
-	KSampleABroadcaster.callWithDelay(50, [Math.random()], functThree);
-}
-
-function functThree()
-{
-	SMUT.setBypassed(false);
-	Console.print("THREE");
-}
-
-
-inline function onSampleAControl(component, value)
-{
-	functOne();
-
-	local itemText = AudioList[value - 1];
-	slot1.loadFile(itemText);
-		Console.print("{PROJECT_FOLDER}" + itemText);
-	if (!value)
-		return;
-}
-KSampleABroadcaster.callWithDelay(300, [Math.random()], populateAudioMenu);
-
-inline function populateAudioMenu()
-{
-	SampleA.set("items", "");
-
-	for (x in AudioList)
-	{
-		local fullPath = x.split("}")[1];
-		local arr = fullPath.split("/");
-		local item = "";
-
-		for (i = 0; i < arr.length; i++)
-		{
-			item += arr[i];
-			
-			if (i < arr.length - 1)
-				item += "::";
-		}
-
-		SampleA.addItem(item);
-	
-	}
-}
-
-const var SampleB = Content.getComponent("SampleB");
-
-inline function createDelayBroadcaster2(Sample2)
-{
-	return Engine.createBroadcaster({
-		"id": Sample2.get("id") + " Delayer",
-		"args": [ "unused" ]
-	});
-}
-
-const var KSampleABroadcaster2 = createDelayBroadcaster(SampleB);
-
-
-SampleB.setControlCallback(onSampleBControl);
-
-function functOne1()
-{
-	Console.print("ONE");
-	Engine.allNotesOff();
-	SMUT.setBypassed(true);
-	// You need to call it with a new argument (random number) or
-	// it won't fire...
-	KSampleABroadcaster2.callWithDelay(30, [Math.random()], functTwo);
-}
-
-
-
-inline function onSampleBControl(component, value)
-{
-	functOne1();
-
-	local itemText = AudioList[value - 1];
-	slot2.loadFile(itemText);
-		Console.print("{PROJECT_FOLDER}" + itemText);
-	if (!value)
-		return;
-}
-KSampleABroadcaster2.callWithDelay(300, [Math.random()], populateAudioMenu2);
-
-inline function populateAudioMenu2()
-{
-	SampleB.set("items", "");
-
-	for (x in AudioList)
-	{
-		local fullPath = x.split("}")[1];
-		local arr = fullPath.split("/");
-		local item = "";
-
-		for (i = 0; i < arr.length; i++)
-		{
-			item += arr[i];
-			
-			if (i < arr.length - 1)
-				item += "::";
-		}
-
-		SampleB.addItem(item);
-	
-	}
-}function onNoteOn()
+function onNoteOn()
 {
 	Message.ignoreEvent(Message.getNoteNumber() == 23);
 	Message.ignoreEvent(Message.getNoteNumber() == 22);

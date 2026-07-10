@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Preset Version="0.2.1">
+<Preset Version="0.9.0">
   <Content Processor="Interface">
     <Control type="ScriptComboBox" id="OscShapeMode4" value="3.0"/>
     <Control type="ScriptSlider" id="Osc2into1" value="0.1899999976158142"/>
