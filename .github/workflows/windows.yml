@@ -152,6 +152,15 @@ jobs:
           #ifndef FAUST_API
           #define FAUST_API
           #endif
+          #ifndef FAUSTMAJORVERSION
+          #define FAUSTMAJORVERSION 2
+          #endif
+          #ifndef FAUSTMINORVERSION
+          #define FAUSTMINORVERSION 74
+          #endif
+          #ifndef FAUSTPATCHVERSION
+          #define FAUSTPATCHVERSION 6
+          #endif
           "@ | Set-Content -Path (Join-Path $faustRoot "export.h") -NoNewline
 
           $clientUtils = Join-Path $env:VST3_ROOT "JuceLibraryCode\include_juce_audio_plugin_client_utils.cpp"
