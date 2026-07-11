@@ -120,3 +120,24 @@ function onTimer()
 
 Synth.startTimer(200);
 
+
+inline function onFilePath1Control(component, value)
+
+
+{
+	slot1.loadFile(FilePath1.getValue());
+};
+
+Content.getComponent("FilePath1").setControlCallback(onFilePath1Control);
+
+
+inline function onFilePath2Control(component, value)
+
+
+{
+	slot2.loadFile(FilePath3.getValue());
+};
+
+Content.getComponent("FilePath2").setControlCallback(onFilePath2Control);
+
+

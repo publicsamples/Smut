@@ -336,7 +336,7 @@
 				951334B791C1FF380FD35A27,
 				2AF52B3774EB3E0F56F38808,
 				375D2628F72A796397A4AFAF,
-				8A97C1FD3900BF3429AB1AB0,
+				6E453E3F7892A5D9397C7BF5,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -493,7 +493,7 @@
 			name = "JUCE Library Code";
 			sourceTree = "<group>";
 		};
-		8A97C1FD3900BF3429AB1AB0 /* nodes */ = {
+		6E453E3F7892A5D9397C7BF5 /* nodes */ = {
 			isa = PBXGroup;
 			children = (
 				2C570315FD67894906B31C73,
