@@ -161,10 +161,10 @@
              itemColour="4293583307" itemColour2="4293583307" textColour="4283319303">
     <Component type="ScriptButton" id="LoadSample1" x="68" y="4" width="30"
                height="30" parentComponent="File1" bgColour="4294967295" filmstripImage="{PROJECT_FOLDER}disk.png"
-               scaleFactor="0.06"/>
+               scaleFactor="0.06" saveInPreset="0"/>
     <Component type="ScriptLabel" id="FileName1" x="100" y="9" width="150" height="20"
-               parentComponent="File1" text="FILE 1" fontName="mon" fontSize="15.0"
-               editable="0" textColour="4280620804" alignment="left"/>
+               parentComponent="File1" text="SINMIN" fontName="mon" fontSize="15.0"
+               editable="0" textColour="4280620804" alignment="left" saveInPreset="1"/>
     <Component type="ScriptLabel" id="ScriptLabel25" x="64" y="167" width="70"
                height="20" parentComponent="File1" text="Position" fontName="mon"
                editable="0" textColour="4280620804"/>
@@ -176,7 +176,8 @@
     <Component type="ScriptAudioWaveform" id="AudioWaveform1" x="12" y="35"
                processorId="SMUT" width="120" height="60" parentComponent="File1"
                bgColour="1994576912" textColour="1979645952" itemColour2="2315190272"
-               itemColour="2499739648" itemColour3="1994576912" saveInPreset="0"/>
+               itemColour="2499739648" itemColour3="1994576912" saveInPreset="0"
+               showFileName="0"/>
     <Component type="ScriptAudioWaveform" id="UserWaveform1" x="12" y="35" processorId="SMUT"
                width="120" height="60" parentComponent="File1" bgColour="2499739648"
                textColour="1994576912" itemColour2="1994576912" itemColour="1994576912"
@@ -312,17 +313,18 @@
                  editable="0" textColour="4280620804"/>
     </Component>
     <Component type="ScriptLabel" id="FilePath1" x="150" y="18" width="150"
-               height="20" parentComponent="File1" text="FILE 1" fontName="mon"
-               fontSize="15.0" editable="0" textColour="4280620804" alignment="left"/>
+               height="20" parentComponent="File1" text="/Users/rick/Documents/GitHub/Smut/Smut/AudioFiles/SINMIN.WAV"
+               fontName="mon" fontSize="15.0" editable="0" textColour="4280620804"
+               alignment="left" saveInPreset="1"/>
   </Component>
   <Component type="ScriptPanel" id="File2" x="514" y="168" width="275" height="190"
              itemColour="4293583307" itemColour2="4293583307" textColour="4283319303">
     <Component type="ScriptLabel" id="FileName2" x="99" y="9" width="150" height="20"
-               parentComponent="File2" text="FILE 1" fontName="mon" fontSize="15.0"
-               editable="0" textColour="4280620804" alignment="left"/>
+               parentComponent="File2" text="202-3" fontName="mon" fontSize="15.0"
+               editable="0" textColour="4280620804" alignment="left" saveInPreset="1"/>
     <Component type="ScriptButton" id="LoadSample2" x="67" y="4" width="30"
                height="30" parentComponent="File2" bgColour="4294967295" filmstripImage="{PROJECT_FOLDER}disk.png"
-               scaleFactor="0.06"/>
+               scaleFactor="0.06" saveInPreset="0"/>
     <Component type="ScriptSliderPack" id="FileModPack2" x="143" y="35" width="120"
                height="60" parentComponent="File2" itemColour="1434925876" textColour="16777215"
                itemColour2="13223424" bgColour="4294878976" processorId="SMUT"
@@ -394,7 +396,7 @@
                processorId="SMUT" width="120" height="60" parentComponent="File2"
                bgColour="1994576912" textColour="1979645952" itemColour2="2315190272"
                itemColour="2499739648" itemColour3="1994576912" sampleIndex="1"
-               saveInPreset="0"/>
+               saveInPreset="0" showFileName="0"/>
     <Component type="ScriptAudioWaveform" id="UserWaveform2" x="12" y="35" processorId="SMUT"
                width="120" height="60" parentComponent="File2" bgColour="2499739648"
                textColour="1994576912" itemColour2="1994576912" itemColour="1994576912"
@@ -470,8 +472,9 @@
                style="Vertical" itemColour="4281545523" bgColour="16777215"
                textColour="16777215" itemColour2="4279308561" dragDirection="Vertical"/>
     <Component type="ScriptLabel" id="FilePath2" x="141" y="20" width="150"
-               height="20" parentComponent="File2" text="FILE 1" fontName="mon"
-               fontSize="15.0" editable="0" textColour="4280620804" alignment="left"/>
+               height="20" parentComponent="File2" text="{AUDIO_FILES}Single Cycle/Synths1/202-3.wav"
+               fontName="mon" fontSize="15.0" editable="0" textColour="4280620804"
+               alignment="left" saveInPreset="1"/>
   </Component>
   <Component type="ScriptPanel" id="Fil1" x="232" y="362" width="275" height="130"
              itemColour="4293583307" itemColour2="4293583307" textColour="4279702530">
@@ -979,8 +982,7 @@
              textColour="4279702530" itemColour2="4293583307" itemColour="4293583307">
     <Component type="ScriptTable" id="EnvTable1" x="11" y="34" width="200" height="70"
                processorId="ENV1" parentComponent="Envelope1" bgColour="14654085"
-               itemColour="14865424" customColours="1" itemColour2="4279308561"
-               visible="0"/>
+               itemColour="14865424" customColours="1" itemColour2="4279308561"/>
     <Component type="ScriptComboBox" id="EnvMode1" x="10" y="120" max="3" width="60"
                height="30" items="Envelope&#10;Table&#10;Step" parentComponent="Envelope1"
                textColour="4281936900" bgColour="1427967234"/>
@@ -1017,7 +1019,7 @@
                visible="0"/>
     <Component type="ScriptPanel" id="EnvControls1" x="11" y="33" width="200"
                height="70" parentComponent="Envelope1" textColour="16777215"
-               itemColour2="0" itemColour="0" bgColour="16777215">
+               itemColour2="0" itemColour="0" bgColour="16777215" visible="0">
       <Component type="ScriptLabel" id="ScriptLabel113" x="123" y="55" width="20"
                  height="20" parentComponent="EnvControls1" text="R" fontName="mon"
                  editable="0" textColour="4280620804" alignment="left"/>
@@ -1386,8 +1388,8 @@
              itemColour="4293583307" itemColour2="4293583307" textColour="4279702530">
     <Component type="ScriptComboBox" id="cmbPresets" x="13" y="10" width="160"
                height="40" textColour="4278190080" bgColour="1426063360" parentComponent="Panel3"
-               useCustomPopup="1" saveInPreset="0" text="LOAD PRESET" items="&#10;Factory::Misc::111&#10;Factory::Misc::Ah forget it&#10;Factory::Misc::Being Nice&#10;Factory::Misc::Broken&#10;Factory::Misc::Cannibells&#10;Factory::Misc::Hybrow&#10;Factory::Misc::init&#10;Factory::Misc::Jaunty&#10;Factory::Misc::Just the thing&#10;Factory::Misc::Meander&#10;Factory::Misc::Not in a million years&#10;Factory::Misc::Shorty&#10;Factory::Misc::Simple Dirty S&amp;H&#10;Factory::Misc::Simple Pluck"
-               max="14"/>
+               useCustomPopup="1" saveInPreset="0" text="LOAD PRESET" items="&#10;Expansion::Bass::Motional&#10;Expansion::FX::Oxygen Vendor&#10;Expansion::FX::Super Useful&#10;Expansion::FX::Wilbur Whoppers&#10;Expansion::Grooves::Grumble&#10;Expansion::Grooves::slow acid&#10;Expansion::Keys::FM PIaNo&#10;Expansion::Keys::Previously bell&#10;Expansion::Keys::Sticky&#10;Expansion::Pads::Death Warmed Up II&#10;Expansion::Pads::Death warmed up&#10;Expansion::Pads::JpPad&#10;Factory::Misc::121&#10;Factory::Misc::Ah forget it&#10;Factory::Misc::Being Nice&#10;Factory::Misc::Broken&#10;Factory::Misc::Cannibells&#10;Factory::Misc::Hybrow&#10;Factory::Misc::init&#10;Factory::Misc::Jaunty&#10;Factory::Misc::Just the thing&#10;Factory::Misc::Meander&#10;Factory::Misc::Not in a million years&#10;Factory::Misc::Shorty&#10;Factory::Misc::Simple Dirty S&amp;H&#10;Factory::Misc::Simple Pluck"
+               max="26"/>
     <Component type="ScriptButton" id="ShowPResetManager" x="174" y="6" width="40"
                height="50" filmstripImage="{PROJECT_FOLDER}disk.png" scaleFactor="0.09000000357627869"
                parentComponent="Panel3" saveInPreset="0" enableMidiLearn="0"/>

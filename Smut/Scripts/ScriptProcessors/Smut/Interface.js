@@ -4,22 +4,13 @@ include("laf.js");
 include("KnobLAF1.js");
 include("Rect.js");
 include("Scopes.js");
+include("Samples.js");
 
 const var ShowPResetManager = Content.getComponent("ShowPResetManager");
 ShowPResetManager.setValue(1);
 ShowPResetManager.changed();
 
 const var SMUT = Synth.getChildSynth("SMUT");
-const var LoadSample1 = Content.getComponent("LoadSample1");
-const var LoadSample2 = Content.getComponent("LoadSample2");
-const var FileName1 = Content.getComponent("FileName1");
-const var FileName2 = Content.getComponent("FileName2");
-const var FilePath1 = Content.getComponent("FilePath1");
-const var FilePath2 = Content.getComponent("FilePath2");
-
-
-
-
 
 inline function onVoicesControl(component, value)
 {
@@ -145,20 +136,7 @@ inline function onOscShapeMode2Control(component, value)
 
 Content.getComponent("OscShapeMode2").setControlCallback(onOscShapeMode2Control);
 
-//File User1 
 
-const var UserWave = [Content.getComponent("UserWaveform1"),
-                      Content.getComponent("UserInstructions")];
-
-const var AudioWaveform1 = Content.getComponent("AudioWaveform1");
-
-
-//File User2
-
-const var UserWave1 = [Content.getComponent("UserWaveform2"),
-                      Content.getComponent("UserInstructions1")];
-
-const var AudioWaveform2 = Content.getComponent("AudioWaveform2");
 
 //File1 Mod Mode
 
@@ -360,9 +338,6 @@ inline function onLfoShape3Control(component, value)
 Content.getComponent("LfoShape3").setControlCallback(onLfoShape3Control);
 
 
-//Samples
-
-
 ///Presets
 
 const var cmbPresets = Content.getComponent("cmbPresets");
@@ -431,124 +406,8 @@ Link.setMouseCallback(function(event)
 });
 
 
-//Samples New
 
 
-const var File1 = Synth.getAudioSampleProcessor("SMUT");
-
-const slot1 = File1.getAudioFile(0);
-const slot2 = File1.getAudioFile(1);
-
-const var defaultRef1 = "{PROJECT_FOLDER}AD-Draw1.wav";
-const var defaultRef = "{PROJECT_FOLDER}SINMIN.wav";
-
-// Delay ensures processors exist after compile
-Content.callAfterDelay(10, function()
-{
-    slot1.loadFile(defaultRef);
-	slot2.loadFile(defaultRef1);
-});
-
-inline function getFileNameOnly(path)
-{
-	local parts = path.split("/");
-	return parts[parts.length - 1];
-}
-
-inline function finishSampleLoad(slot, file, fileNameLabel, filePathLabel)
-{
-	slot.loadFile(file);
-
-	fileNameLabel.set("text", getFileNameOnly(file));
-	filePathLabel.set("text", file);
-
-	Content.callAfterDelay(50, function()
-	{
-		SMUT.setBypassed(false);
-	});
-}
-
-inline function finishSampleLoad(slot, file, fileNameLabel, filePathLabel)
-{
-	slot.loadFile(file.toString());
-	fileNameLabel.set("text", file.getFileName());
-	filePathLabel.set("text", file.toString());
-
-	Content.callAfterDelay(50, function()
-	{
-		SMUT.setBypassed(false);
-	});
-}
-
-inline function loadSampleForSlot(slot, fileNameLabel, filePathLabel)
-{
-	Engine.allNotesOff();
-	SMUT.setBypassed(true);
-
-	FileSystem.browse(FileSystem.AudioFiles, false, "*.wav;*.aif;*.aiff",
-		function [slot, fileNameLabel, filePathLabel](file)
-		{
-			if (file.toString() == "")
-			{
-				SMUT.setBypassed(false);
-				return;
-			}
-
-			finishSampleLoad(slot, file, fileNameLabel, filePathLabel);
-		}
-	);
-}
-
-inline function recallSampleForSlot(slot, fileNameLabel, filePathLabel)
-{
-	local path = filePathLabel.get("text");
-
-	if (path == "")
-		return;
-
-	Engine.allNotesOff();
-	SMUT.setBypassed(true);
-
-	local file = FileSystem.fromAbsolutePath(path);
-	finishSampleLoad(slot, file, fileNameLabel, filePathLabel);
-}
-
-
-inline function onLoadSample1Control(component, value)
-{
-	if (!value)
-		return;
-
-	loadSampleForSlot(slot1, FileName1, FilePath1);
-	component.setValue(0);
-}
-
-inline function onLoadSample2Control(component, value)
-{
-	if (!value)
-		return;
-
-	loadSampleForSlot(slot2, FileName2, FilePath2);
-	component.setValue(0);
-}
-
-LoadSample1.setControlCallback(onLoadSample1Control);
-LoadSample2.setControlCallback(onLoadSample2Control);
-
-inline function oncmbPresetsControl(component, value)
-{
-	if (!value)
-		return;
-
-	local itemText = Engine.getUserPresetList()[value - 1];
-	Engine.loadUserPreset(itemText + ".preset");
-
-	Content.callAfterDelay(50, function()
-	{
-		recallSampleForSlot(slot1, FileName1, FilePath1);
-		recallSampleForSlot(slot2, FileName2, FilePath2);
-	});
-}
 function onNoteOn()
 {
 	Message.ignoreEvent(Message.getNoteNumber() == 23);

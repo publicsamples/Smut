@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Preset Version="0.2.0">
+<Preset Version="0.9.0">
   <Content Processor="Interface">
     <Control type="ScriptComboBox" id="OscShapeMode4" value="2.0"/>
     <Control type="ScriptSlider" id="Osc2into1" value="0.0"/>
@@ -23,10 +23,8 @@
     <Control type="ScriptSlider" id="Divide1" value="2.0"/>
     <Control type="ScriptComboBox" id="TempoSync1" value="1.0"/>
     <Control type="ScriptSlider" id="OscMix1" value="0.0"/>
-    <Control type="ScriptAudioWaveform" id="AudioWaveform1" value="0.0" data="{PROJECT_FOLDER}Wavetables/1024/BELL7654.WAV"
-             rangeStart="0" rangeEnd="262144"/>
-    <Control type="ScriptAudioWaveform" id="UserWaveform1" value="0.0" data=""
-             rangeStart="0" rangeEnd="0"/>
+    <Control type="ScriptLabel" id="FileName1" value="BELL7654"/>
+    <Control type="ScriptLabel" id="FilePath1" value="{AUDIO_FILES}Wavetables/1024/BELL7654.WAV"/>
     <Control type="ScriptSlider" id="FileInput" value="0.5"/>
     <Control type="ScriptComboBox" id="QuantMode" value="5.0"/>
     <Control type="ScriptComboBox" id="PosModTempo" value="1.0"/>
@@ -57,10 +55,8 @@
     <Control type="ScriptSlider" id="FileR2" value="3.0"/>
     <Control type="ScriptButton" id="ScriptButton2" value="1.0"/>
     <Control type="ScriptSlider" id="OscMix10" value="0.0"/>
-    <Control type="ScriptAudioWaveform" id="AudioWaveform2" value="0.0" data="{PROJECT_FOLDER}Loops/Misc/ngy72.wav"
-             rangeStart="0" rangeEnd="294000"/>
-    <Control type="ScriptAudioWaveform" id="UserWaveform2" value="0.0" data=""
-             rangeStart="0" rangeEnd="0"/>
+    <Control type="ScriptLabel" id="FileName2" value="ngy72"/>
+    <Control type="ScriptLabel" id="FilePath2" value="{AUDIO_FILES}Loops/Misc/ngy72.wav"/>
     <Control type="ScriptSlider" id="FileInput1" value="0.0"/>
     <Control type="ScriptComboBox" id="QuantMode2" value="1.0"/>
     <Control type="ScriptComboBox" id="PosModTempo1" value="1.0"/>

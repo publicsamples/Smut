@@ -335,7 +335,40 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		056F25D1B95A1B71CC17369C /* nodes */ = {
+		1A3BBA9F595BE1E9A47D7C6F /* Smut */ = {
+			isa = PBXGroup;
+			children = (
+				35F33123F64AC4508152DC4E,
+			);
+			name = Smut;
+			sourceTree = "<group>";
+		};
+		3205093F7BDA10E625755066 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CA93FFD95EACC0DF69ED7B7B,
+				980B3A8951C40B2D8F7FEF00,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		35F33123F64AC4508152DC4E /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				3F04B3F477BC00DD825A3C6C,
+				43449E9DF1970440B09D4658,
+				64C55FEF80D9C776B75ED68E,
+				4A6BA7753B4BDCFEB4D26A18,
+				A17477BAF36B2E5E9B2D7BE8,
+				951334B791C1FF380FD35A27,
+				2AF52B3774EB3E0F56F38808,
+				375D2628F72A796397A4AFAF,
+				3600010FCB5822D62BE0BAA5,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		3600010FCB5822D62BE0BAA5 /* nodes */ = {
 			isa = PBXGroup;
 			children = (
 				2C570315FD67894906B31C73,
@@ -370,39 +403,6 @@
 				77E355090F5E53A520CBDD24,
 			);
 			name = nodes;
-			sourceTree = "<group>";
-		};
-		1A3BBA9F595BE1E9A47D7C6F /* Smut */ = {
-			isa = PBXGroup;
-			children = (
-				35F33123F64AC4508152DC4E,
-			);
-			name = Smut;
-			sourceTree = "<group>";
-		};
-		3205093F7BDA10E625755066 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				CA93FFD95EACC0DF69ED7B7B,
-				980B3A8951C40B2D8F7FEF00,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-		};
-		35F33123F64AC4508152DC4E /* Source */ = {
-			isa = PBXGroup;
-			children = (
-				3F04B3F477BC00DD825A3C6C,
-				43449E9DF1970440B09D4658,
-				64C55FEF80D9C776B75ED68E,
-				4A6BA7753B4BDCFEB4D26A18,
-				A17477BAF36B2E5E9B2D7BE8,
-				951334B791C1FF380FD35A27,
-				2AF52B3774EB3E0F56F38808,
-				375D2628F72A796397A4AFAF,
-				056F25D1B95A1B71CC17369C,
-			);
-			name = Source;
 			sourceTree = "<group>";
 		};
 		3CFB9C26DC017F4D31F0B45E /* Source */ = {

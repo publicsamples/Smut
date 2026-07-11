@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Preset Version="0.2.1">
+<Preset Version="0.9.0">
   <Content Processor="Interface">
     <Control type="ScriptComboBox" id="OscShapeMode4" value="2.0"/>
     <Control type="ScriptSlider" id="Osc2into1" value="0.0"/>
@@ -22,11 +22,10 @@
     <Control type="ScriptButton" id="Sync1" value="0.0"/>
     <Control type="ScriptSlider" id="Divide1" value="17.0"/>
     <Control type="ScriptComboBox" id="TempoSync1" value="1.0"/>
+    <Control type="ScriptComboBox" id="SampleA" value="24.0"/>
+    <Control type="ScriptLabel" id="FileName1" value="Saw1"/>
+    <Control type="ScriptLabel" id="FilePath1" value="{AUDIO_FILES}Single Cycle/Drawn/Saw1.wav"/>
     <Control type="ScriptSlider" id="FilePos1" value="0.0"/>
-    <Control type="ScriptAudioWaveform" id="AudioWaveform1" value="0.0" data="{PROJECT_FOLDER}Single Cycle/Synths1/202-9.wav"
-             rangeStart="0" rangeEnd="256"/>
-    <Control type="ScriptAudioWaveform" id="UserWaveform1" value="0.0" data="{PROJECT_FOLDER}Single Cycle/Synths1/202-13.wav"
-             rangeStart="0" rangeEnd="256"/>
     <Control type="ScriptSlider" id="FileInput" value="1.0"/>
     <Control type="ScriptComboBox" id="QuantMode" value="9.0"/>
     <Control type="ScriptComboBox" id="PosModTempo" value="6.0"/>
@@ -53,11 +52,9 @@
     <Control type="ScriptSlider" id="FileS2" value="1.0"/>
     <Control type="ScriptSlider" id="FileR2" value="3.0"/>
     <Control type="ScriptButton" id="ScriptButton2" value="1.0"/>
+    <Control type="ScriptLabel" id="FileName2" value="AX-16"/>
+    <Control type="ScriptLabel" id="FilePath2" value="{AUDIO_FILES}Single Cycle/Synths1/AX-16.wav"/>
     <Control type="ScriptSlider" id="FilePosi1" value="0.0"/>
-    <Control type="ScriptAudioWaveform" id="AudioWaveform2" value="0.0" data="{PROJECT_FOLDER}Single Cycle/Drawn/Filp1.wav"
-             rangeStart="0" rangeEnd="437"/>
-    <Control type="ScriptAudioWaveform" id="UserWaveform2" value="0.0" data="{PROJECT_FOLDER}Single Cycle/Synths1/AX-5.wav"
-             rangeStart="0" rangeEnd="256"/>
     <Control type="ScriptSlider" id="FileInput1" value="0.5699999928474426"/>
     <Control type="ScriptComboBox" id="QuantMode2" value="1.0"/>
     <Control type="ScriptComboBox" id="PosModTempo1" value="1.0"/>
@@ -69,6 +66,7 @@
     <Control type="ScriptComboBox" id="PosModMode1" value="2.0"/>
     <Control type="ScriptComboBox" id="QuantMode3" value="1.0"/>
     <Control type="ScriptSlider" id="InputOffset1" value="0.6800000071525574"/>
+    <Control type="ScriptComboBox" id="SampleB" value="59.0"/>
     <Control type="ScriptButton" id="UserMode1" value="1.0"/>
     <Control type="ScriptSlider" id="Cut1" value="1.0"/>
     <Control type="ScriptSlider" id="Q1" value="0.0"/>

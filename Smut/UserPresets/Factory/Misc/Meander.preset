@@ -22,11 +22,9 @@
     <Control type="ScriptButton" id="Sync1" value="0.0"/>
     <Control type="ScriptSlider" id="Divide1" value="17.0"/>
     <Control type="ScriptComboBox" id="TempoSync1" value="1.0"/>
+    <Control type="ScriptLabel" id="FileName1" value="SINMIN"/>
+    <Control type="ScriptLabel" id="FilePath1" value="{AUDIO_FILES}Wavetables/256/SINMIN.WAV"/>
     <Control type="ScriptSlider" id="FilePos1" value="0.0"/>
-    <Control type="ScriptAudioWaveform" id="AudioWaveform1" value="0.0" data="{PROJECT_FOLDER}Wavetables/256/SINMIN.WAV"
-             rangeStart="0" rangeEnd="262144"/>
-    <Control type="ScriptAudioWaveform" id="UserWaveform1" value="0.0" data="{PROJECT_FOLDER}Single Cycle/Synths1/202-13.wav"
-             rangeStart="0" rangeEnd="256"/>
     <Control type="ScriptSlider" id="FileInput" value="0.1000000014901161"/>
     <Control type="ScriptComboBox" id="QuantMode" value="6.0"/>
     <Control type="ScriptComboBox" id="PosModTempo" value="1.0"/>
@@ -53,11 +51,9 @@
     <Control type="ScriptSlider" id="FileS2" value="1.0"/>
     <Control type="ScriptSlider" id="FileR2" value="3.0"/>
     <Control type="ScriptButton" id="ScriptButton2" value="1.0"/>
+    <Control type="ScriptLabel" id="FileName2" value="WONK3"/>
+    <Control type="ScriptLabel" id="FilePath2" value="{AUDIO_FILES}Single Cycle/Synths1/WONK3.wav"/>
     <Control type="ScriptSlider" id="FilePosi1" value="0.0"/>
-    <Control type="ScriptAudioWaveform" id="AudioWaveform2" value="0.0" data="{PROJECT_FOLDER}Single Cycle/Synths1/WONK3.wav"
-             rangeStart="0" rangeEnd="256"/>
-    <Control type="ScriptAudioWaveform" id="UserWaveform2" value="0.0" data="{PROJECT_FOLDER}Single Cycle/Synths1/AX-5.wav"
-             rangeStart="0" rangeEnd="256"/>
     <Control type="ScriptSlider" id="FileInput1" value="0.0"/>
     <Control type="ScriptComboBox" id="QuantMode2" value="1.0"/>
     <Control type="ScriptComboBox" id="PosModTempo1" value="1.0"/>
