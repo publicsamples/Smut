@@ -149,6 +149,15 @@ jobs:
             ' "$wrapper"
           fi
 
+          faust_include="$hise/tools/faust/include/faust"
+          mkdir -p "$faust_include"
+          cat > "$faust_include/export.h" <<'EOF'
+          #pragma once
+          #ifndef FAUST_API
+          #define FAUST_API
+          #endif
+          EOF
+
           client_utils="$VST3_ROOT/JuceLibraryCode/include_juce_audio_plugin_client_utils.cpp"
           if [[ -f "$client_utils" ]]; then
             printf '%s\n' '#include "AppConfig.h"' > "$client_utils"

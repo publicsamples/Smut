@@ -176,6 +176,15 @@ jobs:
             ' "$pbxproj"
           done
 
+          faust_include="$GITHUB_WORKSPACE/HISE/tools/faust/include/faust"
+          mkdir -p "$faust_include"
+          cat > "$faust_include/export.h" <<'EOF'
+          #pragma once
+          #ifndef FAUST_API
+          #define FAUST_API
+          #endif
+          EOF
+
           vst3_common=""
           for candidate in \
             "$GITHUB_WORKSPACE/HISE/JUCE/modules/juce_audio_processors/format_types/juce_VST3Common.h" \

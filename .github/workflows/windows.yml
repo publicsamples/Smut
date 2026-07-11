@@ -145,6 +145,15 @@ jobs:
             }
           }
 
+          $faustRoot = Join-Path $hise "tools\faust\include\faust"
+          New-Item -ItemType Directory -Force -Path $faustRoot | Out-Null
+          @"
+          #pragma once
+          #ifndef FAUST_API
+          #define FAUST_API
+          #endif
+          "@ | Set-Content -Path (Join-Path $faustRoot "export.h") -NoNewline
+
           $clientUtils = Join-Path $env:VST3_ROOT "JuceLibraryCode\include_juce_audio_plugin_client_utils.cpp"
           if (Test-Path $clientUtils) {
             '#include "AppConfig.h"' | Set-Content -Path $clientUtils -NoNewline
