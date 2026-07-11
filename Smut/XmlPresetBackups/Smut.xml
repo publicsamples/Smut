@@ -13,7 +13,7 @@
             <Control type="ScriptSlider" id="Osc2into1" value="0.0"/>
             <Control type="ScriptSlider" id="OscSemiTone1" value="0.0"/>
             <Control type="ScriptSlider" id="OscCent1" value="0.0"/>
-            <Control type="ScriptComboBox" id="OscShapeMode1" value="4.0"/>
+            <Control type="ScriptComboBox" id="OscShapeMode1" value="1.0"/>
             <Control type="ScriptSlider" id="OscShape1" value="0.0"/>
             <Control type="ScriptButton" id="Sync" value="0.0"/>
             <Control type="ScriptSlider" id="Divide" value="32.0"/>
@@ -22,7 +22,7 @@
             <Control type="ScriptTable" id="OscUser2" value="0.0" data="156...............vOJb8H9HEtd8C...vO8nvU9nYlY7C...vOrGEt9v0iB4C...vOb8nv9.v0ixC...vOOJb89....9C...3OgqGE+.........vOtdTH+HtdT7C...vOJb8H+vdT33C...vOeT3J+XlYl6C...vOT35Q+b8nv8C...vOw0iR+PJb87C...vO...f+.......qbfO"/>
             <Control type="ScriptComboBox" id="OscShapeMode5" value="2.0"/>
             <Control type="ScriptSlider" id="Osc1into2" value="0.0"/>
-            <Control type="ScriptSlider" id="OscSemiTone2" value="0.0"/>
+            <Control type="ScriptSlider" id="OscSemiTone2" value="7.0"/>
             <Control type="ScriptSlider" id="OscCent2" value="0.0"/>
             <Control type="ScriptComboBox" id="OscShapeMode2" value="1.0"/>
             <Control type="ScriptSlider" id="OscShape2" value="0.0"/>
@@ -33,17 +33,17 @@
             <Control type="ScriptSlider" id="FilePos1" value="0.0"/>
             <Control type="ScriptAudioWaveform" id="UserWaveform1" value="0.0" data=""
                      rangeStart="0" rangeEnd="0"/>
-            <Control type="ScriptSlider" id="FileInput" value="0.1000000014901161"/>
-            <Control type="ScriptComboBox" id="QuantMode" value="8.0"/>
+            <Control type="ScriptSlider" id="FileInput" value="0.02999999932944775"/>
+            <Control type="ScriptComboBox" id="QuantMode" value="5.0"/>
             <Control type="ScriptComboBox" id="PosModTempo" value="1.0"/>
             <Control type="ScriptTable" id="Table3" value="0.0" data=""/>
             <Control type="ScriptTable" id="Table4" value="0.0" data=""/>
             <Control type="ScriptTable" id="FileModTable1" value="0.0" data="36...............vO....+....9C...vO...f+.........vO"/>
             <Control type="ScriptSlider" id="PosDiv" value="10.0"/>
-            <Control type="ScriptSlider" id="PosMod" value="0.4399999976158142"/>
+            <Control type="ScriptSlider" id="PosMod" value="1.0"/>
             <Control type="ScriptComboBox" id="PosModMode" value="2.0"/>
             <Control type="ScriptComboBox" id="QuantMode1" value="1.0"/>
-            <Control type="ScriptSlider" id="InputOffset" value="0.5699999928474426"/>
+            <Control type="ScriptSlider" id="InputOffset" value="0.3400000035762787"/>
             <Control type="ScriptSliderPack" id="FileModPack1" value="4.0" data="64......35Qg7C..............8C.....6QgK+.....vGEtlO..........vGEtxO..........P35QwO......"/>
             <Control type="ScriptSlider" id="FileA1" value="945.0"/>
             <Control type="ScriptSlider" id="FileH1" value="0.0"/>
@@ -63,16 +63,16 @@
             <Control type="ScriptSlider" id="FilePosi1" value="0.0"/>
             <Control type="ScriptAudioWaveform" id="UserWaveform2" value="0.0" data=""
                      rangeStart="0" rangeEnd="0"/>
-            <Control type="ScriptSlider" id="FileInput1" value="0.0"/>
+            <Control type="ScriptSlider" id="FileInput1" value="1.0"/>
             <Control type="ScriptComboBox" id="QuantMode2" value="1.0"/>
             <Control type="ScriptComboBox" id="PosModTempo1" value="1.0"/>
             <Control type="ScriptTable" id="Table5" value="0.0" data=""/>
             <Control type="ScriptTable" id="Table6" value="0.0" data=""/>
             <Control type="ScriptTable" id="FileModTable2" value="0.0" data="36...............vOqpp59....9C...vO...f+.........vO"/>
             <Control type="ScriptSlider" id="PosDiv1" value="8.0"/>
-            <Control type="ScriptSlider" id="PosMod1" value="0.2199999988079071"/>
+            <Control type="ScriptSlider" id="PosMod1" value="0.0"/>
             <Control type="ScriptComboBox" id="PosModMode1" value="2.0"/>
-            <Control type="ScriptComboBox" id="QuantMode3" value="3.0"/>
+            <Control type="ScriptComboBox" id="QuantMode3" value="2.0"/>
             <Control type="ScriptSlider" id="InputOffset1" value="0.6800000071525574"/>
             <Control type="ScriptLabel" id="FilePath2" value="{AUDIO_FILES}Single Cycle/Synths1/202-3.wav"/>
             <Control type="ScriptSlider" id="Cut1" value="1.0"/>
@@ -81,11 +81,11 @@
             <Control type="ScriptSlider" id="FilterGain1" value="1.0"/>
             <Control type="ScriptComboBox" id="FilterMode1" value="1.0"/>
             <Control type="ScriptSliderPack" id="ScriptSliderPack1" value="2.0" data="16...........fYlY1O......"/>
-            <Control type="ScriptSliderPack" id="ScriptSliderPack2" value="2.0" data="20..........9C................"/>
+            <Control type="ScriptSliderPack" id="ScriptSliderPack2" value="3.0" data="20.................rGEd+......"/>
             <Control type="ScriptSlider" id="Cut2" value="1.0"/>
             <Control type="ScriptSlider" id="q2" value="0.0"/>
             <Control type="ScriptSlider" id="Pan" value="0.0"/>
-            <Control type="ScriptSlider" id="FilterGain2" value="1.0"/>
+            <Control type="ScriptSlider" id="FilterGain2" value="0.0"/>
             <Control type="ScriptComboBox" id="FilterMode2" value="1.0"/>
             <Control type="ScriptComboBox" id="ScriptComboBox1" value="1.0"/>
             <Control type="ScriptSlider" id="ScriptSlider1" value="0.0"/>
@@ -94,7 +94,7 @@
             <Control type="ScriptComboBox" id="ScriptComboBox3" value="3.0"/>
             <Control type="ScriptSlider" id="ScriptSlider3" value="0.0"/>
             <Control type="ScriptComboBox" id="ScriptComboBox4" value="4.0"/>
-            <Control type="ScriptSlider" id="ScriptSlider4" value="0.6499999761581421"/>
+            <Control type="ScriptSlider" id="ScriptSlider4" value="0.0"/>
             <Control type="ScriptSlider" id="ScriptSlider5" value="0.0"/>
             <Control type="ScriptComboBox" id="ScriptComboBox5" value="4.0"/>
             <Control type="ScriptSlider" id="ScriptSlider6" value="0.0"/>
@@ -109,7 +109,7 @@
             <Control type="ScriptComboBox" id="ScriptComboBox10" value="4.0"/>
             <Control type="ScriptSlider" id="ScriptSlider11" value="0.0"/>
             <Control type="ScriptComboBox" id="ScriptComboBox11" value="1.0"/>
-            <Control type="ScriptSlider" id="ScriptSlider12" value="0.8999999761581421"/>
+            <Control type="ScriptSlider" id="ScriptSlider12" value="0.0"/>
             <Control type="ScriptComboBox" id="ScriptComboBox12" value="1.0"/>
             <Control type="ScriptSlider" id="ScriptSlider13" value="0.0"/>
             <Control type="ScriptComboBox" id="ScriptComboBox13" value="4.0"/>
@@ -118,15 +118,15 @@
             <Control type="ScriptSlider" id="ScriptSlider15" value="0.0"/>
             <Control type="ScriptSlider" id="ScriptSlider16" value="0.0"/>
             <Control type="ScriptComboBox" id="ScriptComboBox15" value="3.0"/>
-            <Control type="ScriptSlider" id="ScriptSlider21" value="0.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider21" value="0.4900000095367432"/>
             <Control type="ScriptComboBox" id="ScriptComboBox20" value="1.0"/>
             <Control type="ScriptSlider" id="ScriptSlider22" value="0.0"/>
             <Control type="ScriptComboBox" id="ScriptComboBox21" value="1.0"/>
-            <Control type="ScriptSlider" id="ScriptSlider23" value="0.0"/>
+            <Control type="ScriptSlider" id="ScriptSlider23" value="0.4699999988079071"/>
             <Control type="ScriptSlider" id="ScriptSlider24" value="0.0"/>
             <Control type="ScriptComboBox" id="ScriptComboBox22" value="1.0"/>
             <Control type="ScriptComboBox" id="ScriptComboBox16" value="1.0"/>
-            <Control type="ScriptComboBox" id="ScriptComboBox17" value="1.0"/>
+            <Control type="ScriptComboBox" id="ScriptComboBox17" value="4.0"/>
             <Control type="ScriptComboBox" id="ScriptComboBox23" value="1.0"/>
             <Control type="ScriptSlider" id="ScriptSlider25" value="0.0"/>
             <Control type="ScriptComboBox" id="ScriptComboBox24" value="1.0"/>
@@ -146,14 +146,14 @@
             <Control type="ScriptSlider" id="Vol1" value="0.0"/>
             <Control type="ScriptButton" id="Track" value="0.0"/>
             <Control type="ScriptTable" id="EnvTable1" value="0.0" data="36...............vO....+....9C...vO...f+.........vO"/>
-            <Control type="ScriptComboBox" id="EnvMode1" value="2.0"/>
+            <Control type="ScriptComboBox" id="EnvMode1" value="1.0"/>
             <Control type="ScriptSlider" id="PosDiv2" value="8.0"/>
             <Control type="ScriptComboBox" id="PosModTempo2" value="1.0"/>
             <Control type="ScriptSlider" id="PosDiv3" value="0.3100000023841858"/>
             <Control type="ScriptSliderPack" id="EnvSp1" value="6.0" data="64.Rgqm9vdT35SgqGsOw0ih9jBWO3C........f+HEtd8C6QgqO35Qg9DWOJ5yv0ipORgqm9vdT35SgqGwO......"/>
             <Control type="ScriptSlider" id="ModR1" value="1220.0"/>
-            <Control type="ScriptSlider" id="ModS1" value="1.0"/>
-            <Control type="ScriptSlider" id="ModD1" value="0.0"/>
+            <Control type="ScriptSlider" id="ModS1" value="0.7400000095367432"/>
+            <Control type="ScriptSlider" id="ModD1" value="8415.0"/>
             <Control type="ScriptSlider" id="ModH1" value="0.0"/>
             <Control type="ScriptSlider" id="ModA1" value="2222.0"/>
             <Control type="ScriptButton" id="EnvTrig1" value="0.0"/>
@@ -163,11 +163,11 @@
             <Control type="ScriptComboBox" id="PosModTempo4" value="1.0"/>
             <Control type="ScriptSlider" id="PosDiv7" value="0.0"/>
             <Control type="ScriptSliderPack" id="EnvSp2" value="0.0" data="64....f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+....9C...3O...f+."/>
-            <Control type="ScriptSlider" id="ModR2" value="0.0"/>
-            <Control type="ScriptSlider" id="ModS2" value="0.0"/>
-            <Control type="ScriptSlider" id="ModD2" value="0.0"/>
+            <Control type="ScriptSlider" id="ModR2" value="824.0"/>
+            <Control type="ScriptSlider" id="ModS2" value="0.5199999809265137"/>
+            <Control type="ScriptSlider" id="ModD2" value="10000.0"/>
             <Control type="ScriptSlider" id="ModH2" value="0.0"/>
-            <Control type="ScriptSlider" id="ModA2" value="0.0"/>
+            <Control type="ScriptSlider" id="ModA2" value="1588.0"/>
             <Control type="ScriptButton" id="EnvTrig2" value="0.0"/>
             <Control type="ScriptTable" id="EnvTable3" value="0.0" data=""/>
             <Control type="ScriptComboBox" id="EnvMode3" value="1.0"/>
@@ -287,8 +287,8 @@
           <ChildProcessors>
             <Processor Type="HardcodedEnvelopeModulator" ID="ENV1" Bypassed="0" Monophonic="0.0"
                        Retrigger="1.0" Bipolar="0" Intensity="1.0" Network="Env" Tempo="1.0"
-                       Divide="8.0" Mode="2.0" EnvTrig="0.0" a="2222.0" h="0.0" d="0.0"
-                       s="1.0" r="1220.0" Oneshot="0.0" Velocity="0.3100000023841858">
+                       Divide="8.0" Mode="1.0" EnvTrig="0.0" a="2222.0" h="0.0" d="8415.0"
+                       s="0.7400000095367432" r="1220.0" Oneshot="0.0" Velocity="0.3100000023841858">
               <ChildProcessors/>
               <Tables>
                 <Table EmbeddedData="36...............vO....+....9C...vO...f+.........vO"/>
@@ -299,8 +299,8 @@
             </Processor>
             <Processor Type="HardcodedEnvelopeModulator" ID="ENV2" Bypassed="0" Monophonic="0.0"
                        Retrigger="1.0" Bipolar="0" Intensity="1.0" Network="Env" Tempo="1.0"
-                       Divide="0.0" Mode="0.0" EnvTrig="0.0" a="0.0" h="0.0" d="0.0"
-                       s="0.0" r="0.0" Oneshot="0.0" Velocity="0.0">
+                       Divide="0.0" Mode="0.0" EnvTrig="0.0" a="1588.0" h="0.0" d="10000.0"
+                       s="0.5199999809265137" r="824.0" Oneshot="0.0" Velocity="0.0">
               <ChildProcessors/>
               <Tables>
                 <Table EmbeddedData=""/>
@@ -372,35 +372,35 @@
                Balance="0.0" VoiceLimit="8.0" KillFadeTime="20.0" IconColour="0"
                Network="Sm2" OscSt1="0.0" OscCent1="0.0" Oscfm1="0.0" OscMod1="0.0"
                OscTempoSync1="0.0" OscTempo1="1.0" OscDiv1="32.0" OscFmSrc1="2.0"
-               OscPitchSrc1="1.0" Osc12Mix="0.0" filePos1="0.0" FilePosMod1="0.4399999976158142"
-               FilePosQuant1="8.0" FileInputGain1="0.1000000014901161" FileInputGainMod="0.6499999761581421"
+               OscPitchSrc1="1.0" Osc12Mix="0.0" filePos1="0.0" FilePosMod1="1.0"
+               FilePosQuant1="5.0" FileInputGain1="0.02999999932944775" FileInputGainMod="0.0"
                FileInputGainSrc1="4.0" FileInputGainFm1="0.0" FilterMode1="1.0"
                FilterCut1="1.0" FilterCutMod1="0.0" FilterCutFm1="0.0" FilterCutSrc1="4.0"
                FilterModMode1="4.0" VcaGain1="1.0" VcaGainMod1="0.0" VcaGainFm1="0.0"
-               VcaGainSrc1="1.0" Res1="0.0" Pan1="0.0" VcaFmSrc1="4.0" OscSt2="0.0"
+               VcaGainSrc1="1.0" Res1="0.0" Pan1="0.0" VcaFmSrc1="4.0" OscSt2="7.0"
                OscCent2="0.0" Oscfm2="0.0" OscMod2="0.0" OscFmSrc2="1.0" FilterMode2="1.0"
                FilterCut2="1.0" FilterCutMod2="0.0" FilterCutFm2="0.0" FilterCutSrc2="1.0"
-               FilterFmdSrc="3.0" VcaGain2="1.0" VcaGainMod2="0.0" VcaGainFm2="0.0"
-               VcaGainSrc2="1.0" VcaGainModMode2="0.0" Res2="0.0" Pan2="0.0"
-               VcaFmSrc2="1.0" OscShape="0.0" OscShapeMod="0.0" OscShapeFm="0.0"
+               FilterFmdSrc="3.0" VcaGain2="0.0" VcaGainMod2="0.4699999988079071"
+               VcaGainFm2="0.0" VcaGainSrc2="4.0" VcaGainModMode2="0.0" Res2="0.0"
+               Pan2="0.0" VcaFmSrc2="1.0" OscShape="0.0" OscShapeMod="0.0" OscShapeFm="0.0"
                OscShapeModSrc="4.0" OscShapeFmSrc="3.0" Osc2InputGain="0.0"
                Osc2InputGainMod="0.0" Osc2InputGainFm="0.0" Osc2InputGainModSrc="1.0"
                Osc2InputGainFmSrc="1.0" FileInFmSrc="3.0" FilterInput1="0.0"
                FilterInput2="0.0" PostModMode="1.0" PosEnvTrig="1.0" PosEnvA="945.0"
                PosEnvH="0.0" PosEnvD="0.0" PosEnvS="0.0" PosEnvR="1456.0" PosVel="0.0"
-               OscsSubGain="0.0" PosTempo="1.0" PosDib="10.0" FileInOffset="0.5699999928474426"
-               oscShapeMode1="4.0" oscShapeMode2="1.0" shape2="0.0" ShapeMod1="0.8999999761581421"
+               OscsSubGain="0.0" PosTempo="1.0" PosDib="10.0" FileInOffset="0.3400000035762787"
+               oscShapeMode1="1.0" oscShapeMode2="1.0" shape2="0.0" ShapeMod1="0.0"
                ShapeSrc2="1.0" ShapeFm2="0.0" ShapeFmSrc2="1.0" PosSmooth="0.0"
                Osc2Src="1.0" Osc2InSel="2.0" FileInSel="1.0" Vol="1.0" Osc1Input="0.0"
-               Osc1InputMod="0.0" Osc1FM="0.0" OscFmSrc="1.0" Osc1InputSrc="1.0"
-               Osc1InSel="1.0" s="1.0" a="862.0" h="0.0" d="10000.0" r="640.0"
-               TEMPO2="1.0" DIV2="17.0" SYNC2="0.0" File2InSel="3.0" File2GainOffset="0.6800000071525574"
-               File2Gain="0.0" File2Mod="0.0" File2Fm="0.0" File2ModSrc="1.0"
-               File2FmSrc="1.0" File2Tempo="1.0" FileDiv="8.0" File2Mode="2.0"
-               File2EnvTrig="1.0" File2A="222.0" File2H="0.0" File2D="2.0" File2S="1.0"
-               File2R="3.0" File2Pos="0.0" File2PosMod="0.2199999988079071"
-               File2Quant="1.0" User1="0.0" User2="0.0" tune="0.0" Track1="0.0"
-               Track2="0.0">
+               Osc1InputMod="0.4900000095367432" Osc1FM="0.0" OscFmSrc="1.0"
+               Osc1InputSrc="1.0" Osc1InSel="1.0" s="1.0" a="862.0" h="0.0"
+               d="10000.0" r="640.0" TEMPO2="1.0" DIV2="17.0" SYNC2="0.0" File2InSel="2.0"
+               File2GainOffset="0.6800000071525574" File2Gain="1.0" File2Mod="0.0"
+               File2Fm="0.0" File2ModSrc="1.0" File2FmSrc="1.0" File2Tempo="1.0"
+               FileDiv="8.0" File2Mode="2.0" File2EnvTrig="1.0" File2A="222.0"
+               File2H="0.0" File2D="2.0" File2S="1.0" File2R="3.0" File2Pos="0.0"
+               File2PosMod="0.0" File2Quant="1.0" User1="0.0" User2="0.0" tune="0.0"
+               Track1="0.0" Track2="0.0">
       <ChildProcessors>
         <Processor Type="MidiProcessorChain" ID="Midi Processor" Bypassed="0">
           <ChildProcessors/>
@@ -445,7 +445,7 @@
         <SliderPack EmbeddedData="64......35Qg7C..............8C.....6QgK+.....vGEtlO..........vGEtxO..........P35QwO......"/>
         <SliderPack EmbeddedData="64.35QA9...........................Jb8n8nYlY3yGEtlOZlYl9v0iB6iYlYtOT35A+nYlY7ydT3xO...P+."/>
         <SliderPack EmbeddedData="16...........fYlY1O......"/>
-        <SliderPack EmbeddedData="20..........9C................"/>
+        <SliderPack EmbeddedData="20.................rGEd+......"/>
       </SliderPacks>
       <AudioFiles>
         <AudioFile EmbeddedData="{PROJECT_FOLDER}SINMIN.wav" MinValue="0" MaxValue="262144"/>
