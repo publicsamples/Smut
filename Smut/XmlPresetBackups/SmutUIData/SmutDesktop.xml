@@ -140,7 +140,7 @@
     <Component type="ScriptButton" id="Sync1" x="16" y="129" width="30" height="30"
                parentComponent="Osc2" textColour="4281936900" text="Tempo" filmstripImage="{PROJECT_FOLDER}clkInv.png"
                scaleFactor="0.05000000074505806"/>
-    <Component type="ScriptSlider" id="Divide1" x="13" y="72" processorId="SMUT"
+    <Component type="ScriptSlider" id="Divide1" x="15" y="72" processorId="SMUT"
                parameterId="DIV2" pluginParameterName="Osc2 - Divide" middlePosition="16.0"
                width="40" height="40" parentComponent="Osc2" textColour="16777215"
                bgColour="16777215" max="32.0" stepSize="1.0" showValuePopup="Below"
@@ -159,10 +159,12 @@
   </Component>
   <Component type="ScriptPanel" id="File1" x="232" y="168" width="275" height="190"
              itemColour="4293583307" itemColour2="4293583307" textColour="4283319303">
-    <Component type="ScriptComboBox" id="SampleA" x="71" y="8" width="158" height="20"
-               parentComponent="File1" textColour="4281936900" bgColour="1427967234"
-               useCustomPopup="1" text="LOAD SAMPLE" items="&#10;001 Loops::001 Misc::about70.wav&#10;001 Loops::001 Misc::bounce.wav&#10;001 Loops::001 Misc::budg.wav&#10;001 Loops::001 Misc::castle.wav&#10;001 Loops::001 Misc::DFRNG-129.wav&#10;001 Loops::001 Misc::Fall 1 75.wav&#10;001 Loops::001 Misc::FastSid-160-04.wav&#10;001 Loops::001 Misc::Grumbler.wav&#10;001 Loops::001 Misc::ngy72.wav&#10;001 Loops::001 Misc::OptoGroove-142-07.wav&#10;001 Loops::001 Misc::perc133.wav&#10;001 Loops::001 Misc::rock88.wav&#10;001 Loops::001 Misc::STBELL-130-02.wav&#10;001 Loops::001 Misc::StereoSqr-142-02.wav&#10;001 Loops::001 Misc::StereoTri-138#02.1-02.wav&#10;001 Loops::002 Chains::basschain-0.wav&#10;001 Loops::002 Chains::basschain-_2.wav&#10;001 Loops::002 Chains::cs1.wav&#10;001 Loops::002 Chains::fx.wav&#10;001 Loops::002 Chains::hats.wav&#10;001 Loops::002 Chains::kick.wav&#10;001 Loops::002 Chains::perc.wav&#10;001 Loops::002 Chains::snare.wav&#10;001 Loops::003 Drums::DelSnare-129-02.wav&#10;001 Loops::003 Drums::DelSnare-129.3-10.wav&#10;001 Loops::003 Drums::DFKick-135#03.3.wav&#10;001 Loops::003 Drums::DFKick-135#05.3.wav&#10;001 Loops::004 Meta::Lambs 90.wav&#10;001 Loops::004 Meta::meta1.wav&#10;001 Loops::004 Meta::meta2.wav&#10;001 Loops::004 Meta::meta3.wav&#10;001 Loops::004 Meta::meta4.wav&#10;001 Loops::004 Meta::meta5.wav&#10;001 Loops::004 Meta::meta6.wav&#10;001 Loops::004 Meta::meta7.wav&#10;001 Loops::004 Meta::swan130.wav&#10;002 Single Cycle::001 Drawn::AD-Draw1.wav&#10;002 Single Cycle::001 Drawn::AD-Draw2.wav&#10;002 Single Cycle::001 Drawn::AD-Draw4.wav&#10;002 Single Cycle::001 Drawn::AD_DRAW3.wav&#10;002 Single Cycle::001 Drawn::amp1.wav&#10;002 Single Cycle::001 Drawn::Cheb1.wav&#10;002 Single Cycle::001 Drawn::chirp.wav&#10;002 Single Cycle::001 Drawn::Filp1.wav&#10;002 Single Cycle::001 Drawn::flip2.wav&#10;002 Single Cycle::001 Drawn::flip3.wav&#10;002 Single Cycle::001 Drawn::flip4.wav&#10;002 Single Cycle::001 Drawn::LowQ.wav&#10;002 Single Cycle::001 Drawn::Noisy1.wav&#10;002 Single Cycle::001 Drawn::res1.wav&#10;002 Single Cycle::001 Drawn::Saw1.wav&#10;002 Single Cycle::001 Drawn::Saw2.wav&#10;002 Single Cycle::001 Drawn::saw3.wav&#10;002 Single Cycle::001 Drawn::Saw4.wav&#10;002 Single Cycle::001 Drawn::shSin.wav&#10;002 Single Cycle::001 Drawn::Sine1.wav&#10;002 Single Cycle::001 Drawn::Square1.wav&#10;002 Single Cycle::001 Drawn::square2.wav&#10;002 Single Cycle::001 Drawn::square3.wav&#10;002 Single Cycle::001 Drawn::square4.wav&#10;002 Single Cycle::001 Drawn::square5.wav&#10;002 Single Cycle::001 Drawn::square6.wav&#10;002 Single Cycle::001 Drawn::Trap1.wav&#10;002 Single Cycle::001 Drawn::trap2.wav&#10;002 Single Cycle::001 Drawn::WEDITDRAW1.wav&#10;002 Single Cycle::002 Synths1::202-1.wav&#10;002 Single Cycle::002 Synths1::202-10.wav&#10;002 Single Cycle::002 Synths1::202-11.wav&#10;002 Single Cycle::002 Synths1::202-12.wav&#10;002 Single Cycle::002 Synths1::202-13.wav&#10;002 Single Cycle::002 Synths1::202-14.wav&#10;002 Single Cycle::002 Synths1::202-2.wav&#10;002 Single Cycle::002 Synths1::202-3.wav&#10;002 Single Cycle::002 Synths1::202-4.wav&#10;002 Single Cycle::002 Synths1::202-5.wav&#10;002 Single Cycle::002 Synths1::202-6.wav&#10;002 Single Cycle::002 Synths1::202-7.wav&#10;002 Single Cycle::002 Synths1::202-8.wav&#10;002 Single Cycle::002 Synths1::202-9.wav&#10;002 Single Cycle::002 Synths1::AX-1.wav&#10;002 Single Cycle::002 Synths1::AX-11.wav&#10;002 Single Cycle::002 Synths1::AX-12.wav&#10;002 Single Cycle::002 Synths1::AX-13.wav&#10;002 Single Cycle::002 Synths1::AX-14.wav&#10;002 Single Cycle::002 Synths1::AX-15.wav&#10;002 Single Cycle::002 Synths1::AX-16.wav&#10;002 Single Cycle::002 Synths1::AX-17.wav&#10;002 Single Cycle::002 Synths1::AX-18.wav&#10;002 Single Cycle::002 Synths1::AX-2.wav&#10;002 Single Cycle::002 Synths1::AX-3.wav&#10;002 Single Cycle::002 Synths1::AX-4.wav&#10;002 Single Cycle::002 Synths1::AX-5.wav&#10;002 Single Cycle::002 Synths1::AX-6.wav&#10;002 Single Cycle::002 Synths1::AX-7.wav&#10;002 Single Cycle::002 Synths1::AX-8.wav&#10;002 Single Cycle::002 Synths1::AX-9.wav&#10;002 Single Cycle::002 Synths1::CS-1.wav&#10;002 Single Cycle::002 Synths1::CS-11.wav&#10;002 Single Cycle::002 Synths1::CS-12.wav&#10;002 Single Cycle::002 Synths1::CS-13.wav&#10;002 Single Cycle::002 Synths1::CS-14.wav&#10;002 Single Cycle::002 Synths1::CS-15.wav&#10;002 Single Cycle::002 Synths1::CS-16.wav&#10;002 Single Cycle::002 Synths1::CS-17.wav&#10;002 Single Cycle::002 Synths1::CS-18.wav&#10;002 Single Cycle::002 Synths1::CS-19.wav&#10;002 Single Cycle::002 Synths1::CS-2.wav&#10;002 Single Cycle::002 Synths1::CS-21.wav&#10;002 Single Cycle::002 Synths1::CS-22.wav&#10;002 Single Cycle::002 Synths1::CS-23.wav&#10;002 Single Cycle::002 Synths1::CS-24.wav&#10;002 Single Cycle::002 Synths1::CS-25.wav&#10;002 Single Cycle::002 Synths1::CS-26.wav&#10;002 Single Cycle::002 Synths1::CS-27.wav&#10;002 Single Cycle::002 Synths1::CS-28.wav&#10;002 Single Cycle::002 Synths1::CS-29.wav&#10;002 Single Cycle::002 Synths1::CS-3.wav&#10;002 Single Cycle::002 Synths1::CS-31.wav&#10;002 Single Cycle::002 Synths1::CS-32.wav&#10;002 Single Cycle::002 Synths1::CS-33.wav&#10;002 Single Cycle::002 Synths1::CS-34.wav&#10;002 Single Cycle::002 Synths1::CS-35.wav&#10;002 Single Cycle::002 Synths1::CS-36.wav&#10;002 Single Cycle::002 Synths1::CS-4.wav&#10;002 Single Cycle::002 Synths1::CS-5.wav&#10;002 Single Cycle::002 Synths1::CS-6.wav&#10;002 Single Cycle::002 Synths1::CS-7.wav&#10;002 Single Cycle::002 Synths1::CS-8.wav&#10;002 Single Cycle::002 Synths1::CS-9.wav&#10;002 Single Cycle::002 Synths1::Mb-1.wav&#10;002 Single Cycle::002 Synths1::Mb-11.wav&#10;002 Single Cycle::002 Synths1::Mb-12.wav&#10;002 Single Cycle::002 Synths1::Mb-13.wav&#10;002 Single Cycle::002 Synths1::Mb-14.wav&#10;002 Single Cycle::002 Synths1::Mb-16.wav&#10;002 Single Cycle::002 Synths1::Mb-17.wav&#10;002 Single Cycle::002 Synths1::Mb-2.wav&#10;002 Single Cycle::002 Synths1::Mb-3.wav&#10;002 Single Cycle::002 Synths1::Mb-4.wav&#10;002 Single Cycle::002 Synths1::Mb-6.wav&#10;002 Single Cycle::002 Synths1::Mb-7.wav&#10;002 Single Cycle::002 Synths1::Mb-8.wav&#10;002 Single Cycle::002 Synths1::Mb-9.wav&#10;002 Single Cycle::002 Synths1::Mg-1.wav&#10;002 Single Cycle::002 Synths1::Mg-10.wav&#10;002 Single Cycle::002 Synths1::Mg-11.wav&#10;002 Single Cycle::002 Synths1::Mg-12.wav&#10;002 Single Cycle::002 Synths1::Mg-13.wav&#10;002 Single Cycle::002 Synths1::Mg-14.wav&#10;002 Single Cycle::002 Synths1::Mg-2.wav&#10;002 Single Cycle::002 Synths1::Mg-3.wav&#10;002 Single Cycle::002 Synths1::Mg-4.wav&#10;002 Single Cycle::002 Synths1::Mg-5.wav&#10;002 Single Cycle::002 Synths1::Mg-6.wav&#10;002 Single Cycle::002 Synths1::Mg-7.wav&#10;002 Single Cycle::002 Synths1::Mg-8.wav&#10;002 Single Cycle::002 Synths1::Mg-9.wav&#10;002 Single Cycle::002 Synths1::Ms-1.wav&#10;002 Single Cycle::002 Synths1::Ms-10.wav&#10;002 Single Cycle::002 Synths1::Ms-11.wav&#10;002 Single Cycle::002 Synths1::Ms-12.wav&#10;002 Single Cycle::002 Synths1::Ms-13.wav&#10;002 Single Cycle::002 Synths1::Ms-14.wav&#10;002 Single Cycle::002 Synths1::Ms-15.wav&#10;002 Single Cycle::002 Synths1::Ms-16.wav&#10;002 Single Cycle::002 Synths1::Ms-17.wav&#10;002 Single Cycle::002 Synths1::Ms-18.wav&#10;002 Single Cycle::002 Synths1::Ms-19.wav&#10;002 Single Cycle::002 Synths1::Ms-2.wav&#10;002 Single Cycle::002 Synths1::Ms-20.wav&#10;002 Single Cycle::002 Synths1::Ms-21.wav&#10;002 Single Cycle::002 Synths1::Ms-22.wav&#10;002 Single Cycle::002 Synths1::Ms-23.wav&#10;002 Single Cycle::002 Synths1::Ms-24.wav&#10;002 Single Cycle::002 Synths1::Ms-25.wav&#10;002 Single Cycle::002 Synths1::Ms-26.wav&#10;002 Single Cycle::002 Synths1::Ms-3.wav&#10;002 Single Cycle::002 Synths1::Ms-4.wav&#10;002 Single Cycle::002 Synths1::Ms-5.wav&#10;002 Single Cycle::002 Synths1::Ms-6.wav&#10;002 Single Cycle::002 Synths1::Ms-7.wav&#10;002 Single Cycle::002 Synths1::Ms-8.wav&#10;002 Single Cycle::002 Synths1::Ms-9.wav&#10;002 Single Cycle::002 Synths1::WONK1.wav&#10;002 Single Cycle::002 Synths1::WONK10.wav&#10;002 Single Cycle::002 Synths1::WONK11.wav&#10;002 Single Cycle::002 Synths1::WONK12.wav&#10;002 Single Cycle::002 Synths1::WONK13.wav&#10;002 Single Cycle::002 Synths1::WONK14.wav&#10;002 Single Cycle::002 Synths1::WONK15.wav&#10;002 Single Cycle::002 Synths1::WONK16.wav&#10;002 Single Cycle::002 Synths1::WONK17.wav&#10;002 Single Cycle::002 Synths1::WONK18.wav&#10;002 Single Cycle::002 Synths1::WONK2.wav&#10;002 Single Cycle::002 Synths1::WONK3.wav&#10;002 Single Cycle::002 Synths1::WONK4.wav&#10;002 Single Cycle::002 Synths1::WONK5.wav&#10;002 Single Cycle::002 Synths1::WONK6.wav&#10;002 Single Cycle::002 Synths1::WONK7.wav&#10;002 Single Cycle::002 Synths1::WONK8.wav&#10;002 Single Cycle::002 Synths1::WONK9.wav&#10;002 Single Cycle::002 Synths1::XP-1.wav&#10;002 Single Cycle::002 Synths1::XP-10.wav&#10;002 Single Cycle::002 Synths1::XP-11.wav&#10;002 Single Cycle::002 Synths1::XP-12.wav&#10;002 Single Cycle::002 Synths1::XP-13.wav&#10;002 Single Cycle::002 Synths1::XP-14.wav&#10;002 Single Cycle::002 Synths1::XP-15.wav&#10;002 Single Cycle::002 Synths1::XP-16.wav&#10;002 Single Cycle::002 Synths1::XP-2.wav&#10;002 Single Cycle::002 Synths1::XP-3.wav&#10;002 Single Cycle::002 Synths1::XP-4.wav&#10;002 Single Cycle::002 Synths1::XP-5.wav&#10;002 Single Cycle::002 Synths1::XP-6.wav&#10;002 Single Cycle::002 Synths1::XP-7.wav&#10;002 Single Cycle::002 Synths1::XP-8.wav&#10;002 Single Cycle::002 Synths1::XP-9.wav&#10;002 Single Cycle::003 Synths2::Synth1.WAV&#10;002 Single Cycle::003 Synths2::Synth10.WAV&#10;002 Single Cycle::003 Synths2::Synth11.WAV&#10;002 Single Cycle::003 Synths2::Synth12.WAV&#10;002 Single Cycle::003 Synths2::Synth13.WAV&#10;002 Single Cycle::003 Synths2::Synth14.WAV&#10;002 Single Cycle::003 Synths2::Synth15.WAV&#10;002 Single Cycle::003 Synths2::Synth16.WAV&#10;002 Single Cycle::003 Synths2::Synth17.WAV&#10;002 Single Cycle::003 Synths2::Synth18.WAV&#10;002 Single Cycle::003 Synths2::Synth19.WAV&#10;002 Single Cycle::003 Synths2::Synth2.WAV&#10;002 Single Cycle::003 Synths2::Synth20.WAV&#10;002 Single Cycle::003 Synths2::Synth21.WAV&#10;002 Single Cycle::003 Synths2::Synth22.WAV&#10;002 Single Cycle::003 Synths2::Synth23.WAV&#10;002 Single Cycle::003 Synths2::Synth3.WAV&#10;002 Single Cycle::003 Synths2::Synth4.WAV&#10;002 Single Cycle::003 Synths2::Synth5.WAV&#10;002 Single Cycle::003 Synths2::Synth6.WAV&#10;002 Single Cycle::003 Synths2::Synth7.WAV&#10;002 Single Cycle::003 Synths2::Synth8.WAV&#10;002 Single Cycle::003 Synths2::Synth9.WAV&#10;003 Wavetables::001 Misc::jp-1.WAV&#10;003 Wavetables::001 Misc::loop1 2.wav&#10;003 Wavetables::001 Misc::loop10.wav&#10;003 Wavetables::001 Misc::loop11.wav&#10;003 Wavetables::001 Misc::loop12.wav&#10;003 Wavetables::001 Misc::loop13.wav&#10;003 Wavetables::001 Misc::loop14.wav&#10;003 Wavetables::001 Misc::loop15.wav&#10;003 Wavetables::001 Misc::loop2 2.wav&#10;003 Wavetables::001 Misc::loop3.wav&#10;003 Wavetables::001 Misc::loop4.wav&#10;003 Wavetables::001 Misc::loop5.wav&#10;003 Wavetables::001 Misc::loop6.wav&#10;003 Wavetables::001 Misc::loop7.wav&#10;003 Wavetables::001 Misc::loop8.wav&#10;003 Wavetables::001 Misc::loop9.wav&#10;003 Wavetables::001 Misc::ST_256-2.wav&#10;003 Wavetables::001 Misc::VQW.wav&#10;003 Wavetables::001 Misc::WTB.wav&#10;003 Wavetables::001 Misc::WTB3.wav&#10;003 Wavetables::001 Misc::WTSLOT08.WAV&#10;003 Wavetables::001 Misc::WTSLOT11.WAV&#10;003 Wavetables::001 Misc::xfswp.wav&#10;003 Wavetables::001 Misc::XPPLUCK1.WAV&#10;003 Wavetables::001 Misc::XPSHIFT.WAV&#10;003 Wavetables::002 256::BIRD.WAV&#10;003 Wavetables::002 256::BPDUAL1.WAV&#10;003 Wavetables::002 256::BPDUAL2.WAV&#10;003 Wavetables::002 256::BPDUAL3.WAV&#10;003 Wavetables::002 256::BPDUAL4.WAV&#10;003 Wavetables::002 256::BPDUAL5.WAV&#10;003 Wavetables::002 256::BPDUAL6.WAV&#10;003 Wavetables::002 256::SINMIN.WAV&#10;003 Wavetables::003 512::BELL3.WAV&#10;003 Wavetables::003 512::FLUTE1.WAV&#10;003 Wavetables::003 512::FLY.WAV&#10;003 Wavetables::003 512::FOLD2.WAV&#10;003 Wavetables::003 512::FOLD4.WAV&#10;003 Wavetables::003 512::HARMBELL.WAV&#10;003 Wavetables::003 512::jp-5.WAV&#10;003 Wavetables::003 512::K3-2.WAV&#10;003 Wavetables::003 512::LFO2.WAV&#10;003 Wavetables::003 512::LP1.WAV&#10;003 Wavetables::003 512::LP3.WAV&#10;003 Wavetables::003 512::MG1.WAV&#10;003 Wavetables::003 512::SYNC.WAV&#10;003 Wavetables::004 1024::BELL4.WAV&#10;003 Wavetables::004 1024::BELL7654.WAV&#10;003 Wavetables::004 1024::DF1.WAV&#10;003 Wavetables::004 1024::DF2.WAV&#10;003 Wavetables::004 1024::DF3.WAV&#10;003 Wavetables::004 1024::DF4.WAV&#10;003 Wavetables::004 1024::DF5.WAV&#10;003 Wavetables::004 1024::GLASSY.WAV&#10;003 Wavetables::004 1024::jp-3.WAV&#10;003 Wavetables::004 1024::jp-6.WAV&#10;003 Wavetables::004 1024::JPSCAN.WAV&#10;003 Wavetables::004 1024::PEYHARM.WAV&#10;003 Wavetables::004 1024::SAWHARM.WAV&#10;003 Wavetables::004 1024::SH.WAV"
-               max="300"/>
+    <Component type="ScriptButton" id="LoadSample1" x="68" y="4" width="30"
+               height="30" parentComponent="File1" bgColour="4294967295" filmstripImage="{PROJECT_FOLDER}disk.png"
+               scaleFactor="0.06"/>
+    <Component type="ScriptLabel" id="FileName1" x="100" y="9" width="150" height="20"
+               parentComponent="File1" text="FILE 1" fontName="mon" fontSize="15.0"
+               editable="0" textColour="4280620804" alignment="left"/>
     <Component type="ScriptLabel" id="ScriptLabel25" x="64" y="167" width="70"
                height="20" parentComponent="File1" text="Position" fontName="mon"
                editable="0" textColour="4280620804"/>
@@ -174,8 +176,7 @@
     <Component type="ScriptAudioWaveform" id="AudioWaveform1" x="12" y="35"
                processorId="SMUT" width="120" height="60" parentComponent="File1"
                bgColour="1994576912" textColour="1979645952" itemColour2="2315190272"
-               itemColour="2499739648" itemColour3="1994576912" enabled="0"
-               showFileName="0" saveInPreset="0"/>
+               itemColour="2499739648" itemColour3="1994576912" saveInPreset="0"/>
     <Component type="ScriptAudioWaveform" id="UserWaveform1" x="12" y="35" processorId="SMUT"
                width="120" height="60" parentComponent="File1" bgColour="2499739648"
                textColour="1994576912" itemColour2="1994576912" itemColour="1994576912"
@@ -200,7 +201,7 @@
                enabled="0"/>
     <Component type="ScriptTable" id="Table4" x="12" y="35" width="120" height="60"
                processorId="SMUT" tableIndex="5" parentComponent="File1" bgColour="38399"
-               itemColour="14865424" itemColour2="0" enabled="0" customColours="1"/>
+               itemColour="16711680" itemColour2="0" enabled="0" customColours="1"/>
     <Component type="ScriptTable" id="FileModTable1" x="141" y="35" width="120"
                height="60" processorId="SMUT" tableIndex="2" parentComponent="File1"
                bgColour="4292844165" itemColour="14865424" itemColour2="4279308561"
@@ -251,15 +252,6 @@
                parentComponent="File1" width="10" height="40" showValuePopup="Below"
                style="Vertical" textColour="16777215" itemColour="4281545523"
                bgColour="16777215" dragDirection="Vertical"/>
-    <Component type="ScriptPanel" id="UserInstructions" x="70" y="3" width="160"
-               height="30" parentComponent="File1" itemColour="4293583307" itemColour2="4293583307"
-               bgColour="16777215" textColour="16777215">
-      <Component type="ScriptLabel" id="ScriptLabel97" x="6" y="0" width="160"
-                 height="30" parentComponent="UserInstructions" editable="0" fontName="mon"
-                 textColour="4278190080" text="Drag &amp; Drop/Right Click"/>
-      <Component type="ScriptImage" id="ScriptImage3" x="0" y="7" width="20" height="30"
-                 parentComponent="UserInstructions" fileName="{PROJECT_FOLDER}arrow.png"/>
-    </Component>
     <Component type="ScriptSliderPack" id="FileModPack1" x="143" y="35" width="120"
                height="60" parentComponent="File1" itemColour="1434925876" textColour="16777215"
                itemColour2="717866496" bgColour="4294296160" processorId="SMUT"
@@ -319,9 +311,18 @@
                  height="10" parentComponent="FileEnv1" text="Loop" fontName="mon"
                  editable="0" textColour="4280620804"/>
     </Component>
+    <Component type="ScriptLabel" id="FilePath1" x="150" y="18" width="150"
+               height="20" parentComponent="File1" text="FILE 1" fontName="mon"
+               fontSize="15.0" editable="0" textColour="4280620804" alignment="left"/>
   </Component>
   <Component type="ScriptPanel" id="File2" x="514" y="168" width="275" height="190"
              itemColour="4293583307" itemColour2="4293583307" textColour="4283319303">
+    <Component type="ScriptLabel" id="FileName2" x="99" y="9" width="150" height="20"
+               parentComponent="File2" text="FILE 1" fontName="mon" fontSize="15.0"
+               editable="0" textColour="4280620804" alignment="left"/>
+    <Component type="ScriptButton" id="LoadSample2" x="67" y="4" width="30"
+               height="30" parentComponent="File2" bgColour="4294967295" filmstripImage="{PROJECT_FOLDER}disk.png"
+               scaleFactor="0.06"/>
     <Component type="ScriptSliderPack" id="FileModPack2" x="143" y="35" width="120"
                height="60" parentComponent="File2" itemColour="1434925876" textColour="16777215"
                itemColour2="13223424" bgColour="4294878976" processorId="SMUT"
@@ -392,8 +393,8 @@
     <Component type="ScriptAudioWaveform" id="AudioWaveform2" x="12" y="35"
                processorId="SMUT" width="120" height="60" parentComponent="File2"
                bgColour="1994576912" textColour="1979645952" itemColour2="2315190272"
-               itemColour="2499739648" showFileName="0" itemColour3="1994576912"
-               enabled="0" sampleIndex="1" saveInPreset="0"/>
+               itemColour="2499739648" itemColour3="1994576912" sampleIndex="1"
+               saveInPreset="0"/>
     <Component type="ScriptAudioWaveform" id="UserWaveform2" x="12" y="35" processorId="SMUT"
                width="120" height="60" parentComponent="File2" bgColour="2499739648"
                textColour="1994576912" itemColour2="1994576912" itemColour="1994576912"
@@ -468,15 +469,9 @@
                parentComponent="File2" width="10" height="40" showValuePopup="Below"
                style="Vertical" itemColour="4281545523" bgColour="16777215"
                textColour="16777215" itemColour2="4279308561" dragDirection="Vertical"/>
-    <Component type="ScriptPanel" id="UserInstructions1" x="70" y="2" width="160"
-               height="30" parentComponent="File2" itemColour="4293583307" itemColour2="4293583307"
-               bgColour="16777215" textColour="16777215">
-      <Component type="ScriptLabel" id="ScriptLabel98" x="6" y="1" width="160"
-                 height="30" parentComponent="UserInstructions1" editable="0"
-                 fontName="mon" textColour="4278190080" text="Drag &amp; Drop/Right Click"/>
-      <Component type="ScriptImage" id="ScriptImage4" x="0" y="7" width="20" height="30"
-                 parentComponent="UserInstructions1" fileName="{PROJECT_FOLDER}arrow.png"/>
-    </Component>
+    <Component type="ScriptLabel" id="FilePath2" x="141" y="20" width="150"
+               height="20" parentComponent="File2" text="FILE 1" fontName="mon"
+               fontSize="15.0" editable="0" textColour="4280620804" alignment="left"/>
   </Component>
   <Component type="ScriptPanel" id="Fil1" x="232" y="362" width="275" height="130"
              itemColour="4293583307" itemColour2="4293583307" textColour="4279702530">
@@ -617,7 +612,8 @@
     <Component type="ScriptSlider" id="ScriptSlider1" x="71" y="33" width="60"
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="OscMod1"
-               showValuePopup="Left" bgColour="2496627791" itemColour="1714621452"/>
+               showValuePopup="Left" bgColour="2496627791" itemColour="1714621452"
+               textColour="16777215"/>
     <Component type="ScriptLabel" id="ScriptLabel1" x="10" y="33" width="59"
                height="15" parentComponent="ModMatrix" text="PITCH1" fontName="mon"
                editable="0" textColour="4280620804" alignment="left"/>
@@ -638,7 +634,7 @@
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="Oscfm1"
                showValuePopup="Left" bgColour="1441781396" itemColour="1715876103"
-               dragDirection="Horizontal"/>
+               dragDirection="Horizontal" textColour="16777215"/>
     <Component type="ScriptLabel" id="ScriptLabel5" x="174" y="9" width="60"
                height="20" parentComponent="ModMatrix" text="FOLLOW" fontName="mon"
                editable="0" textColour="4280620804"/>
@@ -649,7 +645,8 @@
     <Component type="ScriptSlider" id="ScriptSlider3" x="458" y="33" width="60"
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="FileInputGainFm1"
-               dragDirection="Horizontal" bgColour="1441781396" itemColour="1715876103"/>
+               dragDirection="Horizontal" bgColour="1441781396" itemColour="1715876103"
+               textColour="16777215"/>
     <Component type="ScriptComboBox" id="ScriptComboBox4" x="419" y="33" width="35"
                height="15" max="8" parentComponent="ModMatrix" items="ENV1&#10;ENV2&#10;ENV3&#10;LFO1&#10;LFO2&#10;LFO3&#10;Velocity&#10;Track"
                processorId="SMUT" parameterId="FileInputGainSrc1" bgColour="1562184962"
@@ -658,7 +655,7 @@
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="FileInputGainMod"
                showValuePopup="Left" dragDirection="Horizontal" bgColour="2496627791"
-               itemColour="1714621452"/>
+               itemColour="1714621452" textColour="16777215"/>
     <Component type="ScriptLabel" id="ScriptLabel6" x="284" y="33" width="70"
                height="15" parentComponent="ModMatrix" text="FILE1 INPUT" fontName="mon"
                editable="0" textColour="4280620804" alignment="left"/>
@@ -681,7 +678,7 @@
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="FilterCutMod1"
                showValuePopup="Left" dragDirection="Horizontal" bgColour="2496627791"
-               itemColour="1714621452"/>
+               itemColour="1714621452" textColour="16777215"/>
     <Component type="ScriptComboBox" id="ScriptComboBox5" x="419" y="70" width="35"
                height="15" max="8" parentComponent="ModMatrix" items="ENV1&#10;ENV2&#10;ENV3&#10;LFO1&#10;LFO2&#10;LFO3&#10;Velocity&#10;Track"
                processorId="SMUT" parameterId="FilterCutSrc1" bgColour="1562184962"
@@ -689,7 +686,8 @@
     <Component type="ScriptSlider" id="ScriptSlider6" x="458" y="70" width="60"
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="FilterCutFm1"
-               dragDirection="Horizontal" bgColour="1441781396" itemColour="1715876103"/>
+               dragDirection="Horizontal" bgColour="1441781396" itemColour="1715876103"
+               textColour="16777215"/>
     <Component type="ScriptComboBox" id="ScriptComboBox6" x="523" y="70" width="35"
                height="15" max="6" parentComponent="ModMatrix" items="Osc 1&#10;Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
                processorId="SMUT" parameterId="FilterModMode1" bgColour="1562184962"
@@ -698,7 +696,7 @@
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="Oscfm2"
                showValuePopup="Left" bgColour="1441781396" itemColour="1715876103"
-               dragDirection="Horizontal"/>
+               dragDirection="Horizontal" textColour="16777215"/>
     <Component type="ScriptComboBox" id="ScriptComboBox7" x="239" y="51" width="35"
                height="15" max="6" parentComponent="ModMatrix" items="Osc 1&#10;Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
                processorId="SMUT" parameterId="OscFmSrc2" bgColour="1562184962"
@@ -709,7 +707,8 @@
     <Component type="ScriptSlider" id="ScriptSlider8" x="71" y="51" width="60"
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="OscMod2"
-               showValuePopup="Left" bgColour="2496627791" itemColour="1714621452"/>
+               showValuePopup="Left" bgColour="2496627791" itemColour="1714621452"
+               textColour="16777215"/>
     <Component type="ScriptComboBox" id="ScriptComboBox8" x="135" y="51" width="35"
                height="15" max="8" parentComponent="ModMatrix" items="ENV1&#10;ENV2&#10;ENV3&#10;LFO1&#10;LFO2&#10;LFO3&#10;Velocity&#10;Track"
                processorId="SMUT" parameterId="Osc2Src" bgColour="1562184962"
@@ -721,7 +720,7 @@
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="VcaGainMod1"
                showValuePopup="Left" dragDirection="Horizontal" bgColour="2496627791"
-               itemColour="1714621452"/>
+               itemColour="1714621452" textColour="16777215"/>
     <Component type="ScriptComboBox" id="ScriptComboBox9" x="419" y="109" width="35"
                height="15" max="8" parentComponent="ModMatrix" items="ENV1&#10;ENV2&#10;ENV3&#10;LFO1&#10;LFO2&#10;LFO3&#10;Velocity&#10;Track"
                processorId="SMUT" parameterId="VcaGainSrc1" bgColour="1562184962"
@@ -729,7 +728,8 @@
     <Component type="ScriptSlider" id="ScriptSlider10" x="458" y="109" width="60"
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="VcaGainFm1"
-               dragDirection="Horizontal" bgColour="1441781396" itemColour="1715876103"/>
+               dragDirection="Horizontal" bgColour="1441781396" itemColour="1715876103"
+               textColour="16777215"/>
     <Component type="ScriptComboBox" id="ScriptComboBox10" x="523" y="109" width="35"
                height="15" max="6" parentComponent="ModMatrix" items="Osc 1&#10;Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
                processorId="SMUT" parameterId="VcaFmSrc1" bgColour="1562184962"
@@ -738,7 +738,7 @@
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="ShapeFm2"
                showValuePopup="Left" bgColour="1441781396" itemColour="1715876103"
-               dragDirection="Horizontal"/>
+               dragDirection="Horizontal" textColour="16777215"/>
     <Component type="ScriptComboBox" id="ScriptComboBox11" x="239" y="90" width="35"
                height="15" max="6" parentComponent="ModMatrix" items="Osc 1&#10;Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
                processorId="SMUT" parameterId="ShapeFmSrc2" bgColour="1562184962"
@@ -749,7 +749,8 @@
     <Component type="ScriptSlider" id="ScriptSlider12" x="71" y="90" width="60"
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="ShapeMod1"
-               showValuePopup="Left" bgColour="2496627791" itemColour="1714621452"/>
+               showValuePopup="Left" bgColour="2496627791" itemColour="1714621452"
+               textColour="16777215"/>
     <Component type="ScriptComboBox" id="ScriptComboBox12" x="135" y="90" width="35"
                height="15" max="8" parentComponent="ModMatrix" items="ENV1&#10;ENV2&#10;ENV3&#10;LFO1&#10;LFO2&#10;LFO3&#10;Velocity&#10;Track"
                processorId="SMUT" parameterId="ShapeSrc2" bgColour="1562184962"
@@ -760,7 +761,8 @@
     <Component type="ScriptSlider" id="ScriptSlider13" x="71" y="70" width="60"
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="OscShapeMod"
-               showValuePopup="Left" bgColour="2496627791" itemColour="1714621452"/>
+               showValuePopup="Left" bgColour="2496627791" itemColour="1714621452"
+               textColour="16777215"/>
     <Component type="ScriptComboBox" id="ScriptComboBox13" x="135" y="70" width="35"
                height="15" max="8" parentComponent="ModMatrix" items="ENV1&#10;ENV2&#10;ENV3&#10;LFO1&#10;LFO2&#10;LFO3&#10;Velocity&#10;Track"
                processorId="SMUT" parameterId="OscShapeModSrc" bgColour="1562184962"
@@ -769,7 +771,7 @@
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="OscShapeFm"
                showValuePopup="Left" bgColour="1441781396" itemColour="1715876103"
-               dragDirection="Horizontal"/>
+               dragDirection="Horizontal" textColour="16777215"/>
     <Component type="ScriptComboBox" id="ScriptComboBox14" x="239" y="70" width="35"
                height="15" max="6" parentComponent="ModMatrix" items="Osc 1&#10;Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
                processorId="SMUT" parameterId="OscShapeFmSrc" bgColour="1562184962"
@@ -781,11 +783,12 @@
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="FilterCutMod2"
                showValuePopup="Left" dragDirection="Horizontal" bgColour="2496627791"
-               itemColour="1714621452"/>
+               itemColour="1714621452" textColour="16777215"/>
     <Component type="ScriptSlider" id="ScriptSlider16" x="458" y="89" width="60"
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="FilterCutFm2"
-               dragDirection="Horizontal" bgColour="1441781396" itemColour="1715876103"/>
+               dragDirection="Horizontal" bgColour="1441781396" itemColour="1715876103"
+               textColour="16777215"/>
     <Component type="ScriptComboBox" id="ScriptComboBox15" x="523" y="89" width="35"
                height="15" max="6" parentComponent="ModMatrix" items="Osc 1&#10;Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
                processorId="SMUT" parameterId="FilterFmdSrc" bgColour="1562184962"
@@ -796,7 +799,8 @@
     <Component type="ScriptSlider" id="ScriptSlider21" x="71" y="109" width="60"
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="Osc1InputMod"
-               showValuePopup="Left" bgColour="2496627791" itemColour="1714621452"/>
+               showValuePopup="Left" bgColour="2496627791" itemColour="1714621452"
+               textColour="16777215"/>
     <Component type="ScriptComboBox" id="ScriptComboBox20" x="135" y="109" width="35"
                height="15" max="8" parentComponent="ModMatrix" items="ENV1&#10;ENV2&#10;ENV3&#10;LFO1&#10;LFO2&#10;LFO3&#10;Velocity&#10;Track"
                processorId="SMUT" parameterId="Osc1InputSrc" bgColour="1562184962"
@@ -805,7 +809,7 @@
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="Osc1FM"
                showValuePopup="Left" bgColour="1441781396" itemColour="1715876103"
-               dragDirection="Horizontal"/>
+               dragDirection="Horizontal" textColour="16777215"/>
     <Component type="ScriptComboBox" id="ScriptComboBox21" x="239" y="109" width="35"
                height="15" max="6" parentComponent="ModMatrix" items="Osc 1&#10;Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
                processorId="SMUT" parameterId="OscFmSrc" bgColour="1562184962"
@@ -817,11 +821,12 @@
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="VcaGainMod2"
                showValuePopup="Left" dragDirection="Horizontal" bgColour="2496627791"
-               itemColour="1714621452"/>
+               itemColour="1714621452" textColour="16777215"/>
     <Component type="ScriptSlider" id="ScriptSlider24" x="458" y="128" width="60"
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="VcaGainFm2"
-               dragDirection="Horizontal" bgColour="1441781396" itemColour="1715876103"/>
+               dragDirection="Horizontal" bgColour="1441781396" itemColour="1715876103"
+               textColour="16777215"/>
     <Component type="ScriptComboBox" id="ScriptComboBox22" x="523" y="128" width="35"
                height="15" max="6" parentComponent="ModMatrix" items="Osc 1&#10;Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
                processorId="SMUT" parameterId="VcaFmSrc2" bgColour="1562184962"
@@ -842,7 +847,7 @@
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="Osc2InputGainFm"
                showValuePopup="Left" bgColour="1441781396" itemColour="1715876103"
-               dragDirection="Horizontal"/>
+               dragDirection="Horizontal" textColour="16777215"/>
     <Component type="ScriptComboBox" id="ScriptComboBox24" x="135" y="128" width="35"
                height="15" max="8" parentComponent="ModMatrix" items="ENV1&#10;ENV2&#10;ENV3&#10;LFO1&#10;LFO2&#10;LFO3&#10;Velocity&#10;Track"
                processorId="SMUT" parameterId="Osc2InputGainModSrc" bgColour="1562184962"
@@ -850,7 +855,8 @@
     <Component type="ScriptSlider" id="ScriptSlider26" x="71" y="128" width="60"
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="Osc2InputGainMod"
-               showValuePopup="Left" bgColour="2496627791" itemColour="1714621452"/>
+               showValuePopup="Left" bgColour="2496627791" itemColour="1714621452"
+               textColour="16777215"/>
     <Component type="ScriptLabel" id="ScriptLabel55" x="10" y="128" width="59"
                height="15" parentComponent="ModMatrix" text="OSC2 FM" fontName="mon"
                editable="0" textColour="4280620804" alignment="left"/>
@@ -864,7 +870,7 @@
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="File2Mod"
                showValuePopup="Left" dragDirection="Horizontal" bgColour="2496627791"
-               itemColour="1714621452"/>
+               itemColour="1714621452" textColour="16777215"/>
     <Component type="ScriptComboBox" id="ScriptComboBox18" x="419" y="51" width="35"
                height="15" max="8" parentComponent="ModMatrix" items="ENV1&#10;ENV2&#10;ENV3&#10;LFO1&#10;LFO2&#10;LFO3&#10;Velocity&#10;Track"
                processorId="SMUT" parameterId="File2ModSrc" bgColour="1562184962"
@@ -872,7 +878,8 @@
     <Component type="ScriptSlider" id="ScriptSlider18" x="458" y="51" width="60"
                height="15" parentComponent="ModMatrix" style="Horizontal" min="-1.0"
                middlePosition="0.0" processorId="SMUT" parameterId="File2Fm"
-               dragDirection="Horizontal" bgColour="1441781396" itemColour="1715876103"/>
+               dragDirection="Horizontal" bgColour="1441781396" itemColour="1715876103"
+               textColour="16777215"/>
     <Component type="ScriptComboBox" id="ScriptComboBox19" x="523" y="51" width="35"
                height="15" max="6" parentComponent="ModMatrix" items="Osc 1&#10;Osc 2&#10;File 1&#10;File 2&#10;Filter 1&#10;Filter 2"
                processorId="SMUT" parameterId="File2FmSrc" bgColour="1562184962"
@@ -931,10 +938,10 @@
     <Component type="ScriptLabel" id="ScriptLabel68" x="16" y="125" width="20"
                height="20" parentComponent="Fin" text="A" fontName="mon" editable="0"
                textColour="4280620804" alignment="left"/>
-    <Component type="ScriptSlider" id="Vol" x="151" y="81" middlePosition="0.5"
-               suffix=" dB" processorId="SMUT" parameterId="Vol" parentComponent="Fin"
-               width="40" height="40" defaultValue="0.5" textColour="16777215"
-               bgColour="16777215"/>
+    <Component type="ScriptSlider" id="Vol" x="151" y="81" middlePosition="-18.0"
+               suffix=" dB" processorId="Simple Gain" parameterId="Gain" parentComponent="Fin"
+               width="40" height="40" textColour="16777215" bgColour="16777215"
+               mode="Decibel" min="-100.0" max="0.0" stepSize="0.1000000014901161"/>
     <Component type="ScriptPanel" id="Panel1" x="-584" y="-422" width="220"
                height="170" itemColour="4293583307" itemColour2="4293583307"
                textColour="4278190080" parentComponent="Fin"/>
