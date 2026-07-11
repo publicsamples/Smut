@@ -10,6 +10,19 @@ const var ShowPResetManager = Content.getComponent("ShowPResetManager");
 ShowPResetManager.setValue(1);
 ShowPResetManager.changed();
 
+const slot1 = File1.getAudioFile(0);
+const slot2 = File1.getAudioFile(1);
+
+const var defaultRef1 = "{PROJECT_FOLDER}AD-Draw1.wav";
+const var defaultRef = "{PROJECT_FOLDER}SINMIN.wav";
+
+// Delay ensures processors exist after compile
+Content.callAfterDelay(10, function()
+{
+    slot1.loadFile(defaultRef);
+	slot2.loadFile(defaultRef1);
+});
+
 const var SMUT = Synth.getChildSynth("SMUT");
 
 inline function onVoicesControl(component, value)

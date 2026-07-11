@@ -10,22 +10,13 @@ const var FilePath2 = Content.getComponent("FilePath2");
 
 const var File1 = Synth.getAudioSampleProcessor("SMUT");
 
-const slot1 = File1.getAudioFile(0);
-const slot2 = File1.getAudioFile(1);
+
 
 reg lastPath1 = "";
 reg lastPath2 = "";
 reg isInternalSampleUpdate = false;
 
-const var defaultRef1 = "{PROJECT_FOLDER}AD-Draw1.wav";
-const var defaultRef = "{PROJECT_FOLDER}SINMIN.wav";
 
-// Delay ensures processors exist after compile
-Content.callAfterDelay(10, function()
-{
-    slot1.loadFile(defaultRef);
-	slot2.loadFile(defaultRef1);
-});
 
 inline function finishSampleLoad(slot, file, fileNameLabel, filePathLabel)
 {
@@ -135,7 +126,7 @@ inline function onFilePath2Control(component, value)
 
 
 {
-	slot2.loadFile(FilePath3.getValue());
+	slot2.loadFile(FilePath2.getValue());
 };
 
 Content.getComponent("FilePath2").setControlCallback(onFilePath2Control);
