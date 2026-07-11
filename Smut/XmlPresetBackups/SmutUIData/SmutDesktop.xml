@@ -1023,7 +1023,7 @@
       <Component type="ScriptLabel" id="ScriptLabel116" x="42" y="55" width="20"
                  height="20" parentComponent="EnvControls1" text="H" fontName="mon"
                  editable="0" textColour="4280620804" alignment="left"/>
-      <Component type="ScriptLabel" id="ScriptLabel117" x="15" y="55" width="20"
+      <Component type="ScriptLabel" id="ScriptLabel117a" x="15" y="55" width="20"
                  height="20" parentComponent="EnvControls1" text="A" fontName="mon"
                  editable="0" textColour="4280620804" alignment="left"/>
       <Component type="ScriptSlider" id="ModR1" x="123" y="2" stepSize="1.0" style="Vertical"
