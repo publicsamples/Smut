@@ -3588,11 +3588,14 @@ using split26_t = container::split<parameter::empty,
                                    chain160_t<NV>>;
 
 template <int NV>
-using fix8_block_t = container::chain<parameter::empty, 
-                                      wrap::fix<2, split8_t<NV>>, 
-                                      split_t<NV>, 
-                                      math::clear<NV>, 
-                                      split26_t<NV>>;
+using fix8_block_t_ = container::chain<parameter::empty, 
+                                       wrap::fix<2, split8_t<NV>>, 
+                                       split_t<NV>, 
+                                       math::clear<NV>, 
+                                       split26_t<NV>>;
+
+template <int NV>
+using fix8_block_t = wrap::fix_block<8, fix8_block_t_<NV>>;
 
 namespace Sm2_t_parameters
 {
@@ -4641,8 +4644,8 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x656C, 0x6F50, 0x5173, 0x6175, 0x746E, 0x0031, 0x0000, 0x8000, 
             0x003F, 0x2000, 0x0041, 0xC000, 0x0040, 0x8000, 0x003F, 0x8000, 
             0x5C3F, 0x0D00, 0x0000, 0x4600, 0x6C69, 0x4965, 0x706E, 0x7475, 
-            0x6147, 0x6E69, 0x0031, 0x0000, 0x0000, 0x0000, 0x8000, 0x8F3F, 
-            0xF5C2, 0x003D, 0x8000, 0x003F, 0x0000, 0x5C00, 0x0E00, 0x0000, 
+            0x6147, 0x6E69, 0x0031, 0x0000, 0x0000, 0x0000, 0x8000, 0xB83F, 
+            0x051E, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 0x0E00, 0x0000, 
             0x4600, 0x6C69, 0x4965, 0x706E, 0x7475, 0x6147, 0x6E69, 0x6F4D, 
             0x0064, 0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 
             0x8000, 0x003F, 0x0000, 0x5C00, 0x0F00, 0x0000, 0x4600, 0x6C69, 
@@ -4727,8 +4730,8 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x005C, 0x0030, 0x0000, 0x6356, 0x4661, 0x536D, 0x6372, 0x0032, 
             0x0000, 0x8000, 0x003F, 0xC000, 0x0040, 0x8000, 0x003F, 0x8000, 
             0x003F, 0x8000, 0x5C3F, 0x3100, 0x0000, 0x4F00, 0x6373, 0x6853, 
-            0x7061, 0x0065, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 
-            0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x3200, 0x0000, 0x4F00, 
+            0x7061, 0x0065, 0x0000, 0x0000, 0x0000, 0x8000, 0xAE3F, 0xE147, 
+            0x003D, 0x8000, 0x003F, 0x0000, 0x5C00, 0x3200, 0x0000, 0x4F00, 
             0x6373, 0x6853, 0x7061, 0x4D65, 0x646F, 0x0000, 0x0000, 0xBF80, 
             0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 
             0x005C, 0x0033, 0x0000, 0x734F, 0x5363, 0x6168, 0x6570, 0x6D46, 
@@ -4786,7 +4789,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x6269, 0x0000, 0x0000, 0x3F80, 0x0000, 0x4200, 0x0000, 0x4120, 
             0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0049, 0x0000, 0x6946, 
             0x656C, 0x6E49, 0x664F, 0x7366, 0x7465, 0x0000, 0x0000, 0x0000, 
-            0x0000, 0x3F80, 0x51EC, 0x3EB8, 0x0000, 0x3F80, 0x0000, 0x0000, 
+            0x0000, 0x3F80, 0x3D71, 0x3E8A, 0x0000, 0x3F80, 0x0000, 0x0000, 
             0x005C, 0x004A, 0x0000, 0x736F, 0x5363, 0x6168, 0x6570, 0x6F4D, 
             0x6564, 0x0031, 0x0000, 0x8000, 0x003F, 0x4000, 0x0041, 0x8000, 
             0x0040, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x4B00, 0x0000, 0x6F00, 
@@ -7636,7 +7639,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		; // pma3::Add is automated
 		
 		;                                        // smoothed_parameter::Value is automated
-		smoothed_parameter.setParameterT(1, 0.); // control::smoothed_parameter::SmoothingTime
+		smoothed_parameter.setParameterT(1, 1);  // control::smoothed_parameter::SmoothingTime
 		smoothed_parameter.setParameterT(2, 1.); // control::smoothed_parameter::Enabled
 		
 		; // branch1::Index is automated
@@ -8113,7 +8116,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->setParameterT(10, 0.);
 		this->setParameterT(11, 0.44);
 		this->setParameterT(12, 6.);
-		this->setParameterT(13, 0.12);
+		this->setParameterT(13, 0.52);
 		this->setParameterT(14, 0.);
 		this->setParameterT(15, 4.);
 		this->setParameterT(16, 0.);
@@ -8149,7 +8152,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->setParameterT(46, 0.);
 		this->setParameterT(47, 0.);
 		this->setParameterT(48, 1.);
-		this->setParameterT(49, 0.);
+		this->setParameterT(49, 0.11);
 		this->setParameterT(50, 0.);
 		this->setParameterT(51, 0.);
 		this->setParameterT(52, 4.);
@@ -8173,7 +8176,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->setParameterT(70, 6.1);
 		this->setParameterT(71, 1.);
 		this->setParameterT(72, 10.);
-		this->setParameterT(73, 0.36);
+		this->setParameterT(73, 0.27);
 		this->setParameterT(74, 4.);
 		this->setParameterT(75, 10.);
 		this->setParameterT(76, 0.02);

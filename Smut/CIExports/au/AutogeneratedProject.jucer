@@ -26,60 +26,60 @@
       <FILE id="AOT2K8" name="Plugin.cpp" compile="1" resource="0" file="Source/Plugin.cpp"/>
       <FILE id="esGQuC" name="PresetData.cpp" compile="1" resource="0" file="Source/PresetData.cpp"/>
       <FILE id="q8WZ82" name="PresetData.h" compile="0" resource="0" file="Source/PresetData.h"/>
-      <GROUP id="G54Oow" name="nodes">
-        <FILE id="fGnosm" name="chop_networkdata.h" compile="0" resource="0"
+      <GROUP id="joa9mW" name="nodes">
+        <FILE id="kUAP7j" name="chop_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/chop_networkdata.h"/>
-        <FILE id="jyH90f" name="combValueTest_networkdata.h" compile="0" resource="0"
+        <FILE id="P3F5Bg" name="combValueTest_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/combValueTest_networkdata.h"/>
-        <FILE id="OPzEM3" name="empty_networkdata.h" compile="0" resource="0"
+        <FILE id="lfVRoA" name="empty_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/empty_networkdata.h"/>
-        <FILE id="sWKkI3" name="Env.h" compile="0" resource="0" file="../AdditionalSourceCode/nodes/Env.h"/>
-        <FILE id="A7EigY" name="factory.cpp" compile="1" resource="0" file="../AdditionalSourceCode/nodes/factory.cpp"/>
-        <FILE id="lQrgDq" name="FoldTests_networkdata.h" compile="0" resource="0"
+        <FILE id="m9pULZ" name="Env.h" compile="0" resource="0" file="../AdditionalSourceCode/nodes/Env.h"/>
+        <FILE id="kyuKr0" name="factory.cpp" compile="1" resource="0" file="../AdditionalSourceCode/nodes/factory.cpp"/>
+        <FILE id="EPyn8X" name="FoldTests_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/FoldTests_networkdata.h"/>
-        <FILE id="lQndEu" name="ftest_networkdata.h" compile="0" resource="0"
+        <FILE id="HKkDhL" name="ftest_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/ftest_networkdata.h"/>
-        <FILE id="It6gOM" name="GainMod_networkdata.h" compile="0" resource="0"
+        <FILE id="nHAjvA" name="GainMod_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/GainMod_networkdata.h"/>
-        <FILE id="ueFYh4" name="includes.h" compile="0" resource="0" file="../AdditionalSourceCode/nodes/includes.h"/>
-        <FILE id="JhC3Hi" name="lfo2_networkdata.h" compile="0" resource="0"
+        <FILE id="z2VqMZ" name="includes.h" compile="0" resource="0" file="../AdditionalSourceCode/nodes/includes.h"/>
+        <FILE id="ozbRrE" name="lfo2_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/lfo2_networkdata.h"/>
-        <FILE id="pvkqw5" name="lfo3_networkdata.h" compile="0" resource="0"
+        <FILE id="cYw8z3" name="lfo3_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/lfo3_networkdata.h"/>
-        <FILE id="OrMlcW" name="lfo4_networkdata.h" compile="0" resource="0"
+        <FILE id="D1ExcS" name="lfo4_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/lfo4_networkdata.h"/>
-        <FILE id="pJnjPX" name="LfoNew.h" compile="0" resource="0" file="../AdditionalSourceCode/nodes/LfoNew.h"/>
-        <FILE id="o7wmnD" name="Lfos_networkdata.h" compile="0" resource="0"
+        <FILE id="DSxfgu" name="LfoNew.h" compile="0" resource="0" file="../AdditionalSourceCode/nodes/LfoNew.h"/>
+        <FILE id="zd5GR7" name="Lfos_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/Lfos_networkdata.h"/>
-        <FILE id="LZQteJ" name="lfo_networkdata.h" compile="0" resource="0"
+        <FILE id="RCCTig" name="lfo_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/lfo_networkdata.h"/>
-        <FILE id="F3hJcK" name="ModConnect_networkdata.h" compile="0" resource="0"
+        <FILE id="IzLq25" name="ModConnect_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/ModConnect_networkdata.h"/>
-        <FILE id="InlsZ2" name="mp_networkdata.h" compile="0" resource="0"
+        <FILE id="eie3ws" name="mp_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/mp_networkdata.h"/>
-        <FILE id="qE8nhh" name="PitchTempo_networkdata.h" compile="0" resource="0"
+        <FILE id="G47Cty" name="PitchTempo_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/PitchTempo_networkdata.h"/>
-        <FILE id="g9QLXw" name="pitch_networkdata.h" compile="0" resource="0"
+        <FILE id="BJQGsp" name="pitch_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/pitch_networkdata.h"/>
-        <FILE id="rPkoo0" name="ptichCorrect_networkdata.h" compile="0" resource="0"
+        <FILE id="AGkshb" name="ptichCorrect_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/ptichCorrect_networkdata.h"/>
-        <FILE id="UKSpQ2" name="Revern_networkdata.h" compile="0" resource="0"
+        <FILE id="julzpY" name="Revern_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/Revern_networkdata.h"/>
-        <FILE id="IzRYs3" name="RNBO.cpp" compile="1" resource="0" file="../AdditionalSourceCode/nodes/RNBO.cpp"/>
-        <FILE id="xYXV3p" name="rp_networkdata.h" compile="0" resource="0"
+        <FILE id="u6kYHM" name="RNBO.cpp" compile="1" resource="0" file="../AdditionalSourceCode/nodes/RNBO.cpp"/>
+        <FILE id="FvWtL7" name="rp_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/rp_networkdata.h"/>
-        <FILE id="HfS7Ju" name="sawAM_networkdata.h" compile="0" resource="0"
+        <FILE id="pqNiuf" name="sawAM_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/sawAM_networkdata.h"/>
-        <FILE id="DqQljT" name="ShaperTests_networkdata.h" compile="0" resource="0"
+        <FILE id="KxcsTO" name="ShaperTests_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/ShaperTests_networkdata.h"/>
-        <FILE id="XMVA6r" name="shaper_networkdata.h" compile="0" resource="0"
+        <FILE id="J2hioq" name="shaper_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/shaper_networkdata.h"/>
-        <FILE id="oGJ1na" name="Sm2.h" compile="0" resource="0" file="../AdditionalSourceCode/nodes/Sm2.h"/>
-        <FILE id="o1nT3t" name="SuperDetune_networkdata.h" compile="0" resource="0"
+        <FILE id="zshdd8" name="Sm2.h" compile="0" resource="0" file="../AdditionalSourceCode/nodes/Sm2.h"/>
+        <FILE id="LRsWe5" name="SuperDetune_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/SuperDetune_networkdata.h"/>
-        <FILE id="O3gwbc" name="sw_networkdata.h" compile="0" resource="0"
+        <FILE id="E6gCUJ" name="sw_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/sw_networkdata.h"/>
-        <FILE id="BT3lbh" name="VcaAdsr_networkdata.h" compile="0" resource="0"
+        <FILE id="Nc49Rq" name="VcaAdsr_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/VcaAdsr_networkdata.h"/>
       </GROUP>
     </GROUP>

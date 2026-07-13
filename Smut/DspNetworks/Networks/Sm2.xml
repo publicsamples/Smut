@@ -4,7 +4,7 @@
   <Node FactoryPath="container.chain" ID="Sm2" Bypassed="0" Name="Sm2"
         ShowParameters="1">
     <Nodes>
-      <Node ID="fix8_block" FactoryPath="container.fix8_block" Bypassed="1"
+      <Node ID="fix8_block" FactoryPath="container.fix8_block" Bypassed="0"
             Name="fix8_block">
         <Nodes>
           <Node ID="split8" FactoryPath="container.split" Bypassed="0" Name="split8"
@@ -4304,7 +4304,7 @@
                                     <Parameters>
                                       <Parameter MinValue="0.0" MaxValue="1.0" ID="Value" DefaultValue="0.0" Automated="1"/>
                                       <Parameter MinValue="0.1000000014901161" MaxValue="1000.0" StepSize="0.1000000014901161"
-                                                 ID="SmoothingTime" Value="0.0" DefaultValue="100.0"/>
+                                                 ID="SmoothingTime" Value="1.000000014901161" DefaultValue="100.0"/>
                                       <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Enabled" Value="1.0"/>
                                     </Parameters>
                                   </Node>
@@ -6658,7 +6658,7 @@
           <Connection NodeId="branch1" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="FileInputGain1" Value="0.119999997317791"
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="FileInputGain1" Value="0.5199999809265137"
                  ExternalModulation="Disabled" DefaultValue="0.0">
         <Connections>
           <Connection NodeId="global_mod6" ParameterId="Value"/>
@@ -6888,7 +6888,8 @@
           <Connection NodeId="branch25" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="OscShape" Value="0.0" ExternalModulation="Disabled">
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="OscShape" Value="0.1099999994039536"
+                 ExternalModulation="Disabled" DefaultValue="0.0">
         <Connections>
           <Connection NodeId="global_mod4" ParameterId="Value"/>
         </Connections>
@@ -7022,7 +7023,7 @@
           <Connection NodeId="tempo_sync4" ParameterId="Multiplier"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="FileInOffset" Value="0.3600000143051147"
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="FileInOffset" Value="0.2700000107288361"
                  DefaultValue="0.0">
         <Connections>
           <Connection NodeId="gain21" ParameterId="Gain"/>
