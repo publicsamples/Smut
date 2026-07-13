@@ -44,6 +44,36 @@ jobs:
             "VST3_ROOT=$fallbackRoot" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
           }
 
+      - name: Resolve Visual Studio export directory
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $candidates = @(
+            "VisualStudio2026",
+            "VisualStudio2022"
+          )
+
+          $vsDir = $null
+          foreach ($candidate in $candidates) {
+            $probe = Join-Path $env:VST3_ROOT "Builds\$candidate\Smut_VST3.vcxproj"
+            if (Test-Path $probe) {
+              $vsDir = $candidate
+              break
+            }
+          }
+
+          if (-not $vsDir) {
+            $buildsRoot = Join-Path $env:VST3_ROOT "Builds"
+            if (Test-Path $buildsRoot) {
+              Write-Host "Available build directories under $buildsRoot:"
+              Get-ChildItem -Path $buildsRoot -Directory | Select-Object Name
+            }
+            throw "Could not find a supported Visual Studio export directory under $buildsRoot"
+          }
+
+          "VS_BUILD_DIR=$vsDir" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+
       - name: Source fingerprint (Windows)
         shell: pwsh
         run: |
@@ -91,8 +121,8 @@ jobs:
           }
           if (-not $juceVst3Sdk) { throw "Missing VST3 SDK in expected paths." }
 
-          $vstProj = Join-Path $env:VST3_ROOT "Builds\VisualStudio2022\Smut_VST3.vcxproj"
-          $sharedProj = Join-Path $env:VST3_ROOT "Builds\VisualStudio2022\Smut_SharedCode.vcxproj"
+          $vstProj = Join-Path $env:VST3_ROOT "Builds\$env:VS_BUILD_DIR\Smut_VST3.vcxproj"
+          $sharedProj = Join-Path $env:VST3_ROOT "Builds\$env:VS_BUILD_DIR\Smut_SharedCode.vcxproj"
 
           foreach ($p in @($vstProj, $sharedProj)) {
             if (!(Test-Path $p)) { continue }
@@ -189,7 +219,9 @@ jobs:
           $ErrorActionPreference = "Stop"
 
           function Invoke-MSBuild([string]$ProjectPath, [string]$Label) {
-            if (-not (Test-Path $ProjectPath)) { return }
+            if (-not (Test-Path $ProjectPath)) {
+              throw "Missing project for ${Label}: $ProjectPath"
+            }
             Write-Host "Building ${Label}: $ProjectPath"
             msbuild $ProjectPath /m /t:Build /p:Configuration=Release /p:Platform=x64 /p:PreferredToolArchitecture=x64
             if ($LASTEXITCODE -ne 0) {
@@ -197,8 +229,8 @@ jobs:
             }
           }
 
-          $shared = Join-Path $env:VST3_ROOT "Builds\VisualStudio2022\Smut_SharedCode.vcxproj"
-          $vst3 = Join-Path $env:VST3_ROOT "Builds\VisualStudio2022\Smut_VST3.vcxproj"
+          $shared = Join-Path $env:VST3_ROOT "Builds\$env:VS_BUILD_DIR\Smut_SharedCode.vcxproj"
+          $vst3 = Join-Path $env:VST3_ROOT "Builds\$env:VS_BUILD_DIR\Smut_VST3.vcxproj"
 
           Invoke-MSBuild $shared "Windows plugin shared code"
           Invoke-MSBuild $vst3 "Windows VST3"
