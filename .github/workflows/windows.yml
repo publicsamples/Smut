@@ -98,9 +98,15 @@ jobs:
             if (!(Test-Path $p)) { continue }
             $c = Get-Content -Raw -Path $p
             $c = $c.Replace('\Users\rick\Documents\GitHub\HISE\JUCE\modules\juce_audio_processors\format_types\VST3_SDK', $juceVst3Sdk)
+            $c = $c.Replace('\Users\rick\Documents\GitHub\CI_TEST\HISE\JUCE\modules\juce_audio_processors\format_types\VST3_SDK', $juceVst3Sdk)
             $c = $c.Replace('\Users\rick\Documents\GitHub\HISE\tools\SDK\VST3 SDK', $juceVst3Sdk)
+            $c = $c.Replace('\Users\rick\Documents\GitHub\CI_TEST\HISE\tools\SDK\VST3 SDK', $juceVst3Sdk)
             $c = $c.Replace('\Users\rick\Documents\GitHub\HISE', $hise)
+            $c = $c.Replace('\Users\rick\Documents\GitHub\CI_TEST\HISE', $hise)
             $c = $c.Replace('/Users/rick/Documents/GitHub/HISE', $hise)
+            $c = $c.Replace('/Users/rick/Documents/GitHub/CI_TEST/HISE', $hise)
+            $c = $c.Replace('..\..\..\..\..\CI_TEST\HISE', $hise)
+            $c = $c.Replace('../../../../../CI_TEST/HISE', $hise)
             $c = $c.Replace('%FFT_HEADER_PATH%;', '')
             $c = $c.Replace('%FFT_LINKER_FLAGS%', '')
             $c = $c.Replace('%WIN_STATIC_LIBS%', '')

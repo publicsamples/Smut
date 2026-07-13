@@ -31,4 +31,4 @@ String hise::FrontendHandler::getAppGroupId() { return ""; };
 String hise::FrontendHandler::getExpansionKey() { return ""; };
 String hise::FrontendHandler::getExpansionType() { return "Disabled"; };
 String hise::FrontendHandler::getHiseVersion() { return "4.1.0"; };
-String hise::FrontendHandler::getDefaultUserPreset() const { return "init"; };
+String hise::FrontendHandler::getDefaultUserPreset() const { return ""; };
