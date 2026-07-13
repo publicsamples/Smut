@@ -978,7 +978,8 @@
              textColour="4279702530" itemColour2="4293583307" itemColour="4293583307">
     <Component type="ScriptTable" id="EnvTable1" x="11" y="34" width="200" height="70"
                processorId="ENV1" parentComponent="Envelope1" bgColour="14654085"
-               itemColour="14865424" customColours="1" itemColour2="4279308561"/>
+               itemColour="14865424" customColours="1" itemColour2="4279308561"
+               visible="0"/>
     <Component type="ScriptComboBox" id="EnvMode1" x="10" y="120" max="3" width="60"
                height="30" items="Envelope&#10;Table&#10;Step" parentComponent="Envelope1"
                textColour="4281936900" bgColour="1427967234"/>
@@ -1015,7 +1016,7 @@
                visible="0"/>
     <Component type="ScriptPanel" id="EnvControls1" x="11" y="33" width="200"
                height="70" parentComponent="Envelope1" textColour="16777215"
-               itemColour2="0" itemColour="0" bgColour="16777215" visible="0">
+               itemColour2="0" itemColour="0" bgColour="16777215">
       <Component type="ScriptLabel" id="ScriptLabel113" x="123" y="55" width="20"
                  height="20" parentComponent="EnvControls1" text="R" fontName="mon"
                  editable="0" textColour="4280620804" alignment="left"/>
