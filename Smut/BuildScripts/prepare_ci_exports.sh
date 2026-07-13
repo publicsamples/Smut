@@ -35,6 +35,8 @@ Options:
 Notes:
   - HISE export_ci performs a build as part of export. This wrapper does not
     suppress compilation; it snapshots the generated files after each export.
+  - Before each export run, this script clears the live Binaries directory so
+    stale generated files don't leak into the snapshots.
   - The live Binaries folder is overwritten during the process because HISE only
     maintains one export tree at a time.
 EOF
@@ -276,6 +278,13 @@ clean_dsp_network_binaries() {
   mkdir -p "$dsp_binaries_dir"
 }
 
+clear_build_directory() {
+  echo "Clearing build directory: $BINARY_ROOT"
+
+  rm -rf "$BINARY_ROOT"
+  mkdir -p "$BINARY_ROOT"
+}
+
 copy_dsp_network_sources() {
   local dest_root="$1"
 
@@ -446,6 +455,7 @@ run_export() {
   "$HISE_BIN" set_project_folder "-p:$PROJECT_DIR"
   "$HISE_BIN" set_hise_folder "-p:$HISE_SOURCE_DIR"
 
+  clear_build_directory
   clean_dsp_network_binaries
 
   echo "Running HISE export for $mode"
