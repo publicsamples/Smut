@@ -7,4 +7,4 @@ plugin_target=instrument
 vst3_format=VST3
 au_format=AU
 hise_source_dir=/Users/rick/Documents/GitHub/HISE
-timestamp=2026-07-13T15:29:30Z
+timestamp=2026-07-13T19:57:41Z

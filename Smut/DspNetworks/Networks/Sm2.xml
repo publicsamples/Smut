@@ -4,7 +4,7 @@
   <Node FactoryPath="container.chain" ID="Sm2" Bypassed="0" Name="Sm2"
         ShowParameters="1">
     <Nodes>
-      <Node ID="fix8_block" FactoryPath="container.fix8_block" Bypassed="0"
+      <Node ID="fix8_block" FactoryPath="container.fix8_block" Bypassed="1"
             Name="fix8_block">
         <Nodes>
           <Node ID="split8" FactoryPath="container.split" Bypassed="0" Name="split8"
@@ -4027,7 +4027,7 @@
                                  ID="UnsyncedTime" Value="200.0"/>
                     </Parameters>
                   </Node>
-                  <Node ID="frame2_block1" FactoryPath="container.frame2_block" Bypassed="0"
+                  <Node ID="frame2_block1" FactoryPath="container.frame2_block" Bypassed="1"
                         Name="frame2_block1">
                     <Nodes>
                       <Node ID="chain7" FactoryPath="container.chain" Bypassed="0" Name="chain7">
@@ -4384,7 +4384,7 @@
                                         <ComplexData>
                                           <AudioFiles>
                                             <AudioFile Index="0" EmbeddedData="{PROJECT_FOLDER}Single Cycle/Synths2/Synth22.WAV"
-                                                       MinValue="0" MaxValue="256"/>
+                                                       MinValue="0" MaxValue="262144"/>
                                           </AudioFiles>
                                         </ComplexData>
                                         <Parameters>
@@ -4643,7 +4643,7 @@
                                  SkewFactor="5.422270774841309" ID="ResetValue" Value="0.0"/>
                     </Parameters>
                   </Node>
-                  <Node ID="frame2_block2" FactoryPath="container.frame2_block" Bypassed="0"
+                  <Node ID="frame2_block2" FactoryPath="container.frame2_block" Bypassed="1"
                         Name="frame2_block1">
                     <Nodes>
                       <Node ID="chain33" FactoryPath="container.chain" Bypassed="0" Name="chain7">
@@ -4938,7 +4938,7 @@
                                     </Parameters>
                                   </Node>
                                   <Node ID="branch8" FactoryPath="container.branch" Bypassed="0" Name="branch1"
-                                        ShowParameters="1" Folded="1">
+                                        ShowParameters="1">
                                     <Nodes>
                                       <Node ID="add20" FactoryPath="math.add" Bypassed="0" Name="add1">
                                         <Parameters>
@@ -5013,7 +5013,7 @@
                                         <ComplexData>
                                           <AudioFiles>
                                             <AudioFile Index="1" EmbeddedData="{PROJECT_FOLDER}Single Cycle/Synths2/Synth22.WAV"
-                                                       MinValue="0" MaxValue="256"/>
+                                                       MinValue="0" MaxValue="437"/>
                                           </AudioFiles>
                                         </ComplexData>
                                         <Parameters>
@@ -6576,64 +6576,6 @@
         </Nodes>
         <Parameters/>
       </Node>
-      <Node ID="ahdsr1" FactoryPath="envelope.ahdsr" Bypassed="0" Name="ahdsr1">
-        <Properties>
-          <Property ID="NumParameters" Value="2"/>
-        </Properties>
-        <SwitchTargets>
-          <SwitchTarget>
-            <Connections/>
-          </SwitchTarget>
-          <SwitchTarget>
-            <Connections>
-              <Connection NodeId="voice_manager" ParameterId="Kill Voice"/>
-            </Connections>
-          </SwitchTarget>
-        </SwitchTargets>
-        <ComplexData>
-          <DisplayBuffers>
-            <DisplayBuffer Index="-1" EmbeddedData=""/>
-          </DisplayBuffers>
-        </ComplexData>
-        <Parameters>
-          <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
-                     SkewFactor="0.1976716816425323" ID="Attack" DefaultValue="10.00000014901161"
-                     Automated="1"/>
-          <Parameter MinValue="0.0" MaxValue="1.0" ID="AttackLevel" Value="1.0"/>
-          <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
-                     SkewFactor="0.1976716816425323" ID="Hold" DefaultValue="20.00000029802322"
-                     Automated="1"/>
-          <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
-                     SkewFactor="0.1976716816425323" ID="Decay" DefaultValue="300.0000044703484"
-                     Automated="1"/>
-          <Parameter MinValue="0.0" MaxValue="1.0" ID="Sustain" DefaultValue="0.5"
-                     Automated="1"/>
-          <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
-                     SkewFactor="0.1976716816425323" ID="Release" DefaultValue="20.00000029802322"
-                     Automated="1"/>
-          <Parameter MinValue="0.0" MaxValue="1.0" ID="AttackCurve" Value="0.5"/>
-          <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Retrigger" Value="0.0"/>
-          <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Gate" Value="0.0"/>
-        </Parameters>
-      </Node>
-      <Node ID="voice_manager" FactoryPath="envelope.voice_manager" Bypassed="0"
-            Name="voice_manager">
-        <Parameters>
-          <Parameter MinValue="0.0" MaxValue="1.0" StepSize="1.0" ID="Kill Voice"
-                     DefaultValue="1.0" Automated="1"/>
-        </Parameters>
-      </Node>
-      <Node ID="gain" FactoryPath="core.gain" Bypassed="0" Name="gain">
-        <Parameters>
-          <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
-                     SkewFactor="5.422270774841309" ID="Gain" DefaultValue="0.0" Automated="1"/>
-          <Parameter MinValue="0.0" MaxValue="1000.0" StepSize="0.1000000014901161"
-                     SkewFactor="0.3010300099849701" ID="Smoothing" Value="20.0"/>
-          <Parameter MinValue="-100.0" MaxValue="0.0" StepSize="0.1000000014901161"
-                     SkewFactor="5.422270774841309" ID="ResetValue" Value="-10.79999867081644"
-                     DefaultValue="0.0"/>
-        </Parameters>
-      </Node>
     </Nodes>
     <Parameters>
       <Parameter MinValue="-24.0" MaxValue="24.0" ID="OscSt1" Value="0.0" ExternalModulation="Disabled"
@@ -6716,14 +6658,14 @@
           <Connection NodeId="branch1" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="FileInputGain1" Value="0.2000000029802322"
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="FileInputGain1" Value="0.119999997317791"
                  ExternalModulation="Disabled" DefaultValue="0.0">
         <Connections>
           <Connection NodeId="global_mod6" ParameterId="Value"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="-1.0" MaxValue="1.0" ID="FileInputGainMod" Value="0.6499999761581421"
-                 TextToValueConverter="" DefaultValue="0.0">
+      <Parameter MinValue="-1.0" MaxValue="1.0" ID="FileInputGainMod" Value="0.0"
+                 TextToValueConverter="">
         <Connections>
           <Connection NodeId="global_mod6" ParameterId="Intensity"/>
         </Connections>
@@ -6741,8 +6683,8 @@
           <Connection NodeId="pma_unscaled8" ParameterId="Multiply"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="1.0" MaxValue="9.0" ID="FilterMode1" Value="1.0" StepSize="1.0"
-                 TextToValueConverter="" ExternalModulation="Disabled">
+      <Parameter MinValue="1.0" MaxValue="9.0" ID="FilterMode1" Value="4.0" StepSize="1.0"
+                 TextToValueConverter="" ExternalModulation="Disabled" DefaultValue="1.0">
         <Connections>
           <Connection NodeId="branch6" ParameterId="Index"/>
         </Connections>
@@ -6778,7 +6720,7 @@
           <Connection NodeId="branch21" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="VcaGain1" Value="0.0">
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="VcaGain1" Value="1.0" DefaultValue="0.0">
         <Connections>
           <Connection NodeId="global_mod10" ParameterId="Value"/>
         </Connections>
@@ -6800,7 +6742,7 @@
           <Connection NodeId="global_mod10" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="Res1" Value="0.0" SkewFactor="0.2647178173065186"
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="Res1" Value="1.0" SkewFactor="0.2647178173065186"
                  TextToValueConverter="" ExternalModulation="Disabled" DefaultValue="0.300000011920929">
         <Connections>
           <Connection NodeId="one_pole2" ParameterId="Q"/>
@@ -6827,8 +6769,8 @@
           <Connection NodeId="branch22" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="-24.0" MaxValue="24.0" ID="OscSt2" Value="5.0" ExternalModulation="Disabled"
-                 StepSize="1.0" TextToValueConverter="" DefaultValue="0.0">
+      <Parameter MinValue="-24.0" MaxValue="24.0" ID="OscSt2" Value="0.0" ExternalModulation="Disabled"
+                 StepSize="1.0" TextToValueConverter="">
         <Connections>
           <Connection NodeId="minmax2" ParameterId="Value"/>
         </Connections>
@@ -6839,8 +6781,7 @@
           <Connection NodeId="add35" ParameterId="Value"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="-1.0" MaxValue="1.0" ID="Oscfm2" Value="-0.07000000029802322"
-                 TextToValueConverter="" DefaultValue="0.0">
+      <Parameter MinValue="-1.0" MaxValue="1.0" ID="Oscfm2" Value="0.0" TextToValueConverter="">
         <Connections>
           <Connection NodeId="pma_unscaled15" ParameterId="Multiply"/>
           <Connection NodeId="pma1" ParameterId="Multiply"/>
@@ -6859,13 +6800,14 @@
           <Connection NodeId="branch11" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="1.0" MaxValue="9.0" ID="FilterMode2" Value="1.0" StepSize="1.0"
-                 TextToValueConverter="" ExternalModulation="Disabled">
+      <Parameter MinValue="1.0" MaxValue="9.0" ID="FilterMode2" Value="3.0" StepSize="1.0"
+                 TextToValueConverter="" ExternalModulation="Disabled" DefaultValue="1.0">
         <Connections>
           <Connection NodeId="branch13" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="FilterCut2" Value="1.0" DefaultValue="0.0">
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="FilterCut2" Value="0.699999988079071"
+                 DefaultValue="0.0">
         <Connections>
           <Connection NodeId="global_mod11" ParameterId="Value"/>
         </Connections>
@@ -6894,8 +6836,7 @@
           <Connection NodeId="branch23" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="VcaGain2" Value="0.6410495923913043"
-                 DefaultValue="0.0">
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="VcaGain2" Value="1.0" DefaultValue="0.0">
         <Connections>
           <Connection NodeId="global_mod12" ParameterId="Value"/>
         </Connections>
@@ -7081,7 +7022,8 @@
           <Connection NodeId="tempo_sync4" ParameterId="Multiplier"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="FileInOffset" Value="1.0" DefaultValue="0.0">
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="FileInOffset" Value="0.3600000143051147"
+                 DefaultValue="0.0">
         <Connections>
           <Connection NodeId="gain21" ParameterId="Gain"/>
         </Connections>
@@ -7106,8 +7048,7 @@
           <Connection NodeId="global_mod7" ParameterId="Value"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="-1.0" MaxValue="1.0" ID="ShapeMod1" Value="0.8999999761581421"
-                 TextToValueConverter="" DefaultValue="0.0">
+      <Parameter MinValue="-1.0" MaxValue="1.0" ID="ShapeMod1" Value="0.0" TextToValueConverter="">
         <Connections>
           <Connection NodeId="global_mod7" ParameterId="Intensity"/>
         </Connections>
@@ -7152,12 +7093,9 @@
         </Connections>
       </Parameter>
       <Parameter MinValue="0.0" MaxValue="1.0" ID="Vol" Value="1.0" DefaultValue="0.0">
-        <Connections>
-          <Connection NodeId="gain" ParameterId="Gain"/>
-        </Connections>
+        <Connections/>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="Osc1Input" Value="0.1599999964237213"
-                 DefaultValue="0.0">
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="Osc1Input" Value="0.0">
         <Connections>
           <Connection NodeId="global_mod8" ParameterId="Value"/>
         </Connections>
@@ -7192,37 +7130,26 @@
           <Connection NodeId="branch28" ParameterId="Index"/>
         </Connections>
       </Parameter>
-      <Parameter MinValue="0.0" MaxValue="1.0" ID="s" Value="0.01999999955296516"
-                 DefaultValue="0.0">
-        <Connections>
-          <Connection NodeId="ahdsr1" ParameterId="Sustain"/>
-        </Connections>
+      <Parameter MinValue="0.0" MaxValue="1.0" ID="s" Value="1.0" DefaultValue="0.0">
+        <Connections/>
       </Parameter>
       <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
                  SkewFactor="0.1976716816425323" ID="a" Value="0.0">
-        <Connections>
-          <Connection NodeId="ahdsr1" ParameterId="Attack"/>
-        </Connections>
+        <Connections/>
       </Parameter>
       <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
                  SkewFactor="0.1976716816425323" ID="h" Value="0.0" ExternalModulation="Disabled">
-        <Connections>
-          <Connection NodeId="ahdsr1" ParameterId="Hold"/>
-        </Connections>
+        <Connections/>
       </Parameter>
       <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
                  SkewFactor="0.1976716816425323" ID="d" Value="2102.00003132224"
                  DefaultValue="0.0">
-        <Connections>
-          <Connection NodeId="ahdsr1" ParameterId="Decay"/>
-        </Connections>
+        <Connections/>
       </Parameter>
       <Parameter MinValue="0.0" MaxValue="10000.0" StepSize="0.1000000014901161"
-                 SkewFactor="0.1976716816425323" ID="r" Value="640.0000095367431"
+                 SkewFactor="0.1976716816425323" ID="r" Value="3817.000056877732"
                  DefaultValue="0.0">
-        <Connections>
-          <Connection NodeId="ahdsr1" ParameterId="Release"/>
-        </Connections>
+        <Connections/>
       </Parameter>
       <Parameter MinValue="0.0" MaxValue="18.0" StepSize="1.0" ID="TEMPO2" Value="1.0"
                  DefaultValue="0.0">

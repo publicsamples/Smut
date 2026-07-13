@@ -2915,11 +2915,8 @@ using chain7_t = container::chain<parameter::empty,
                                   wrap::fix<2, split1_t<NV>>>;
 
 template <int NV>
-using frame2_block1_t_ = container::chain<parameter::empty, 
-                                          wrap::fix<2, chain7_t<NV>>>;
-
-template <int NV>
-using frame2_block1_t = wrap::frame<2, frame2_block1_t_<NV>>;
+using frame2_block1_t = container::chain<parameter::empty, 
+                                         wrap::fix<2, chain7_t<NV>>>;
 
 using chain255_t = chain90_t;
 
@@ -3150,11 +3147,8 @@ using chain33_t = container::chain<parameter::empty,
                                    wrap::fix<2, split17_t<NV>>>;
 
 template <int NV>
-using frame2_block2_t_ = container::chain<parameter::empty, 
-                                          wrap::fix<2, chain33_t<NV>>>;
-
-template <int NV>
-using frame2_block2_t = wrap::frame<2, frame2_block2_t_<NV>>;
+using frame2_block2_t = container::chain<parameter::empty, 
+                                         wrap::fix<2, chain33_t<NV>>>;
 
 using chain100_t = chain90_t;
 
@@ -3594,28 +3588,11 @@ using split26_t = container::split<parameter::empty,
                                    chain160_t<NV>>;
 
 template <int NV>
-using fix8_block_t_ = container::chain<parameter::empty, 
-                                       wrap::fix<2, split8_t<NV>>, 
-                                       split_t<NV>, 
-                                       math::clear<NV>, 
-                                       split26_t<NV>>;
-
-template <int NV>
-using fix8_block_t = wrap::fix_block<8, fix8_block_t_<NV>>;
-
-DECLARE_PARAMETER_RANGE_STEP(ahdsr1_c1Range, 
-                             0., 
-                             1., 
-                             1.);
-
-using ahdsr1_c1 = parameter::from0To1<envelope::voice_manager, 
-                                      0, 
-                                      ahdsr1_c1Range>;
-
-using ahdsr1_multimod = parameter::list<parameter::empty, ahdsr1_c1>;
-
-template <int NV>
-using ahdsr1_t = wrap::no_data<envelope::ahdsr<NV, ahdsr1_multimod>>;
+using fix8_block_t = container::chain<parameter::empty, 
+                                      wrap::fix<2, split8_t<NV>>, 
+                                      split_t<NV>, 
+                                      math::clear<NV>, 
+                                      split26_t<NV>>;
 
 namespace Sm2_t_parameters
 {
@@ -4163,11 +4140,6 @@ using FileInSel_0 = parameter::from0To1<Sm2_impl::branch26_t<NV>,
 template <int NV>
 using FileInSel = parameter::chain<FileInSel_InputRange, FileInSel_0<NV>>;
 
-template <int NV>
-using Vol = parameter::from0To1<core::gain<NV>, 
-                                0, 
-                                Sm2_impl::peak25_modRange>;
-
 DECLARE_PARAMETER_RANGE_STEP(OscFmSrc_InputRange, 
                              1., 
                              5., 
@@ -4431,6 +4403,7 @@ template <int NV>
 using ShapeFm2 = parameter::plain<Sm2_impl::pma_unscaled13_t<NV>, 
                                   1>;
 using PosSmooth = Osc12Mix;
+using Vol = Osc12Mix;
 template <int NV>
 using Osc1Input = parameter::plain<Sm2_impl::global_mod8_t<NV>, 
                                    1>;
@@ -4440,16 +4413,11 @@ using Osc1InputMod = parameter::plain<Sm2_impl::global_mod8_t<NV>,
 template <int NV>
 using Osc1FM = parameter::plain<Sm2_impl::pma_unscaled14_t<NV>, 
                                 1>;
-template <int NV>
-using s = parameter::plain<Sm2_impl::ahdsr1_t<NV>, 4>;
-template <int NV>
-using a = parameter::plain<Sm2_impl::ahdsr1_t<NV>, 0>;
-template <int NV>
-using h = parameter::plain<Sm2_impl::ahdsr1_t<NV>, 2>;
-template <int NV>
-using d = parameter::plain<Sm2_impl::ahdsr1_t<NV>, 3>;
-template <int NV>
-using r = parameter::plain<Sm2_impl::ahdsr1_t<NV>, 5>;
+using s = Osc12Mix;
+using a = Osc12Mix;
+using h = Osc12Mix;
+using d = Osc12Mix;
+using r = Osc12Mix;
 template <int NV>
 using DIV2 = parameter::plain<Sm2_impl::tempo_sync2_t<NV>, 
                               1>;
@@ -4580,18 +4548,18 @@ using Sm2_t_plist = parameter::list<OscSt1<NV>,
                                     Osc2Src<NV>, 
                                     Osc2InSel<NV>, 
                                     FileInSel<NV>, 
-                                    Vol<NV>, 
+                                    Vol, 
                                     Osc1Input<NV>, 
                                     Osc1InputMod<NV>, 
                                     Osc1FM<NV>, 
                                     OscFmSrc<NV>, 
                                     Osc1InputSrc<NV>, 
                                     Osc1InSel<NV>, 
-                                    s<NV>, 
-                                    a<NV>, 
-                                    h<NV>, 
-                                    d<NV>, 
-                                    r<NV>, 
+                                    s, 
+                                    a, 
+                                    h, 
+                                    d, 
+                                    r, 
                                     TEMPO2<NV>, 
                                     DIV2<NV>, 
                                     SYNC2<NV>, 
@@ -4623,10 +4591,7 @@ using Sm2_t_plist = parameter::list<OscSt1<NV>,
 
 template <int NV>
 using Sm2_t_ = container::chain<Sm2_t_parameters::Sm2_t_plist<NV>, 
-                                wrap::fix<2, fix8_block_t<NV>>, 
-                                ahdsr1_t<NV>, 
-                                envelope::voice_manager, 
-                                core::gain<NV>>;
+                                wrap::fix<2, fix8_block_t<NV>>>;
 
 // =================================| Root node initialiser class |=================================
 
@@ -4676,10 +4641,10 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x656C, 0x6F50, 0x5173, 0x6175, 0x746E, 0x0031, 0x0000, 0x8000, 
             0x003F, 0x2000, 0x0041, 0xC000, 0x0040, 0x8000, 0x003F, 0x8000, 
             0x5C3F, 0x0D00, 0x0000, 0x4600, 0x6C69, 0x4965, 0x706E, 0x7475, 
-            0x6147, 0x6E69, 0x0031, 0x0000, 0x0000, 0x0000, 0x8000, 0xCD3F, 
-            0x4CCC, 0x003E, 0x8000, 0x003F, 0x0000, 0x5C00, 0x0E00, 0x0000, 
+            0x6147, 0x6E69, 0x0031, 0x0000, 0x0000, 0x0000, 0x8000, 0x8F3F, 
+            0xF5C2, 0x003D, 0x8000, 0x003F, 0x0000, 0x5C00, 0x0E00, 0x0000, 
             0x4600, 0x6C69, 0x4965, 0x706E, 0x7475, 0x6147, 0x6E69, 0x6F4D, 
-            0x0064, 0x0000, 0x8000, 0x00BF, 0x8000, 0x663F, 0x2666, 0x003F, 
+            0x0064, 0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 
             0x8000, 0x003F, 0x0000, 0x5C00, 0x0F00, 0x0000, 0x4600, 0x6C69, 
             0x4965, 0x706E, 0x7475, 0x6147, 0x6E69, 0x7253, 0x3163, 0x0000, 
             0x0000, 0x3F80, 0x0000, 0x4188, 0x0000, 0x4080, 0x0000, 0x3F80, 
@@ -4687,7 +4652,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x7570, 0x4774, 0x6961, 0x466E, 0x316D, 0x0000, 0x0000, 0xBF80, 
             0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 
             0x005C, 0x0011, 0x0000, 0x6946, 0x746C, 0x7265, 0x6F4D, 0x6564, 
-            0x0031, 0x0000, 0x8000, 0x003F, 0x1000, 0x0041, 0x8000, 0x003F, 
+            0x0031, 0x0000, 0x8000, 0x003F, 0x1000, 0x0041, 0x8000, 0x0040, 
             0x8000, 0x003F, 0x8000, 0x5C3F, 0x1200, 0x0000, 0x4600, 0x6C69, 
             0x6574, 0x4372, 0x7475, 0x0031, 0x0000, 0x0000, 0x0000, 0x8000, 
             0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x1300, 
@@ -4702,7 +4667,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x6574, 0x4D72, 0x646F, 0x6F4D, 0x6564, 0x0031, 0x0000, 0x8000, 
             0x003F, 0xC000, 0x0040, 0x8000, 0x0040, 0x8000, 0x003F, 0x8000, 
             0x5C3F, 0x1700, 0x0000, 0x5600, 0x6163, 0x6147, 0x6E69, 0x0031, 
-            0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 
+            0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 
             0x003F, 0x0000, 0x5C00, 0x1800, 0x0000, 0x5600, 0x6163, 0x6147, 
             0x6E69, 0x6F4D, 0x3164, 0x0000, 0x0000, 0xBF80, 0x0000, 0x3F80, 
             0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0019, 
@@ -4711,28 +4676,28 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x0000, 0x005C, 0x001A, 0x0000, 0x6356, 0x4761, 0x6961, 0x536E, 
             0x6372, 0x0031, 0x0000, 0x8000, 0x003F, 0x8800, 0x0041, 0x8000, 
             0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x1B00, 0x0000, 0x5200, 
-            0x7365, 0x0031, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 
-            0x1800, 0x8789, 0x003E, 0x0000, 0x5C00, 0x1C00, 0x0000, 0x5000, 
+            0x7365, 0x0031, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 
+            0x183F, 0x8789, 0x003E, 0x0000, 0x5C00, 0x1C00, 0x0000, 0x5000, 
             0x6E61, 0x0031, 0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 
             0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x1D00, 0x0000, 0x5600, 
             0x6163, 0x6D46, 0x7253, 0x3163, 0x0000, 0x0000, 0x3F80, 0x0000, 
             0x40C0, 0x0000, 0x4080, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
             0x001E, 0x0000, 0x734F, 0x5363, 0x3274, 0x0000, 0x0000, 0xC1C0, 
-            0x0000, 0x41C0, 0x0000, 0x40A0, 0x0000, 0x3F80, 0x0000, 0x3F80, 
+            0x0000, 0x41C0, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 0x3F80, 
             0x005C, 0x001F, 0x0000, 0x734F, 0x4363, 0x6E65, 0x3274, 0x0000, 
             0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 
             0x0000, 0x0000, 0x005C, 0x0020, 0x0000, 0x734F, 0x6663, 0x326D, 
-            0x0000, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x5C29, 0xBD8F, 0x0000, 
+            0x0000, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 
             0x3F80, 0x0000, 0x0000, 0x005C, 0x0021, 0x0000, 0x734F, 0x4D63, 
             0x646F, 0x0032, 0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 
             0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x2200, 0x0000, 0x4F00, 
             0x6373, 0x6D46, 0x7253, 0x3263, 0x0000, 0x0000, 0x3F80, 0x0000, 
             0x40C0, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
             0x0023, 0x0000, 0x6946, 0x746C, 0x7265, 0x6F4D, 0x6564, 0x0032, 
-            0x0000, 0x8000, 0x003F, 0x1000, 0x0041, 0x8000, 0x003F, 0x8000, 
+            0x0000, 0x8000, 0x003F, 0x1000, 0x0041, 0x4000, 0x0040, 0x8000, 
             0x003F, 0x8000, 0x5C3F, 0x2400, 0x0000, 0x4600, 0x6C69, 0x6574, 
-            0x4372, 0x7475, 0x0032, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 
-            0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 0x2500, 0x0000, 
+            0x4372, 0x7475, 0x0032, 0x0000, 0x0000, 0x0000, 0x8000, 0x333F, 
+            0x3333, 0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 0x2500, 0x0000, 
             0x4600, 0x6C69, 0x6574, 0x4372, 0x7475, 0x6F4D, 0x3264, 0x0000, 
             0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x0000, 0x3F80, 
             0x0000, 0x0000, 0x005C, 0x0026, 0x0000, 0x6946, 0x746C, 0x7265, 
@@ -4744,7 +4709,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x4672, 0x646D, 0x7253, 0x0063, 0x0000, 0x8000, 0x003F, 0xC000, 
             0x0040, 0x4000, 0x0040, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x2900, 
             0x0000, 0x5600, 0x6163, 0x6147, 0x6E69, 0x0032, 0x0000, 0x0000, 
-            0x0000, 0x8000, 0xD33F, 0x241B, 0x003F, 0x8000, 0x003F, 0x0000, 
+            0x0000, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x003F, 0x0000, 
             0x5C00, 0x2A00, 0x0000, 0x5600, 0x6163, 0x6147, 0x6E69, 0x6F4D, 
             0x3264, 0x0000, 0x0000, 0xBF80, 0x0000, 0x3F80, 0x0000, 0x0000, 
             0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x002B, 0x0000, 0x6356, 
@@ -4821,7 +4786,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x6269, 0x0000, 0x0000, 0x3F80, 0x0000, 0x4200, 0x0000, 0x4120, 
             0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x0049, 0x0000, 0x6946, 
             0x656C, 0x6E49, 0x664F, 0x7366, 0x7465, 0x0000, 0x0000, 0x0000, 
-            0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 
+            0x0000, 0x3F80, 0x51EC, 0x3EB8, 0x0000, 0x3F80, 0x0000, 0x0000, 
             0x005C, 0x004A, 0x0000, 0x736F, 0x5363, 0x6168, 0x6570, 0x6F4D, 
             0x6564, 0x0031, 0x0000, 0x8000, 0x003F, 0x4000, 0x0041, 0x8000, 
             0x0040, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x4B00, 0x0000, 0x6F00, 
@@ -4830,8 +4795,8 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x3F80, 0x005C, 0x004C, 0x0000, 0x6873, 0x7061, 0x3265, 0x0000, 
             0x0000, 0x0000, 0x0000, 0x3F80, 0xD70A, 0x3CA3, 0x0000, 0x3F80, 
             0x0000, 0x0000, 0x005C, 0x004D, 0x0000, 0x6853, 0x7061, 0x4D65, 
-            0x646F, 0x0031, 0x0000, 0x8000, 0x00BF, 0x8000, 0x663F, 0x6666, 
-            0x003F, 0x8000, 0x003F, 0x0000, 0x5C00, 0x4E00, 0x0000, 0x5300, 
+            0x646F, 0x0031, 0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 
+            0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 0x4E00, 0x0000, 0x5300, 
             0x6168, 0x6570, 0x7253, 0x3263, 0x0000, 0x0000, 0x3F80, 0x0000, 
             0x4188, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 
             0x004F, 0x0000, 0x6853, 0x7061, 0x4665, 0x326D, 0x0000, 0x0000, 
@@ -4851,7 +4816,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x5600, 0x6C6F, 0x0000, 0x0000, 0x0000, 0x0000, 0x3F80, 0x0000, 
             0x3F80, 0x0000, 0x3F80, 0x0000, 0x0000, 0x005C, 0x0056, 0x0000, 
             0x734F, 0x3163, 0x6E49, 0x7570, 0x0074, 0x0000, 0x0000, 0x0000, 
-            0x8000, 0x0A3F, 0x23D7, 0x003E, 0x8000, 0x003F, 0x0000, 0x5C00, 
+            0x8000, 0x003F, 0x0000, 0x0000, 0x8000, 0x003F, 0x0000, 0x5C00, 
             0x5700, 0x0000, 0x4F00, 0x6373, 0x4931, 0x706E, 0x7475, 0x6F4D, 
             0x0064, 0x0000, 0x8000, 0x00BF, 0x8000, 0x003F, 0x0000, 0x0000, 
             0x8000, 0x003F, 0x0000, 0x5C00, 0x5800, 0x0000, 0x4F00, 0x6373, 
@@ -4864,7 +4829,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x003F, 0x8000, 0x5C3F, 0x5B00, 0x0000, 0x4F00, 0x6373, 0x4931, 
             0x536E, 0x6C65, 0x0000, 0x0000, 0x3F80, 0x0000, 0x40A0, 0x0000, 
             0x3F80, 0x0000, 0x3F80, 0x0000, 0x3F80, 0x005C, 0x005C, 0x0000, 
-            0x0073, 0x0000, 0x0000, 0x0000, 0x8000, 0x0A3F, 0xA3D7, 0x003C, 
+            0x0073, 0x0000, 0x0000, 0x0000, 0x8000, 0x003F, 0x8000, 0x003F, 
             0x8000, 0x003F, 0x0000, 0x5C00, 0x5D00, 0x0000, 0x6100, 0x0000, 
             0x0000, 0x0000, 0x4000, 0x461C, 0x0000, 0x0000, 0x6A72, 0x3E4A, 
             0xCCCD, 0x3DCC, 0x005C, 0x005E, 0x0000, 0x0068, 0x0000, 0x0000, 
@@ -4872,7 +4837,7 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
             0x5C3D, 0x5F00, 0x0000, 0x6400, 0x0000, 0x0000, 0x0000, 0x4000, 
             0x461C, 0x6000, 0x4503, 0x6A72, 0x3E4A, 0xCCCD, 0x3DCC, 0x005C, 
             0x0060, 0x0000, 0x0072, 0x0000, 0x0000, 0x0000, 0x1C40, 0x0046, 
-            0x2000, 0x7244, 0x4A6A, 0xCD3E, 0xCCCC, 0x5C3D, 0x6100, 0x0000, 
+            0x6E90, 0x7245, 0x4A6A, 0xCD3E, 0xCCCC, 0x5C3D, 0x6100, 0x0000, 
             0x5400, 0x4D45, 0x4F50, 0x0032, 0x0000, 0x0000, 0x0000, 0x9000, 
             0x0041, 0x8000, 0x003F, 0x8000, 0x003F, 0x8000, 0x5C3F, 0x6200, 
             0x0000, 0x4400, 0x5649, 0x0032, 0x0000, 0x8000, 0x003F, 0x0000, 
@@ -6279,9 +6244,6 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		auto& clear11 = this->getT(0).getT(3).getT(1).getT(3).getT(0).getT(1).getT(1); // math::clear<NV>
 		auto& gain41 = this->getT(0).getT(3).getT(1).getT(4);                          // core::gain<NV>
 		auto& jpanner2 = this->getT(0).getT(3).getT(1).getT(5);                        // jdsp::jpanner<NV>
-		auto& ahdsr1 = this->getT(1);                                                  // Sm2_impl::ahdsr1_t<NV>
-		auto& voice_manager = this->getT(2);                                           // envelope::voice_manager
-		auto& gain = this->getT(3);                                                    // core::gain<NV>
 		
 		// Parameter Connections -------------------------------------------------------------------
 		
@@ -6481,8 +6443,6 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		
 		this->getParameterT(84).connectT(0, branch26); // FileInSel -> branch26::Index
 		
-		this->getParameterT(85).connectT(0, gain); // Vol -> gain::Gain
-		
 		this->getParameterT(86).connectT(0, global_mod8); // Osc1Input -> global_mod8::Value
 		
 		this->getParameterT(87).connectT(0, global_mod8); // Osc1InputMod -> global_mod8::Intensity
@@ -6494,16 +6454,6 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->getParameterT(90).connectT(0, global_mod8); // Osc1InputSrc -> global_mod8::Index
 		
 		this->getParameterT(91).connectT(0, branch28); // Osc1InSel -> branch28::Index
-		
-		this->getParameterT(92).connectT(0, ahdsr1); // s -> ahdsr1::Sustain
-		
-		this->getParameterT(93).connectT(0, ahdsr1); // a -> ahdsr1::Attack
-		
-		this->getParameterT(94).connectT(0, ahdsr1); // h -> ahdsr1::Hold
-		
-		this->getParameterT(95).connectT(0, ahdsr1); // d -> ahdsr1::Decay
-		
-		this->getParameterT(96).connectT(0, ahdsr1); // r -> ahdsr1::Release
 		
 		this->getParameterT(97).connectT(0, global_mod13); // TEMPO2 -> global_mod13::Value
 		
@@ -6831,8 +6781,6 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		peak33.getParameter().connectT(11, add127);                             // peak33 -> add127::Value
 		peak33.getParameter().connectT(12, add83);                              // peak33 -> add83::Value
 		peak33.getParameter().connectT(13, add152);                             // peak33 -> add152::Value
-		auto& ahdsr1_p = ahdsr1.getWrappedObject().getParameter();
-		ahdsr1_p.getParameterT(1).connectT(0, voice_manager); // ahdsr1 -> voice_manager::KillVoice
 		
 		// Send Connections ------------------------------------------------------------------------
 		
@@ -8152,22 +8100,6 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		;                              // jpanner2::Pan is automated
 		jpanner2.setParameterT(1, 1.); // jdsp::jpanner::Rule
 		
-		;                             // ahdsr1::Attack is automated
-		ahdsr1.setParameterT(1, 1.);  // envelope::ahdsr::AttackLevel
-		;                             // ahdsr1::Hold is automated
-		;                             // ahdsr1::Decay is automated
-		;                             // ahdsr1::Sustain is automated
-		;                             // ahdsr1::Release is automated
-		ahdsr1.setParameterT(6, 0.5); // envelope::ahdsr::AttackCurve
-		ahdsr1.setParameterT(7, 0.);  // envelope::ahdsr::Retrigger
-		ahdsr1.setParameterT(8, 0.);  // envelope::ahdsr::Gate
-		
-		; // voice_manager::KillVoice is automated
-		
-		;                            // gain::Gain is automated
-		gain.setParameterT(1, 20.);  // core::gain::Smoothing
-		gain.setParameterT(2, -10.); // core::gain::ResetValue
-		
 		this->setParameterT(0, 0.);
 		this->setParameterT(1, 0.);
 		this->setParameterT(2, 0.);
@@ -8181,35 +8113,35 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->setParameterT(10, 0.);
 		this->setParameterT(11, 0.44);
 		this->setParameterT(12, 6.);
-		this->setParameterT(13, 0.2);
-		this->setParameterT(14, 0.65);
+		this->setParameterT(13, 0.12);
+		this->setParameterT(14, 0.);
 		this->setParameterT(15, 4.);
 		this->setParameterT(16, 0.);
-		this->setParameterT(17, 1.);
+		this->setParameterT(17, 4.);
 		this->setParameterT(18, 0.);
 		this->setParameterT(19, 0.);
 		this->setParameterT(20, 0.);
 		this->setParameterT(21, 4.);
 		this->setParameterT(22, 4.);
-		this->setParameterT(23, 0.);
+		this->setParameterT(23, 1.);
 		this->setParameterT(24, 0.);
 		this->setParameterT(25, 0.);
 		this->setParameterT(26, 1.);
-		this->setParameterT(27, 0.);
+		this->setParameterT(27, 1.);
 		this->setParameterT(28, 0.);
 		this->setParameterT(29, 4.);
-		this->setParameterT(30, 5.);
+		this->setParameterT(30, 0.);
 		this->setParameterT(31, 0.);
-		this->setParameterT(32, -0.07);
+		this->setParameterT(32, 0.);
 		this->setParameterT(33, 0.);
 		this->setParameterT(34, 1.);
-		this->setParameterT(35, 1.);
-		this->setParameterT(36, 1.);
+		this->setParameterT(35, 3.);
+		this->setParameterT(36, 0.7);
 		this->setParameterT(37, 0.);
 		this->setParameterT(38, 0.);
 		this->setParameterT(39, 1.);
 		this->setParameterT(40, 3.);
-		this->setParameterT(41, 0.64105);
+		this->setParameterT(41, 1.);
 		this->setParameterT(42, 0.);
 		this->setParameterT(43, 0.);
 		this->setParameterT(44, 1.);
@@ -8241,11 +8173,11 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->setParameterT(70, 6.1);
 		this->setParameterT(71, 1.);
 		this->setParameterT(72, 10.);
-		this->setParameterT(73, 1.);
+		this->setParameterT(73, 0.36);
 		this->setParameterT(74, 4.);
 		this->setParameterT(75, 10.);
 		this->setParameterT(76, 0.02);
-		this->setParameterT(77, 0.9);
+		this->setParameterT(77, 0.);
 		this->setParameterT(78, 1.);
 		this->setParameterT(79, 0.);
 		this->setParameterT(80, 1.);
@@ -8254,17 +8186,17 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->setParameterT(83, 2.);
 		this->setParameterT(84, 1.);
 		this->setParameterT(85, 1.);
-		this->setParameterT(86, 0.16);
+		this->setParameterT(86, 0.);
 		this->setParameterT(87, 0.);
 		this->setParameterT(88, 0.);
 		this->setParameterT(89, 1.);
 		this->setParameterT(90, 1.);
 		this->setParameterT(91, 1.);
-		this->setParameterT(92, 0.02);
+		this->setParameterT(92, 1.);
 		this->setParameterT(93, 0.);
 		this->setParameterT(94, 0.);
 		this->setParameterT(95, 2102.);
-		this->setParameterT(96, 640.);
+		this->setParameterT(96, 3817.);
 		this->setParameterT(97, 1.);
 		this->setParameterT(98, 17.);
 		this->setParameterT(99, 0.);
@@ -8522,7 +8454,6 @@ template <int NV> struct instance: public Sm2_impl::Sm2_t_<NV>
 		this->getT(0).getT(3).getT(1).getT(3).                           // Sm2_impl::peak33_t<NV>
         getT(0).getT(1).getT(0).getT(1).
         getT(1).setExternalData(b, index);
-		this->getT(1).setExternalData(b, index); // Sm2_impl::ahdsr1_t<NV>
 	}
 };
 }

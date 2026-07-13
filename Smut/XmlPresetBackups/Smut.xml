@@ -14,7 +14,7 @@
             <Control type="ScriptSlider" id="OscSemiTone1" value="0.0"/>
             <Control type="ScriptSlider" id="OscCent1" value="0.0"/>
             <Control type="ScriptComboBox" id="OscShapeMode1" value="4.0"/>
-            <Control type="ScriptSlider" id="OscShape1" value="0.0"/>
+            <Control type="ScriptSlider" id="OscShape1" value="0.1099999994039536"/>
             <Control type="ScriptButton" id="Sync" value="0.0"/>
             <Control type="ScriptSlider" id="Divide" value="32.0"/>
             <Control type="ScriptComboBox" id="TempoSync" value="1.0"/>
@@ -31,7 +31,7 @@
             <Control type="ScriptComboBox" id="TempoSync1" value="1.0"/>
             <Control type="ScriptLabel" id="FileName1" value="SINMIN"/>
             <Control type="ScriptSlider" id="FilePos1" value="0.0"/>
-            <Control type="ScriptSlider" id="FileInput" value="0.2099999934434891"/>
+            <Control type="ScriptSlider" id="FileInput" value="0.1400000005960464"/>
             <Control type="ScriptComboBox" id="QuantMode" value="6.0"/>
             <Control type="ScriptComboBox" id="PosModTempo" value="1.0"/>
             <Control type="ScriptTable" id="Table3" value="0.0" data=""/>
@@ -41,7 +41,7 @@
             <Control type="ScriptSlider" id="PosMod" value="0.4399999976158142"/>
             <Control type="ScriptComboBox" id="PosModMode" value="2.0"/>
             <Control type="ScriptComboBox" id="QuantMode1" value="1.0"/>
-            <Control type="ScriptSlider" id="InputOffset" value="1.0"/>
+            <Control type="ScriptSlider" id="InputOffset" value="0.2700000107288361"/>
             <Control type="ScriptSliderPack" id="FileModPack1" value="4.0" data="64......35Qg7C..............8C.....6QgK+.....vGEtlO..........vGEtxO..........P35QwO......"/>
             <Control type="ScriptSlider" id="FileA1" value="945.0"/>
             <Control type="ScriptSlider" id="FileH1" value="0.0"/>
@@ -78,7 +78,7 @@
             <Control type="ScriptSlider" id="Pan1" value="0.0"/>
             <Control type="ScriptSlider" id="FilterGain1" value="1.0"/>
             <Control type="ScriptComboBox" id="FilterMode1" value="4.0"/>
-            <Control type="ScriptSliderPack" id="ScriptSliderPack1" value="0.0" data="16....f+................."/>
+            <Control type="ScriptSliderPack" id="ScriptSliderPack1" value="2.0" data="16...............3O......"/>
             <Control type="ScriptSliderPack" id="ScriptSliderPack2" value="1.0" data="20............................"/>
             <Control type="ScriptSlider" id="Cut2" value="0.699999988079071"/>
             <Control type="ScriptSlider" id="q2" value="0.0"/>
@@ -135,11 +135,11 @@
             <Control type="ScriptComboBox" id="ScriptComboBox19" value="1.0"/>
             <Control type="ScriptComboBox" id="Voices" value="4.0"/>
             <Control type="ScriptComboBox" id="Voices1" value="4.0"/>
-            <Control type="ScriptSlider" id="Knob1" value="0.0"/>
+            <Control type="ScriptSlider" id="Knob1" value="2340.0"/>
             <Control type="ScriptSlider" id="Knob2" value="0.0"/>
-            <Control type="ScriptSlider" id="Knob3" value="2102.0"/>
-            <Control type="ScriptSlider" id="Knob4" value="1.0"/>
-            <Control type="ScriptSlider" id="Knob5" value="3817.0"/>
+            <Control type="ScriptSlider" id="Knob3" value="300.0"/>
+            <Control type="ScriptSlider" id="Knob4" value="-6.100002288818359"/>
+            <Control type="ScriptSlider" id="Knob5" value="20.0"/>
             <Control type="ScriptSlider" id="Vol" value="-10.39999866485596"/>
             <Control type="ScriptSlider" id="Vol1" value="0.0"/>
             <Control type="ScriptButton" id="Track" value="0.0"/>
@@ -371,7 +371,7 @@
                Network="Sm2" OscSt1="0.0" OscCent1="0.0" Oscfm1="0.0" OscMod1="0.0"
                OscTempoSync1="0.0" OscTempo1="1.0" OscDiv1="32.0" OscFmSrc1="2.0"
                OscPitchSrc1="1.0" Osc12Mix="0.0" filePos1="0.0" FilePosMod1="0.4399999976158142"
-               FilePosQuant1="6.0" FileInputGain1="0.2099999934434891" FileInputGainMod="0.0"
+               FilePosQuant1="6.0" FileInputGain1="0.1400000005960464" FileInputGainMod="0.0"
                FileInputGainSrc1="4.0" FileInputGainFm1="0.0" FilterMode1="4.0"
                FilterCut1="0.0" FilterCutMod1="0.0" FilterCutFm1="0.0" FilterCutSrc1="4.0"
                FilterModMode1="4.0" VcaGain1="1.0" VcaGainMod1="0.0" VcaGainFm1="0.0"
@@ -380,13 +380,13 @@
                FilterCut2="0.699999988079071" FilterCutMod2="0.0" FilterCutFm2="0.0"
                FilterCutSrc2="1.0" FilterFmdSrc="3.0" VcaGain2="1.0" VcaGainMod2="0.0"
                VcaGainFm2="0.0" VcaGainSrc2="1.0" VcaGainModMode2="0.0" Res2="0.0"
-               Pan2="0.0" VcaFmSrc2="1.0" OscShape="0.0" OscShapeMod="0.0" OscShapeFm="0.0"
-               OscShapeModSrc="4.0" OscShapeFmSrc="3.0" Osc2InputGain="0.0"
+               Pan2="0.0" VcaFmSrc2="1.0" OscShape="0.1099999994039536" OscShapeMod="0.0"
+               OscShapeFm="0.0" OscShapeModSrc="4.0" OscShapeFmSrc="3.0" Osc2InputGain="0.0"
                Osc2InputGainMod="0.0" Osc2InputGainFm="0.0" Osc2InputGainModSrc="1.0"
                Osc2InputGainFmSrc="1.0" FileInFmSrc="3.0" FilterInput1="0.0"
                FilterInput2="0.0" PostModMode="1.0" PosEnvTrig="1.0" PosEnvA="945.0"
                PosEnvH="0.0" PosEnvD="0.0" PosEnvS="0.0" PosEnvR="1456.0" PosVel="0.0"
-               OscsSubGain="0.0" PosTempo="1.0" PosDib="10.0" FileInOffset="1.0"
+               OscsSubGain="0.0" PosTempo="1.0" PosDib="10.0" FileInOffset="0.2700000107288361"
                oscShapeMode1="4.0" oscShapeMode2="10.0" shape2="0.01999999955296516"
                ShapeMod1="0.0" ShapeSrc2="1.0" ShapeFm2="0.0" ShapeFmSrc2="1.0"
                PosSmooth="0.0" Osc2Src="1.0" Osc2InSel="2.0" FileInSel="1.0"
@@ -412,6 +412,28 @@
             <Processor Type="ScriptnodeVoiceKiller" ID="Scriptnode Voice Killer1" Bypassed="0"
                        Monophonic="0.0" Retrigger="0.0" Intensity="1.0">
               <ChildProcessors/>
+            </Processor>
+            <Processor Type="AHDSR" ID="AHDSR Envelope" Bypassed="0" Monophonic="0.0"
+                       Retrigger="1.0" Intensity="1.0" AttackCurve="0.8030624985694885"
+                       DecayCurve="0.0" Attack="2340.0" AttackLevel="0.0" Hold="0.0"
+                       Decay="300.0" Sustain="-6.100002288818359" Release="20.0" EcoMode="1.0">
+              <ChildProcessors>
+                <Processor Type="ModulatorChain" ID="Attack Time" Bypassed="0" Intensity="1.0">
+                  <ChildProcessors/>
+                </Processor>
+                <Processor Type="ModulatorChain" ID="Attack Level" Bypassed="0" Intensity="1.0">
+                  <ChildProcessors/>
+                </Processor>
+                <Processor Type="ModulatorChain" ID="Decay Time" Bypassed="0" Intensity="1.0">
+                  <ChildProcessors/>
+                </Processor>
+                <Processor Type="ModulatorChain" ID="Sustain Level" Bypassed="0" Intensity="1.0">
+                  <ChildProcessors/>
+                </Processor>
+                <Processor Type="ModulatorChain" ID="Release Time" Bypassed="0" Intensity="1.0">
+                  <ChildProcessors/>
+                </Processor>
+              </ChildProcessors>
             </Processor>
           </ChildProcessors>
         </Processor>
@@ -442,11 +464,11 @@
       <SliderPacks>
         <SliderPack EmbeddedData="64......35Qg7C..............8C.....6QgK+.....vGEtlO..........vGEtxO..........P35QwO......"/>
         <SliderPack EmbeddedData="64.35QA9...........................Jb8n8nYlY3yGEtlOZlYl9v0iB6iYlYtOT35A+nYlY7ydT3xO...P+."/>
-        <SliderPack EmbeddedData="16....f+................."/>
+        <SliderPack EmbeddedData="16...............3O......"/>
         <SliderPack EmbeddedData="20............................"/>
       </SliderPacks>
       <AudioFiles>
-        <AudioFile EmbeddedData="{PROJECT_FOLDER}SINMIN.wav" MinValue="0" MaxValue="262144"/>
+        <AudioFile EmbeddedData="{PROJECT_FOLDER}SINMIN.WAV" MinValue="0" MaxValue="262144"/>
         <AudioFile EmbeddedData="{PROJECT_FOLDER}AD-Draw1.wav" MinValue="0" MaxValue="437"/>
         <AudioFile EmbeddedData="" MinValue="0" MaxValue="0"/>
         <AudioFile EmbeddedData="" MinValue="0" MaxValue="0"/>
