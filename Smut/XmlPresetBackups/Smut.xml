@@ -447,7 +447,7 @@
         <SliderPack EmbeddedData="20..........9C................"/>
       </SliderPacks>
       <AudioFiles>
-        <AudioFile EmbeddedData="{PROJECT_FOLDER}SINMIN.WAV" MinValue="0" MaxValue="262144"/>
+        <AudioFile EmbeddedData="{PROJECT_FOLDER}SINMIN.wav" MinValue="0" MaxValue="262144"/>
         <AudioFile EmbeddedData="{PROJECT_FOLDER}AD-Draw1.wav" MinValue="0" MaxValue="437"/>
         <AudioFile EmbeddedData="" MinValue="0" MaxValue="0"/>
         <AudioFile EmbeddedData="" MinValue="0" MaxValue="0"/>

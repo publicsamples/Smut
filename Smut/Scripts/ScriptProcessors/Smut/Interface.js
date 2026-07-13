@@ -10,6 +10,7 @@ const var ShowPResetManager = Content.getComponent("ShowPResetManager");
 ShowPResetManager.setValue(1);
 ShowPResetManager.changed();
 
+Engine.loadAudioFilesIntoPool();
 
 const var SMUT = Synth.getChildSynth("SMUT");
 const var File1 = Synth.getAudioSampleProcessor("SMUT");
