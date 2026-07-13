@@ -10,6 +10,10 @@ const var ShowPResetManager = Content.getComponent("ShowPResetManager");
 ShowPResetManager.setValue(1);
 ShowPResetManager.changed();
 
+
+const var SMUT = Synth.getChildSynth("SMUT");
+const var File1 = Synth.getAudioSampleProcessor("SMUT");
+
 const slot1 = File1.getAudioFile(0);
 const slot2 = File1.getAudioFile(1);
 
@@ -23,7 +27,7 @@ Content.callAfterDelay(10, function()
 	slot2.loadFile(defaultRef1);
 });
 
-const var SMUT = Synth.getChildSynth("SMUT");
+
 
 inline function onVoicesControl(component, value)
 {

@@ -29,7 +29,7 @@
             <Control type="ScriptButton" id="Sync1" value="0.0"/>
             <Control type="ScriptSlider" id="Divide1" value="17.0"/>
             <Control type="ScriptComboBox" id="TempoSync1" value="1.0"/>
-            <Control type="ScriptLabel" id="FileName1" value="AX-3"/>
+            <Control type="ScriptLabel" id="FileName1" value="SINMIN"/>
             <Control type="ScriptSlider" id="FilePos1" value="0.0"/>
             <Control type="ScriptSlider" id="FileInput" value="0.2000000029802322"/>
             <Control type="ScriptComboBox" id="QuantMode" value="6.0"/>
@@ -49,8 +49,8 @@
             <Control type="ScriptSlider" id="FileS1" value="0.0"/>
             <Control type="ScriptSlider" id="FileR1" value="1456.0"/>
             <Control type="ScriptButton" id="ScriptButton1" value="1.0"/>
-            <Control type="ScriptLabel" id="FilePath1" value="{AUDIO_FILES}Single Cycle/Synths1/AX-3.wav"/>
-            <Control type="ScriptLabel" id="FileName2" value="WONK3"/>
+            <Control type="ScriptLabel" id="FilePath1" value="/Users/rick/Documents/GitHub/Smut/Smut/AudioFiles/SINMIN.WAV"/>
+            <Control type="ScriptLabel" id="FileName2" value="AD-Draw1"/>
             <Control type="ScriptSliderPack" id="FileModPack2" value="14.0" data="64.35QA9...........................Jb8n8nYlY3yGEtlOZlYl9v0iB6iYlYtOT35A+nYlY7ydT3xO...P+."/>
             <Control type="ScriptSlider" id="FileA2" value="222.0"/>
             <Control type="ScriptSlider" id="FileH2" value="0.0"/>
@@ -72,7 +72,7 @@
             <Control type="ScriptComboBox" id="PosModMode1" value="2.0"/>
             <Control type="ScriptComboBox" id="QuantMode3" value="3.0"/>
             <Control type="ScriptSlider" id="InputOffset1" value="0.6800000071525574"/>
-            <Control type="ScriptLabel" id="FilePath2" value="{AUDIO_FILES}Single Cycle/Synths1/WONK3.wav"/>
+            <Control type="ScriptLabel" id="FilePath2" value="/Users/rick/Documents/GitHub/Smut/Smut/AudioFiles/AD-Draw1.wav"/>
             <Control type="ScriptSlider" id="Cut1" value="1.0"/>
             <Control type="ScriptSlider" id="Q1" value="0.0"/>
             <Control type="ScriptSlider" id="Pan1" value="0.0"/>
@@ -447,7 +447,7 @@
         <SliderPack EmbeddedData="20..........9C................"/>
       </SliderPacks>
       <AudioFiles>
-        <AudioFile EmbeddedData="{PROJECT_FOLDER}SINMIN.wav" MinValue="0" MaxValue="262144"/>
+        <AudioFile EmbeddedData="{PROJECT_FOLDER}SINMIN.WAV" MinValue="0" MaxValue="262144"/>
         <AudioFile EmbeddedData="{PROJECT_FOLDER}AD-Draw1.wav" MinValue="0" MaxValue="437"/>
         <AudioFile EmbeddedData="" MinValue="0" MaxValue="0"/>
         <AudioFile EmbeddedData="" MinValue="0" MaxValue="0"/>

@@ -163,7 +163,7 @@
                height="30" parentComponent="File1" bgColour="4294967295" filmstripImage="{PROJECT_FOLDER}disk.png"
                scaleFactor="0.05999999865889549" saveInPreset="0"/>
     <Component type="ScriptLabel" id="FileName1" x="100" y="9" width="150" height="20"
-               parentComponent="File1" text="AX-3" fontName="mon" fontSize="15.0"
+               parentComponent="File1" text="SINMIN" fontName="mon" fontSize="15.0"
                editable="0" textColour="4280620804" alignment="left" saveInPreset="1"/>
     <Component type="ScriptLabel" id="ScriptLabel25" x="64" y="167" width="70"
                height="20" parentComponent="File1" text="Position" fontName="mon"
@@ -309,14 +309,14 @@
                  editable="0" textColour="4280620804"/>
     </Component>
     <Component type="ScriptLabel" id="FilePath1" x="150" y="18" width="150"
-               height="20" parentComponent="File1" text="{AUDIO_FILES}Single Cycle/Synths1/AX-3.wav"
+               height="20" parentComponent="File1" text="/Users/rick/Documents/GitHub/Smut/Smut/AudioFiles/SINMIN.WAV"
                fontName="mon" fontSize="15.0" editable="0" textColour="4280620804"
                alignment="left" saveInPreset="1" visible="0"/>
   </Component>
   <Component type="ScriptPanel" id="File2" x="514" y="168" width="275" height="190"
              itemColour="4293583307" itemColour2="4293583307" textColour="4283319303">
     <Component type="ScriptLabel" id="FileName2" x="99" y="9" width="150" height="20"
-               parentComponent="File2" text="WONK3" fontName="mon" fontSize="15.0"
+               parentComponent="File2" text="AD-Draw1" fontName="mon" fontSize="15.0"
                editable="0" textColour="4280620804" alignment="left" saveInPreset="1"/>
     <Component type="ScriptButton" id="LoadSample2" x="67" y="4" width="30"
                height="30" parentComponent="File2" bgColour="4294967295" filmstripImage="{PROJECT_FOLDER}disk.png"
@@ -468,7 +468,7 @@
                style="Vertical" itemColour="4281545523" bgColour="16777215"
                textColour="16777215" itemColour2="4279308561" dragDirection="Vertical"/>
     <Component type="ScriptLabel" id="FilePath2" x="141" y="20" width="150"
-               height="20" parentComponent="File2" text="{AUDIO_FILES}Single Cycle/Synths1/WONK3.wav"
+               height="20" parentComponent="File2" text="/Users/rick/Documents/GitHub/Smut/Smut/AudioFiles/AD-Draw1.wav"
                fontName="mon" fontSize="15.0" editable="0" textColour="4280620804"
                alignment="left" saveInPreset="1" visible="0"/>
   </Component>

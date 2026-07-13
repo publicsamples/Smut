@@ -8,10 +8,6 @@ const var FilePath1 = Content.getComponent("FilePath1");
 const var FilePath2 = Content.getComponent("FilePath2");
 
 
-const var File1 = Synth.getAudioSampleProcessor("SMUT");
-
-
-
 reg lastPath1 = "";
 reg lastPath2 = "";
 reg isInternalSampleUpdate = false;
