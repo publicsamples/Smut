@@ -363,7 +363,7 @@
 				951334B791C1FF380FD35A27,
 				2AF52B3774EB3E0F56F38808,
 				375D2628F72A796397A4AFAF,
-				B9DF33490E3F4466A5FF424A,
+				959CD2C9851428A9DFE6AF8B,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -524,7 +524,7 @@
 			name = "JUCE Library Code";
 			sourceTree = "<group>";
 		};
-		B9DF33490E3F4466A5FF424A /* nodes */ = {
+		959CD2C9851428A9DFE6AF8B /* nodes */ = {
 			isa = PBXGroup;
 			children = (
 				2C570315FD67894906B31C73,
@@ -943,7 +943,6 @@
 					"$(SRCROOT)/../../JuceLibraryCode",
 					"/Users/rick/Documents/GitHub/HISE",
 					"/Users/rick/Documents/GitHub/HISE/JUCE/modules",
-					"/Users/rick/Documents/GitHub/HISE/tools/faust/include",
 					"/Users/rick/Documents/GitHub/HISE/JUCE/modules/juce_audio_plugin_client",
 					"$(inherited)",
 				);
@@ -951,7 +950,7 @@
 				INFOPLIST_PREPROCESS = NO;
 				LIBRARY_STYLE = Bundle;
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../JuceLibraryCode /Users/rick/Documents/GitHub/HISE /Users/rick/Documents/GitHub/HISE/JUCE/modules /Users/rick/Documents/GitHub/HISE/tools/faust/include /Users/rick/Documents/GitHub/HISE/JUCE/modules/juce_audio_plugin_client";
+				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../JuceLibraryCode /Users/rick/Documents/GitHub/HISE /Users/rick/Documents/GitHub/HISE/JUCE/modules /Users/rick/Documents/GitHub/HISE/JUCE/modules/juce_audio_plugin_client";
 				OTHER_CFLAGS = "-Wno-reorder -Wno-inconsistent-missing-override  -faligned-allocation -ffp-contract=off";
 				OTHER_CPLUSPLUSFLAGS = "-Wno-reorder -Wno-inconsistent-missing-override  -faligned-allocation -ffp-contract=off";
 				OTHER_LDFLAGS = "-bundle -lSmut\\ Debug";
@@ -1004,7 +1003,6 @@
 					"$(SRCROOT)/../../JuceLibraryCode",
 					"/Users/rick/Documents/GitHub/HISE",
 					"/Users/rick/Documents/GitHub/HISE/JUCE/modules",
-					"/Users/rick/Documents/GitHub/HISE/tools/faust/include",
 					"/Users/rick/Documents/GitHub/HISE/JUCE/modules/juce_audio_plugin_client",
 					"$(inherited)",
 				);
@@ -1012,7 +1010,7 @@
 				INFOPLIST_PREPROCESS = NO;
 				LIBRARY_STYLE = Bundle;
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../JuceLibraryCode /Users/rick/Documents/GitHub/HISE /Users/rick/Documents/GitHub/HISE/JUCE/modules /Users/rick/Documents/GitHub/HISE/tools/faust/include /Users/rick/Documents/GitHub/HISE/JUCE/modules/juce_audio_plugin_client";
+				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../JuceLibraryCode /Users/rick/Documents/GitHub/HISE /Users/rick/Documents/GitHub/HISE/JUCE/modules /Users/rick/Documents/GitHub/HISE/JUCE/modules/juce_audio_plugin_client";
 				OTHER_CFLAGS = "-Wno-reorder -Wno-inconsistent-missing-override  -faligned-allocation -ffp-contract=off";
 				OTHER_CPLUSPLUSFLAGS = "-Wno-reorder -Wno-inconsistent-missing-override  -faligned-allocation -ffp-contract=off";
 				OTHER_LDFLAGS = "-bundle -lSmut";
@@ -1066,13 +1064,12 @@
 					"$(SRCROOT)/../../JuceLibraryCode",
 					"/Users/rick/Documents/GitHub/HISE",
 					"/Users/rick/Documents/GitHub/HISE/JUCE/modules",
-					"/Users/rick/Documents/GitHub/HISE/tools/faust/include",
 					"/Users/rick/Documents/GitHub/HISE/JUCE/modules/juce_audio_plugin_client",
 					"$(inherited)",
 				);
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../JuceLibraryCode /Users/rick/Documents/GitHub/HISE /Users/rick/Documents/GitHub/HISE/JUCE/modules /Users/rick/Documents/GitHub/HISE/tools/faust/include /Users/rick/Documents/GitHub/HISE/JUCE/modules/juce_audio_plugin_client";
+				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../JuceLibraryCode /Users/rick/Documents/GitHub/HISE /Users/rick/Documents/GitHub/HISE/JUCE/modules /Users/rick/Documents/GitHub/HISE/JUCE/modules/juce_audio_plugin_client";
 				OTHER_CFLAGS = "-Wno-reorder -Wno-inconsistent-missing-override  -faligned-allocation -ffp-contract=off";
 				OTHER_CPLUSPLUSFLAGS = "-Wno-reorder -Wno-inconsistent-missing-override  -faligned-allocation -ffp-contract=off";
 				PRODUCT_BUNDLE_IDENTIFIER = com.modularsamples.product;
@@ -1170,13 +1167,12 @@
 					"$(SRCROOT)/../../JuceLibraryCode",
 					"/Users/rick/Documents/GitHub/HISE",
 					"/Users/rick/Documents/GitHub/HISE/JUCE/modules",
-					"/Users/rick/Documents/GitHub/HISE/tools/faust/include",
 					"/Users/rick/Documents/GitHub/HISE/JUCE/modules/juce_audio_plugin_client",
 					"$(inherited)",
 				);
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../JuceLibraryCode /Users/rick/Documents/GitHub/HISE /Users/rick/Documents/GitHub/HISE/JUCE/modules /Users/rick/Documents/GitHub/HISE/tools/faust/include /Users/rick/Documents/GitHub/HISE/JUCE/modules/juce_audio_plugin_client";
+				MTL_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../JuceLibraryCode /Users/rick/Documents/GitHub/HISE /Users/rick/Documents/GitHub/HISE/JUCE/modules /Users/rick/Documents/GitHub/HISE/JUCE/modules/juce_audio_plugin_client";
 				OTHER_CFLAGS = "-Wno-reorder -Wno-inconsistent-missing-override  -faligned-allocation -ffp-contract=off";
 				OTHER_CPLUSPLUSFLAGS = "-Wno-reorder -Wno-inconsistent-missing-override  -faligned-allocation -ffp-contract=off";
 				PRODUCT_BUNDLE_IDENTIFIER = com.modularsamples.product;

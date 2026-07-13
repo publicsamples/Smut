@@ -26,60 +26,60 @@
       <FILE id="AOT2K8" name="Plugin.cpp" compile="1" resource="0" file="Source/Plugin.cpp"/>
       <FILE id="esGQuC" name="PresetData.cpp" compile="1" resource="0" file="Source/PresetData.cpp"/>
       <FILE id="q8WZ82" name="PresetData.h" compile="0" resource="0" file="Source/PresetData.h"/>
-      <GROUP id="BTP8Y0" name="nodes">
-        <FILE id="A8bLCQ" name="chop_networkdata.h" compile="0" resource="0"
+      <GROUP id="nbwtoL" name="nodes">
+        <FILE id="oIYO9x" name="chop_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/chop_networkdata.h"/>
-        <FILE id="WPz0AL" name="combValueTest_networkdata.h" compile="0" resource="0"
+        <FILE id="RyLkG9" name="combValueTest_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/combValueTest_networkdata.h"/>
-        <FILE id="Yj6FZc" name="empty_networkdata.h" compile="0" resource="0"
+        <FILE id="BCZ6QU" name="empty_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/empty_networkdata.h"/>
-        <FILE id="roAg3V" name="Env.h" compile="0" resource="0" file="../AdditionalSourceCode/nodes/Env.h"/>
-        <FILE id="cx4TVG" name="factory.cpp" compile="1" resource="0" file="../AdditionalSourceCode/nodes/factory.cpp"/>
-        <FILE id="r8HgwI" name="FoldTests_networkdata.h" compile="0" resource="0"
+        <FILE id="g6RaB0" name="Env.h" compile="0" resource="0" file="../AdditionalSourceCode/nodes/Env.h"/>
+        <FILE id="fHY9XD" name="factory.cpp" compile="1" resource="0" file="../AdditionalSourceCode/nodes/factory.cpp"/>
+        <FILE id="ZV7a8n" name="FoldTests_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/FoldTests_networkdata.h"/>
-        <FILE id="CNlC3g" name="ftest_networkdata.h" compile="0" resource="0"
+        <FILE id="bUJrBz" name="ftest_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/ftest_networkdata.h"/>
-        <FILE id="kNiZ0X" name="GainMod_networkdata.h" compile="0" resource="0"
+        <FILE id="bdfFkl" name="GainMod_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/GainMod_networkdata.h"/>
-        <FILE id="rg1SeT" name="includes.h" compile="0" resource="0" file="../AdditionalSourceCode/nodes/includes.h"/>
-        <FILE id="sFkvlm" name="lfo2_networkdata.h" compile="0" resource="0"
+        <FILE id="tH2lC2" name="includes.h" compile="0" resource="0" file="../AdditionalSourceCode/nodes/includes.h"/>
+        <FILE id="JkIT4s" name="lfo2_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/lfo2_networkdata.h"/>
-        <FILE id="GkoiCq" name="lfo3_networkdata.h" compile="0" resource="0"
+        <FILE id="PIvqL6" name="lfo3_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/lfo3_networkdata.h"/>
-        <FILE id="GMzXUB" name="lfo4_networkdata.h" compile="0" resource="0"
+        <FILE id="zAnJX4" name="lfo4_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/lfo4_networkdata.h"/>
-        <FILE id="lXO1u0" name="LfoNew.h" compile="0" resource="0" file="../AdditionalSourceCode/nodes/LfoNew.h"/>
-        <FILE id="gsJFDk" name="Lfos_networkdata.h" compile="0" resource="0"
+        <FILE id="HKGlNm" name="LfoNew.h" compile="0" resource="0" file="../AdditionalSourceCode/nodes/LfoNew.h"/>
+        <FILE id="OYIqkV" name="Lfos_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/Lfos_networkdata.h"/>
-        <FILE id="ma00hi" name="lfo_networkdata.h" compile="0" resource="0"
+        <FILE id="KRhmIw" name="lfo_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/lfo_networkdata.h"/>
-        <FILE id="YNWaSh" name="ModConnect_networkdata.h" compile="0" resource="0"
+        <FILE id="wsFU9z" name="ModConnect_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/ModConnect_networkdata.h"/>
-        <FILE id="UdsYlm" name="mp_networkdata.h" compile="0" resource="0"
+        <FILE id="FAeWt2" name="mp_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/mp_networkdata.h"/>
-        <FILE id="CAVHWZ" name="PitchTempo_networkdata.h" compile="0" resource="0"
+        <FILE id="ng8grl" name="PitchTempo_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/PitchTempo_networkdata.h"/>
-        <FILE id="pvs06p" name="pitch_networkdata.h" compile="0" resource="0"
+        <FILE id="TLWRY4" name="pitch_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/pitch_networkdata.h"/>
-        <FILE id="eQqpVN" name="ptichCorrect_networkdata.h" compile="0" resource="0"
+        <FILE id="oB0sTh" name="ptichCorrect_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/ptichCorrect_networkdata.h"/>
-        <FILE id="SBWThP" name="Revern_networkdata.h" compile="0" resource="0"
+        <FILE id="SR234j" name="Revern_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/Revern_networkdata.h"/>
-        <FILE id="hZaa8B" name="RNBO.cpp" compile="1" resource="0" file="../AdditionalSourceCode/nodes/RNBO.cpp"/>
-        <FILE id="c1poa8" name="rp_networkdata.h" compile="0" resource="0"
+        <FILE id="d5rD6l" name="RNBO.cpp" compile="1" resource="0" file="../AdditionalSourceCode/nodes/RNBO.cpp"/>
+        <FILE id="P3I7fD" name="rp_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/rp_networkdata.h"/>
-        <FILE id="iBhjU9" name="sawAM_networkdata.h" compile="0" resource="0"
+        <FILE id="Py9dhS" name="sawAM_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/sawAM_networkdata.h"/>
-        <FILE id="uVX4Xm" name="ShaperTests_networkdata.h" compile="0" resource="0"
+        <FILE id="y2zGDr" name="ShaperTests_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/ShaperTests_networkdata.h"/>
-        <FILE id="W8lMEM" name="shaper_networkdata.h" compile="0" resource="0"
+        <FILE id="vOSweK" name="shaper_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/shaper_networkdata.h"/>
-        <FILE id="VaE0rS" name="Sm2.h" compile="0" resource="0" file="../AdditionalSourceCode/nodes/Sm2.h"/>
-        <FILE id="KTYmf4" name="SuperDetune_networkdata.h" compile="0" resource="0"
+        <FILE id="Hul82Q" name="Sm2.h" compile="0" resource="0" file="../AdditionalSourceCode/nodes/Sm2.h"/>
+        <FILE id="iEgarc" name="SuperDetune_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/SuperDetune_networkdata.h"/>
-        <FILE id="N0s3PR" name="sw_networkdata.h" compile="0" resource="0"
+        <FILE id="bjXjeS" name="sw_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/sw_networkdata.h"/>
-        <FILE id="b48b6E" name="VcaAdsr_networkdata.h" compile="0" resource="0"
+        <FILE id="JsOIvs" name="VcaAdsr_networkdata.h" compile="0" resource="0"
               file="../AdditionalSourceCode/nodes/VcaAdsr_networkdata.h"/>
       </GROUP>
     </GROUP>
@@ -90,11 +90,11 @@
             extraLinkerFlags="%FFT_LINKER_FLAGS%%WIN_STATIC_LIBS%">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" winWarningLevel="1" generateManifest="1" winArchitecture="x64"
-                       isDebug="1" optimisation="1" targetName="Smut Debug" headerPath="%FFT_HEADER_PATH%&#10;/Users/rick/Documents/GitHub/HISE/tools/faust/include"
+                       isDebug="1" optimisation="1" targetName="Smut Debug" headerPath="%FFT_HEADER_PATH%&#10;"
                        libraryPath=";%WIN_STATIC_LIB_FOLDER_D64%" binaryPath="Compiled/"
                        useRuntimeLibDLL="0" prebuildCommand="%PREBUILD_COMMAND%"/>
         <CONFIGURATION name="Release" winWarningLevel="1" generateManifest="1" winArchitecture="x64"
-                       isDebug="0" optimisation="3" targetName="Smut" headerPath="%FFT_HEADER_PATH%&#10;/Users/rick/Documents/GitHub/HISE/tools/faust/include"
+                       isDebug="0" optimisation="3" targetName="Smut" headerPath="%FFT_HEADER_PATH%&#10;"
                        libraryPath=";%WIN_STATIC_LIB_FOLDER_R64%" binaryPath="Compiled/"
                        linkTimeOptimisation="0" useRuntimeLibDLL="0" prebuildCommand="%PREBUILD_COMMAND%;"/>
       </CONFIGURATIONS>
@@ -140,12 +140,10 @@
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" osxSDK="default" osxCompatibility="11.0 SDK" osxArchitecture="64BitIntel"
                        isDebug="1" optimisation="1" enablePluginBinaryCopyStep="0" targetName="Smut Debug"
-                       headerPath="/Users/rick/Documents/GitHub/HISE/tools/faust/include"
-                       libraryPath=";;" cppLibType="libc++"/>
+                       headerPath="" libraryPath=";;" cppLibType="libc++"/>
         <CONFIGURATION name="Release" osxSDK="default" osxCompatibility="11.0 SDK" osxArchitecture="64BitIntel"
                        isDebug="0" optimisation="3" enablePluginBinaryCopyStep="0" targetName="Smut"
-                       headerPath="/Users/rick/Documents/GitHub/HISE/tools/faust/include"
-                       libraryPath=";;" cppLibType="libc++" linkTimeOptimisation="0"
+                       headerPath="" libraryPath=";;" cppLibType="libc++" linkTimeOptimisation="0"
                        stripLocalSymbols="1"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
@@ -188,10 +186,10 @@
                  featureGatedModules="hi_rlottie:HISE_INCLUDE_RLOTTIE, hi_loris:HISE_INCLUDE_LORIS">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" osxArchitecture="x86_64" isDebug="1" optimisation="1"
-                       enablePluginBinaryCopyStep="0" targetName="Smut Debug" headerPath="/Users/rick/Documents/GitHub/HISE/tools/faust/include"
+                       enablePluginBinaryCopyStep="0" targetName="Smut Debug" headerPath=""
                        libraryPath=";;"/>
         <CONFIGURATION name="Release" osxArchitecture="x86_64" isDebug="0" optimisation="3"
-                       enablePluginBinaryCopyStep="0" targetName="Smut" headerPath="/Users/rick/Documents/GitHub/HISE/tools/faust/include"
+                       enablePluginBinaryCopyStep="0" targetName="Smut" headerPath=""
                        libraryPath=";;" linkTimeOptimisation="0" stripLocalSymbols="1"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
@@ -238,11 +236,11 @@
                   iosDeviceFamily="%TARGET_FAMILY%">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" iosCompatibility="9.0" isDebug="1" optimisation="1"
-                       targetName="Smut_Debug" headerPath="/Users/rick/Documents/GitHub/HISE/tools/faust/include"
-                       cppLanguageStandard="c++11" cppLibType="libc++"/>
+                       targetName="Smut_Debug" headerPath="" cppLanguageStandard="c++11"
+                       cppLibType="libc++"/>
         <CONFIGURATION name="Release" iosCompatibility="9.0" isDebug="0" optimisation="3"
-                       targetName="Smut" headerPath="/Users/rick/Documents/GitHub/HISE/tools/faust/include"
-                       cppLanguageStandard="c++11" cppLibType="libc++" linkTimeOptimisation="0"/>
+                       targetName="Smut" headerPath="" cppLanguageStandard="c++11" cppLibType="libc++"
+                       linkTimeOptimisation="0"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_product_unlocking" path="/Users/rick/Documents/GitHub/HISE/JUCE/modules"/>
@@ -283,11 +281,9 @@
                 linuxExtraPkgConfig="">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" isDebug="1" optimisation="1" linkTimeOptimisation="0"
-                       targetName="Smut Debug" headerPath="/Users/rick/Documents/GitHub/HISE/tools/faust/include"
-                       libraryPath=""/>
+                       targetName="Smut Debug" headerPath="" libraryPath=""/>
         <CONFIGURATION name="Release" isDebug="0" optimisation="3" linkTimeOptimisation="0"
-                       targetName="Smut" headerPath="/Users/rick/Documents/GitHub/HISE/tools/faust/include"
-                       libraryPath=""/>
+                       targetName="Smut" headerPath="" libraryPath=""/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_product_unlocking" path="/Users/rick/Documents/GitHub/HISE/JUCE/modules"/>
@@ -365,7 +361,7 @@
                USE_GLITCH_DETECTION="1" ENABLE_PLOTTER="0" ENABLE_SCRIPTING_SAFE_CHECKS="0"
                ENABLE_ALL_PEAK_METERS="0" USE_SPLASH_SCREEN="0" HISE_OVERWRITE_OLD_USER_PRESETS="1"
                HI_SUPPORT_MONO_CHANNEL_LAYOUT="0" HI_SUPPORT_FULL_DYNAMICS_HLAC="1"
-               ENABLE_CONSOLE_OUTPUT="0" HI_ENABLE_LEGACY_CPU_SUPPORT="0" HISE_INCLUDE_FAUST="1"
+               ENABLE_CONSOLE_OUTPUT="0" HI_ENABLE_LEGACY_CPU_SUPPORT="0" HISE_INCLUDE_FAUST="0"
                HISE_USE_SYSTEM_APP_DATA_FOLDER="0" HISE_INCLUDE_RLOTTIE="1"
                HLAC_MEASURE_DECODING_PERFORMANCE="0" HLAC_DEBUG_LOG="0" HLAC_INCLUDE_TEST_SUITE="0"
                STANDALONE_STREAMING="0" JUCE_ASSERTION_FIRFILTER="0" JUCE_VST3_CAN_REPLACE_VST2="0"

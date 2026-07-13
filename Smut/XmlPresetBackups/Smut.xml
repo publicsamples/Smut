@@ -10,9 +10,9 @@
           <ChildProcessors/>
           <Content>
             <Control type="ScriptComboBox" id="OscShapeMode4" value="1.0"/>
-            <Control type="ScriptSlider" id="Osc2into1" value="0.3400000035762787"/>
-            <Control type="ScriptSlider" id="OscSemiTone1" value="24.0"/>
-            <Control type="ScriptSlider" id="OscCent1" value="-1.0"/>
+            <Control type="ScriptSlider" id="Osc2into1" value="0.0"/>
+            <Control type="ScriptSlider" id="OscSemiTone1" value="0.0"/>
+            <Control type="ScriptSlider" id="OscCent1" value="0.0"/>
             <Control type="ScriptComboBox" id="OscShapeMode1" value="4.0"/>
             <Control type="ScriptSlider" id="OscShape1" value="0.0"/>
             <Control type="ScriptButton" id="Sync" value="0.0"/>
@@ -78,8 +78,8 @@
             <Control type="ScriptSlider" id="Pan1" value="0.0"/>
             <Control type="ScriptSlider" id="FilterGain1" value="1.0"/>
             <Control type="ScriptComboBox" id="FilterMode1" value="4.0"/>
-            <Control type="ScriptSliderPack" id="ScriptSliderPack1" value="0" data="16....f+................."/>
-            <Control type="ScriptSliderPack" id="ScriptSliderPack2" value="1" data="20............................"/>
+            <Control type="ScriptSliderPack" id="ScriptSliderPack1" value="0.0" data="16....f+................."/>
+            <Control type="ScriptSliderPack" id="ScriptSliderPack2" value="1.0" data="20............................"/>
             <Control type="ScriptSlider" id="Cut2" value="0.699999988079071"/>
             <Control type="ScriptSlider" id="q2" value="0.0"/>
             <Control type="ScriptSlider" id="Pan" value="0.0"/>
@@ -135,7 +135,7 @@
             <Control type="ScriptComboBox" id="ScriptComboBox19" value="1.0"/>
             <Control type="ScriptComboBox" id="Voices" value="4.0"/>
             <Control type="ScriptComboBox" id="Voices1" value="4.0"/>
-            <Control type="ScriptSlider" id="Knob1" value="2837.0"/>
+            <Control type="ScriptSlider" id="Knob1" value="0.0"/>
             <Control type="ScriptSlider" id="Knob2" value="0.0"/>
             <Control type="ScriptSlider" id="Knob3" value="2102.0"/>
             <Control type="ScriptSlider" id="Knob4" value="1.0"/>
@@ -368,7 +368,7 @@
     </Processor>
     <Processor Type="HardcodedSynth" ID="SMUT" Bypassed="0" Gain="0.5011872053146362"
                Balance="0.0" VoiceLimit="8.0" KillFadeTime="20.0" IconColour="0"
-               Network="Sm2" OscSt1="24.0" OscCent1="-1.0" Oscfm1="0.0" OscMod1="0.0"
+               Network="Sm2" OscSt1="0.0" OscCent1="0.0" Oscfm1="0.0" OscMod1="0.0"
                OscTempoSync1="0.0" OscTempo1="1.0" OscDiv1="32.0" OscFmSrc1="2.0"
                OscPitchSrc1="1.0" Osc12Mix="0.0" filePos1="0.0" FilePosMod1="0.4399999976158142"
                FilePosQuant1="6.0" FileInputGain1="0.2099999934434891" FileInputGainMod="0.0"
@@ -390,15 +390,15 @@
                oscShapeMode1="4.0" oscShapeMode2="10.0" shape2="0.01999999955296516"
                ShapeMod1="0.0" ShapeSrc2="1.0" ShapeFm2="0.0" ShapeFmSrc2="1.0"
                PosSmooth="0.0" Osc2Src="1.0" Osc2InSel="2.0" FileInSel="1.0"
-               Vol="1.0" Osc1Input="0.3400000035762787" Osc1InputMod="0.0" Osc1FM="0.0"
-               OscFmSrc="1.0" Osc1InputSrc="1.0" Osc1InSel="1.0" s="1.0" a="2837.0"
-               h="0.0" d="2102.0" r="3817.0" TEMPO2="1.0" DIV2="17.0" SYNC2="0.0"
-               File2InSel="3.0" File2GainOffset="0.6800000071525574" File2Gain="0.0"
-               File2Mod="0.0" File2Fm="0.0" File2ModSrc="1.0" File2FmSrc="1.0"
-               File2Tempo="1.0" FileDiv="8.0" File2Mode="2.0" File2EnvTrig="1.0"
-               File2A="222.0" File2H="0.0" File2D="2.0" File2S="1.0" File2R="3.0"
-               File2Pos="0.0" File2PosMod="0.2199999988079071" File2Quant="1.0"
-               User1="0.0" User2="0.0" tune="0.0" Track1="0.0" Track2="0.0">
+               Vol="1.0" Osc1Input="0.0" Osc1InputMod="0.0" Osc1FM="0.0" OscFmSrc="1.0"
+               Osc1InputSrc="1.0" Osc1InSel="1.0" s="1.0" a="0.0" h="0.0" d="2102.0"
+               r="3817.0" TEMPO2="1.0" DIV2="17.0" SYNC2="0.0" File2InSel="3.0"
+               File2GainOffset="0.6800000071525574" File2Gain="0.0" File2Mod="0.0"
+               File2Fm="0.0" File2ModSrc="1.0" File2FmSrc="1.0" File2Tempo="1.0"
+               FileDiv="8.0" File2Mode="2.0" File2EnvTrig="1.0" File2A="222.0"
+               File2H="0.0" File2D="2.0" File2S="1.0" File2R="3.0" File2Pos="0.0"
+               File2PosMod="0.2199999988079071" File2Quant="1.0" User1="0.0"
+               User2="0.0" tune="0.0" Track1="0.0" Track2="0.0">
       <ChildProcessors>
         <Processor Type="MidiProcessorChain" ID="Midi Processor" Bypassed="0">
           <ChildProcessors/>

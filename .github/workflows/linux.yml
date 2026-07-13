@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: RickTaylor79/HISE
-          ref: 1791fe98e4e0ff8a44d10370b0837af1d958c86c
+          ref: de5a95e910db9b60753ad61701a3119ba107f0ce
           path: HISE
           submodules: recursive
 

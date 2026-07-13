@@ -1,5 +1,5 @@
 mode=au
-hise_bin=/Users/rick/HISE Standalone - App 2026-05-07 16-42-28/HISE.app/Contents/MacOS/HISE
+hise_bin=/Users/rick/HISE Standalone - App 2026-07-13 16-23-07/HISE.app/Contents/MacOS/HISE
 project_dir=/Users/rick/Documents/GitHub/Smut/Smut
 project_file=XmlPresetBackups/Smut.xml
 arch=x64
@@ -7,4 +7,4 @@ plugin_target=instrument
 vst3_format=VST3
 au_format=AU
 hise_source_dir=/Users/rick/Documents/GitHub/HISE
-timestamp=2026-07-13T14:36:01Z
+timestamp=2026-07-13T15:29:35Z
