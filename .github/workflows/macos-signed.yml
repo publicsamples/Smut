@@ -234,6 +234,9 @@ jobs:
               -scheme "$scheme" \
               -configuration Release \
               MACOSX_DEPLOYMENT_TARGET=10.13 \
+              ARCHS="x86_64 arm64" \
+              ONLY_ACTIVE_ARCH=NO \
+              EXCLUDED_ARCHS="" \
               CODE_SIGNING_ALLOWED=NO \
               build
           }
@@ -290,6 +293,28 @@ jobs:
             fi
           done
           find "$compiled_dir" -mindepth 1 -maxdepth 1 | sort
+
+      - name: Verify universal macOS bundles
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          found_any=0
+          while IFS= read -r binary; do
+            [[ -z "$binary" ]] && continue
+            found_any=1
+            archs="$(lipo -archs "$binary")"
+            echo "$binary -> $archs"
+            if [[ "$archs" != *"x86_64"* || "$archs" != *"arm64"* ]]; then
+              echo "ERROR: Expected universal binary with x86_64 and arm64 slices: $binary"
+              exit 1
+            fi
+          done < <(find "$GITHUB_WORKSPACE/Smut/Binaries/Compiled" -path "*/Contents/MacOS/*" -type f)
+
+          if [[ "$found_any" -eq 0 ]]; then
+            echo "ERROR: No macOS bundle executables found for architecture verification."
+            exit 1
+          fi
 
       - name: Import Developer ID certificate
         shell: bash

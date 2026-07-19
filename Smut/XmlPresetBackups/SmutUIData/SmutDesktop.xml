@@ -897,15 +897,6 @@
                  width="20" height="20" items="1&#10;2&#10;4&#10;8" textColour="4278190080"
                  bgColour="4278190080" defaultValue="4.0"/>
     </Component>
-    <Component type="ScriptLabel" id="Label2" x="75" y="38" text="STANDARD"
-               editable="0" fontName="mon" fontSize="12.0" width="70" height="10"
-               bgColour="2667511290" itemColour2="983040" itemColour="94" parentComponent="Panel2"
-               textColour="4284038975">
-      <Component type="ScriptComboBox" id="Voices1" x="192" y="4" max="4" parentComponent="Label2"
-                 width="20" height="20" items="1&#10;2&#10;4&#10;8" textColour="4278190080"
-                 bgColour="4278190080" defaultValue="4.0" itemColour2="983040"
-                 itemColour="94"/>
-    </Component>
   </Component>
   <Component type="ScriptPanel" id="Fin" x="588" y="496" width="200" height="155"
              itemColour="4293583307" itemColour2="4293583307" textColour="4279702530">
@@ -928,8 +919,8 @@
                style="Vertical" width="20" height="90" processorId="AHDSR Envelope"
                parameterId="Sustain" parentComponent="Fin" showValuePopup="Below"
                bgColour="16777215" itemColour="4281545523" itemColour2="4279308561"
-               textColour="16777215" dragDirection="Horizontal" defaultValue="1.0"
-               mode="Decibel" max="0.0" min="-100.0" middlePosition="-12"/>
+               textColour="16777215" dragDirection="Horizontal" mode="Decibel"
+               max="0.0" min="-100.0" middlePosition="-12.0"/>
     <Component type="ScriptSlider" id="Knob5" x="124" y="32" stepSize="1.0"
                style="Vertical" width="20" height="90" processorId="AHDSR Envelope"
                mode="Time" max="10000.0" middlePosition="1000.0" parameterId="Release"
